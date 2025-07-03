@@ -1,0 +1,57 @@
+@use 'variables' as v;
+@use 'mixins' as m;
+
+html{
+    overflow-x: hidden;
+}
+
+body{
+    font-size: 16px;
+}
+
+.d-block, picture{
+    display: block;
+}
+
+.w-100{width: 100%;}
+.h-100{height: 100%;}
+.wh-100{
+    @extend .w-100;
+    @extend .h-100;
+}
+
+img{
+    vertical-align: top;
+    height: auto;
+}
+
+.relative{
+    position: relative;
+}
+
+.absolute{
+    position: absolute;
+}
+
+a, button, input[type="submit"]{
+    cursor: pointer;
+    @include m.transition;
+}
+
+main, section, header, footer, aside{
+    width: 100%;
+}
+
+a{
+    text-decoration: none;
+}
+
+textarea, button, input, select, option {
+    outline: none;
+}
+
+video{
+    display: block;
+    width: 100%;
+    aspect-ratio: 16/9;
+}

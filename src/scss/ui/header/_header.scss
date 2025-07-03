@@ -1,0 +1,118 @@
+@use "base/mixins" as m;
+@use "base/variables" as v;
+
+%a{
+    text-transform: uppercase;
+    color: white;
+}
+
+.header {
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    background: rgba($color: white, $alpha: 0.2);
+    backdrop-filter: blur(20px);
+
+    @media (min-width: v.$tv) {
+        padding-block: m.px-to-vw(30px);
+        padding-inline: m.px-to-vw(180px);
+    }
+
+    @media (max-width: v.$tv) {}
+
+    &_container {
+        @include m.flex(space-between);
+
+        a, button{
+            font-family: 'GothamLight';
+        }
+    }
+
+    &_logo {
+        @media (min-width: v.$tv) {
+            max-width: m.px-to-vw(112px);
+        }
+
+        @media (max-width: v.$tv) {}
+    }
+
+    ul,
+    li {
+        list-style: none;
+    }
+
+    .ul_menu {
+        @media (min-width: v.$tv) {
+            @include m.flex(center, m.px-to-vw(36px));
+        }
+
+        @media (max-width: v.$tv) {
+            @include m.flex(center, 22px);
+        }
+
+        &>li {
+            position: relative;
+
+            &>a {
+                @extend %a;
+                @media (min-width: v.$tv) {
+                    font-size: m.px-to-vw(16px);
+                    letter-spacing: 1.6px;
+                }
+
+                @media (max-width: v.$tv) {
+                    font-size: 15px;
+                }
+            }
+        }
+
+        .sub-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            opacity: 0;
+            pointer-events: none;
+        }
+    }
+
+    &_actions {
+        @media (min-width: v.$tv) {
+            @include m.flex(flex-end, m.px-to-vw(36px));
+        }
+
+        @media (max-width: v.$tv) {
+            @include m.flex(flex-end, 22px);
+        }
+
+        button {
+            background: none;
+            border: none;
+            @extend %a;
+
+            @media (min-width: v.$tv) {
+                @include m.flex(center, m.px-to-vw(8px));
+                font-size: m.px-to-vw(14px);
+            }
+            
+            @media (max-width: v.$tv) {
+                @include m.flex(center, 5.2px);
+                font-size: 13px;
+            }
+
+            svg {
+                @media (min-width: v.$tv) {
+                    @include m.square(m.px-to-vw(12px));
+                }
+
+                @media (max-width: v.$tv) {
+                    @include m.square(11px);
+                }
+            }
+        }
+
+        a {
+            @include m.btn1;
+        }
+    }
+}

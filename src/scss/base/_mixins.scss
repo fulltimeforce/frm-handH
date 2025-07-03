@@ -1,0 +1,113 @@
+@use 'variables' as v;
+
+/** ------ Media Queries ------ **/
+@mixin phone {
+    @media (max-width: v.$phone) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media (max-width: v.$tablet) {
+        @content;
+    }
+}
+
+@mixin laptop {
+    @media (max-width: v.$laptop) {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media (max-width: v.$desktop) {
+        @content;
+    }
+}
+
+@mixin tv {
+    @media (max-width: v.$tv) {
+        @content;
+    }
+}
+
+@mixin fullWH{
+    width: 100%;
+    height: 100%;
+}
+
+@mixin transition($s: .3s) {
+    transition: all $s ease;
+}
+
+@mixin flex($prop, $gap: 0){
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: $prop;
+    gap: $gap;
+}
+
+@mixin grid($n, $gap: 0){
+    display: grid;
+    grid-template-columns: repeat($n, 1fr);
+    grid-gap: $gap;
+}
+
+@mixin centerX{
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+@mixin centerY{
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+@mixin centerXY{
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@mixin square($size){
+    display: block;
+    width: $size;
+    height: $size;
+    aspect-ratio: 1/1;
+    object-fit: contain;
+    object-position: center;
+}
+
+@mixin lines($n){
+    display: -webkit-box;
+    -webkit-line-clamp: $n;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+// If the layout size is 1920px, the large breakpoint is 1540px.
+// If the layout size is 1440px, the large breakpoint is 1200px.
+@function px-to-vw($val) {
+    $num: calc($val / 1px);
+    $base: 1920;
+    $res: calc(($num / $base) * 100 * 1vw);
+    @return $res;
+}
+
+@mixin btn1($color: white){
+    color: $color;
+    width: fit-content;
+    border: 1px solid $color;
+    text-transform: uppercase;
+    @media (min-width: v.$tv) {
+        @include flex(center, px-to-vw(8px));
+        padding: px-to-vw(17px) px-to-vw(20px);
+        font-size: px-to-vw(17px);
+    }
+    @media (max-width: v.$tv) {
+        @include flex(center, 5.2px);
+        padding: 12px 18px;
+        font-size: 15px;
+    }
+}

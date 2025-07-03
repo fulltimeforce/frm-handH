@@ -1,0 +1,38 @@
+// ============================
+// FONTS
+// ============================
+@font-face {
+    font-family: 'GothamRegular';
+    src: url(../../fonts/GothamRegular.otf);
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'GothamLight';
+    src: url(../../fonts/GothamLight.otf);
+    font-display: swap;
+}
+
+
+// ============================
+// BREAKPOINTS (Media Queries)
+// ============================
+$breakpoints: (
+    phone: 480px,
+    tablet: 768px,
+    laptop: 1024px,
+    desktop: 1200px,
+    tv: 1540px
+);
+
+// Para usar sin map, si lo prefieres también
+$phone: map-get($breakpoints, phone);
+$tablet: map-get($breakpoints, tablet);
+$laptop: map-get($breakpoints, laptop);
+$desktop: map-get($breakpoints, desktop);
+$tv: map-get($breakpoints, tv);
+
+
+// ============================
+// COLORS
+// ============================
