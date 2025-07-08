@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Client Theme Functions
+ * HandH Theme Functions
  * @package WordPress
- * @subpackage Client
+ * @subpackage HandH
  * @since 1.0.0
  * @version 1.0.0
  */

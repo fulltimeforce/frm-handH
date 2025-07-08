@@ -1,0 +1,37 @@
+@use "base/mixins" as m;
+@use "base/variables" as v;
+
+.page_breadcrumb {
+    position: relative;
+    margin-top: m.px-to-vw(150px);
+    min-height: m.px-to-vw(365px);
+    display: inline-flex;
+    align-items: end;
+    color: v.$white;
+    padding-block: m.px-to-vw(72px);
+    background-position: bottom;
+    &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: #181D24;
+    opacity: 0.7;
+    }
+    .container {
+        width: 100%;
+        max-width: m.px-to-vw(1296px);
+        z-index: 1;
+        margin-inline: auto;
+    }
+    &_list {
+        font-family: v.$gotham_light;
+        padding-bottom: m.px-to-vw(48px);
+        letter-spacing: m.px-to-vw(1.7px);
+        font-size: m.px-to-vw(17px);
+    }
+    &_title {
+        font-family: v.$goudy;
+        font-size: m.px-to-vw(50px);
+        text-transform: uppercase;
+    }
+}

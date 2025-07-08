@@ -8,11 +8,45 @@
 }
 
 @font-face {
+    font-family: 'GothamMedium';
+    src: url(../../fonts/GothamMedium.otf);
+    font-display: swap;
+}
+
+@font-face {
     font-family: 'GothamLight';
     src: url(../../fonts/GothamLight.otf);
     font-display: swap;
 }
 
+@font-face {
+    font-family: 'GoudyTitlingRegular';
+    src: url(../../fonts/GoudyTitlingRegular.otf);
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'CormorantGaramond';
+    src: url(../../fonts/CormorantGaramond.ttf);
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'CanelaTextLight';
+    src: url(../../fonts/CanelaTextLight.otf);
+    font-display: swap;
+}
+
+
+// ============================
+// FONTS
+// ============================
+$goudy: 'GoudyTitlingRegular';
+$gotham: 'GothamRegular';
+$gotham_m: 'GothamMedium';
+$gotham_light: 'GothamLight';
+$cormorant: 'CormorantGaramond';
+$canela_text: 'CanelaTextLight';
 
 // ============================
 // BREAKPOINTS (Media Queries)
@@ -36,3 +70,7 @@ $tv: map-get($breakpoints, tv);
 // ============================
 // COLORS
 // ============================
+$beige: #F5F2EE;
+$light_brown: #8C6E47;
+$black: #000000;
+$white: #ffffff;
