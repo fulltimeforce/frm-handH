@@ -20,6 +20,12 @@
 }
 
 @font-face {
+    font-family: 'GoudyTitlingSemiBold';
+    src: url(../../fonts/GoudyTitlingSemiBold.ttf);
+    font-display: swap;
+}
+
+@font-face {
     font-family: 'GoudyTitlingRegular';
     src: url(../../fonts/GoudyTitlingRegular.otf);
     font-display: swap;
@@ -42,6 +48,7 @@
 // FONTS
 // ============================
 $goudy: 'GoudyTitlingRegular';
+$goudysb: 'GoudyTitlingSemiBold';
 $gotham: 'GothamRegular';
 $gotham_m: 'GothamMedium';
 $gotham_light: 'GothamLight';
@@ -74,3 +81,4 @@ $beige: #F5F2EE;
 $light_brown: #8C6E47;
 $black: #000000;
 $white: #ffffff;
+$bg: #E5DDD2;

@@ -1,8 +1,10 @@
 @use "base/mixins" as m;
 @use "base/variables" as v;
 
-%a{
+%a {
     text-transform: uppercase;
+    leading-trim: both;
+    text-edge: cap;
     color: white;
 }
 
@@ -21,10 +23,21 @@
 
     @media (max-width: v.$tv) {}
 
+    &_lines {
+        position: fixed;
+        bottom: 0;
+        z-index: 3;
+        height: calc(100vh - m.px-to-vw(150px));
+        width: 100%;
+        max-width: m.px-to-vw(40px);
+        left: m.px-to-vw(216px);
+    }
+
     &_container {
         @include m.flex(space-between);
 
-        a, button{
+        a,
+        button {
             font-family: 'GothamLight';
         }
     }
@@ -42,47 +55,97 @@
         list-style: none;
     }
 
-    .ul_menu {
-        @media (min-width: v.$tv) {
-            @include m.flex(center, m.px-to-vw(36px));
-        }
+    &_navigation {
+        mix-blend-mode: difference;
 
-        @media (max-width: v.$tv) {
-            @include m.flex(center, 22px);
-        }
-
-        &>li {
-            position: relative;
-
-            &>a {
-                @extend %a;
-                @media (min-width: v.$tv) {
-                    font-size: m.px-to-vw(16px);
-                    letter-spacing: 1.6px;
-                }
-
-                @media (max-width: v.$tv) {
-                    font-size: 15px;
-                }
+        &--bg {
+            @media (min-width: v.$tv) {
+                display: none;
             }
         }
 
-        .sub-menu {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            opacity: 0;
-            pointer-events: none;
+        &--list {
+            @media (min-width: v.$tv) {
+                padding-top: m.px-to-vw(34px);
+            }
+
+            @include m.tv {}
+        }
+    }
+
+    .ul_menu {
+        @media (min-width: v.$tv) {
+            @include m.flex(center, m.px-to-vw(8px));
+        }
+
+        @media (max-width: v.$tv) {
+            @include m.flex(center, 4px);
+        }
+
+        &>li {
+            &>a {
+                @extend %a;
+                font-weight: 300;
+                line-height: normal;
+
+                @media (min-width: v.$tv) {
+                    letter-spacing: m.px-to-vw(0.48px);
+                    @include m.flex(center, m.px-to-vw(9px));
+                    font-size: m.px-to-vw(16px);
+                    padding: m.px-to-vw(18.5px) m.px-to-vw(16px);
+                }
+
+                @media (max-width: v.$tv) {
+                    @include m.flex(center, 5px);
+                    font-size: 15px;
+                    padding: 14px 11px;
+                }
+
+                @include m.transition;
+
+                svg,
+                path {
+                    @include m.transition;
+                }
+
+                svg {
+                    @media (min-width: v.$tv) {
+                        width: m.px-to-vw(8px);
+                    }
+
+                    @include m.tv {
+                        width: 6px;
+                    }
+
+                    height: auto;
+                    object-fit: contain;
+                }
+            }
+
+            &:first-child {
+                &>a {
+                    padding-left: 0;
+                }
+            }
+
+            &:last-child {
+                &>a {
+                    padding-right: 0;
+                }
+            }
         }
     }
 
     &_actions {
+        mix-blend-mode: difference;
+
         @media (min-width: v.$tv) {
-            @include m.flex(flex-end, m.px-to-vw(36px));
+            padding-top: m.px-to-vw(34px);
+            @include m.flex(flex-end, m.px-to-vw(18px));
         }
 
         @media (max-width: v.$tv) {
-            @include m.flex(flex-end, 22px);
+            @include m.flex(flex-end, 12px);
         }
 
         button {
@@ -91,13 +154,18 @@
             @extend %a;
 
             @media (min-width: v.$tv) {
-                @include m.flex(center, m.px-to-vw(8px));
-                font-size: m.px-to-vw(14px);
+                padding-block: m.px-to-vw(18.5px);
+                padding-inline: 0 m.px-to-vw(16px);
+                @include m.flex(center, m.px-to-vw(9px));
+                font-size: m.px-to-vw(16px);
+                letter-spacing: m.px-to-vw(0.48px);
             }
-            
+
             @media (max-width: v.$tv) {
-                @include m.flex(center, 5.2px);
-                font-size: 13px;
+                padding-block: 14px;
+                padding-inline: 0 11px;
+                @include m.flex(center, 5px);
+                font-size: 15px;
             }
 
             svg {
@@ -106,7 +174,7 @@
                 }
 
                 @media (max-width: v.$tv) {
-                    @include m.square(11px);
+                    @include m.square(10px);
                 }
             }
         }
@@ -114,5 +182,45 @@
         a {
             @include m.btn1;
         }
+
+        svg,
+        path {
+            @include m.transition;
+        }
     }
+
+    &.dark {
+        .ul_menu {
+            &>li {
+                &>a {
+                    color: v.$black;
+
+                    svg,
+                    path {
+                        fill: v.$black;
+                    }
+                }
+            }
+        }
+
+        .header {
+            &_actions {
+
+                a,
+                button {
+                    color: v.$black;
+
+                    svg,
+                    path {
+                        stroke: v.$black;
+                    }
+                }
+
+                a {
+                    border-color: v.$black;
+                }
+            }
+        }
+    }
+
 }

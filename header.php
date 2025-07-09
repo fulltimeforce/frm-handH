@@ -16,7 +16,48 @@
             <a href="<?php echo esc_url(home_url('/')); ?>" title="<?php echo get_bloginfo('name'); ?>" class="header_logo d-block w-100">
                 <img src="<?php echo IMG; ?>/logo.svg" title="<?php echo get_bloginfo('name'); ?>" alt="<?php echo get_bloginfo('name'); ?>" class="w-100" loading="lazy">
             </a>
-            <?php wp_nav_menu(array('theme_location' => 'header-menu', 'container_class' => 'top-menus-wrapper', 'menu_class' => 'ul_menu')); ?>
+            <div class="header_navigation">
+                <div class="header_navigation--bg"></div>
+                <div class="header_navigation--list">
+                    <ul class="ul_menu">
+                        <li>
+                            <a href="">
+                                Classic Auctions
+                                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="4" viewBox="0 0 8 4" fill="none">
+                                    <path d="M4 4L0 0H8L4 4Z" fill="white" />
+                                </svg>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                Private Sales
+                                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="4" viewBox="0 0 8 4" fill="none">
+                                    <path d="M4 4L0 0H8L4 4Z" fill="white" />
+                                </svg>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                About
+                                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="4" viewBox="0 0 8 4" fill="none">
+                                    <path d="M4 4L0 0H8L4 4Z" fill="white" />
+                                </svg>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">Contact</a>
+                        </li>
+                        <li>
+                            <a href="">
+                                Register / Sign In
+                                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="4" viewBox="0 0 8 4" fill="none">
+                                    <path d="M4 4L0 0H8L4 4Z" fill="white" />
+                                </svg>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
             <div class="header_actions">
                 <button type="button">
                     Search
@@ -33,3 +74,5 @@
             </div>
         </div>
     </header>
+
+    <img src="<?php echo IMG; ?>/lines.svg" class="header_lines">

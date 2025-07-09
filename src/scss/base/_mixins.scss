@@ -100,14 +100,81 @@
     width: fit-content;
     border: 1px solid $color;
     text-transform: uppercase;
+    leading-trim: both;
+    text-edge: cap;
+    font-weight: 400;
+    font-style: normal;
+    line-height: normal;
+
     @media (min-width: v.$tv) {
         @include flex(center, px-to-vw(8px));
-        padding: px-to-vw(17px) px-to-vw(20px);
-        font-size: px-to-vw(17px);
+        height: px-to-vw(46px);
+        letter-spacing: px-to-vw(0.48px);
+        padding-inline: px-to-vw(20px);
+        font-size: px-to-vw(16px);
     }
     @media (max-width: v.$tv) {
         @include flex(center, 5.2px);
-        padding: 12px 18px;
+        height: 42px;
+        padding-inline: 16px;
         font-size: 15px;
+    }
+
+    svg{
+        @media (min-width: v.$tv){
+            width: px-to-vw(24px);
+        }
+        @include tv{
+            
+        }
+        height: auto;
+        object-fit: contain;
+    }
+}
+
+@mixin breadlines($color: v.$white, $lines: 2){
+    position: relative;
+    width: fit-content;
+    @media (min-width: v.$tv){
+        @include flex(flex-start, px-to-vw(15px));
+    }
+    @include tv{
+        @include flex(flex-start, 12px);
+    }
+
+    p{
+        color: $color;
+        font-weight: 300;
+        line-height: normal;
+        leading-trim: both;
+        text-edge: cap;
+        text-transform: uppercase;
+
+        @media (min-width: v.$tv){
+            font-size: px-to-vw(17px);
+        }
+        @include tv{
+            
+        }
+    }
+    &::before{
+        content: '';
+    }
+    @if($lines == 2){
+        &::after{
+            content: '';
+        }
+    }
+    &::before, &::after{
+        display: block;
+        background: $color;
+        @media (min-width: v.$tv){
+            width: px-to-vw(30px);
+            height: px-to-vw(1px);
+        }
+        @include tv{
+            width: 24px;
+            height: 1px;
+        }
     }
 }
