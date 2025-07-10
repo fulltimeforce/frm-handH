@@ -1,65 +1,105 @@
 @use 'variables' as v;
 @use 'mixins' as m;
 
-html{
+html {
     overflow-x: hidden;
 }
 
-body{
+body {
     font-size: 16px;
     background-color: v.$beige;
 }
 
-.d-block, picture{
+.d-block,
+picture {
     display: block;
 }
 
-.w-100{width: 100%;}
-.h-100{height: 100%;}
-.wh-100{
+.w-100 {
+    width: 100%;
+}
+
+.h-100 {
+    height: 100%;
+}
+
+.wh-100 {
     @extend .w-100;
     @extend .h-100;
 }
 
-img{
+img {
     vertical-align: top;
     height: auto;
 }
 
-.relative{
+.relative {
     position: relative;
 }
 
-.absolute{
+.absolute {
     position: absolute;
 }
 
-a, button, input[type="submit"]{
+a,
+button,
+input[type="submit"] {
     cursor: pointer;
     @include m.transition;
 }
 
-main, section, header, footer, aside{
+main,
+section,
+header,
+footer,
+aside {
     width: 100%;
 }
 
-a{
+a {
     text-decoration: none;
 }
 
-textarea, button, input, select, option {
+textarea,
+button,
+input,
+select,
+option {
     outline: none;
 }
 
-video{
+video {
     display: block;
     width: 100%;
     aspect-ratio: 16/9;
 }
 
 .container {
-    max-width: m.px-to-vw(1296px);
+    width: 96%;
+
+    @media (min-width: v.$tv) {
+        max-width: m.px-to-vw(1296px);
+    }
+
+    @include m.tv {
+        max-width: 1300px;
+    }
+
     margin-inline: auto;
+
+    &_side {
+        width: 96%;
+
+        @media (min-width: v.$tv) {
+            max-width: m.px-to-vw(1608px);
+        }
+
+        @include m.tv {
+            max-width: 1450px;
+        }
+
+        margin-left: auto;
+    }
 }
 
 h2 {

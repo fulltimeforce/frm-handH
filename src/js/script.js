@@ -90,4 +90,52 @@ import "@splidejs/splide/css";
         }).mount({ AutoScroll });
     }
 
+
+    let vehiclesThumbs = document.querySelectorAll('.vehicle_card-thumbs')
+    if(vehiclesThumbs){
+        vehiclesThumbs.forEach(vehicle=>{
+            new Splide(vehicle, {
+                type: 'loop',
+                arrows: true,
+                pagination: true,
+                perPage: 1,
+                perMove: 1,
+                breakpoints: {
+                }
+            }).mount();
+        })
+    }
+
+
+    if(document.querySelector('#clients')){
+        new Splide('#clients', {
+            type: 'loop',
+            arrows: true,
+            pagination: false,
+            autoWidth: true,
+            gap: '1.094vw',
+            breakpoints: {
+                1540: {
+                    gap: '17px'
+                }
+            }
+        }).mount();
+    }
+
+    if(document.querySelector('#upcoming')){
+        new Splide('#upcoming', {
+            type: 'loop',
+            focus: 'start',
+            arrows: true,
+            pagination: false,
+            autoWidth: true,
+            gap: '1.042vw',
+            breakpoints: {
+                1540: {
+                    gap: '16px'
+                }
+            }
+        }).mount();
+    }
+
 })();

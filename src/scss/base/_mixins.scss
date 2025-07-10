@@ -95,6 +95,61 @@
     @return $res;
 }
 
+@mixin p($color: v.$black){
+    color: $color;
+    font-family: v.$gotham_light;
+    font-weight: 300;
+
+    @media (min-width: v.$tv) {
+        font-size: px-to-vw(17px);
+        line-height: px-to-vw(23.8px);
+        letter-spacing: px-to-vw(1.02px);
+    }
+
+    @include tv {
+        font-size: 15.4px;
+    }
+}
+
+@mixin h3($color: v.$black, $ff: v.$goudysb, $upper: true){
+    font-family: $ff;
+    font-weight: 400;
+    color: $color;
+    @if($upper){
+        text-transform: uppercase;
+    }@else{
+        text-transform: capitalize;
+    }
+
+    @media (min-width: v.$tv) {
+        line-height: px-to-vw(27.6px);
+        font-size: px-to-vw(24px);
+    }
+
+    @include tv {
+        font-size: 21px;
+    }
+
+    @include lines(3);
+}
+
+@mixin h4($color: v.$black){
+    color: $color;
+    font-family: v.$goudysb;
+    leading-trim: both;
+    text-edge: cap;
+    text-transform: uppercase;
+
+    @media (min-width: v.$tv) {
+        font-size: px-to-vw(36px);
+        line-height: px-to-vw(41.4px);
+    }
+
+    @include tv {
+        font-size: 28px;
+    }
+}
+
 @mixin btn1($color: white){
     color: $color;
     width: fit-content;
@@ -132,7 +187,59 @@
     }
 }
 
-@mixin breadlines($color: v.$white, $lines: 2){
+@mixin btn2($width, $height){
+    position: relative;
+    leading-trim: both;
+    text-edge: cap;
+    
+    width: $width;
+    height: $height;
+    color: v.$light_brown;
+    font-family: v.$gotham_light;
+    font-weight: 400;
+    text-transform: uppercase;
+
+    @media (min-width: v.$tv){
+        font-size: px-to-vw(17px);
+        letter-spacing: px-to-vw(1.7px);
+        border: 1px solid v.$light_brown;
+        padding-left: px-to-vw(85px);
+    }
+    @include tv{
+        border: px-to-vw(1px) solid v.$light_brown;
+    }
+    @include flex(flex-start);
+
+    svg{
+        @include transition;
+        pointer-events: none;
+        position: absolute;
+        @include centerY;
+        object-fit: contain;
+        object-position: center;
+        @media (min-width: v.$tv){
+            width: px-to-vw(24px);
+            right: px-to-vw(85px);
+        }
+        @include tv{
+            
+        }
+        height: auto;
+    }
+    &:is(:hover, :focus){
+        @media (min-width: v.$tv){
+            padding-left: px-to-vw(105px);
+        }
+        @include tv{
+            
+        }
+        svg{
+            opacity: 0;
+        }
+    }
+}
+
+@mixin breadlines($color: v.$white, $lines: 2, $reverse: false){
     position: relative;
     width: fit-content;
     @media (min-width: v.$tv){
@@ -157,10 +264,12 @@
             
         }
     }
-    &::before{
-        content: '';
+    @if($reverse == false){
+        &::before{
+            content: '';
+        }
     }
-    @if($lines == 2){
+    @if($lines == 2 or $reverse == true){
         &::after{
             content: '';
         }

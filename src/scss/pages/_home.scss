@@ -116,18 +116,7 @@
 }
 
 %p {
-    font-family: v.$gotham_light;
-    font-weight: 300;
-
-    @media (min-width: v.$tv) {
-        font-size: m.px-to-vw(17px);
-        line-height: m.px-to-vw(23.8px);
-        letter-spacing: m.px-to-vw(1.02px);
-    }
-
-    @include m.tv {
-        font-size: 15.4px;
-    }
+    @include m.p;
 }
 
 %h2 {
@@ -141,6 +130,11 @@
 
     @include m.tv {
         font-size: 36px;
+    }
+
+    span {
+        display: block;
+        color: v.$light_brown;
     }
 }
 
@@ -214,20 +208,7 @@
                 user-select: none;
                 opacity: 0.2;
                 text-align: center;
-                color: v.$light_brown;
-                font-family: v.$goudysb;
-                leading-trim: both;
-                text-edge: cap;
-                text-transform: uppercase;
-
-                @media (min-width: v.$tv) {
-                    font-size: m.px-to-vw(36px);
-                    line-height: m.px-to-vw(41.4px);
-                }
-
-                @include m.tv {
-                    font-size: 28px;
-                }
+                @include m.h4(v.$light_brown);
             }
         }
 
@@ -244,220 +225,278 @@
     }
 }
 
-.car_card {
-    width: fit-content;
+.vehicles_grid {
+    width: 100%;
+    @include m.grid(3, m.px-to-vw(32px) m.px-to-vw(21px));
+}
 
-    &-flex {
+%mb31 {
+    @media (min-width: v.$tv) {
+        margin-block: m.px-to-vw(31px) 0;
+    }
+
+    @include m.tv {
+        margin-block: 20px 0;
+    }
+}
+
+%head_section {
+    .breadlines {
+        @include m.breadlines(v.$black, 1);
+    }
+
+    h2 {
+        @extend %h2;
+        @extend %mb31;
+    }
+}
+
+%border_and_spacing_bottom {
+    @media (min-width: v.$tv) {
+        padding-bottom: m.px-to-vw(17px);
+        border-bottom: m.px-to-vw(1px) solid v.$white;
+    }
+
+    @include m.tv {
+        padding-bottom: 11px;
+        border-bottom: 1px solid v.$white;
+    }
+}
+
+.upcoming {
+    @media (min-width: v.$tv) {
+        padding-block: m.px-to-vw(120px) m.px-to-vw(160px);
+    }
+
+    @include m.tv {
+        padding-block: 76px 116px;
+    }
+
+    &_head {
+        @extend %head_section;
+    }
+    .container{
+        @media (min-width: v.$tv){
+            margin-top: m.px-to-vw(96px);
+        }
+        @include m.tv{
+            margin-top: 68px;
+        }
+    }
+}
+
+.banner_car{
+    position: relative;
+    z-index: 3;
+    @media (min-width: v.$tv){
+        height: m.px-to-vw(636px);
+    }
+    @include m.tv{
+     
+    }
+
+    &::before{
+        position: absolute;
+        z-index: 2;
+        content: '';
+        background: v.$black;
+        opacity: 0.2;
+    }
+    &::before, video{
+        @include m.fullWH;
+    }
+    video{
+        object-fit: cover;
+        object-position: center;
+    }
+}
+
+.shadows {
+    position: relative;
+    z-index: 3;
+    background: url(../../images/banner-car.png) no-repeat;
+    background-size: cover;
+    background-position: center;
+
+    @media (min-width: v.$tv) {
+        height: m.px-to-vw(640px);
+    }
+
+    @include m.tv {}
+
+    &_grid {
+        @include m.grid(3);
+
         @media (min-width: v.$tv) {
-            display: grid;
-            grid-template-columns: m.px-to-vw(407px) m.px-to-vw(418px);
-            grid-gap: m.px-to-vw(12px);
-            align-items: center;
+            @include m.fullWH;
         }
 
-        @include m.tv {}
-
-        &>* {
+        @include m.tv {
             width: 100%;
         }
     }
 
-    &-image {
-        width: 100%;
+    .col {
+        position: relative;
+        overflow: hidden;
 
         @media (min-width: v.$tv) {
-            border: m.px-to-vw(1px) solid v.$light_brown;
-            padding: m.px-to-vw(15px);
-        }
-
-        @include m.tv {
-            border: 1px solid v.$light_brown;
-            padding: 12px;
-        }
-    }
-
-    &-thumb {
-        position: relative;
-        width: 100%;
-        aspect-ratio: 16/9.003;
-
-        img {
             @include m.fullWH;
-            object-fit: cover;
-            object-position: center;
+            padding-top: m.px-to-vw(56px);
+            padding-inline: m.px-to-vw(36px) 0;
+        }
+
+        @include m.tv {}
+
+        &_head {
+            width: 100%;
+            position: relative;
+            z-index: 2;
+
+            &>* {
+                @include m.transition(.35s);
+            }
+        }
+
+        &_title {
+            width: fit-content;
+            position: relative;
+
+            @extend %border_and_spacing_bottom;
+
+            @media (min-width: v.$tv) {
+                bottom: m.px-to-vw(-67px);
+                @include m.flex(flex-start, m.px-to-vw(16px));
+                margin-bottom: m.px-to-vw(36px);
+            }
+
+            @include m.tv {
+                @include m.flex(flex-start, 10px);
+                margin-bottom: 28px;
+            }
+
+            h3 {
+                color: v.$white;
+                font-family: v.$canela_text;
+                font-weight: 300;
+                leading-trim: both;
+                text-edge: cap;
+
+                @media (min-width: v.$tv) {
+                    line-height: m.px-to-vw(50.4px);
+                    font-size: m.px-to-vw(36px);
+                    // letter-spacing: m.px-to-vw(1px);
+                }
+
+                @include m.tv {}
+            }
+
+            svg {
+                @media (min-width: v.$tv) {
+                    width: m.px-to-vw(24px);
+                    height: auto;
+                    object-fit: contain;
+                    object-position: center;
+                }
+
+                @include m.tv {}
+            }
+        }
+
+        &_description {
+            width: 100%;
+            opacity: 0;
+            transition-delay: .1s;
+
+            @media (min-width: v.$tv) {
+                max-width: m.px-to-vw(395px);
+            }
+
+            @include m.tv {}
+
+            p {
+                color: v.$white;
+                font-family: v.$gotham_light;
+                font-weight: 500;
+                leading-trim: both;
+                text-edge: cap;
+
+                @media (min-width: v.$tv) {
+                    letter-spacing: m.px-to-vw(1.2px);
+                    line-height: m.px-to-vw(28px);
+                    font-size: m.px-to-vw(20px);
+                }
+
+                @include m.tv {}
+            }
         }
 
         .permalink,
-        svg {
+        &::before {
             position: absolute;
-            bottom: 0;
-            right: 0;
+            background: v.$black;
+            @include m.transition(.325s);
         }
 
         .permalink {
+            transition-delay: 0.1s;
             opacity: 0;
-            pointer-events: none;
-
-            @include m.transition;
-            @include m.fullWH;
-            z-index: 4;
-            background: rgba($color: v.$black, $alpha: 0.6);
-            @include m.flex(center);
-
-            a {
-                @include m.square(96px);
-                border-radius: 50%;
-                background: v.$black;
-                @include m.flex(center);
-                color: v.$white;
-                @extend %p;
-            }
-        }
-
-        svg {
-            z-index: 6;
-            width: 100%;
+            text-align: center;
+            transform: scale(1.25);
 
             @media (min-width: v.$tv) {
-                max-width: m.px-to-vw(42.25px);
+                bottom: m.px-to-vw(24px);
+                left: m.px-to-vw(24px);
+
+                @include m.square(m.px-to-vw(272px));
+                @include m.flex(center);
             }
 
             @include m.tv {
-                max-width: 36px;
+                bottom: 18px;
+                left: 18px;
+
+                @include m.square(212px);
+                @include m.flex(center);
             }
+
+            border-radius: 50%;
+            @include m.h3(v.$white, v.$gotham_light, false);
+        }
+
+        &::before {
+            content: '';
+            @include m.fullWH;
+            opacity: 0.4;
+            inset: 0;
+            pointer-events: none;
         }
 
         &:is(:hover, :focus) {
+            &::before {
+                opacity: 0.6;
+            }
+
             .permalink {
                 opacity: 1;
-                pointer-events: all;
-            }
-        }
-    }
-
-    &-info {
-        @media (min-width: v.$tv) {
-            padding-inline: m.px-to-vw(24px);
-        }
-
-        @include m.tv {}
-
-        p,
-        span {
-            opacity: 0.8;
-        }
-
-        h3 {
-            @media (min-width: v.$tv) {
-                padding-block: m.px-to-vw(20px);
-            }
-            @include m.tv {
-                padding-block: 12px;
-            }
-        }
-
-        h4 {
-            leading-trim: both;
-            text-edge: cap;
-            font-weight: 500;
-            color: v.$light_brown;
-            font-family: v.$gotham_m;
-            line-height: .9em;
-
-            @media (min-width: v.$tv) {
-                font-size: m.px-to-vw(36px);
-                letter-spacing: m.px-to-vw(2.16px);
-                margin-bottom: m.px-to-vw(10px);
+                transform: none;
             }
 
-            @include m.tv {
-                font-size: 28px;
-                margin-bottom: 6px;
-            }
-
-            span {
-                display: block;
-                color: v.$black;
-                font-family: v.$gotham_light;
-                font-weight: 900;
-
-                @media (min-width: v.$tv) {
-                    font-size: m.px-to-vw(21px);
-                    letter-spacing: m.px-to-vw(1.26px);
+            .col {
+                &_title {
+                    bottom: 0;
                 }
 
-                @include m.tv {
-                    font-size: 18px;
+                &_description {
+                    opacity: 1;
                 }
             }
         }
-
-        p {
-            font-weight: 400;
-
-            @media (min-width: v.$tv) {
-                font-size: m.px-to-vw(14px);
-            }
-
-            @include m.tv {
-                font-size: 11px;
-            }
-        }
-    }
-
-    &-content {
-        &>* {
-            color: v.$black;
-        }
-    }
-
-    &-price {}
-}
-
-.car_card,
-.vehicle_card {
-    &-info {
-        h3 {
-            font-family: v.$goudysb;
-            font-weight: 400;
-            color: v.$black;
-
-            @media (min-width: v.$tv) {
-                font-size: m.px-to-vw(24px);
-            }
-
-            @include m.tv {
-                font-size: 21px;
-            }
-
-            @include m.lines(3);
-        }
     }
 }
 
-.vehicle_card {
-    width: 100%;
-
-    &>* {
-        width: 100%;
-    }
-
-    &-image {
-        
-    }
-
-    &-info {
-        @media (min-width: v.$tv) {
-            padding: m.px-to-vw(24px);
-        }
-
-        @include m.tv {
-            padding: 18px;
-        }
-    }
-}
-
-.discover {
+.discover,
+.clients {
     @media (min-width: v.$tv) {
         padding-block: m.px-to-vw(160px);
     }
@@ -467,6 +506,12 @@
     }
 
     &_head {
+        @extend %head_section;
+    }
+}
+
+.discover {
+    &_head {
         @media (min-width: v.$tv) {
             margin-bottom: m.px-to-vw(88px);
         }
@@ -474,25 +519,475 @@
         @include m.tv {
             margin-bottom: 62px;
         }
+    }
 
-        .breadlines {
-            @include m.breadlines(v.$black, 1);
-        }
-
-        h2 {
-            @extend %h2;
-
+    &_body {
+        &>a {
             @media (min-width: v.$tv) {
-                margin-block: m.px-to-vw(31px) 0;
+                @include m.btn2(m.px-to-vw(418px), m.px-to-vw(60px));
+                margin: m.px-to-vw(48px) auto 0;
             }
 
-            @include m.tv {
-                margin-block: 20px 0;
+            @include m.tv {}
+        }
+    }
+}
+
+.upcoming,
+.clients {
+    &_head {
+        @media (min-width: v.$tv) {
+            margin-bottom: m.px-to-vw(64px);
+        }
+
+        @include m.tv {
+            margin-bottom: 42px;
+        }
+    }
+
+    &_body {
+        .splide {
+            width: 100%;
+
+            &__arrows {
+                width: fit-content;
+
+                @media (min-width: v.$tv) {
+                    @include m.flex(flex-start, m.px-to-vw(36px));
+                    padding-left: m.px-to-vw(36px);
+                    margin-bottom: m.px-to-vw(24px);
+                }
+
+                @include m.tv {
+                    @include m.flex(flex-start, 26px);
+                    padding-left: 26px;
+                    margin-bottom: 18px;
+                }
+            }
+
+            &__arrow {
+                background: none !important;
+                border-radius: 0 !important;
+
+                @media (min-width: v.$tv) {
+                    width: m.px-to-vw(48px) !important;
+                }
+
+                @include m.tv {
+                    width: 36px !important;
+                }
+
+                height: auto !important;
+                object-fit: contain;
+                object-position: center;
+                position: relative !important;
+                transform: none !important;
+                inset: 0 !important;
+
+                svg {
+                    width: 100% !important;
+                    height: auto !important;
+                }
             }
         }
     }
 }
 
-.vehicles_grid {
-    @include m.grid(3, m.px-to-vw(21px) m.px-to-vw(32px));
+.comment {
+    background: white;
+    @include m.flex(space-between);
+    flex-direction: column;
+
+    @media (min-width: v.$tv) {
+        width: m.px-to-vw(418px);
+        padding: m.px-to-vw(36px) m.px-to-vw(24px);
+        min-height: m.px-to-vw(545px);
+    }
+
+    @include m.tv {}
+
+    &>* {
+        width: 100%;
+    }
+
+    .stars {
+        @media (min-width: v.$tv) {
+            @include m.flex(flex-start, m.px-to-vw(2px));
+        }
+
+        @include m.tv {
+            @include m.flex(flex-start, 1px);
+        }
+
+        svg {
+            @media (min-width: v.$tv) {
+                @include m.square(m.px-to-vw(20px));
+            }
+
+            @include m.tv {
+                @include m.square(16px);
+            }
+        }
+    }
+
+    &_info {}
+
+    &_title {
+        @media (min-width: v.$tv) {
+            margin-block: m.px-to-vw(24px) m.px-to-vw(36px);
+        }
+
+        @include m.tv {
+            margin-block: 18px 26px;
+        }
+
+        h3 {
+            @include m.h3;
+        }
+    }
+
+    &_description {
+        p {
+            @include m.p;
+            opacity: 0.8;
+        }
+    }
+
+    &_photo {
+        @include m.square(m.px-to-vw(60px));
+        background: v.$light_brown;
+        border-radius: 50%;
+        @include m.h3(v.$white);
+        @include m.flex(center);
+    }
+
+    &_author {
+        @media (min-width: v.$tv) {
+            @include m.flex(flex-start, m.px-to-vw(20px));
+        }
+
+        @include m.tv {
+            @include m.flex(flex-start, 12px);
+        }
+
+        span {
+            @include m.h3(v.$black, v.$gotham_m, false);
+        }
+    }
+}
+
+%borde_16 {
+    @media (min-width: v.$tv) {
+        padding: m.px-to-vw(16px);
+        border: m.px-to-vw(1px) solid v.$light_brown;
+    }
+
+    @include m.tv {
+        padding: 10px;
+        border: 1px solid v.$light_brown;
+    }
+}
+
+.celebrating {
+    background: v.$bg;
+
+    @media (min-width: v.$tv) {
+        padding-block: m.px-to-vw(144px) m.px-to-vw(160px);
+    }
+
+    @include m.tv {
+        padding-block: 96px 116px;
+    }
+
+    &_container {
+        width: 96%;
+
+        @media (min-width: v.$tv) {
+            max-width: m.px-to-vw(1328px);
+        }
+
+        @include m.tv {
+            max-width: 1340px;
+        }
+
+        margin-inline: auto;
+    }
+
+    &-subtitles {
+        @media (min-width: v.$tv) {
+            margin-top: m.px-to-vw(144px);
+        }
+
+        @include m.tv {
+            margin-top: 96px;
+        }
+    }
+
+    &_info,
+    &-subtitles,
+    &-descriptions,
+    &-images {
+        width: 100%;
+        @include m.flex(space-between);
+    }
+
+    &-subtitles,
+    &-descriptions {
+        @media (min-width: v.$tv) {
+            padding-inline: m.px-to-vw(16px);
+        }
+
+        @include m.tv {
+            padding-inline: 10px;
+        }
+    }
+
+    &_info {
+        @media (min-width: v.$tv) {
+            padding-inline: m.px-to-vw(16px) 0;
+        }
+
+        @include m.tv {
+            padding-inline: 10px 0;
+        }
+
+        .breadlines {
+            @include m.breadlines(v.$black, 1);
+        }
+
+        .content {
+            width: 100%;
+
+            @media (min-width: v.$tv) {
+                max-width: m.px-to-vw(506px);
+            }
+
+            @include m.tv {}
+
+            h2 {
+                @extend %mb31;
+                @extend %h2;
+            }
+
+            &>p {
+                @include m.p;
+
+                @media (min-width: v.$tv) {
+                    margin-block: m.px-to-vw(40px);
+                }
+
+                @include m.tv {
+                    margin-block: 26px;
+                }
+            }
+
+            a {
+                width: fit-content;
+                @extend %border_and_spacing_bottom;
+                @include m.h3(v.$light_brown, v.$canela_text, false);
+                border-color: v.$light_brown;
+
+                @media (min-width: v.$tv) {
+                    @include m.flex(flex-start, m.px-to-vw(16px));
+                }
+
+                @include m.tv {
+                    @include m.flex(flex-start, 10px);
+                }
+            }
+        }
+
+        &-thumb {
+            @extend %borde_16;
+            @include m.flex(space-between);
+            width: 100%;
+
+            @media (min-width: v.$tv) {
+                max-width: m.px-to-vw(670px);
+            }
+
+            @include m.tv {}
+        }
+    }
+
+    &_info,
+    &-images {
+        .image {
+            position: relative;
+            flex: 1;
+            @include m.transition;
+
+            @media (min-width: v.$tv) {
+                min-width: m.px-to-vw(100px);
+                height: m.px-to-vw(430px);
+            }
+
+            @include m.tv {
+                min-width: 50px;
+                width: calc(50% - 7px);
+                height: 360px;
+            }
+
+            .permalink,
+            &::before,
+            &-vector,
+            &-thumb {
+                @include m.transition;
+            }
+
+            .permalink,
+            &::before,
+            &-vector {
+                position: absolute;
+            }
+
+            &::before,
+            &-thumb {
+                @include m.fullWH;
+            }
+
+            &-vector {
+                z-index: 3;
+                width: auto;
+                filter: drop-shadow(0px 2.791px 13.953px rgba(0, 0, 0, 0.25));
+
+                @media (min-width: v.$tv) {
+                    top: m.px-to-vw(24px);
+                    left: m.px-to-vw(24px);
+                    height: m.px-to-vw(150px);
+                    object-fit: contain;
+                    object-position: center;
+                }
+
+                @include m.tv {
+                    top: 17px;
+                    left: 17px;
+                }
+            }
+
+            &::before {
+                content: '';
+                z-index: 2;
+                pointer-events: none;
+                inset: 0;
+                background: v.$black;
+                opacity: 0;
+            }
+
+            .permalink {
+                z-index: 3;
+                transition-delay: .1s;
+                opacity: 0;
+                pointer-events: none;
+                @include m.centerXY;
+                background: v.$black;
+                border-radius: 50%;
+                @include m.p(v.$white);
+
+                @media (min-width: v.$tv) {
+                    @include m.square(m.px-to-vw(150px));
+                    @include m.flex(center);
+                }
+
+                @include m.tv {
+                    @include m.square(120px);
+                    @include m.flex(center);
+                }
+            }
+
+            &-thumb {
+                object-fit: cover;
+                object-position: center;
+            }
+
+            &:is(:hover) {
+                &::before {
+                    opacity: 0.6;
+                }
+
+                .permalink {
+                    pointer-events: all;
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    &-images {
+        @extend %borde_16;
+
+        @media (min-width: v.$tv) {
+            gap: m.px-to-vw(20px);
+            margin-block: m.px-to-vw(48px);
+        }
+
+        @include m.tv {
+            gap: 12px;
+            margin-block: 34px;
+        }
+
+        .image {
+            &:is(:hover) {
+                @media (min-width: v.$tv) {
+                    min-width: m.px-to-vw(770px);
+                }
+
+                @include m.tv {}
+            }
+        }
+    }
+
+    &-subtitles {
+        &>div {
+            h3 {
+                @include m.h4();
+            }
+
+            &:first-child {
+                .breadlines {
+                    @include m.breadlines(v.$black, 1);
+                }
+            }
+
+            &:last-child {
+                .breadlines {
+                    @include m.breadlines(v.$black, 1, true);
+                    margin-left: auto;
+                }
+
+                h3 {
+                    text-align: right;
+                }
+            }
+        }
+    }
+
+    &-descriptions {
+        p {
+            @include m.p;
+            opacity: 0.9;
+        }
+
+        &>div {
+            &:first-child {
+                @media (min-width: v.$tv) {
+                    max-width: m.px-to-vw(468px);
+                }
+
+                @include m.tv {}
+            }
+
+            &:last-child {
+                @media (min-width: v.$tv) {
+                    max-width: m.px-to-vw(523px);
+                }
+
+                @include m.tv {}
+
+                p {
+                    text-align: right;
+                }
+            }
+        }
+    }
 }
