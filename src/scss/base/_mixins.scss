@@ -111,6 +111,25 @@
     }
 }
 
+@mixin h2($color: v.$black, $font: v.$goudysb){
+    font-family: $font;
+    text-transform: uppercase;
+    color: $color;
+
+    @media (min-width: v.$tv) {
+        font-size: px-to-vw(50px);
+    }
+
+    @include tv {
+        font-size: 36px;
+    }
+
+    span {
+        display: block;
+        color: v.$light_brown;
+    }
+}
+
 @mixin h3($color: v.$black, $ff: v.$goudysb, $upper: true){
     font-family: $ff;
     font-weight: 400;
@@ -187,7 +206,7 @@
     }
 }
 
-@mixin btn2($width, $height){
+@mixin btn2($width, $height, $hover: true){
     position: relative;
     leading-trim: both;
     text-edge: cap;
@@ -199,11 +218,22 @@
     font-weight: 400;
     text-transform: uppercase;
 
+    @if($hover == false){
+        @media (min-width: v.$tv){
+            @include flex(center, px-to-vw(16px));
+        }
+        @include tv{
+         
+        }
+    }
+
     @media (min-width: v.$tv){
         font-size: px-to-vw(17px);
         letter-spacing: px-to-vw(1.7px);
         border: 1px solid v.$light_brown;
-        padding-left: px-to-vw(85px);
+        @if($hover){
+            padding-left: px-to-vw(85px);
+        }
     }
     @include tv{
         border: px-to-vw(1px) solid v.$light_brown;
@@ -213,28 +243,39 @@
     svg{
         @include transition;
         pointer-events: none;
-        position: absolute;
-        @include centerY;
         object-fit: contain;
         object-position: center;
+
+        @if($hover){
+            position: absolute;
+            @include centerY;
+        }
+
         @media (min-width: v.$tv){
-            width: px-to-vw(24px);
-            right: px-to-vw(85px);
+            @if($hover){
+                width: px-to-vw(24px);
+                right: px-to-vw(85px);
+            }@else{
+                width: px-to-vw(18px);
+            }
         }
         @include tv{
             
         }
         height: auto;
     }
-    &:is(:hover, :focus){
-        @media (min-width: v.$tv){
-            padding-left: px-to-vw(105px);
-        }
-        @include tv{
-            
-        }
-        svg{
-            opacity: 0;
+
+    @if($hover){
+        &:is(:hover, :focus){
+            @media (min-width: v.$tv){
+                padding-left: px-to-vw(105px);
+            }
+            @include tv{
+                
+            }
+            svg{
+                opacity: 0;
+            }
         }
     }
 }
@@ -259,6 +300,7 @@
 
         @media (min-width: v.$tv){
             font-size: px-to-vw(17px);
+            letter-spacing: px-to-vw(1.7px);
         }
         @include tv{
             

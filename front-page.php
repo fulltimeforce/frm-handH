@@ -90,6 +90,23 @@ get_header();
         </div>
     </div>
     <div class="container">
+        <div class="upcoming_foot">
+            <div>
+                <p>Bidding is available live at all our auction venues, online through our website, or by telephone and commission. Parking and entry into the auction is free for auction attendees with a catalogue.</p>
+            </div>
+            <a href="#" class="permalink" alt="View All Vehicles">
+                View All Vehicles
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
+                    <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
+                </svg>
+            </a>
+        </div>
+        <a href="#" class="permalink_border">
+            View All Auction Venues
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
+                <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
+            </svg>
+        </a>
     </div>
 </section>
 
@@ -97,6 +114,56 @@ get_header();
     <video autoplay loop muted>
         <source src="<?php echo IMG; ?>/banner-car.mp4">
     </video>
+</section>
+
+<section class="why_choose_us">
+    <div class="container">
+        <div class="why_choose_us-info">
+            <div class="content">
+                <div class="breadlines">
+                    <p>Why Choose H&H Classics</p>
+                </div>
+                <h2>The very best chance of selling successfully</h2>
+                <p>Over 30 years of record-breaking sales, expert valuations, and unmatched passion for classic and collector vehicles.</p>
+            </div>
+            <div class="image">
+                <img src="<?php echo IMG; ?>/5.png">
+            </div>
+        </div>
+        <div class="why_choose_us-stats">
+            <div>
+                <h3>$11M+</h3>
+                <p>Classic Car Sold</p>
+            </div>
+            <div>
+                <h3>83%</h3>
+                <p>sell-through rate</p>
+            </div>
+            <div>
+                <h3>70,000+</h3>
+                <p>Global Clients</p>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="upcoming_foot">
+            <div>
+                <p>Founded by Simon Hope and Mark Hamilton in 1993 H&H Classics has been continuously trading longer than any other UK or European auction house. In fact, you could say that we’ve reached classic status ourselves.</p>
+            </div>
+            <a href="#" class="permalink" alt="View All Vehicles">
+                Purchase A Catalogue
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
+                    <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
+                </svg>
+            </a>
+        </div>
+        <a href="#" class="permalink_border">
+            Learn More About H&H Classics
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
+                <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
+            </svg>
+        </a>
+    </div>
 </section>
 
 <section class="our_successes">
@@ -412,7 +479,7 @@ get_header();
                 </div>
                 <h2><span>Celebrating</span> Over 30 Years</h2>
                 <p>H&H are trusted by Classic Car and Motorcycle enthusiasts for over 30 years. H&H are Europe's largest established expert auction house of our kind.</p>
-                <a href="#">
+                <a href="#" class="permalink_border">
                     Learn More About The Team
                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
                         <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />

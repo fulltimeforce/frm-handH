@@ -413,6 +413,7 @@
             @include m.fullWH;
             object-fit: cover;
             object-position: center;
+            @include m.transition;
 
             @media (min-width: v.$tv){
                 max-height: m.px-to-vw(360px);

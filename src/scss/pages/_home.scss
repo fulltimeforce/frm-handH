@@ -107,6 +107,18 @@
     }
 }
 
+%borde_16 {
+    @media (min-width: v.$tv) {
+        padding: m.px-to-vw(16px);
+        border: m.px-to-vw(1px) solid v.$light_brown;
+    }
+
+    @include m.tv {
+        padding: 10px;
+        border: 1px solid v.$light_brown;
+    }
+}
+
 %mb96 {
     @media (min-width: v.$tv) {
         margin-bottom: m.px-to-vw(96px);
@@ -115,27 +127,22 @@
     @include m.tv {}
 }
 
+%mt48 {
+    @media (min-width: v.$tv) {
+        margin-top: m.px-to-vw(48px);
+    }
+
+    @include m.tv {
+        margin-top: 32px;
+    }
+}
+
 %p {
     @include m.p;
 }
 
 %h2 {
-    font-family: v.$goudysb;
-    text-transform: uppercase;
-    color: v.$black;
-
-    @media (min-width: v.$tv) {
-        font-size: m.px-to-vw(50px);
-    }
-
-    @include m.tv {
-        font-size: 36px;
-    }
-
-    span {
-        display: block;
-        color: v.$light_brown;
-    }
+    @include m.h2;
 }
 
 .our_successes {
@@ -214,13 +221,7 @@
 
         #cars1,
         #cars2 {
-            @media (min-width: v.$tv) {
-                margin-top: m.px-to-vw(48px);
-            }
-
-            @include m.tv {
-                margin-top: 32px;
-            }
+            @extend %mt48;
         }
     }
 }
@@ -275,39 +276,187 @@
     &_head {
         @extend %head_section;
     }
-    .container{
-        @media (min-width: v.$tv){
+
+    &_foot {
+        @include m.flex(space-between, 1.1rem 0);
+        align-items: flex-start;
+        width: 100%;
+
+        div {
+            width: 100%;
+
+            @media (min-width: v.$tv) {
+                max-width: m.px-to-vw(770px);
+            }
+
+            @include m.tv {}
+        }
+
+        li,
+        p {
+            @include m.p;
+        }
+
+        a {
+            @media (min-width: v.$tv) {
+                @include m.btn2(m.px-to-vw(418px), m.px-to-vw(60px), false);
+            }
+
+            @include m.tv {}
+        }
+
+        &+.permalink_border {
+            @extend %mt48;
+        }
+    }
+
+    .container {
+        @media (min-width: v.$tv) {
             margin-top: m.px-to-vw(96px);
         }
-        @include m.tv{
+
+        @include m.tv {
             margin-top: 68px;
         }
     }
 }
 
-.banner_car{
+.banner_car {
     position: relative;
     z-index: 3;
-    @media (min-width: v.$tv){
+
+    @media (min-width: v.$tv) {
         height: m.px-to-vw(636px);
     }
-    @include m.tv{
-     
-    }
 
-    &::before{
+    @include m.tv {}
+
+    &::before {
         position: absolute;
         z-index: 2;
         content: '';
         background: v.$black;
         opacity: 0.2;
     }
-    &::before, video{
+
+    &::before,
+    video {
         @include m.fullWH;
     }
-    video{
+
+    video {
         object-fit: cover;
         object-position: center;
+    }
+}
+
+.why_choose_us {
+    position: relative;
+    z-index: 4;
+    @media (min-width: v.$tv) {
+        margin-top: m.px-to-vw(-112px);
+        padding-bottom: m.px-to-vw(160px);
+    }
+
+    @include m.tv {
+        padding-bottom: 116px;
+    }
+
+    .container {
+        @media (min-width: v.$tv) {
+            max-width: m.px-to-vw(1312px);
+        }
+
+        &:not(:last-child) {
+            @media (min-width: v.$tv) {
+                margin-bottom: m.px-to-vw(120px);
+            }
+
+            @include m.tv {
+                margin-bottom: 76px;
+            }
+        }
+    }
+
+    &-info {
+        @media (min-width: v.$tv){
+            margin-bottom: m.px-to-vw(104px);
+            display: grid;
+            grid-template-columns: 1fr m.px-to-vw(670px);
+            align-items: flex-end;
+
+            &>*{
+                width: 100%;
+            }
+        }
+        @include m.tv{
+            
+        }
+
+        .breadlines{
+            @include m.breadlines(v.$black, 1);
+        }
+        .content{
+            @media (min-width: v.$tv){
+                padding-right: m.px-to-vw(120px);
+                padding-bottom: m.px-to-vw(16px);
+            }
+            @include m.tv{
+                padding-right: 60px;
+                padding-bottom: 8px;    
+            }
+
+            h2{
+                @include m.h4;
+                @extend %mb31;
+            }
+            &>p{
+                @extend %mb31;
+                /*@media (min-width: v.$tv){
+                    margin-top: m.px-to-vw(40px);
+                }
+                @include m.tv{
+                    margin-top: 28px;
+                }*/
+
+                @include m.p;
+                opacity: 0.9;
+            }
+        }
+        .image{
+            @extend %borde_16;
+            img{
+                width: 100%;
+            }
+        }
+    }
+
+    &-stats {
+        width: 100%;
+        @include m.flex(space-between);
+
+        @media (min-width: v.$tv) {
+            max-width: m.px-to-vw(1184px);
+        }
+
+        @include m.tv {}
+
+        margin-inline: auto;
+
+        h3,
+        p {
+            text-align: center;
+        }
+
+        h3 {
+            @include m.h2(v.$light_brown, v.$gotham_m);
+        }
+
+        p {
+            @include m.p;
+            @extend %mb31;
+            text-transform: uppercase;
+        }
     }
 }
 
@@ -676,15 +825,18 @@
     }
 }
 
-%borde_16 {
+.permalink_border {
+    width: fit-content;
+    @extend %border_and_spacing_bottom;
+    @include m.h3(v.$light_brown, v.$canela_text, false);
+    border-color: v.$light_brown;
+
     @media (min-width: v.$tv) {
-        padding: m.px-to-vw(16px);
-        border: m.px-to-vw(1px) solid v.$light_brown;
+        @include m.flex(flex-start, m.px-to-vw(16px));
     }
 
     @include m.tv {
-        padding: 10px;
-        border: 1px solid v.$light_brown;
+        @include m.flex(flex-start, 10px);
     }
 }
 
@@ -781,20 +933,7 @@
                 }
             }
 
-            a {
-                width: fit-content;
-                @extend %border_and_spacing_bottom;
-                @include m.h3(v.$light_brown, v.$canela_text, false);
-                border-color: v.$light_brown;
-
-                @media (min-width: v.$tv) {
-                    @include m.flex(flex-start, m.px-to-vw(16px));
-                }
-
-                @include m.tv {
-                    @include m.flex(flex-start, 10px);
-                }
-            }
+            a {}
         }
 
         &-thumb {
@@ -923,7 +1062,7 @@
 
         @include m.tv {
             gap: 12px;
-            margin-block: 34px;
+            margin-block: 32px;
         }
 
         .image {

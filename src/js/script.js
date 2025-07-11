@@ -2,9 +2,9 @@ import { Splide } from '@splidejs/splide';
 import { AutoScroll } from '@splidejs/splide-extension-auto-scroll';
 import "@splidejs/splide/css";
 
-(function(){
+(function () {
 
-    if(document.querySelector('#cars1')){
+    if (document.querySelector('#cars1')) {
         new Splide('#cars1', {
             type: 'loop',
             arrows: false,
@@ -25,7 +25,7 @@ import "@splidejs/splide/css";
         }).mount({ AutoScroll });
     }
 
-    if(document.querySelector('#cars2')){
+    if (document.querySelector('#cars2')) {
         new Splide('#cars2', {
             type: 'loop',
             arrows: false,
@@ -46,7 +46,7 @@ import "@splidejs/splide/css";
         }).mount({ AutoScroll });
     }
 
-    if(document.querySelector('#text1')){
+    if (document.querySelector('#text1')) {
         new Splide('#text1', {
             type: 'loop',
             arrows: false,
@@ -68,7 +68,7 @@ import "@splidejs/splide/css";
         }).mount({ AutoScroll });
     }
 
-    if(document.querySelector('#text2')){
+    if (document.querySelector('#text2')) {
         new Splide('#text2', {
             type: 'loop',
             arrows: false,
@@ -92,8 +92,8 @@ import "@splidejs/splide/css";
 
 
     let vehiclesThumbs = document.querySelectorAll('.vehicle_card-thumbs')
-    if(vehiclesThumbs){
-        vehiclesThumbs.forEach(vehicle=>{
+    if (vehiclesThumbs) {
+        vehiclesThumbs.forEach(vehicle => {
             new Splide(vehicle, {
                 type: 'loop',
                 arrows: true,
@@ -107,7 +107,7 @@ import "@splidejs/splide/css";
     }
 
 
-    if(document.querySelector('#clients')){
+    if (document.querySelector('#clients')) {
         new Splide('#clients', {
             type: 'loop',
             arrows: true,
@@ -122,9 +122,8 @@ import "@splidejs/splide/css";
         }).mount();
     }
 
-    if(document.querySelector('#upcoming')){
-        new Splide('#upcoming', {
-            type: 'loop',
+    if (document.querySelector('#upcoming')) {
+        let splide = new Splide('#upcoming', {
             focus: 'start',
             arrows: true,
             pagination: false,
@@ -135,7 +134,13 @@ import "@splidejs/splide/css";
                     gap: '16px'
                 }
             }
-        }).mount();
+        })
+
+        splide.on("mounted move", function () {
+            console.log(splide)
+        });
+
+        splide.mount();
     }
 
 })();
