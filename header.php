@@ -11,7 +11,14 @@
 
 <body <?php body_class(); ?>>
 
-    <header class="header">
+    <?php 
+        $class = '';
+        if(!is_front_page()){
+            $class = 'white_bg';
+        }
+    ?>
+
+    <header class="header <?php echo $class; ?>">
         <div class="header_container">
             <a href="<?php echo esc_url(home_url('/')); ?>" title="<?php echo get_bloginfo('name'); ?>" class="header_logo d-block w-100">
                 <img src="<?php echo IMG; ?>/logo.svg" title="<?php echo get_bloginfo('name'); ?>" alt="<?php echo get_bloginfo('name'); ?>" class="w-100" loading="lazy">

@@ -128,13 +128,7 @@
 }
 
 %mt48 {
-    @media (min-width: v.$tv) {
-        margin-top: m.px-to-vw(48px);
-    }
-
-    @include m.tv {
-        margin-top: 32px;
-    }
+    @include m.mt48;
 }
 
 %p {
@@ -253,15 +247,7 @@
 }
 
 %border_and_spacing_bottom {
-    @media (min-width: v.$tv) {
-        padding-bottom: m.px-to-vw(17px);
-        border-bottom: m.px-to-vw(1px) solid v.$white;
-    }
-
-    @include m.tv {
-        padding-bottom: 11px;
-        border-bottom: 1px solid v.$white;
-    }
+    @include m.border_and_spacing_bottom();
 }
 
 .upcoming {
@@ -317,6 +303,17 @@
 
         @include m.tv {
             margin-top: 68px;
+        }
+    }
+
+    .splide{
+        &__slide{
+            @media (min-width: v.$tv){
+                @include m.flex(flex-start, m.px-to-vw(20px));
+            }
+            @include m.tv{
+                @include m.flex(flex-start, 12px);
+            }
         }
     }
 }
@@ -646,13 +643,7 @@
 
 .discover,
 .clients {
-    @media (min-width: v.$tv) {
-        padding-block: m.px-to-vw(160px);
-    }
-
-    @include m.tv {
-        padding-block: 116px;
-    }
+    @include m.pblock160;
 
     &_head {
         @extend %head_section;
@@ -695,50 +686,7 @@
     }
 
     &_body {
-        .splide {
-            width: 100%;
-
-            &__arrows {
-                width: fit-content;
-
-                @media (min-width: v.$tv) {
-                    @include m.flex(flex-start, m.px-to-vw(36px));
-                    padding-left: m.px-to-vw(36px);
-                    margin-bottom: m.px-to-vw(24px);
-                }
-
-                @include m.tv {
-                    @include m.flex(flex-start, 26px);
-                    padding-left: 26px;
-                    margin-bottom: 18px;
-                }
-            }
-
-            &__arrow {
-                background: none !important;
-                border-radius: 0 !important;
-
-                @media (min-width: v.$tv) {
-                    width: m.px-to-vw(48px) !important;
-                }
-
-                @include m.tv {
-                    width: 36px !important;
-                }
-
-                height: auto !important;
-                object-fit: contain;
-                object-position: center;
-                position: relative !important;
-                transform: none !important;
-                inset: 0 !important;
-
-                svg {
-                    width: 100% !important;
-                    height: auto !important;
-                }
-            }
-        }
+        @include m.splide_arrows;
     }
 }
 
@@ -826,18 +774,7 @@
 }
 
 .permalink_border {
-    width: fit-content;
-    @extend %border_and_spacing_bottom;
-    @include m.h3(v.$light_brown, v.$canela_text, false);
-    border-color: v.$light_brown;
-
-    @media (min-width: v.$tv) {
-        @include m.flex(flex-start, m.px-to-vw(16px));
-    }
-
-    @include m.tv {
-        @include m.flex(flex-start, 10px);
-    }
+    @include m.permalink;
 }
 
 .celebrating {

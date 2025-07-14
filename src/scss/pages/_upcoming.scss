@@ -1,0 +1,224 @@
+@use "base/mixins" as m;
+@use "base/variables" as v;
+
+.banner{
+    @include m.flex(flex-end);
+    flex-direction: column;
+    position: relative;
+    
+    @media (min-width: v.$tv){
+        min-height: m.px-to-vw(515px);
+        padding-block: m.px-to-vw(72px);
+    }
+    @include m.tv{
+        
+    }
+
+    &__bg{
+        position: absolute;
+        z-index: 1;
+        inset: 0;
+        @include m.fullWH;
+        &::before, img{
+            @include m.fullWH;
+        }
+        img{
+            object-fit: cover;
+            object-position: center;
+        }
+        &::before{
+            position: absolute;
+            inset: 0;
+            content: '';
+            z-index: 2;
+            background: #181D24;
+            opacity: 0.8;
+        }
+    }
+    .breadcrumb{
+        opacity: 0.6;
+        p{
+            @include m.p(v.$white);
+            text-transform: uppercase;
+        }
+    }
+    .container{
+        position: relative;
+        z-index: 3;
+        h1{
+            @include m.mt48;
+            @include m.h2(v.$white);
+        }
+    }
+}
+
+.auction_list{
+    @include m.pblock160;
+    @include m.space-left;
+
+    .auction{
+        @media (min-width: v.$tv){
+            padding-bottom: m.px-to-vw(80px);
+            margin-bottom: m.px-to-vw(80px);
+            border-bottom: m.px-to-vw(1px) solid v.$light_brown;
+        }
+        @include m.tv{
+            padding-bottom: 52px;
+            margin-bottom: 52px;
+            border-bottom: 1px solid v.$light_brown;
+        }
+    }
+}
+
+.auction{
+    width: 100%;
+    @media (min-width: v.$tv){
+        display: grid;
+        grid-template-columns: 1fr m.px-to-vw(539px) m.px-to-vw(336px);
+        grid-gap: m.px-to-vw(42px) m.px-to-vw(16px);
+        align-items: center;
+    }
+    @include m.tv{
+        
+    }
+
+    &>*{
+        width: 100%;
+    }
+    .thumb{
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16/8.968;
+        @media (min-width: v.$tv){
+            padding-bottom: m.px-to-vw(16px);
+            padding-right: m.px-to-vw(16px);
+        }
+        @include m.tv{
+            padding-bottom: 10px;
+            padding-right: 10px;
+        }
+
+        img{
+            @include m.fullWH;
+            object-fit: cover;
+            position: relative;
+            z-index: 3;
+            object-position: center;
+        }
+
+        &::before{
+            position: absolute;
+            content: '';
+            @media (min-width: v.$tv){
+                width: calc(100% - m.px-to-vw(16px));
+                height: calc(100% - m.px-to-vw(16px));
+                top: m.px-to-vw(16px);
+                left: m.px-to-vw(16px);
+                border: m.px-to-vw(1px) solid v.$light_brown;
+            }
+            @include m.tv{
+                width: calc(100% - 10px);
+                height: calc(100% - 10px);
+                top: 10px;
+                left: 10px;
+                border: 1px solid v.$light_brown;
+            }
+        }
+    }
+    &_keytimes{
+        background: v.$light_brown;
+        grid-column: span 3;
+        @media (min-width: v.$tv){
+            padding: m.px-to-vw(32px);
+        }
+        @include m.tv{
+            padding: 26px;
+        }
+    }
+    &_actions{
+        ul{
+            @media (min-width: v.$tv){
+                @include m.flex(center, m.px-to-vw(12px));
+            }
+            @include m.tv{
+                @include m.flex(center, 6px);
+            }
+        }
+        a{
+            width: 100%;
+            @include m.flex(center);
+            text-transform: uppercase;
+            font-family: v.$gotham_m;
+            font-weight: 300;
+            text-align: center;
+            color: v.$black;
+
+            @media (min-width: v.$tv){
+                border: m.px-to-vw(1px) solid v.$light_brown;
+                height: m.px-to-vw(51px);
+                font-size: m.px-to-vw(16px);
+
+                line-height: 1;
+                letter-spacing: m.px-to-vw(0.8px);
+            }
+            @include m.tv{
+                border: 1px solid v.$light_brown;
+            }
+        }
+        li{
+            width: 100%;
+            list-style: none;
+            &:first-child{
+                a{
+                    background: v.$light_brown;
+                    color: v.$white;
+                }
+            }
+        }
+    }
+    &_info{
+        &>*{
+            &:not(:last-child){
+                @media (min-width: v.$tv){
+                    margin-bottom: m.px-to-vw(26px);
+                }
+                @include m.tv{
+                    margin-bottom: 16px;
+                }
+            }
+        }
+        a{
+            @include m.permalink(false);
+        }
+        h2{
+            color: v.$black;
+            font-family: v.$goudysb;
+            leading-trim: both;
+            text-edge: cap;
+            text-transform: uppercase;
+            font-style: normal;
+
+            @media (min-width: v.$tv){
+                line-height: m.px-to-vw(31.2px);
+                font-size: m.px-to-vw(26px);
+                font-weight: 300;
+            }
+            @include m.tv{
+                
+            }
+        }
+        .content{
+            p, li, span{
+                @include m.p(v.$black);
+            }
+            b, strong{
+                font-weight: 900;
+            }
+            ul, ol{
+                list-style: none;
+                margin: 0;
+                opacity: 0.9;
+            }
+        }   
+    }
+}

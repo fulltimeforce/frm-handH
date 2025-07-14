@@ -31,7 +31,7 @@
     }
 }
 
-@mixin fullWH{
+@mixin fullWH {
     width: 100%;
     height: 100%;
 }
@@ -40,7 +40,7 @@
     transition: all $s ease;
 }
 
-@mixin flex($prop, $gap: 0){
+@mixin flex($prop, $gap: 0) {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -48,29 +48,29 @@
     gap: $gap;
 }
 
-@mixin grid($n, $gap: 0){
+@mixin grid($n, $gap: 0) {
     display: grid;
     grid-template-columns: repeat($n, 1fr);
     grid-gap: $gap;
 }
 
-@mixin centerX{
+@mixin centerX {
     left: 50%;
     transform: translateX(-50%);
 }
 
-@mixin centerY{
+@mixin centerY {
     top: 50%;
     transform: translateY(-50%);
 }
 
-@mixin centerXY{
+@mixin centerXY {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 
-@mixin square($size){
+@mixin square($size) {
     display: block;
     width: $size;
     height: $size;
@@ -79,11 +79,86 @@
     object-position: center;
 }
 
-@mixin lines($n){
+@mixin lines($n) {
     display: -webkit-box;
     -webkit-line-clamp: $n;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+
+@mixin pblock160 {
+    @media (min-width: v.$tv) {
+        padding-block: px-to-vw(160px);
+    }
+
+    @include tv {
+        padding-block: 116px;
+    }
+}
+
+@mixin mt48 {
+    @media (min-width: v.$tv) {
+        margin-top: px-to-vw(48px);
+    }
+
+    @include tv {
+        margin-top: 32px;
+    }
+}
+
+@mixin space-left {
+    @media (min-width: v.$tv) {
+        padding-left: px-to-vw(312px);
+    }
+
+    @include tv {}
+}
+
+@mixin splide_arrows {
+    .splide {
+        width: 100%;
+
+        &__arrows {
+            width: fit-content;
+
+            @media (min-width: v.$tv) {
+                @include flex(flex-start, px-to-vw(36px));
+                padding-left: px-to-vw(36px);
+                margin-bottom: px-to-vw(24px);
+            }
+
+            @include tv {
+                @include flex(flex-start, 26px);
+                padding-left: 26px;
+                margin-bottom: 18px;
+            }
+        }
+
+        &__arrow {
+            background: none !important;
+            border-radius: 0 !important;
+
+            @media (min-width: v.$tv) {
+                width: px-to-vw(48px) !important;
+            }
+
+            @include tv {
+                width: 36px !important;
+            }
+
+            height: auto !important;
+            object-fit: contain;
+            object-position: center;
+            position: relative !important;
+            transform: none !important;
+            inset: 0 !important;
+
+            svg {
+                width: 100% !important;
+                height: auto !important;
+            }
+        }
+    }
 }
 
 // If the layout size is 1920px, the large breakpoint is 1540px.
@@ -95,7 +170,7 @@
     @return $res;
 }
 
-@mixin p($color: v.$black){
+@mixin p($color: v.$black) {
     color: $color;
     font-family: v.$gotham_light;
     font-weight: 300;
@@ -111,12 +186,14 @@
     }
 }
 
-@mixin h2($color: v.$black, $font: v.$goudysb){
+@mixin h2($color: v.$black, $font: v.$goudysb) {
     font-family: $font;
+    font-weight: 300;
     text-transform: uppercase;
     color: $color;
 
     @media (min-width: v.$tv) {
+        line-height: px-to-vw(57.5px);
         font-size: px-to-vw(50px);
     }
 
@@ -130,13 +207,16 @@
     }
 }
 
-@mixin h3($color: v.$black, $ff: v.$goudysb, $upper: true){
+@mixin h3($color: v.$black, $ff: v.$goudysb, $upper: true) {
     font-family: $ff;
     font-weight: 400;
     color: $color;
-    @if($upper){
+
+    @if($upper) {
         text-transform: uppercase;
-    }@else{
+    }
+
+    @else {
         text-transform: capitalize;
     }
 
@@ -152,7 +232,32 @@
     @include lines(3);
 }
 
-@mixin h4($color: v.$black){
+@mixin h3v2($color: v.$black, $ff: v.$goudysb, $upper: true) {
+    font-family: $ff;
+    font-weight: 400;
+    color: $color;
+
+    @if($upper) {
+        text-transform: uppercase;
+    }
+
+    @else {
+        text-transform: capitalize;
+    }
+
+    @media (min-width: v.$tv) {
+        line-height: px-to-vw(28px);
+        font-size: px-to-vw(20px);
+    }
+
+    @include tv {
+        font-size: 17px;
+    }
+
+    @include lines(3);
+}
+
+@mixin h4($color: v.$black) {
     color: $color;
     font-family: v.$goudysb;
     leading-trim: both;
@@ -169,7 +274,24 @@
     }
 }
 
-@mixin btn1($color: white){
+@mixin h4v2($color: v.$light_brown) {
+    color: $color;
+    font-family: v.$goudysb;
+    leading-trim: both;
+    text-edge: cap;
+    text-transform: uppercase;
+
+    @media (min-width: v.$tv) {
+        font-size: px-to-vw(40px);
+        line-height: px-to-vw(46px);
+    }
+
+    @include tv {
+        font-size: 32px;
+    }
+}
+
+@mixin btn1($color: white) {
     color: $color;
     width: fit-content;
     border: 1px solid $color;
@@ -187,6 +309,7 @@
         padding-inline: px-to-vw(20px);
         font-size: px-to-vw(16px);
     }
+
     @media (max-width: v.$tv) {
         @include flex(center, 5.2px);
         height: 42px;
@@ -194,23 +317,23 @@
         font-size: 15px;
     }
 
-    svg{
-        @media (min-width: v.$tv){
+    svg {
+        @media (min-width: v.$tv) {
             width: px-to-vw(24px);
         }
-        @include tv{
-            
-        }
+
+        @include tv {}
+
         height: auto;
         object-fit: contain;
     }
 }
 
-@mixin btn2($width, $height, $hover: true){
+@mixin btn2($width, $height, $hover: true) {
     position: relative;
     leading-trim: both;
     text-edge: cap;
-    
+
     width: $width;
     height: $height;
     color: v.$light_brown;
@@ -218,79 +341,85 @@
     font-weight: 400;
     text-transform: uppercase;
 
-    @if($hover == false){
-        @media (min-width: v.$tv){
+    @if($hover ==false) {
+        @media (min-width: v.$tv) {
             @include flex(center, px-to-vw(16px));
         }
-        @include tv{
-         
-        }
+
+        @include tv {}
     }
 
-    @media (min-width: v.$tv){
+    @media (min-width: v.$tv) {
         font-size: px-to-vw(17px);
         letter-spacing: px-to-vw(1.7px);
         border: 1px solid v.$light_brown;
-        @if($hover){
+
+        @if($hover) {
             padding-left: px-to-vw(85px);
         }
     }
-    @include tv{
+
+    @include tv {
         border: px-to-vw(1px) solid v.$light_brown;
     }
+
     @include flex(flex-start);
 
-    svg{
+    svg {
         @include transition;
         pointer-events: none;
         object-fit: contain;
         object-position: center;
 
-        @if($hover){
+        @if($hover) {
             position: absolute;
             @include centerY;
         }
 
-        @media (min-width: v.$tv){
-            @if($hover){
+        @media (min-width: v.$tv) {
+            @if($hover) {
                 width: px-to-vw(24px);
                 right: px-to-vw(85px);
-            }@else{
+            }
+
+            @else {
                 width: px-to-vw(18px);
             }
         }
-        @include tv{
-            
-        }
+
+        @include tv {}
+
         height: auto;
     }
 
-    @if($hover){
-        &:is(:hover, :focus){
-            @media (min-width: v.$tv){
+    @if($hover) {
+        &:is(:hover, :focus) {
+            @media (min-width: v.$tv) {
                 padding-left: px-to-vw(105px);
             }
-            @include tv{
-                
-            }
-            svg{
+
+            @include tv {}
+
+            svg {
                 opacity: 0;
             }
         }
     }
 }
 
-@mixin breadlines($color: v.$white, $lines: 2, $reverse: false){
+@mixin breadlines($color: v.$white, $lines: 2, $reverse: false) {
     position: relative;
     width: fit-content;
-    @media (min-width: v.$tv){
+
+    @media (min-width: v.$tv) {
         @include flex(flex-start, px-to-vw(15px));
     }
-    @include tv{
+
+    @include tv {
         @include flex(flex-start, 12px);
     }
 
-    p{
+    p {
         color: $color;
         font-weight: 300;
         line-height: normal;
@@ -298,34 +427,100 @@
         text-edge: cap;
         text-transform: uppercase;
 
-        @media (min-width: v.$tv){
+        @media (min-width: v.$tv) {
             font-size: px-to-vw(17px);
             letter-spacing: px-to-vw(1.7px);
         }
-        @include tv{
-            
-        }
+
+        @include tv {}
     }
-    @if($reverse == false){
-        &::before{
+
+    @if($reverse ==false) {
+        &::before {
             content: '';
         }
     }
-    @if($lines == 2 or $reverse == true){
-        &::after{
+
+    @if($lines ==2 or $reverse ==true) {
+        &::after {
             content: '';
         }
     }
-    &::before, &::after{
+
+    &::before,
+    &::after {
         display: block;
         background: $color;
-        @media (min-width: v.$tv){
+
+        @media (min-width: v.$tv) {
             width: px-to-vw(30px);
             height: px-to-vw(1px);
         }
-        @include tv{
+
+        @include tv {
             width: 24px;
             height: 1px;
+        }
+    }
+}
+
+@mixin border_and_spacing_bottom($color: v.$white, $pb: true) {
+    @media (min-width: v.$tv) {
+        @if($pb) {
+            padding-bottom: px-to-vw(17px);
+        }
+
+        @else {
+            padding-bottom: px-to-vw(15px);
+        }
+
+        border-bottom: px-to-vw(1px) solid $color;
+    }
+
+    @include tv {
+        @if($pb) {
+            padding-bottom: 11px;
+        }
+
+        @else {
+            padding-bottom: 8px;
+        }
+
+        border-bottom: 1px solid $color;
+    }
+}
+
+@mixin permalink($h3: true, $color: v.$light_brown) {
+    width: fit-content;
+
+    @if($h3) {
+        @include h3($color, v.$canela_text, false);
+        @include border_and_spacing_bottom($color);
+    }
+
+    @else {
+        @include h3v2($color, v.$canela_text, false);
+        @include border_and_spacing_bottom($color, false);
+    }
+
+
+    @if($h3) {
+        @media (min-width: v.$tv) {
+            @include flex(flex-start, px-to-vw(16px));
+        }
+
+        @include tv {
+            @include flex(flex-start, 10px);
+        }
+    }
+
+    @else {
+        @media (min-width: v.$tv) {
+            @include flex(flex-start, px-to-vw(37.25px));
+        }
+
+        @include tv {
+            @include flex(flex-start, 22px);
         }
     }
 }

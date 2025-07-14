@@ -102,6 +102,18 @@ video {
     }
 }
 
+.container-pages {
+    width: 100%;
+
+    @media (min-width: v.$tv) {
+        max-width: m.px-to-vw(1428px);
+    }
+
+    @include m.tv {
+        
+    }
+}
+
 h2 {
     font-weight: 400;
     font-size: m.px-to-vw(60px);

@@ -1,3 +1,72 @@
 @use "base/mixins" as m;
 @use "base/variables" as v;
 
+%h2{
+    font-family: v.$cormorant;
+    text-align: center;
+    color: v.$black;
+    @media (min-width: v.$tv){
+        letter-spacing: m.px-to-vw(-1.8px);
+        font-size: m.px-to-vw(60px);
+        line-height: m.px-to-vw(60px);
+    }
+    @include m.tv{
+     
+    }
+}
+
+.timeline{
+    &_head{
+        width: 100%;
+        margin-inline: auto;
+        @media (min-width: v.$tv){
+            max-width: m.px-to-vw(715px);
+        }
+        @include m.tv{
+         
+        }
+        h2{
+            @extend %h2;
+        }
+    }
+    
+    &_body{
+        @include m.splide_arrows;
+    }
+}
+
+.timecard{
+    width: 100%;
+    @media (min-width: v.$tv){
+        max-width: m.px-to-vw(382px);
+    }
+    @include m.tv{
+        
+    }
+
+    &-grid{
+        display: grid;
+        grid-template-rows: m.px-to-vw(371px) m.px-to-vw(361px);
+        grid-gap: 0;
+
+        &>*{
+            width: 100%;
+            @media (min-width: v.$tv){
+                @include m.flex(center, m.px-to-vw(20px));
+                flex-direction: column;
+            }
+            @include m.tv{
+                @include m.flex(center, 10.6px);
+                flex-direction: column;
+            }
+        }
+    }
+    &-time{
+        span{
+            text-align: center;
+            display: block;
+            @include m.h4v2;
+            margin-inline: auto;
+        }
+    }
+}

@@ -4,6 +4,18 @@ import "@splidejs/splide/css";
 
 (function () {
 
+    if(document.querySelector('#timeline')){
+        new Splide('#timeline', {
+            type: 'splide',
+            arrows: true,
+            drag: 'free',
+            pagination: false,
+            autoWidth: true,
+            gap: '1.406vw',
+            perMove: 1,
+        }).mount();
+    }
+
     if (document.querySelector('#cars1')) {
         new Splide('#cars1', {
             type: 'loop',
@@ -124,11 +136,15 @@ import "@splidejs/splide/css";
 
     if (document.querySelector('#upcoming')) {
         let splide = new Splide('#upcoming', {
-            focus: 'start',
+            focus: 0,
+            start: 0,
             arrows: true,
             pagination: false,
             autoWidth: true,
             gap: '1.042vw',
+            padding: {
+                right: '9.375vw'
+            },
             breakpoints: {
                 1540: {
                     gap: '16px'
@@ -136,8 +152,22 @@ import "@splidejs/splide/css";
             }
         })
 
-        splide.on("mounted move", function () {
-            console.log(splide)
+        splide.on("move", function () {
+            let index = splide.index,
+                slides = splide.Components.Elements.slides,
+                el = slides[index];
+
+            Array.from(slides).forEach(slide => {
+                let vehicle = slide.querySelector('.vehicle');
+                if (vehicle && vehicle.classList.contains('active')) {
+                    vehicle.classList.remove('active')
+                }
+            })
+
+            let v = el.querySelector('.vehicle')
+            if (v && !v.classList.contains('active')) {
+                v.classList.add('active');
+            }
         });
 
         splide.mount();

@@ -23,6 +23,10 @@
 
     @media (max-width: v.$tv) {}
 
+    &.white_bg{
+        background: white;
+    }
+
     &_lines {
         position: fixed;
         bottom: 0;
@@ -30,7 +34,12 @@
         height: calc(100vh - m.px-to-vw(150px));
         width: 100%;
         max-width: m.px-to-vw(40px);
+        user-select: none;
+        -webkit-user-drag: none;
         left: m.px-to-vw(216px);
+        
+        object-fit: cover;
+        object-position: center;
     }
 
     &_container {
