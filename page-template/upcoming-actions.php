@@ -47,7 +47,19 @@ get_banner('Homepage / classic auctions / Upcoming Auctions');
                     </ul>
                 </div>
                 <div class="auction_keytimes">
-
+                    <div class="auction_keytimes-grid">
+                        <div class="w-100">
+                            <p>KEY TIMES:</p>
+                        </div>
+                        <div class="w-100">
+                            <p>Viewing:</p>
+                            <p>Tuesday, February 11th: From 12:00 PM (Noon) Wednesday, February 12th: From 9:00 AM</p>
+                        </div>
+                        <div class="w-100">
+                            <p>Sale Time:</p>
+                            <p>Wednesday, February 12th: From 12:00 PM (Noon)</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         <?php endfor; ?>

@@ -2,17 +2,7 @@
 @use "base/variables" as v;
 
 %h2{
-    font-family: v.$cormorant;
-    text-align: center;
-    color: v.$black;
-    @media (min-width: v.$tv){
-        letter-spacing: m.px-to-vw(-1.8px);
-        font-size: m.px-to-vw(60px);
-        line-height: m.px-to-vw(60px);
-    }
-    @include m.tv{
-     
-    }
+    @include m.fz60;
 }
 
 .timeline{
@@ -36,28 +26,81 @@
 }
 
 .timecard{
-    width: 100%;
     @media (min-width: v.$tv){
-        max-width: m.px-to-vw(382px);
+        width: m.px-to-vw(382px);
     }
     @include m.tv{
         
     }
 
+    .round{
+        @media (min-width: v.$tv){
+            @include m.square(m.px-to-vw(150px));
+        }
+        @include m.tv{
+            @include m.square(110px);
+        }
+        border-radius: 50%;
+        object-fit: cover !important;
+    }
     &-grid{
-        display: grid;
-        grid-template-rows: m.px-to-vw(371px) m.px-to-vw(361px);
-        grid-gap: 0;
+        @media (min-width: v.$tv){
+            display: grid;
+            grid-template-rows: m.px-to-vw(371px) m.px-to-vw(361px);
+            grid-gap: 0;
+        }
+        @include m.tv{
+            
+        }
 
+        img{
+            max-width: 100%;
+        }
         &>*{
             width: 100%;
-            @media (min-width: v.$tv){
-                @include m.flex(center, m.px-to-vw(20px));
-                flex-direction: column;
+
+            &:nth-child(odd){
+                @media (min-width: v.$tv){
+                    @include m.flex(flex-end, m.px-to-vw(20px));
+                    flex-direction: column;
+                }
+                @include m.tv{
+                    @include m.flex(flex-end, 10.6px);
+                    flex-direction: column;
+                }
             }
-            @include m.tv{
-                @include m.flex(center, 10.6px);
-                flex-direction: column;
+            &:nth-child(even){
+                @media (min-width: v.$tv){
+                    @include m.flex(flex-start, m.px-to-vw(20px));
+                    flex-direction: column;
+                }
+                @include m.tv{
+                    @include m.flex(flex-start, 10.6px);
+                    flex-direction: column;
+                }
+            }
+
+        }
+        .content{
+            p, span{
+                opacity: 0.9;
+                leading-trim: both;
+                text-edge: cap;
+                text-align: center;
+                font-weight: 600;
+                font-style: normal;
+    
+                @media (min-width: v.$tv){
+                    font-size: m.px-to-vw(14px);
+                    line-height: m.px-to-vw(19.6px);
+                    letter-spacing: m.px-to-vw(0.84px);
+                }
+                @include m.tv{
+                 
+                }
+            }
+            span{
+                color: v.$light_brown;
             }
         }
     }

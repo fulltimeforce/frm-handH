@@ -8,6 +8,52 @@
     color: white;
 }
 
+%flex_button_link {
+    position: relative;
+    background: transparent;
+    @include m.transition;
+
+    @media (min-width: v.$tv) {
+        @include m.flex(flex-start, m.px-to-vw(16px));
+        padding-inline: m.px-to-vw(16px);
+        border: m.px-to-vw(1px) solid rgba($color: v.$light_brown, $alpha: 0)
+    }
+
+    @include m.tv {
+        border: 1px solid rgba($color: v.$light_brown, $alpha: 0)
+    }
+
+    p {
+        @include m.p;
+    }
+
+    svg {
+        @media (min-width: v.$tv) {
+            @include m.square(m.px-to-vw(36px));
+        }
+
+        @include m.tv {}
+    }
+
+    .arrow {
+        position: absolute;
+        @include m.centerY(true);
+        z-index: 3;
+        @include m.transition;
+
+        @media (min-width: v.$tv) {
+            right: m.px-to-vw(16px);
+        }
+
+        @include m.tv {}
+    }
+
+    &:is(:hover, :focus){
+        background: v.$gray_light;
+        border-color: v.$light_brown;
+    }
+}
+
 .header {
     position: fixed;
     z-index: 100;
@@ -23,7 +69,7 @@
 
     @media (max-width: v.$tv) {}
 
-    &.white_bg{
+    &.white_bg {
         background: white;
     }
 
@@ -31,19 +77,31 @@
         position: fixed;
         bottom: 0;
         z-index: 3;
-        height: calc(100vh - m.px-to-vw(150px));
-        width: 100%;
-        max-width: m.px-to-vw(40px);
+        @media (min-width: v.$tv){
+            height: calc(100vh - m.px-to-vw(150px)) !important;
+            width: m.px-to-vw(40px) !important;
+            left: m.px-to-vw(216px) !important;
+        }
+        @include m.tv{
+            
+        }
         user-select: none;
         -webkit-user-drag: none;
-        left: m.px-to-vw(216px);
-        
+
         object-fit: cover;
         object-position: center;
     }
 
     &_container {
-        @include m.flex(space-between);
+        // @include m.flex(space-between);
+
+        @media (min-width: v.$tv) {
+            display: grid;
+            grid-template-columns: m.px-to-vw(112px) 1fr;
+            grid-gap: m.px-to-vw(64px);
+        }
+
+        @include m.tv {}
 
         a,
         button {
@@ -64,6 +122,12 @@
         list-style: none;
     }
 
+    nav {
+        position: relative;
+        width: 100%;
+        @include m.flex(space-between);
+    }
+
     &_navigation {
         mix-blend-mode: difference;
 
@@ -82,6 +146,138 @@
         }
     }
 
+    .submenu {
+        position: absolute;
+        background: v.$white;
+        @include m.transition;
+        box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.25);
+        top: calc(100% + m.px-to-vw(30px) + m.px-to-vw(10px));
+        opacity: 0;
+        pointer-events: none;
+
+        @media (min-width: v.$tv) {
+            left: m.px-to-vw(-32px);
+            width: m.px-to-vw(1416px);
+            padding: m.px-to-vw(32px);
+        }
+
+        @include m.tv {}
+
+        &_content {
+            @include m.flex(flex-start, m.px-to-vw(6px));
+        }
+
+        &-link {
+            flex: 1;
+
+            &:not(.small){
+                @media (min-width: v.$tv){
+                    max-width: calc((100% / 3) - m.px-to-vw(6px));
+                }
+                min-width: calc((100% / 3.3));
+            }
+            &.small{
+                @media (min-width: v.$tv){
+                    max-width: calc((100% / 5) - m.px-to-vw(6px));
+                }
+                min-width: calc((100% / 5.2));
+            }
+
+            @media (min-width: v.$tv) {
+                padding-block: m.px-to-vw(20px);
+            }
+
+            @include m.tv {}
+
+            @extend %flex_button_link;
+        }
+
+        &_dropdown {
+            width: 100%;
+
+            &-section {
+                width: 100%;
+
+                @media (min-width: v.$tv) {
+                    padding-block: m.px-to-vw(12px);
+                    @include m.flex(space-between, m.px-to-vw(12px));
+                }
+
+                @include m.tv {}
+            }
+
+            &-item {
+                flex: 1;
+
+                button {
+                    width: 100%;
+                    @extend %flex_button_link;
+                    background: transparent;
+
+                    @media (min-width: v.$tv) {
+                        border: m.px-to-vw(1px) solid v.$light_brown;
+                        padding-block: m.px-to-vw(8px);
+                    }
+
+                    @include m.tv {
+                        border: 1px solid v.$light_brown;
+                    }
+                }
+            }
+
+            &-content{
+                .submenu-link{
+                    &:is(:hover, :focus){
+                        background: transparent;
+                        border-color: rgba($color: v.$light_brown, $alpha: 0);
+                    }
+                }
+            }
+
+            &[data-state="0"]{
+                .submenu_dropdown{
+                    &-content{
+                        display: none;
+                    }
+                }
+            }
+            &[data-state="1"]{
+                .submenu_dropdown{
+                    &-item:nth-child(1){
+                        button{
+                            background: v.$gray_light;
+                            .arrow{
+                                transform: translateY(-50%);
+                            }
+                        }
+                    }
+                    &-content{
+                        .submenu_content:not(:nth-child(1)){
+                            display: none;
+                        }
+                    }
+                }
+            }
+            &[data-state="2"]{
+                .submenu_dropdown{
+                    &-item:nth-child(2){
+                        button{
+                            background: v.$gray_light;
+                            .arrow{
+                                transform: translateY(-50%);
+                            }
+                        }
+                    }
+                    &-content{
+                        .submenu_content:not(:nth-child(2)){
+                            display: none;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     .ul_menu {
         @media (min-width: v.$tv) {
             @include m.flex(center, m.px-to-vw(8px));
@@ -92,10 +288,16 @@
         }
 
         &>li {
+
+            &>button,
             &>a {
                 @extend %a;
+
+                font-family: v.$gotham_light;
                 font-weight: 300;
                 line-height: normal;
+                background: none;
+                border: none;
 
                 @media (min-width: v.$tv) {
                     letter-spacing: m.px-to-vw(0.48px);
@@ -128,6 +330,13 @@
 
                     height: auto;
                     object-fit: contain;
+                }
+            }
+
+            &.active {
+                .submenu {
+                    opacity: 1;
+                    pointer-events: all;
                 }
             }
 
@@ -201,7 +410,7 @@
     &.dark {
         .ul_menu {
             &>li {
-                &>a {
+                &>button, &>a {
                     color: v.$black;
 
                     svg,
@@ -225,7 +434,7 @@
                     }
                 }
 
-                a {
+                button, a {
                     border-color: v.$black;
                 }
             }

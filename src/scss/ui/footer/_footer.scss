@@ -1,6 +1,162 @@
 @use "base/mixins" as m;
 @use "base/variables" as v;
 
-.footer{
-    
+.footer {
+    position: relative;
+    z-index: 3;
+    background: v.$bg;
+
+    @media (min-width: v.$tv) {
+        padding-block: m.px-to-vw(64px) m.px-to-vw(30px);
+    }
+
+    @include m.tv {}
+
+    &_container {
+        width: 100%;
+
+        @media (min-width: v.$tv) {
+            padding-inline: m.px-to-vw(180px);
+        }
+
+        @include m.tv {}
+    }
+
+    &_top {
+        @include m.flex(center);
+        position: relative;
+
+        @media (min-width: v.$tv){
+            margin-bottom: m.px-to-vw(20px);
+        }
+        @include m.tv{
+         
+        }
+
+        &::before,
+        &::after {
+            position: absolute;
+            @include m.centerY;
+            content: '';
+            background: v.$light_brown;
+
+            @media (min-width: v.$tv) {
+                height: m.px-to-vw(1px);
+                width: m.px-to-vw(678px);
+            }
+
+            @include m.tv {
+                height: 1px;
+            }
+        }
+
+        &::before {
+            left: 0;
+        }
+
+        &::after {
+            right: 0;
+        }
+    }
+
+    &_logo {
+        @media (min-width: v.$tv) {
+            max-width: m.px-to-vw(108px);
+            margin-bottom: m.px-to-vw(36px);
+        }
+
+        @include m.tv {}
+    }
+
+    &_grid{
+        @media (min-width: v.$tv){
+            display: grid;
+            grid-template-columns: m.px-to-vw(375px) 1fr;
+            grid-gap: m.px-to-vw(20px);
+        }
+        @include m.tv{
+         
+        }
+    }
+
+    &_row{
+        @media (min-width: v.$tv){
+            @include m.flex(center, m.px-to-vw(20px));
+            align-items: flex-start;
+            margin-bottom: m.px-to-vw(56px);
+        }
+        @include m.tv{
+            
+        }
+
+        &>*{
+            flex: 1;
+        }
+    }
+    &_nav{
+        &-head{
+            @media (min-width: v.$tv){
+                margin-bottom: m.px-to-vw(36px);
+            }
+            @include m.tv{
+             
+            }
+            
+            @include m.h3;
+            @media (min-width: v.$tv){
+                -webkit-text-stroke: m.px-to-vw(0.25px);
+            }
+            @include m.tv{
+                -webkit-text-stroke: 0.25px;
+            }
+        }
+        &-list{
+            a{
+                display: block;
+                @include m.p;
+
+                &:not(:last-child){
+                    @media (min-width: v.$tv){
+                        margin-bottom: m.px-to-vw(6px);
+                    }
+                    @include m.tv{
+                        margin-bottom: 3px;
+                    }
+                }
+            }
+        }
+    }
+    &_bottom{
+        width: 100%;
+        @media (min-width: v.$tv){
+            display: grid;
+            grid-template-columns: m.px-to-vw(670px) 1fr;
+            grid-gap: m.px-to-vw(120px);
+        }
+        @include m.tv{
+            
+        }
+
+        &>*{
+            width: 100%;
+        }
+    }
+    &_credits{
+        width: 100%;
+        @include m.flex(space-between, 1rem);
+        @media (min-width: v.$tv){
+            margin-top: m.px-to-vw(50px);
+            border-top: m.px-to-vw(1px) solid v.$light_brown;
+            padding-top: m.px-to-vw(30px);
+        }
+        @include m.tv{
+            margin-top: 34px;
+            border-top: 1px solid v.$light_brown;
+            padding-top: 16px;
+        }
+
+        p, a{
+            @include m.p(v.$light_brown);
+        }
+    }
 }

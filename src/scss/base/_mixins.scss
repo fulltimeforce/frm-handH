@@ -59,9 +59,13 @@
     transform: translateX(-50%);
 }
 
-@mixin centerY {
+@mixin centerY($inverse: false) {
     top: 50%;
-    transform: translateY(-50%);
+    @if($inverse){
+        transform: translateY(-50%) scale(-1);
+    }@else{
+        transform: translateY(-50%);
+    }
 }
 
 @mixin centerXY {
@@ -183,6 +187,30 @@
 
     @include tv {
         font-size: 15.4px;
+    }
+}
+
+@mixin mb96{
+    @media (min-width: v.$tv) {
+        margin-bottom: px-to-vw(96px);
+    }
+
+    @include tv {
+
+    }
+}
+
+@mixin fz60{
+    font-family: v.$cormorant;
+    text-align: center;
+    color: v.$black;
+    @media (min-width: v.$tv){
+        letter-spacing: px-to-vw(-1.8px);
+        font-size: px-to-vw(60px);
+        line-height: px-to-vw(60px);
+    }
+    @include tv{
+     
     }
 }
 

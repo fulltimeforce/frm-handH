@@ -1,0 +1,30 @@
+@use "base/mixins" as m;
+@use "base/variables" as v;
+
+.shop_page{
+    @media (min-width: v.$tv){
+        padding-block: m.px-to-vw(230px) m.px-to-vw(160px);
+    }
+    @include m.tv{
+        
+    }
+
+    &-title{
+        width: 100%;
+        @include m.mb96;
+
+        h1{
+            @include m.fz60;
+            font-weight: 400;
+        }
+    }
+    &-grid{
+        width: 100%;
+        @media (min-width: v.$tv){
+            @include m.grid(3, m.px-to-vw(40px));
+        }
+        @include m.tv{
+            @include m.grid(3, 24px);
+        }
+    }
+}

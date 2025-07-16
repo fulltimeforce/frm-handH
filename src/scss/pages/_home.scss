@@ -120,11 +120,7 @@
 }
 
 %mb96 {
-    @media (min-width: v.$tv) {
-        margin-bottom: m.px-to-vw(96px);
-    }
-
-    @include m.tv {}
+    @include m.mb96;
 }
 
 %mt48 {
@@ -1065,5 +1061,15 @@
                 }
             }
         }
+    }
+}
+
+.featured_articles{
+    @media (min-width: v.$tv) {
+        padding-block: m.px-to-vw(160px) m.px-to-vw(120px);
+    }
+
+    @include m.tv {
+        padding-block: 116px 76px;
     }
 }

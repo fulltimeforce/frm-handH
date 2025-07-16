@@ -6,13 +6,11 @@ import "@splidejs/splide/css";
 
     if(document.querySelector('#timeline')){
         new Splide('#timeline', {
-            type: 'splide',
             arrows: true,
             drag: 'free',
             pagination: false,
             autoWidth: true,
             gap: '1.406vw',
-            perMove: 1,
         }).mount();
     }
 
