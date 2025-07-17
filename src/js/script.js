@@ -14,6 +14,18 @@ import "@splidejs/splide/css";
         }).mount();
     }
 
+    if(document.querySelector('#gallery')){
+        new Splide('#gallery', {
+            type: 'splide',
+            arrows: false,
+            pagination: true,
+            perPage: 1,
+            perMove: 1,
+            breakpoints: {
+            }
+        }).mount();
+    }
+
     if (document.querySelector('#cars1')) {
         new Splide('#cars1', {
             type: 'loop',

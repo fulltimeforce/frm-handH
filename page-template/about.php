@@ -169,4 +169,8 @@ get_banner('Homepage / About / About H&H Classics', '', 'About H&H Classics');
     </div>
 </section>
 
+<section class="upcoming">
+    <?php get_template_part('inc/sections/upcoming'); ?>
+</section>
+
 <?php get_footer(); ?>

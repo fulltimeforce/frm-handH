@@ -67,43 +67,7 @@
     }
 
     &_actions {
-        @media (min-width: v.$tv) {
-            @include m.flex(center, m.px-to-vw(12px));
-        }
-
-        @include m.tv {
-            @include m.flex(center, 7px);
-        }
-
-        a {
-            @include m.flex(center);
-            text-align: center;
-            text-transform: uppercase;
-            font-family: v.$gotham_m;
-
-            @media (min-width: v.$tv) {
-                letter-spacing: m.px-to-vw(0.8px);
-                border: m.px-to-vw(1px) solid v.$white;
-                width: m.px-to-vw(240px);
-                height: m.px-to-vw(51px);
-                font-size: m.px-to-vw(16px);
-            }
-
-            @include m.tv {
-                border: 1px solid v.$white;
-                font-size: 15px;
-            }
-
-            &:nth-child(even) {
-                color: v.$white;
-                background: transparent;
-            }
-
-            &:nth-child(odd) {
-                background: v.$white;
-                color: v.$black;
-            }
-        }
+        @include m.link_actions;
     }
 }
 
@@ -247,12 +211,20 @@
 }
 
 .upcoming {
-    @media (min-width: v.$tv) {
-        padding-block: m.px-to-vw(120px) m.px-to-vw(160px);
+    &.pb160 {
+        @include m.pblock160;
     }
 
-    @include m.tv {
-        padding-block: 76px 116px;
+    &:not(.pb160) {
+        @media (min-width: v.$tv) {
+            padding-top: m.px-to-vw(120px);
+        }
+
+        @include m.tv {
+            padding-top: 76px;
+        }
+
+        @include m.pblock160('bottom');
     }
 
     &_head {
@@ -302,12 +274,13 @@
         }
     }
 
-    .splide{
-        &__slide{
-            @media (min-width: v.$tv){
+    .splide {
+        &__slide {
+            @media (min-width: v.$tv) {
                 @include m.flex(flex-start, m.px-to-vw(20px));
             }
-            @include m.tv{
+
+            @include m.tv {
                 @include m.flex(flex-start, 12px);
             }
         }
@@ -346,13 +319,15 @@
 .why_choose_us {
     position: relative;
     z-index: 4;
+
+    @include m.pblock160('bottom');
+
     @media (min-width: v.$tv) {
         margin-top: m.px-to-vw(-112px);
-        padding-bottom: m.px-to-vw(160px);
     }
 
     @include m.tv {
-        padding-bottom: 116px;
+
     }
 
     .container {
@@ -372,38 +347,40 @@
     }
 
     &-info {
-        @media (min-width: v.$tv){
+        @media (min-width: v.$tv) {
             margin-bottom: m.px-to-vw(104px);
             display: grid;
             grid-template-columns: 1fr m.px-to-vw(670px);
             align-items: flex-end;
 
-            &>*{
+            &>* {
                 width: 100%;
             }
         }
-        @include m.tv{
-            
-        }
 
-        .breadlines{
+        @include m.tv {}
+
+        .breadlines {
             @include m.breadlines(v.$black, 1);
         }
-        .content{
-            @media (min-width: v.$tv){
+
+        .content {
+            @media (min-width: v.$tv) {
                 padding-right: m.px-to-vw(120px);
                 padding-bottom: m.px-to-vw(16px);
             }
-            @include m.tv{
+
+            @include m.tv {
                 padding-right: 60px;
-                padding-bottom: 8px;    
+                padding-bottom: 8px;
             }
 
-            h2{
+            h2 {
                 @include m.h4;
                 @extend %mb31;
             }
-            &>p{
+
+            &>p {
                 @extend %mb31;
                 /*@media (min-width: v.$tv){
                     margin-top: m.px-to-vw(40px);
@@ -416,9 +393,11 @@
                 opacity: 0.9;
             }
         }
-        .image{
+
+        .image {
             @extend %borde_16;
-            img{
+
+            img {
                 width: 100%;
             }
         }
@@ -777,12 +756,14 @@
     background: v.$bg;
 
     @media (min-width: v.$tv) {
-        padding-block: m.px-to-vw(144px) m.px-to-vw(160px);
+        padding-top: m.px-to-vw(144px);
     }
 
     @include m.tv {
-        padding-block: 96px 116px;
+        padding-top: 96px;
     }
+
+    @include m.pblock160('bottom');
 
     &_container {
         width: 96%;
@@ -1064,7 +1045,7 @@
     }
 }
 
-.featured_articles{
+.featured_articles {
     @media (min-width: v.$tv) {
         padding-block: m.px-to-vw(160px) m.px-to-vw(120px);
     }

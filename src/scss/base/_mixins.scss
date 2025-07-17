@@ -61,9 +61,12 @@
 
 @mixin centerY($inverse: false) {
     top: 50%;
-    @if($inverse){
+
+    @if($inverse) {
         transform: translateY(-50%) scale(-1);
-    }@else{
+    }
+
+    @else {
         transform: translateY(-50%);
     }
 }
@@ -90,13 +93,19 @@
     overflow: hidden;
 }
 
-@mixin pblock160 {
+@mixin pblock160($just_bottom: false) {
     @media (min-width: v.$tv) {
-        padding-block: px-to-vw(160px);
+        @if($just_bottom == false){
+            padding-top: px-to-vw(160px);
+        }
+        padding-bottom: px-to-vw(160px);
     }
 
     @include tv {
-        padding-block: 116px;
+        @if($just_bottom == false){
+            padding-top: 116px;
+        }
+        padding-bottom: 116px;
     }
 }
 
@@ -190,27 +199,81 @@
     }
 }
 
-@mixin mb96{
+@mixin p2($color: v.$black) {
+    color: $color;
+    font-family: v.$gotham_light;
+    font-weight: 300;
+
+    @media (min-width: v.$tv) {
+        font-size: px-to-vw(16px);
+        line-height: px-to-vw(28.8px);
+    }
+
+    @include tv {
+        font-size: 14.2px;
+    }
+}
+
+@mixin mb96 {
     @media (min-width: v.$tv) {
         margin-bottom: px-to-vw(96px);
     }
 
-    @include tv {
-
-    }
+    @include tv {}
 }
 
-@mixin fz60{
+@mixin fz60($color: v.$black) {
     font-family: v.$cormorant;
     text-align: center;
-    color: v.$black;
-    @media (min-width: v.$tv){
+    color: $color;
+
+    @media (min-width: v.$tv) {
         letter-spacing: px-to-vw(-1.8px);
         font-size: px-to-vw(60px);
         line-height: px-to-vw(60px);
     }
-    @include tv{
-     
+
+    @include tv {}
+}
+
+@mixin link_actions {
+
+    @media (min-width: v.$tv) {
+        @include flex(center, px-to-vw(12px));
+    }
+
+    @include tv {
+        @include flex(center, 7px);
+    }
+
+    a {
+        @include flex(center);
+        text-align: center;
+        text-transform: uppercase;
+        font-family: v.$gotham_m;
+
+        @media (min-width: v.$tv) {
+            letter-spacing: px-to-vw(0.8px);
+            border: px-to-vw(1px) solid v.$white;
+            width: px-to-vw(240px);
+            height: px-to-vw(51px);
+            font-size: px-to-vw(16px);
+        }
+
+        @include tv {
+            border: 1px solid v.$white;
+            font-size: 15px;
+        }
+
+        &:nth-child(even) {
+            color: v.$white;
+            background: transparent;
+        }
+
+        &:nth-child(odd) {
+            background: v.$white;
+            color: v.$black;
+        }
     }
 }
 

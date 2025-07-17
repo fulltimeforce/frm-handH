@@ -1,30 +1,234 @@
 @use "base/mixins" as m;
 @use "base/variables" as v;
 
-.shop_page{
-    @media (min-width: v.$tv){
-        padding-block: m.px-to-vw(230px) m.px-to-vw(160px);
-    }
-    @include m.tv{
-        
+%grid_products {
+    width: 100%;
+
+    @media (min-width: v.$tv) {
+        @include m.grid(3, m.px-to-vw(40px));
     }
 
-    &-title{
+    @include m.tv {
+        @include m.grid(3, 24px);
+    }
+}
+
+.shop_page {
+    @media (min-width: v.$tv) {
+        padding-block: m.px-to-vw(230px) m.px-to-vw(160px);
+    }
+
+    @include m.tv {}
+
+    &-title {
         width: 100%;
         @include m.mb96;
 
-        h1{
+        h1 {
             @include m.fz60;
             font-weight: 400;
         }
     }
-    &-grid{
+
+    &-grid {
+        @extend %grid_products;
+    }
+
+    &-empty {
+        p {
+            text-align: center;
+            @include m.p;
+        }
+    }
+}
+
+.other_products {
+    @include m.pblock160;
+
+    h2 {
+        text-align: left;
+        font-family: v.$cormorant;
+        color: v.$light_brown;
+        font-style: normal;
+        font-weight: 500;
+
+        @media (min-width: v.$tv) {
+            font-size: m.px-to-vw(31px);
+            line-height: m.px-to-vw(40.3px);
+        }
+
+        @include m.tv {}
+    }
+
+    &-grid {
+        @extend %grid_products;
+        
+        @media (min-width: v.$tv) {
+            margin-top: m.px-to-vw(40px);
+        }
+
+        @include m.tv {
+            margin-top: 24px;
+        }
+
+    }
+}
+
+.shop_product {
+    width: 100%;
+
+    @media (min-width: v.$tv) {
+        @include m.flex(center, m.px-to-vw(16px));
+    }
+
+    @include m.tv {
+        @include m.flex(center, 10px);
+    }
+
+    &>* {
         width: 100%;
-        @media (min-width: v.$tv){
-            @include m.grid(3, m.px-to-vw(40px));
+    }
+
+    &-image {
+        background: v.$white;
+
+        img {
+            width: 100%;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            object-position: center;
+            height: auto;
         }
-        @include m.tv{
-            @include m.grid(3, 24px);
+    }
+
+    &-info {
+        &>* {
+            &:not(:last-child) {
+                @media (min-width: v.$tv) {
+                    margin-bottom: m.px-to-vw(4px);
+                }
+
+                @include m.tv {
+                    margin-bottom: 2px;
+                }
+            }
         }
+
+        h3 {
+            font-family: v.$cormorant;
+            color: v.$light_brown;
+            font-style: normal;
+            font-weight: 700;
+
+            @media (min-width: v.$tv) {
+                font-size: m.px-to-vw(25px);
+                line-height: m.px-to-vw(30px);
+                letter-spacing: m.px-to-vw(-0.75px);
+            }
+
+            @include m.tv {}
+        }
+    }
+
+    &-description {
+        p {
+            @include m.p2;
+            opacity: 0.8;
+        }
+    }
+
+    .amount {
+        display: block;
+        font-family: v.$gotham_m;
+        font-weight: 350;
+        color: v.$light_brown;
+        font-style: normal;
+
+        @media (min-width: v.$tv) {
+            font-size: m.px-to-vw(18px);
+            line-height: m.px-to-vw(32.4px);
+        }
+
+        @include m.tv {}
+    }
+}
+
+.cta {
+    position: relative;
+    @include m.flex(center);
+    flex-direction: column;
+
+    @media (min-width: v.$tv) {
+        height: m.px-to-vw(636px);
+    }
+
+    @include m.tv {}
+
+    &_bg {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        @include m.fullWH;
+
+        &::before,
+        img {
+            position: absolute;
+            inset: 0;
+            @include m.fullWH;
+        }
+
+        &::before {
+            content: '';
+            background: v.$black;
+            opacity: 0.6;
+            z-index: 3;
+        }
+
+        img {
+            z-index: 2;
+            object-fit: cover;
+
+            @media (min-width: v.$tv) {
+                object-position: 0 62%;
+            }
+
+            @include m.tv {
+                object-position: center;
+            }
+        }
+    }
+
+    .container {
+        position: relative;
+        z-index: 4;
+    }
+
+    &_content {
+        width: 100%;
+
+        @media (min-width: v.$tv) {
+            max-width: m.px-to-vw(997px);
+        }
+
+        @include m.tv {}
+
+        margin-inline: auto;
+    }
+
+    h2 {
+        @include m.fz60(v.$white);
+        font-weight: 500;
+    }
+
+    &_links {
+        @media (min-width: v.$tv) {
+            margin-top: m.px-to-vw(64px);
+        }
+
+        @include m.tv {
+            margin-top: 48px;
+        }
+
+        @include m.link_actions;
     }
 }
