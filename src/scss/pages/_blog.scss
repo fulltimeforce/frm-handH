@@ -1,0 +1,34 @@
+@use "base/mixins" as m;
+@use "base/variables" as v;
+
+.blog_section{
+    &-box{
+        background: white;
+        padding: m.px-to-vw(66px);
+        border: m.px-to-vw(1px) solid v.$light_brown;
+    }
+    &-grid{
+        @include m.grid(3, m.px-to-vw(36px) m.px-to-vw(21px));
+    }
+}
+
+.blog_article{
+    width: 100%;
+    img, &>*{
+        width: 100%;
+    }
+    &-content{
+        padding: m.px-to-vw(36px);
+        background: v.$beige;
+        border: m.px-to-vw(1px) solid v.$light_brown;
+
+        span{
+            font-size: m.px-to-vw(12px);
+            font-family: v.$gotham_light;
+            font-weight: 500;
+        }
+        h3{
+            @include m.h3v2;
+        }
+    }
+}
