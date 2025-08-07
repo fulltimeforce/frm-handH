@@ -95,18 +95,28 @@
 
 @mixin pblock160($just_bottom: false) {
     @media (min-width: v.$tv) {
-        @if($just_bottom == false){
+        @if($just_bottom ==false) {
             padding-top: px-to-vw(160px);
         }
+
         padding-bottom: px-to-vw(160px);
     }
 
     @include tv {
-        @if($just_bottom == false){
+        @if($just_bottom ==false) {
             padding-top: 116px;
         }
+
         padding-bottom: 116px;
     }
+}
+
+@mixin pt230px {
+    @media (min-width: v.$tv) {
+        padding-top: px-to-vw(230px);
+    }
+
+    @include tv {}
 }
 
 @mixin mt48 {
@@ -217,6 +227,45 @@
 @mixin mb96 {
     @media (min-width: v.$tv) {
         margin-bottom: px-to-vw(96px);
+    }
+
+    @include tv {}
+}
+
+@mixin fz39($color: v.$light_brown) {
+    font-family: v.$cormorant;
+    font-weight: 500;
+    color: $color;
+
+    @media (min-width: v.$tv) {
+        font-size: px-to-vw(39px);
+        line-height: px-to-vw(46.8px);
+        letter-spacing: px-to-vw(-1.17px);
+    }
+
+    @include tv {}
+}
+
+@mixin button_woocommerce($bgColor: v.$light_brown, $color: v.$white) {
+    background: $bgColor !important;
+    border-radius: 0 !important;
+    font-family: v.$gotham_light !important;
+    font-weight: 400 !important;
+    color: $color !important;
+    text-align: center !important;
+    padding: 0 !important;
+    @include flex(center);
+    width: fit-content;
+    
+    @media (min-width: v.$tv) {
+        -webkit-text-stroke: px-to-vw(0.5px);
+        letter-spacing: px-to-vw(0.5px);
+
+        padding-inline: px-to-vw(18px) !important;
+        height: px-to-vw(44px) !important;
+
+        font-size: px-to-vw(16px) !important;
+        line-height: px-to-vw(24px) !important;
     }
 
     @include tv {}
@@ -613,5 +662,49 @@
         @include tv {
             @include flex(flex-start, 22px);
         }
+    }
+}
+
+@mixin icon_text_buttonReturn {
+
+    @media (min-width: v.$tv) {
+        padding-top: px-to-vw(80px);
+    }
+
+    @include tv {
+
+    }
+
+    svg {
+        @media (min-width: v.$tv) {
+            @include square(px-to-vw(64px));
+            margin: 0 auto px-to-vw(8px);
+        }
+
+        @include tv {}
+    }
+
+    h2 {
+        @include fz39;
+        text-align: center;
+        
+        @media (min-width: v.$tv){
+            max-width: px-to-vw(843px);
+        }
+        @include tv{
+         
+        }
+
+        margin-inline: auto;
+    }
+
+    a {
+        @include button_woocommerce();
+
+        @media (min-width: v.$tv) {
+            margin: px-to-vw(40px) auto 0;
+        }
+
+        @include tv {}
     }
 }

@@ -1,0 +1,73 @@
+@use "base/mixins" as m;
+@use "base/variables" as v;
+
+.page_404, .cart_page{
+    @include m.pt230px;
+    &-title{
+        h1 {
+            @include m.fz60;
+            font-weight: 400;
+        }
+    }
+    &-empty{
+        width: 100%;
+        @include m.icon_text_buttonReturn;
+    }
+}
+
+.cart_page{
+    &-empty{
+        @media (min-width: v.$tv){
+            padding-bottom: m.px-to-vw(380px);
+        }
+        @include m.tv{
+            
+        }
+    }
+    .woocommerce{
+        .wc-empty-cart-message{
+            display: none;
+        }
+    }
+}
+
+.page_404{
+    &-empty{
+        @media (min-width: v.$tv){
+            padding-bottom: m.px-to-vw(80px);
+        }
+        @include m.tv{
+            
+        }
+    }
+    &-cta{
+        @media (min-width: v.$tv){
+            padding-bottom: m.px-to-vw(165px);
+        }
+        @include m.tv{
+            
+        }
+
+        a{
+            @include m.button_woocommerce(#D3C7B6, v.$black);
+            margin-inline: auto;
+        }
+        p{
+            text-align: center;
+            color: #333333;
+            font-style: normal;
+            font-family: v.$gotham_light;
+            font-weight: 400;
+
+            @media (min-width: v.$tv){
+                font-size: m.px-to-vw(15px);
+                line-height: m.px-to-vw(24px);
+
+                margin-bottom: m.px-to-vw(40px);
+            }
+            @include m.tv{
+             
+            }
+        }
+    }
+}

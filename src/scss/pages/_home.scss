@@ -625,7 +625,7 @@
     }
 }
 
-.discover {
+.discover, .featured_articles {
     &_head {
         @media (min-width: v.$tv) {
             margin-bottom: m.px-to-vw(88px);
@@ -635,7 +635,9 @@
             margin-bottom: 62px;
         }
     }
+}
 
+.discover {
     &_body {
         &>a {
             @media (min-width: v.$tv) {
@@ -1052,5 +1054,9 @@
 
     @include m.tv {
         padding-block: 116px 76px;
+    }
+
+    &_head {
+        @extend %head_section;
     }
 }

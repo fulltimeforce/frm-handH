@@ -11,12 +11,47 @@
     }
 }
 
+%button_woocommerce {
+    @include m.button_woocommerce;
+}
+
 .sproduct_info {
     @media (min-width: v.$tv) {
         padding-top: m.px-to-vw(283px);
     }
 
     @include m.tv {}
+
+    .container {
+        &:not(:last-child) {
+            @media (min-width: v.$tv) {
+                margin-bottom: m.px-to-vw(60px);
+            }
+
+            @include m.tv {
+                margin-bottom: 42px;
+            }
+        }
+    }
+
+    .woocommerce-message {
+        width: 100%;
+        outline: none;
+        @include m.flex(space-between, 1rem);
+        font-family: v.$gotham_light;
+
+        &::before {
+            @include m.centerY;
+        }
+
+        &::after {
+            display: none;
+        }
+
+        a {
+            @extend %button_woocommerce;
+        }
+    }
 
     &-grid {
         @media (min-width: v.$tv) {
@@ -50,6 +85,58 @@
                 object-fit: cover;
                 object-position: center;
             }
+
+            &__pagination {
+                @media (min-width: v.$tv) {
+                    bottom: m.px-to-vw(20px) !important;
+
+                    @include m.flex(center, m.px-to-vw(8px));
+                }
+
+                @include m.tv {
+                    @include m.flex(center, 4px);
+                }
+
+                li {
+                    @media (min-width: v.$tv) {
+                        line-height: m.px-to-vw(8px);
+                    }
+
+                    @include m.tv {
+                        line-height: 6px;
+                    }
+                }
+
+                &__page {
+                    margin: 0 !important;
+                    border-radius: 300px !important;
+                    transform: none !important;
+                    background: #D3C7B6 !important;
+                    opacity: 1 !important;
+
+                    &:not(.is-active) {
+                        @media (min-width: v.$tv) {
+                            @include m.square(m.px-to-vw(8px));
+                        }
+
+                        @include m.tv {
+                            @include m.square(6px);
+                        }
+                    }
+
+                    &.is-active {
+                        @media (min-width: v.$tv) {
+                            width: m.px-to-vw(24px);
+                            height: m.px-to-vw(8px);
+                        }
+
+                        @include m.tv {
+                            width: 18px;
+                            height: 6px;
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -67,17 +154,8 @@
         }
 
         h1 {
-            font-family: v.$cormorant;
             text-align: left;
-            font-weight: 500;
-            color: v.$light_brown;
-
-            @media (min-width: v.$tv) {
-                font-size: m.px-to-vw(39px);
-                line-height: m.px-to-vw(46.8px);
-            }
-
-            @include m.tv {}
+            @include m.fz39;
         }
     }
 
@@ -115,35 +193,19 @@
         @include m.pblock160('bottom');
     }
 
-    .add-to-cart-button{
+    .add-to-cart-button {
         width: 100%;
 
-        form.cart{
+        form.cart {
             width: 100%;
         }
-        .quantity{
+
+        .quantity {
             display: none;
         }
-        [type="submit"]{
-            background: v.$light_brown !important;
-            border-radius: 0 !important;
-            font-family: v.$gotham_light !important;
-            font-weight: 600 !important;
-            color: v.$white !important;
-            text-align: center !important;
-            padding: 0 !important;
-            @include m.flex(center);
 
-            @media (min-width: v.$tv){
-                width: m.px-to-vw(131px) !important;
-                height: m.px-to-vw(44px) !important;
-
-                font-size: m.px-to-vw(16px) !important;
-                line-height: m.px-to-vw(24px) !important;
-            }
-            @include m.tv{
-             
-            }
+        [type="submit"] {
+            @extend %button_woocommerce;
         }
     }
 }

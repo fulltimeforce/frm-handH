@@ -14,11 +14,15 @@
 }
 
 .shop_page {
+    @include m.pt230px;
+
     @media (min-width: v.$tv) {
-        padding-block: m.px-to-vw(230px) m.px-to-vw(160px);
+        padding-bottom: m.px-to-vw(160px);
     }
 
-    @include m.tv {}
+    @include m.tv {
+
+    }
 
     &-title {
         width: 100%;

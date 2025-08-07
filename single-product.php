@@ -18,6 +18,9 @@ $related_products = new WP_Query($args);
 
 <section class="sproduct_info <?php if (!$related_products->have_posts()){echo 'pb160px';} ?>">
     <div class="container">
+        <?php wc_print_notices(); ?>
+    </div>
+    <div class="container">
         <div class="sproduct_info-grid">
             <div class="sproduct_info-gallery">
                 <div class="splide" role="group" id="gallery">
