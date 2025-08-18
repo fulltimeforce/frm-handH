@@ -5,6 +5,30 @@
 
 get_header();
 
+//set fields
+$hero_bg = get_field('hero_background_video');
+$hero_title = get_field('hero_title');
+$hero_subtitle = get_field('hero_subtitle');
+$hero_button1 = get_field('hero_button_1');
+$hero_button2 = get_field('hero_button_2');
+
+$why_img = get_field('whychoose_image');
+$why_subtitle = get_field('whychoose_subtitle');
+$why_title = get_field('whychoose_title');
+$why_text = get_field('whychoose_text');
+$why_stats = get_field('stats');
+
+$successes_subtitle = get_field('success_subtitle');
+$successes_title = get_field('success_title');
+$successes_text = get_field('success_text');
+
+$testimonials_subtitle = get_field('testimonials_subtitle');
+$testimonials_title = get_field('testimonials_title');
+$testimonials_items = get_field('testimonials_items');
+
+$auction_title = get_field('auction_subtitle');
+$auction_text = get_field('auction_text');
+$auction_button = get_field('auction_button');
 ?>
 
 <main class="hero relative">
@@ -15,13 +39,26 @@ get_header();
     </div>
     <div class="container">
         <div class="hero_content">
-            <div class="breadlines">
-                <p>Est. 1993</p>
-            </div>
-            <h1><span>Auctioneers of classic</span> motorcars & motorcycles</h1>
+            <?php if ($hero_subtitle): ?>
+                <div class="breadlines">
+                    <p><?php echo $hero_subtitle; ?></p>
+                </div>
+            <?php endif; ?>
+            <?php if ($hero_title): ?>
+                <h1><?php echo $hero_title; ?></h1>
+            <?php endif; ?>
             <div class="hero_actions">
-                <a href="">Register to Bid</a>
-                <a href="">Upcoming Auctions</a>
+                <?php if ($hero_button1): ?>
+                    <a href="<?php echo esc_url($hero_button1['url']); ?>" target="<?php echo esc_attr($hero_button1['target'] ?: '_self'); ?>">
+                        <?php echo esc_html($hero_button1['title']); ?>
+                    </a>
+                <?php endif; ?>
+
+                <?php if ($hero_button2): ?>
+                    <a href="<?php echo esc_url($hero_button2['url']); ?>" target="<?php echo esc_attr($hero_button2['target'] ?: '_self'); ?>">
+                        <?php echo esc_html($hero_button2['title']); ?>
+                    </a>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -60,11 +97,17 @@ get_header();
     <div class="container">
         <div class="why_choose_us-info">
             <div class="content">
-                <div class="breadlines">
-                    <p>Why Choose H&H Classics</p>
-                </div>
-                <h2>The very best chance of selling successfully</h2>
-                <p>Over 30 years of record-breaking sales, expert valuations, and unmatched passion for classic and collector vehicles.</p>
+                <?php if ($why_subtitle): ?>
+                    <div class="breadlines">
+                        <p><?php echo $why_subtitle; ?></p>
+                    </div>
+                <?php endif; ?>
+                <?php if ($why_title): ?>
+                    <h2><?php echo $why_title; ?></h2>
+                <?php endif; ?>
+                <?php if ($why_text): ?>
+                    <p><?php echo $why_text; ?></p>
+                <?php endif; ?>
             </div>
             <div class="image">
                 <img src="<?php echo IMG; ?>/5.png">
@@ -413,6 +456,12 @@ get_header();
                 </article>
             <?php endfor; ?>
         </div>
+        <a href="#" class="permalink" alt="View All Vehicles">
+                View All Articles
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
+                    <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
+                </svg>
+        </a>
     </div>
 </section>
 

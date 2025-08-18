@@ -17,7 +17,9 @@
         }
 
         @include m.tv {}
-
+        @include m.tablet {
+            max-width: 300px;
+        }
         &>* {
             width: 100%;
         }
@@ -379,7 +381,10 @@
         width: m.px-to-vw(506px);
     }
 
-    @include m.tv {}
+    @include m.tablet {
+        width: 100%;
+        height: 400px;
+    }
 
     @extend %height_vehicle_card;
 
@@ -500,6 +505,9 @@
 
         @include m.tv {
             padding: 28px;
+        }
+        @include m.tablet {
+            padding: 20px;
         }
     }
 

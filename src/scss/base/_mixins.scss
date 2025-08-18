@@ -52,6 +52,9 @@
     display: grid;
     grid-template-columns: repeat($n, 1fr);
     grid-gap: $gap;
+    @include tablet {
+        grid-template-columns: 1fr;
+    }
 }
 
 @mixin centerX {
@@ -106,8 +109,14 @@
         @if($just_bottom ==false) {
             padding-top: 116px;
         }
-
         padding-bottom: 116px;
+    }
+
+    @include tablet {
+        @if($just_bottom ==false) {
+            padding-top: 58px;
+        }
+        padding-bottom: 58px;
     }
 }
 
@@ -154,6 +163,10 @@
                 @include flex(flex-start, 26px);
                 padding-left: 26px;
                 margin-bottom: 18px;
+            }
+            @include tablet {
+                padding-left: 0;
+                margin-bottom: 24px;
             }
         }
 
@@ -313,6 +326,9 @@
             border: 1px solid v.$white;
             font-size: 15px;
         }
+        @include tablet {
+            padding: 10px 16px;
+        }
 
         &:nth-child(even) {
             color: v.$white;
@@ -339,6 +355,9 @@
 
     @include tv {
         font-size: 36px;
+    }
+    @include tablet {
+        font-size: 30px;
     }
 
     span {
@@ -663,7 +682,12 @@
             @include flex(flex-start, 22px);
         }
     }
+
+    @include tablet {
+        font-size: 18px;
+    }
 }
+
 
 @mixin icon_text_buttonReturn {
 

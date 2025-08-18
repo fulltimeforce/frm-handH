@@ -139,6 +139,9 @@ import "@splidejs/splide/css";
             breakpoints: {
                 1540: {
                     gap: '17px'
+                },
+                768: {
+                    perPage: 1,
                 }
             }
         }).mount();
@@ -158,6 +161,9 @@ import "@splidejs/splide/css";
             breakpoints: {
                 1540: {
                     gap: '16px'
+                },
+                768: {
+                    perPage: 1
                 }
             }
         })

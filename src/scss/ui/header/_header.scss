@@ -85,6 +85,9 @@
         @include m.tv{
             
         }
+        @include m.tablet {
+            display: none;
+        }
         user-select: none;
         -webkit-user-drag: none;
 
@@ -94,18 +97,23 @@
 
     &_container {
         // @include m.flex(space-between);
-
         @media (min-width: v.$tv) {
             display: grid;
             grid-template-columns: m.px-to-vw(112px) 1fr;
             grid-gap: m.px-to-vw(64px);
         }
-
         @include m.tv {}
-
+        @include m.tablet {
+            padding: 10px 20px;
+        }
         a,
         button {
             font-family: 'GothamLight';
+        }
+        img {
+            @include m.tablet {
+                max-width: 70px;
+            }
         }
     }
 
@@ -143,6 +151,9 @@
             }
 
             @include m.tv {}
+            @include m.tablet {
+                display: none;
+            }
         }
     }
 
@@ -364,6 +375,10 @@
 
         @media (max-width: v.$tv) {
             @include m.flex(flex-end, 12px);
+        }
+
+        @include m.tablet {
+            display: none;
         }
 
         button {

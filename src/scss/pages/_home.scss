@@ -54,7 +54,7 @@
 
             @include m.tv {}
 
-            span {
+            strong {
                 display: block;
                 color: #A38B6C;
             }
@@ -68,6 +68,11 @@
 
     &_actions {
         @include m.link_actions;
+        @include m.tablet {
+            margin-top: 20px;
+            flex-direction: column;
+            gap: 20px;
+        }
     }
 }
 
@@ -112,6 +117,9 @@
     @include m.tv {
         padding-block: 76px;
     }
+    @include m.tablet {
+        padding-block: 50px;
+    }
 
     .container {
         @extend %mb96;
@@ -152,6 +160,9 @@
             text-align: center;
             color: v.$black;
             @extend %p;
+            @include m.tablet {
+                margin-bottom: 20px;
+            }
         }
     }
 
@@ -177,12 +188,20 @@
         #cars2 {
             @extend %mt48;
         }
+        #text2 {
+            @include m.tablet {
+                margin-top: 30px;
+            }
+        }
     }
 }
 
 .vehicles_grid {
     width: 100%;
     @include m.grid(3, m.px-to-vw(32px) m.px-to-vw(21px));
+    @include m.tablet {
+        @include m.grid(3, 20px);
+    }
 }
 
 %mb31 {
@@ -235,6 +254,9 @@
         @include m.flex(space-between, 1.1rem 0);
         align-items: flex-start;
         width: 100%;
+        @include m.tablet {
+            gap: 30px;
+        }
 
         div {
             width: 100%;
@@ -255,6 +277,11 @@
             @media (min-width: v.$tv) {
                 @include m.btn2(m.px-to-vw(418px), m.px-to-vw(60px), false);
             }
+            @include m.tablet {
+                @include m.btn2(fit-content, 40px, false);
+                padding-inline: 16px;
+                gap: 10px;
+            }
 
             @include m.tv {}
         }
@@ -272,6 +299,9 @@
         @include m.tv {
             margin-top: 68px;
         }
+        @include m.tablet {
+            margin-top: 40px;
+        }
     }
 
     .splide {
@@ -282,6 +312,10 @@
 
             @include m.tv {
                 @include m.flex(flex-start, 12px);
+            }
+            @include m.tablet {
+                width: 100%;
+                height: 420px;
             }
         }
     }
@@ -327,7 +361,9 @@
     }
 
     @include m.tv {
-
+    }
+    @include m.tablet {
+        padding-top: 58px;
     }
 
     .container {
@@ -342,6 +378,9 @@
 
             @include m.tv {
                 margin-bottom: 76px;
+            }
+            @include m.tablet {
+                margin-bottom: 40px;
             }
         }
     }
@@ -396,7 +435,9 @@
 
         .image {
             @extend %borde_16;
-
+            @include m.tablet {
+                margin-top: 20px;
+            }
             img {
                 width: 100%;
             }
@@ -412,6 +453,11 @@
         }
 
         @include m.tv {}
+        @include m.tablet {
+            padding-top: 20px;
+            gap: 20px;
+            flex-direction: column;
+        }
 
         margin-inline: auto;
 
@@ -468,6 +514,11 @@
         }
 
         @include m.tv {}
+        &:first-of-type {
+                    @include m.tablet {
+            padding-top: 20px;
+        }
+        }
 
         &_head {
             width: 100%;
@@ -494,6 +545,11 @@
             @include m.tv {
                 @include m.flex(flex-start, 10px);
                 margin-bottom: 28px;
+            }
+            @include m.tablet {
+                margin-top: 20px;
+                margin-bottom: 20px;
+                margin-inline: auto;
             }
 
             h3 {
@@ -646,6 +702,15 @@
             }
 
             @include m.tv {}
+            @include m.tablet {
+               display: none;
+            }
+        }
+    }
+    .container {
+        @include m.tablet {
+            margin-inline: 16px;
+            max-width: 382px;
         }
     }
 }
@@ -659,6 +724,9 @@
 
         @include m.tv {
             margin-bottom: 42px;
+        }
+        @include m.tablet {
+            margin-bottom: 24px;
         }
     }
 
@@ -679,6 +747,11 @@
     }
 
     @include m.tv {}
+    @include m.tablet {
+        width: 360px;
+        padding: 36px 24px;
+        gap: 16px;
+    }
 
     &>* {
         width: 100%;
@@ -733,6 +806,10 @@
         border-radius: 50%;
         @include m.h3(v.$white);
         @include m.flex(center);
+        @include m.tablet {
+            width: 40px;
+            height: 40px;
+        }
     }
 
     &_author {
@@ -763,6 +840,9 @@
 
     @include m.tv {
         padding-top: 96px;
+    }
+    @include m.tablet {
+        padding-top: 45px;
     }
 
     @include m.pblock160('bottom');
@@ -835,6 +915,9 @@
             h2 {
                 @extend %mb31;
                 @extend %h2;
+                @include m.tablet {
+                    font-size: 30px;
+                }
             }
 
             &>p {
@@ -862,6 +945,9 @@
             }
 
             @include m.tv {}
+            @include m.tablet {
+                margin-top: 30px;
+            }
         }
     }
 
@@ -881,6 +967,9 @@
                 min-width: 50px;
                 width: calc(50% - 7px);
                 height: 360px;
+            }
+            @include m.tablet {
+                width: 100%;
             }
 
             .permalink,
@@ -980,6 +1069,9 @@
             gap: 12px;
             margin-block: 32px;
         }
+        @include m.tablet {
+            flex-direction: column;
+        }
 
         .image {
             &:is(:hover) {
@@ -996,6 +1088,9 @@
         &>div {
             h3 {
                 @include m.h4();
+                @include m.tablet {
+                    text-align: left;
+                }
             }
 
             &:first-child {
@@ -1008,12 +1103,21 @@
                 .breadlines {
                     @include m.breadlines(v.$black, 1, true);
                     margin-left: auto;
+                     @include m.tablet {
+                    margin-left: 0;
+                }
                 }
 
                 h3 {
                     text-align: right;
+                     @include m.tablet {
+                        text-align: left;
+                    }
                 }
             }
+        }
+        @include m.tablet {
+            gap: 10px;
         }
     }
 
@@ -1021,6 +1125,12 @@
         p {
             @include m.p;
             opacity: 0.9;
+            @include m.tablet {
+                text-align: left !important;
+            }
+        }
+        @include m.tablet {
+            gap: 10px;
         }
 
         &>div {
@@ -1055,6 +1165,9 @@
     @include m.tv {
         padding-block: 116px 76px;
     }
+    @include m.tablet {
+        display: none
+    }
 
     &_head {
         @extend %head_section;
@@ -1065,13 +1178,12 @@
             display: grid;
             grid-template-columns: m.px-to-vw(509px) 1fr 1fr 1fr;
             grid-template-rows: repeat(4, 1fr);
-            grid-gap: m.px-to-vw(16px);
+            grid-gap: m.px-to-vw(18px) m.px-to-vw(16px);
         }
         @include m.tv{
          
         }
     }
-
     .new{
         width: 100%;
         @include m.flex(center);
@@ -1081,9 +1193,16 @@
         }
         &_content{
             background: v.$white;
+            padding: m.px-to-vw(36px);
             *{
                 color: v.$black;
                 text-align: left;
+            }
+            p, span {
+                opacity: 0.8;
+            }
+            a {
+                opacity: 0.6;
             }
         }
         &_image{
@@ -1095,11 +1214,53 @@
 
         &.big{
             grid-row: span 4;
+            .new_image {
+                img {
+                    max-height: m.px-to-vw(336px);
+                    height: 100%;
+                }
+            }
+            .new_content {
+                span, a {
+                    font-size: m.px-to-vw(12px);
+                    font-family: v.$gotham_light;
+                    letter-spacing: 0.72px;
+                }
+                p {
+                    font-size: m.px-to-vw(14px);
+                    letter-spacing: 0.84px;
+                    line-height: 140%;
+                    margin-bottom: m.px-to-vw(33px);
+                }
+            }
+
+            h3 {
+                font-size: m.px-to-vw(20px);
+                line-height: 115%;
+                font-family: v.$goudysb;
+                text-transform: uppercase;
+                margin-block: m.px-to-vw(24px);
+            }
         }
         &.medium{
             grid-row: span 2;
             &[data-nro="4"]{
                 grid-column: 2/3;
+            }
+            .new_content {
+                padding: m.px-to-vw(18px) m.px-to-vw(16px) m.px-to-vw(16px);
+                max-height: m.px-to-vw(177px);
+                height: 100%;
+                a {
+                    font-size: m.px-to-vw(7px);
+                    font-family: v.$gotham_light;
+                }
+            }
+            .new_image {
+                img {
+                    max-height: m.px-to-vw(159px);
+                    height: 100%;
+                }
             }
         }
         &.small{
@@ -1116,6 +1277,13 @@
             &[data-nro="9"]{
                 grid-row: 4/5;
             }
+            .new_content {
+                padding: m.px-to-vw(16px);
+                a {
+                    font-size: m.px-to-vw(7px);
+                    font-family: v.$gotham_light;
+                }
+            }
         }
         &:not(.big){
             span, p{
@@ -1127,7 +1295,7 @@
                 @media (min-width: v.$tv){
                     font-size: m.px-to-vw(7px);
                     letter-spacing: m.px-to-vw(0.42px);
-                    margin-bottom: m.px-to-vw(16px);
+                    margin-bottom: m.px-to-vw(13px);
                 }
                 @include m.tv{
                     
@@ -1140,7 +1308,7 @@
                 text-transform: uppercase;
                 @media (min-width: v.$tv){
                     font-size: m.px-to-vw(14px);
-                    margin-bottom: m.px-to-vw(13px);
+                    margin-bottom: m.px-to-vw(8px);
                 }
                 @include m.tv{
                  
@@ -1151,12 +1319,20 @@
                 @media (min-width: v.$tv){
                     font-size: m.px-to-vw(9px);
                     letter-spacing: m.px-to-vw(0.54px);
-                    margin-bottom: m.px-to-vw(13px);
+                    margin-bottom: m.px-to-vw(8px);
                 }
                 @include m.tv{
                     
                 }
             }
         }
+    }
+    .permalink {
+        margin: auto;
+        margin-top: m.px-to-vw(48px);
+        @media (min-width: v.$tv) {
+            @include m.btn2(m.px-to-vw(418px), m.px-to-vw(60px), false);
+        }
+        @include m.tv {}
     }
 }

@@ -2,6 +2,10 @@
 @use "base/variables" as v;
 
 .blog_section{
+    .container {
+        max-width: m.px-to-vw(1428px);
+        margin-right: m.px-to-vw(180px);
+    }
     &-box{
         background: white;
         padding: m.px-to-vw(66px);
@@ -22,13 +26,26 @@
         background: v.$beige;
         border: m.px-to-vw(1px) solid v.$light_brown;
 
-        span{
-            font-size: m.px-to-vw(12px);
+        span, a{
             font-family: v.$gotham_light;
             font-weight: 500;
         }
+        span,p {
+            opacity: 0.8;
+        }
+        a {
+            opacity: 0.6;
+            color: v.$light_brown;
+            text-decoration: underline;
+        }
         h3{
             @include m.h3v2;
+            -webkit-line-clamp: 4;
+            padding-block: m.px-to-vw(24px);
+        }
+        p {
+            padding-bottom: m.px-to-vw(32px);
+            letter-spacing: 0.84px;
         }
     }
 }

@@ -19,10 +19,10 @@ get_banner('Homepage / classic auctions / News and Insights', '', 'News and Insi
                         <img src="<?php echo IMG; ?>/3.jpg">
                     </div>
                     <div class="blog_article-content">
-                        <span>08/02/2023</span>
+                        <span class="p12">08/02/2023</span>
                         <h3>Actor, Sir Michael Caine’s first car, heads to auction. £100,000 - £150,000 Being Offered with H&H Classics...</h3>
-                        <p>Iconic British actor, Sir Michael Caine CBE’s, first ever car, a 1968 Rolls-Royce Silver Shadow Drophead Coupe with a fascinating history, is being offered for sale at auction on 15 March at the Imperial War Museum, Duxford.</p>
-                        <a href="#">Read More >></a>
+                        <p class="p14">Iconic British actor, Sir Michael Caine CBE’s, first ever car, a 1968 Rolls-Royce Silver Shadow Drophead Coupe with a fascinating history, is being offered for sale at auction on 15 March at the Imperial War Museum, Duxford.</p>
+                        <a class="p12" href="#">Read More >></a>
                     </div>
                 </div>
 

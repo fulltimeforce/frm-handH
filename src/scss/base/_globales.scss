@@ -117,3 +117,33 @@ video {
 .pblock160{
     @include m.pblock160;
 }
+.p12 {
+    font-size: m.px-to-vw(12px);
+    @include m.tv {
+        font-size: 12px;
+    }
+}
+.p14 {
+    font-size: m.px-to-vw(14px);
+    @include m.tv {
+        font-size: 14px;
+    }
+}
+.p16 {
+    font-size: m.px-to-vw(16px);
+    @include m.tv {
+        font-size: 17px;
+    }
+}
+.p18 {
+    font-size: m.px-to-vw(18px);
+    @include m.tv {
+        font-size: 18px;
+    }
+}
+.p20 {
+    font-size: m.px-to-vw(20px);
+    @include m.tv {
+        font-size: 20px;
+    }
+}

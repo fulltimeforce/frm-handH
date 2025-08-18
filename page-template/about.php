@@ -173,4 +173,18 @@ get_banner('Homepage / About / About H&H Classics', '', 'About H&H Classics');
     <?php get_template_part('inc/sections/upcoming'); ?>
 </section>
 
+<section class="two-columns_section">
+    <div class="container">
+        <h2>With 83% sell-through rate across live and online sales</h2>
+        <div class="two_columns_div">
+            <p>H&H Classics connects collectors from around the world through live and online auctions. With prestigious venues like the Imperial War Museum, Duxford, and the Pavilion Gardens, Buxton, and a global network spanning over 20 countries, we ensure every lot receives maximum exposure.</p>
+            <p>Our auctions boast an impressive 83% sell-through rate, thanks to our beautifully curated luxury catalogues and innovative online bidding platform. For every bidder in the room at our live events, three are registered online, with successful sales often shipping thousands of miles to new owners.</p>
+            <div>
+                <a class="permalink_border">Explore Upcoming Auctions</a>
+                <a class="permalink_border">View Our Services</a>
+            </div>
+        </div>
+    </div>
+</section>
+
 <?php get_footer(); ?>
