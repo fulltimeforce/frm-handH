@@ -375,6 +375,44 @@ get_header();
             </div>
             <h2>Featured Articles</h2>
         </div>
+        <div class="featured_articles-body">
+            <article class="new big" data-nro="1">
+                <div class="new_image">
+                    <img src="<?php echo IMG; ?>/new1.png">
+                </div>
+                <div class="new_content">
+                    <span>22/09/2018</span>
+                    <h3>Actor, Sir Michael Caine’s first car, heads to auction. £100,000 - £150,000 Being Offered with H&H Classics...</h3>
+                    <p>Iconic British actor, Sir Michael Caine CBE’s, first ever car, a 1968 Rolls-Royce Silver Shadow Drophead Coupe with a fascinating history, is being offered for sale at auction on 15 March at the Imperial War Museum, Duxford.</p>
+                    <a href="#">Read More >></a>
+                </div>
+            </article>
+            
+            <?php for ($i = 2; $i < 6; $i++): ?>
+                <article class="new medium" data-nro="<?php echo $i; ?>">
+                    <div class="new_image">
+                        <img src="<?php echo IMG; ?>/new1.png">
+                    </div>
+                    <div class="new_content">
+                        <span>22/09/2018</span>
+                        <h3>Eric Clapton's 2004 Ferrari 612 Scaglietti F1</h3>
+                        <p>Rock Music Legend, Eric Clapton’s Mirabeau Blue right-hand drive 2004 Ferrari 612 Scaglietti F1 with 29,700 miles...</p>
+                        <a href="#">Read More >></a>
+                    </div>
+                </article>
+            <?php endfor; ?>
+
+            <?php for ($i = 6; $i < 10; $i++): ?>
+                <article class="new small" data-nro="<?php echo $i; ?>">
+                    <div class="new_content">
+                        <span>22/09/2018</span>
+                        <h3>Eric Clapton's 2004 Ferrari 612 Scaglietti F1</h3>
+                        <p>Rock Music Legend, Eric Clapton’s Mirabeau Blue right-hand drive 2004 Ferrari 612 Scaglietti F1 with 29,700 miles...</p>
+                        <a href="#">Read More >></a>
+                    </div>
+                </article>
+            <?php endfor; ?>
+        </div>
     </div>
 </section>
 

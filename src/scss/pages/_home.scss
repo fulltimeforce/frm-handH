@@ -1059,4 +1059,104 @@
     &_head {
         @extend %head_section;
     }
+    &-body{
+        width: 100%;
+        @media (min-width: v.$tv){
+            display: grid;
+            grid-template-columns: m.px-to-vw(509px) 1fr 1fr 1fr;
+            grid-template-rows: repeat(4, 1fr);
+            grid-gap: m.px-to-vw(16px);
+        }
+        @include m.tv{
+         
+        }
+    }
+
+    .new{
+        width: 100%;
+        @include m.flex(center);
+        flex-direction: column;
+        &>*{
+            width: 100%;
+        }
+        &_content{
+            background: v.$white;
+            *{
+                color: v.$black;
+                text-align: left;
+            }
+        }
+        &_image{
+            img{
+                display: block;
+                width: 100%;
+            }
+        }
+
+        &.big{
+            grid-row: span 4;
+        }
+        &.medium{
+            grid-row: span 2;
+            &[data-nro="4"]{
+                grid-column: 2/3;
+            }
+        }
+        &.small{
+            grid-column: 4/5;
+            &[data-nro="6"]{
+                grid-row: 1/2;
+            }
+            &[data-nro="7"]{
+                grid-row: 2/3;
+            }
+            &[data-nro="8"]{
+                grid-row: 3/4;
+            }
+            &[data-nro="9"]{
+                grid-row: 4/5;
+            }
+        }
+        &:not(.big){
+            span, p{
+                font-family: v.$gotham_light;
+                line-height: 140%;
+            }
+            span{
+                display: block;
+                @media (min-width: v.$tv){
+                    font-size: m.px-to-vw(7px);
+                    letter-spacing: m.px-to-vw(0.42px);
+                    margin-bottom: m.px-to-vw(16px);
+                }
+                @include m.tv{
+                    
+                }
+            }
+            h3{
+                font-family: v.$goudysb;
+                font-weight: 400;
+                line-height: 115%;
+                text-transform: uppercase;
+                @media (min-width: v.$tv){
+                    font-size: m.px-to-vw(14px);
+                    margin-bottom: m.px-to-vw(13px);
+                }
+                @include m.tv{
+                 
+                }
+            }
+            p{
+                opacity: 0.8;
+                @media (min-width: v.$tv){
+                    font-size: m.px-to-vw(9px);
+                    letter-spacing: m.px-to-vw(0.54px);
+                    margin-bottom: m.px-to-vw(13px);
+                }
+                @include m.tv{
+                    
+                }
+            }
+        }
+    }
 }
