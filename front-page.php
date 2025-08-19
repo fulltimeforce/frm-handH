@@ -12,11 +12,19 @@ $hero_subtitle = get_field('hero_subtitle');
 $hero_button1 = get_field('hero_button_1');
 $hero_button2 = get_field('hero_button_2');
 
+$upcoming_text = get_field('upcoming_text');
+$upcoming_button1 = get_field('upcoming_button_1');
+$upcoming_button2 = get_field('upcoming_button_2');
+
+$why_video = get_field('whychoose_video');
 $why_img = get_field('whychoose_image');
 $why_subtitle = get_field('whychoose_subtitle');
 $why_title = get_field('whychoose_title');
 $why_text = get_field('whychoose_text');
 $why_stats = get_field('stats');
+$why_p = get_field('whychoose_p');
+$why_button1 = get_field('whychoose_button1');
+$why_button2 = get_field('whychoose_button2');
 
 $successes_subtitle = get_field('success_subtitle');
 $successes_title = get_field('success_title');
@@ -25,16 +33,12 @@ $successes_text = get_field('success_text');
 $testimonials_subtitle = get_field('testimonials_subtitle');
 $testimonials_title = get_field('testimonials_title');
 $testimonials_items = get_field('testimonials_items');
-
-$auction_title = get_field('auction_subtitle');
-$auction_text = get_field('auction_text');
-$auction_button = get_field('auction_button');
 ?>
 
 <main class="hero relative">
     <div class="video__bg">
         <video autoplay playsinline muted loop>
-            <source src="<?php echo IMG; ?>/HHH.mp4">
+            <source src="<?php echo $hero_bg; ?>">
         </video>
     </div>
     <div class="container">
@@ -45,7 +49,7 @@ $auction_button = get_field('auction_button');
                 </div>
             <?php endif; ?>
             <?php if ($hero_title): ?>
-                <h1><?php echo $hero_title; ?></h1>
+                <?php echo $hero_title; ?>
             <?php endif; ?>
             <div class="hero_actions">
                 <?php if ($hero_button1): ?>
@@ -60,38 +64,51 @@ $auction_button = get_field('auction_button');
                     </a>
                 <?php endif; ?>
             </div>
+            <a class="hero_scroll" href="#upcoming-auctions">
+                <p>SCROLL</p>
+                <div></div>
+                <p>DOWN</p>
+            </a>
         </div>
     </div>
 </main>
 
-<section class="upcoming">
+<section class="upcoming" id="upcoming-auctions">
     <?php get_template_part('inc/sections/upcoming'); ?>
     <div class="container">
         <div class="upcoming_foot">
-            <div>
-                <p>Bidding is available live at all our auction venues, online through our website, or by telephone and commission. Parking and entry into the auction is free for auction attendees with a catalogue.</p>
-            </div>
-            <a href="#" class="permalink" alt="View All Vehicles">
-                View All Vehicles
+            <?php if ($upcoming_text): ?>
+                <div>
+                    <p><?php echo $upcoming_text; ?></p>
+                </div>
+            <?php endif; ?>
+            <?php if ($upcoming_button1): ?>
+                <a href="<?php echo esc_url($upcoming_button1['url']); ?>" target="<?php echo esc_attr($upcoming_button1['target'] ?: '_self'); ?>" class="permalink" alt="<?php echo esc_html($upcoming_button1['title']); ?>">
+                    <?php echo esc_html($upcoming_button1['title']); ?>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 19 19" fill="none">
+                    <path d="M9.49999 -3.93403e-07L9.49999 12M9.49999 12L15.5 6M9.49999 12L3.49999 6M18.5 13L18.5 18L0.499999 18L0.499999 13" stroke="#8C6E47"/>
+                    </svg>
+                </a>
+            <?php endif; ?>
+        </div>
+        <?php if ($upcoming_button2): ?>
+            <a href="<?php echo esc_url($upcoming_button2['url']); ?>" target="<?php echo esc_attr($upcoming_button2['target'] ?: '_self'); ?>" class="permalink_border">
+                <?php echo esc_html($upcoming_button2['title']); ?>
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
                     <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
                 </svg>
             </a>
-        </div>
-        <a href="#" class="permalink_border">
-            View All Auction Venues
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
-                <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
-            </svg>
-        </a>
+        <?php endif; ?>
     </div>
 </section>
 
+<?php if ($why_video): ?>
 <section class="banner_car">
     <video autoplay loop muted>
-        <source src="<?php echo IMG; ?>/banner-car.mp4">
+        <source src="<?php echo $why_video; ?>">
     </video>
 </section>
+<?php endif; ?>
 
 <section class="why_choose_us">
     <div class="container">
@@ -113,50 +130,67 @@ $auction_button = get_field('auction_button');
                 <img src="<?php echo IMG; ?>/5.png">
             </div>
         </div>
-        <div class="why_choose_us-stats">
-            <div>
-                <h3>$11M+</h3>
-                <p>Classic Car Sold</p>
+        <?php if (have_rows('stats')): ?>
+            <div class="why_choose_us-stats">
+                <?php while (have_rows('stats')): the_row(); ?>
+                    <?php 
+                        $number = get_sub_field('stats_number'); 
+                        $text   = get_sub_field('stats_text'); 
+                    ?>
+                    <div>
+                        <?php if ($number): ?>
+                            <h3><?php echo esc_html($number); ?></h3>
+                        <?php endif; ?>
+                        
+                        <?php if ($text): ?>
+                            <p><?php echo esc_html($text); ?></p>
+                        <?php endif; ?>
+                    </div>
+                <?php endwhile; ?>
             </div>
-            <div>
-                <h3>83%</h3>
-                <p>sell-through rate</p>
-            </div>
-            <div>
-                <h3>70,000+</h3>
-                <p>Global Clients</p>
-            </div>
-        </div>
+        <?php endif; ?>
     </div>
     <div class="container">
         <div class="upcoming_foot">
+            <?php if ($why_p): ?>
             <div>
-                <p>Founded by Simon Hope and Mark Hamilton in 1993 H&H Classics has been continuously trading longer than any other UK or European auction house. In fact, you could say that we’ve reached classic status ourselves.</p>
+                <p><?php echo $why_p; ?></p>
             </div>
-            <a href="#" class="permalink" alt="View All Vehicles">
-                Purchase A Catalogue
+            <?php endif; ?>
+            <?php if ($why_button1): ?>
+                <a href="<?php echo esc_url($why_button1['url']); ?>" class="permalink" target="<?php echo esc_attr($why_button1['target'] ?: '_self'); ?>" >
+                    <?php echo ($why_button1['title']); ?>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18" fill="none">
+                    <path d="M9.5 4.55556V17M9.5 4.55556C9.5 3.61256 9.12072 2.70819 8.44558 2.0414C7.77045 1.3746 6.85478 1 5.9 1H1.4C1.16131 1 0.932387 1.09365 0.763604 1.26035C0.594821 1.42705 0.5 1.65314 0.5 1.88889V13.4444C0.5 13.6802 0.594821 13.9063 0.763604 14.073C0.932387 14.2397 1.16131 14.3333 1.4 14.3333H6.8C7.51608 14.3333 8.20284 14.6143 8.70919 15.1144C9.21554 15.6145 9.5 16.2928 9.5 17M9.5 4.55556C9.5 3.61256 9.87928 2.70819 10.5544 2.0414C11.2295 1.3746 12.1452 1 13.1 1H17.6C17.8387 1 18.0676 1.09365 18.2364 1.26035C18.4052 1.42705 18.5 1.65314 18.5 1.88889V13.4444C18.5 13.6802 18.4052 13.9063 18.2364 14.073C18.0676 14.2397 17.8387 14.3333 17.6 14.3333H12.2C11.4839 14.3333 10.7972 14.6143 10.2908 15.1144C9.78446 15.6145 9.5 16.2928 9.5 17" stroke="#8C6E47" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+            <?php endif; ?>
+        </div>
+        <?php if ($why_button2): ?>
+            <a href="<?php echo esc_url($why_button2['url']); ?>" class="permalink_border" target="<?php echo esc_attr($why_button2['target'] ?: '_self'); ?>">
+                <?php echo ($why_button2['title']); ?>
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
                     <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
                 </svg>
             </a>
-        </div>
-        <a href="#" class="permalink_border">
-            Learn More About H&H Classics
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
-                <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
-            </svg>
-        </a>
+        <?php endif; ?>
     </div>
 </section>
 
 <section class="our_successes">
     <div class="container">
         <div class="our_successes-head">
-            <div class="breadlines">
-                <p>What Sets Us Apart</p>
-            </div>
-            <h2>Our Successes</h2>
-            <p>H&H Classics has been selling classic & collector motorcars and motorcycles for longer than any other auction house in the UK and Europe. We sell with a passion and enthusiasm that sets us apart.</p>
+            <?php if ($successes_subtitle): ?>
+                <div class="breadlines">
+                    <p><?php echo $successes_subtitle; ?></p>
+                </div>
+            <?php endif; ?>
+            <?php if ($successes_title): ?>
+                <h2><?php echo $successes_title; ?></h2>
+            <?php endif; ?>
+            <?php if ($successes_text): ?>
+                <p><?php echo $successes_text; ?></p>
+            <?php endif; ?>
         </div>
     </div>
     <div class="our_successes-body">
@@ -348,10 +382,14 @@ $auction_button = get_field('auction_button');
 <section class="clients">
     <div class="container_side">
         <div class="clients_head">
-            <div class="breadlines">
-                <p>Testimonials</p>
-            </div>
-            <h2>From Our Clients</h2>
+            <?php if ($testimonials_subtitle): ?>
+                <div class="breadlines">
+                    <p><?php echo $testimonials_subtitle; ?></p>
+                </div>
+            <?php endif; ?>
+            <?php if ($testimonials_title): ?>
+                <h2><?php echo $testimonials_title; ?></h2>
+            <?php endif; ?>
         </div>
         <div class="clients_body">
             <div class="splide" role="group" id="clients">
@@ -369,39 +407,44 @@ $auction_button = get_field('auction_button');
                 </div>
                 <div class="splide__track">
                     <ul class="splide__list">
-                        <?php for ($j = 0; $j < 5; $j++): ?>
+                    <?php if (have_rows('testimonials_items')): ?>
+                        <?php while (have_rows('testimonials_items')): the_row(); ?>
                             <li class="splide__slide">
                                 <div class="comment">
                                     <div class="comment_info">
                                         <div class="stars">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                                                <path d="M8.76224 0.731762C8.83707 0.501435 9.16293 0.501435 9.23776 0.731763L11.189 6.73708C11.2225 6.84009 11.3185 6.90983 11.4268 6.90983H17.7411C17.9833 6.90983 18.084 7.21973 17.8881 7.36208L12.7797 11.0736C12.692 11.1372 12.6554 11.2501 12.6888 11.3531L14.6401 17.3584C14.7149 17.5887 14.4513 17.7803 14.2554 17.6379L9.14695 13.9264C9.05932 13.8628 8.94068 13.8628 8.85305 13.9264L3.74462 17.6379C3.54869 17.7803 3.28507 17.5887 3.35991 17.3584L5.31116 11.3531C5.34463 11.2501 5.30796 11.1372 5.22034 11.0736L0.11191 7.36208C-0.0840186 7.21973 0.0166752 6.90983 0.258856 6.90983H6.57322C6.68153 6.90983 6.77752 6.84009 6.81099 6.73708L8.76224 0.731762Z" fill="#8C6E47" />
-                                            </svg>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                                                <path d="M8.76224 0.731762C8.83707 0.501435 9.16293 0.501435 9.23776 0.731763L11.189 6.73708C11.2225 6.84009 11.3185 6.90983 11.4268 6.90983H17.7411C17.9833 6.90983 18.084 7.21973 17.8881 7.36208L12.7797 11.0736C12.692 11.1372 12.6554 11.2501 12.6888 11.3531L14.6401 17.3584C14.7149 17.5887 14.4513 17.7803 14.2554 17.6379L9.14695 13.9264C9.05932 13.8628 8.94068 13.8628 8.85305 13.9264L3.74462 17.6379C3.54869 17.7803 3.28507 17.5887 3.35991 17.3584L5.31116 11.3531C5.34463 11.2501 5.30796 11.1372 5.22034 11.0736L0.11191 7.36208C-0.0840186 7.21973 0.0166752 6.90983 0.258856 6.90983H6.57322C6.68153 6.90983 6.77752 6.84009 6.81099 6.73708L8.76224 0.731762Z" fill="#8C6E47" />
-                                            </svg>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                                                <path d="M8.76224 0.731762C8.83707 0.501435 9.16293 0.501435 9.23776 0.731763L11.189 6.73708C11.2225 6.84009 11.3185 6.90983 11.4268 6.90983H17.7411C17.9833 6.90983 18.084 7.21973 17.8881 7.36208L12.7797 11.0736C12.692 11.1372 12.6554 11.2501 12.6888 11.3531L14.6401 17.3584C14.7149 17.5887 14.4513 17.7803 14.2554 17.6379L9.14695 13.9264C9.05932 13.8628 8.94068 13.8628 8.85305 13.9264L3.74462 17.6379C3.54869 17.7803 3.28507 17.5887 3.35991 17.3584L5.31116 11.3531C5.34463 11.2501 5.30796 11.1372 5.22034 11.0736L0.11191 7.36208C-0.0840186 7.21973 0.0166752 6.90983 0.258856 6.90983H6.57322C6.68153 6.90983 6.77752 6.84009 6.81099 6.73708L8.76224 0.731762Z" fill="#8C6E47" />
-                                            </svg>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                                                <path d="M8.76224 0.731762C8.83707 0.501435 9.16293 0.501435 9.23776 0.731763L11.189 6.73708C11.2225 6.84009 11.3185 6.90983 11.4268 6.90983H17.7411C17.9833 6.90983 18.084 7.21973 17.8881 7.36208L12.7797 11.0736C12.692 11.1372 12.6554 11.2501 12.6888 11.3531L14.6401 17.3584C14.7149 17.5887 14.4513 17.7803 14.2554 17.6379L9.14695 13.9264C9.05932 13.8628 8.94068 13.8628 8.85305 13.9264L3.74462 17.6379C3.54869 17.7803 3.28507 17.5887 3.35991 17.3584L5.31116 11.3531C5.34463 11.2501 5.30796 11.1372 5.22034 11.0736L0.11191 7.36208C-0.0840186 7.21973 0.0166752 6.90983 0.258856 6.90983H6.57322C6.68153 6.90983 6.77752 6.84009 6.81099 6.73708L8.76224 0.731762Z" fill="#8C6E47" />
-                                            </svg>
+                                            <?php for ($s = 0; $s < 4; $s++): ?>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                                    <path d="M8.76224 0.731762C8.83707 0.501435 9.16293 0.501435 9.23776 0.731763L11.189 6.73708C11.2225 6.84009 11.3185 6.90983 11.4268 6.90983H17.7411C17.9833 6.90983 18.084 7.21973 17.8881 7.36208L12.7797 11.0736C12.692 11.1372 12.6554 11.2501 12.6888 11.3531L14.6401 17.3584C14.7149 17.5887 14.4513 17.7803 14.2554 17.6379L9.14695 13.9264C9.05932 13.8628 8.94068 13.8628 8.85305 13.9264L3.74462 17.6379C3.54869 17.7803 3.28507 17.5887 3.35991 17.3584L5.31116 11.3531C5.34463 11.2501 5.30796 11.1372 5.22034 11.0736L0.11191 7.36208C-0.0840186 7.21973 0.0166752 6.90983 0.258856 6.90983H6.57322C6.68153 6.90983 6.77752 6.84009 6.81099 6.73708L8.76224 0.731762Z" fill="#8C6E47" />
+                                                </svg>
+                                            <?php endfor; ?>
                                         </div>
                                         <div class="comment_title">
-                                            <h3>Absolutely excellent from start to finish</h3>
+                                            <h3><?php the_sub_field('testimonials_item_title'); ?></h3>
                                         </div>
                                         <div class="comment_description">
-                                            <p>“Absolutely excellent from start to finish. Lucas Gomershall guided us through the whole process. From the cars being collected to the actual auction, when the cars sold well, could not have gone more smoothly.”</p>
+                                            <?php the_sub_field('testimonials_item_text'); ?>
                                         </div>
                                     </div>
                                     <div class="comment_author">
-                                        <div class="comment_photo">JL</div>
-                                        <span>Andrew Cooper</span>
+                                        <div class="comment_photo">
+                                            <?php
+                                            $name = get_sub_field('testimonials_item_name');
+                                            $parts = explode(' ', trim($name));
+                                            if (count($parts) >= 2) {
+                                                echo strtoupper(substr($parts[0], 0, 1) . substr($parts[1], 0, 1));
+                                            } else {
+                                                echo strtoupper(substr($parts[0], 0, 1));
+                                            }
+                                            ?>
+                                        </div>
+                                        <span><?php echo esc_html($name); ?></span>
                                     </div>
                                 </div>
                             </li>
-                        <?php endfor; ?>
-                    </ul>
+                        <?php endwhile; ?>
+                    <?php endif; ?>
+                </ul>
                 </div>
             </div>
         </div>
@@ -419,6 +462,43 @@ $auction_button = get_field('auction_button');
             <h2>Featured Articles</h2>
         </div>
         <div class="featured_articles-body">
+        <?php
+        $args = array(
+            'post_type'      => 'post',
+            'posts_per_page' => 9,
+        );
+        $query = new WP_Query($args);
+
+        if ($query->have_posts() && $query->found_posts > 1) :
+            $count = 1;
+            while ($query->have_posts()) : $query->the_post();
+                if ($count === 1) {
+                    $size_class = 'big';
+                } elseif ($count >= 2 && $count <= 5) {
+                    $size_class = 'medium';
+                } else {
+                    $size_class = 'small';
+                }
+                ?>
+                <article class="new <?php echo $size_class; ?>" data-nro="<?php echo $count; ?>">
+                    <?php if (has_post_thumbnail()) : ?>
+                        <div class="new_image">
+                            <?php the_post_thumbnail('medium'); ?>
+                        </div>
+                    <?php endif; ?>
+                    <div class="new_content">
+                        <span><?php echo get_the_date(); ?></span>
+                        <h3><?php the_title(); ?></h3>
+                        <p><?php echo wp_trim_words(get_the_excerpt(), 25); ?></p>
+                        <a href="<?php the_permalink(); ?>">Read More >></a>
+                    </div>
+                </article>
+                <?php
+                $count++;
+            endwhile;
+            wp_reset_postdata();
+        else :
+            ?>
             <article class="new big" data-nro="1">
                 <div class="new_image">
                     <img src="<?php echo IMG; ?>/new1.png">
@@ -430,7 +510,7 @@ $auction_button = get_field('auction_button');
                     <a href="#">Read More >></a>
                 </div>
             </article>
-            
+
             <?php for ($i = 2; $i < 6; $i++): ?>
                 <article class="new medium" data-nro="<?php echo $i; ?>">
                     <div class="new_image">
@@ -455,12 +535,13 @@ $auction_button = get_field('auction_button');
                     </div>
                 </article>
             <?php endfor; ?>
-        </div>
+        <?php endif; ?>
+    </div>
         <a href="#" class="permalink" alt="View All Vehicles">
-                View All Articles
-                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
-                    <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
-                </svg>
+            View All Articles
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
+                <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
+            </svg>
         </a>
     </div>
 </section>

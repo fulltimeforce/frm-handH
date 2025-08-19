@@ -52,7 +52,12 @@
                 margin-block: m.px-to-vw(36px) m.px-to-vw(64px);
             }
 
-            @include m.tv {}
+            @include m.tv {
+                margin-block: 36px 64px;
+            }
+            @include m.tablet {
+                margin-block: 18px 32px;
+            }
 
             strong {
                 display: block;
@@ -74,6 +79,54 @@
             gap: 20px;
         }
     }
+    &_scroll {
+        position: absolute;
+        right: 0;
+        overflow: hidden;
+        @include m.flex(center, 21px);
+        @media(min-width: v.$tv) {
+            @include m.flex(center, m.px-to-vw(21px));
+            top: m.px-to-vw(550px);
+        }
+        @include m.tv {
+            right: calc(50% - 93px);
+            top: 450px;
+        }
+        p {
+            color: v.$white;
+            padding: m.px-to-vw(10px);
+            font-size: m.px-to-vw(12px);
+            letter-spacing: m.px-to-vw(1.2px);
+            @include m.tv {
+                font-size: 12px;
+                padding: 10px;
+                letter-spacing: 1.2px;
+            }
+        }
+        div {
+            width: m.px-to-vw(1px);
+            height: m.px-to-vw(50px);
+            background: white;  
+            animation: slideDown 1.5s linear infinite;
+            @include m.tv {
+                width: 1px;
+                height: 50px;
+            }
+        }
+    }
+}
+
+
+@keyframes slideDown {
+  0% {
+    transform: translateY(-100%);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(100%);
+  }
 }
 
 %borde_16 {
@@ -909,6 +962,10 @@
                 @include m.tablet {
                     font-size: 30px;
                 }
+                strong {
+                    color: v.$light_brown;
+                    display: block;
+                }
             }
 
             &>p {
@@ -1206,9 +1263,14 @@
         &.big{
             grid-row: span 4;
             .new_image {
+                overflow: hidden;
                 img {
                     max-height: m.px-to-vw(336px);
                     height: 100%;
+                    transition: all .3s ease;
+                    &:hover {
+                        scale: 1.2;
+                    }
                 }
             }
             .new_content {
@@ -1248,9 +1310,14 @@
                 }
             }
             .new_image {
+                overflow: hidden;
                 img {
                     max-height: m.px-to-vw(159px);
                     height: 100%;
+                    transition: all .3s ease;
+                    &:hover {
+                        scale: 1.2;
+                    }
                 }
             }
         }
