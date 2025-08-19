@@ -83,7 +83,9 @@
             left: m.px-to-vw(216px) !important;
         }
         @include m.tv{
-            
+            height: calc(100vh - 100px) !important;
+            width: 25px !important;
+            left: 37px !important;
         }
         @include m.tablet {
             display: none;
@@ -96,13 +98,18 @@
     }
 
     &_container {
-        // @include m.flex(space-between);
+        //@include m.flex(space-between);
         @media (min-width: v.$tv) {
             display: grid;
             grid-template-columns: m.px-to-vw(112px) 1fr;
             grid-gap: m.px-to-vw(64px);
         }
-        @include m.tv {}
+        @include m.tv {
+            display: grid;
+            gap: 20px;
+            grid-template-columns: 112px 1fr;
+            padding: 0 15px 15px;
+        }
         @include m.tablet {
             padding: 10px 20px;
         }
@@ -111,11 +118,19 @@
             font-family: 'GothamLight';
         }
         img {
-            @include m.tablet {
+            @include m.tv {
                 max-width: 70px;
             }
         }
+        a {
+        }
+        nav {
+            @include m.tv {
+                flex: 1;
+            }
+        }
     }
+
 
     &_logo {
         @media (min-width: v.$tv) {
@@ -138,6 +153,9 @@
 
     &_navigation {
         mix-blend-mode: difference;
+        @include m.tv {
+
+        }
 
         &--bg {
             @media (min-width: v.$tv) {
@@ -150,7 +168,9 @@
                 padding-top: m.px-to-vw(34px);
             }
 
-            @include m.tv {}
+            @include m.tv {
+                padding-top: 34px;
+            }
             @include m.tablet {
                 display: none;
             }
@@ -319,9 +339,11 @@
 
                 @media (max-width: v.$tv) {
                     @include m.flex(center, 5px);
-                    font-size: 15px;
+                    font-size: 13px;
                     padding: 14px 11px;
                 }
+
+
 
                 @include m.transition;
 
@@ -365,6 +387,15 @@
         }
     }
 
+    &_logo {
+        @include m.tv {
+            padding-top: 34px;
+        }
+        @include m.tablet {
+            padding-top: 0;
+        }
+    }
+
     &_actions {
         mix-blend-mode: difference;
 
@@ -375,9 +406,11 @@
 
         @media (max-width: v.$tv) {
             @include m.flex(flex-end, 12px);
+            padding-top: 34px;
+            font-size: 13px;
         }
 
-        @include m.tablet {
+        @include m.desktop {
             display: none;
         }
 
@@ -398,7 +431,7 @@
                 padding-block: 14px;
                 padding-inline: 0 11px;
                 @include m.flex(center, 5px);
-                font-size: 15px;
+                font-size: 13px;
             }
 
             svg {
@@ -414,6 +447,10 @@
 
         a {
             @include m.btn1;
+            @include m.tv {
+                max-width: 100%;
+                font-size: 13px;
+            }
         }
 
         svg,

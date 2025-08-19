@@ -1272,9 +1272,14 @@
         &.big{
             grid-row: span 4;
             .new_image {
+                overflow: hidden;
                 img {
                     max-height: m.px-to-vw(336px);
                     height: 100%;
+                    transition: all .3s ease;
+                    &:hover {
+                        scale: 1.2;
+                    }
                 }
             }
             .new_content {
@@ -1314,9 +1319,14 @@
                 }
             }
             .new_image {
+                overflow: hidden;
                 img {
                     max-height: m.px-to-vw(159px);
                     height: 100%;
+                    transition: all .3s ease;
+                    &:hover {
+                        scale: 1.2;
+                    }
                 }
             }
         }
