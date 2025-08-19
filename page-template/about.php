@@ -19,7 +19,36 @@ get_banner('Homepage / About / About H&H Classics', '', 'About H&H Classics');
             <button type="button">Upcoming Auctions</button>
         </div>
         <div class="heritage_information">
+            <div class="heritage_images">
 
+            </div>
+            <div class="heritage_content">
+                <div class="breadlines">
+                    <p>Classic Vehicle Auctions</p>
+                </div>
+                <h2><span>Our Heritage:</span> A Legacy of Successes</h2>
+                <div class="content">
+                    <p>
+                        Founded in 1993 by Simon Hope and Mark Hamilton, H&H Classics has become synonymous with expertise and success in the world of classic and collector vehicles. Over the past 30 years, we’ve sold more than 15,000 motorcars and motorcycles to collectors across the globe, achieving record-breaking sales and global recognition.
+                        <br><br>
+                        Our achievements include selling a car for over $11 million—a 1960 Ferrari 250 GT SWB—and nearly £2 million worth of motorcycles in a single day. With over 75,000 loyal clients globally, H&H Classics has cemented its reputation for delivering excellence.
+                    </p>
+                </div>
+                <div class="actions">
+                    <a href="#" class="permalink_border">
+                        Explore Upcoming Actions
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
+                            <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
+                        </svg>
+                    </a>
+                    <a href="#" class="permalink_border">
+                        View Our Services
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
+                            <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </section>
