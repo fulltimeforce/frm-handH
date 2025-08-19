@@ -1382,26 +1382,29 @@
             img{
                 display: block;
                 width: 100%;
+                object-fit: cover;
             }
         }
 
         &.big{
             grid-row: span 4;
+            
             .new_image {
                 overflow: hidden;
                 img {
-                    max-height: m.px-to-vw(336px);
-                    height: 100%;
+                    height: m.px-to-vw(362px);
                     transition: all .3s ease;
+                    object-fit: cover;
                     &:hover {
                         scale: 1.2;
                     }
                     @include m.tv {
-                        max-height: 336px;
+                        height: 362px;
                     }
                 }
             }
             .new_content {
+                height: m.px-to-vw(370px);
                 span, a {
                     font-size: m.px-to-vw(12px);
                     font-family: v.$gotham_light;
@@ -1441,11 +1444,10 @@
             }
             .new_content {
                 padding: m.px-to-vw(18px) m.px-to-vw(16px) m.px-to-vw(16px);
-                max-height: m.px-to-vw(160px);
-                height: 100%;
+                height: m.px-to-vw(180px);
                  @include m.tv {
                     padding: 18px 16px 16px;
-                    max-height: 160px;
+                    height: 160px;
                 }
                 a {
                     font-size: m.px-to-vw(7px);
@@ -1458,11 +1460,10 @@
             .new_image {
                 overflow: hidden;
                 img {
-                    max-height: m.px-to-vw(142px);
-                    height: 100%;
+                    height: m.px-to-vw(172px);
                     transition: all .3s ease;
                      @include m.tv {
-                        max-height: 142px;
+                        max-height: 172px;
                     }
                     &:hover {
                         scale: 1.2;
@@ -1472,6 +1473,7 @@
         }
         &.small{
             grid-column: 4/5;
+            height: m.px-to-vw(172px);
             &[data-nro="6"]{
                 grid-row: 1/2;
             }
@@ -1485,7 +1487,8 @@
                 grid-row: 4/5;
             }
             .new_content {
-                padding: m.px-to-vw(16px);
+                padding: m.px-to-vw(14px) m.px-to-vw(16px);
+                height: 100%;
                  @include m.tv {
                     padding: 16px;
                 }

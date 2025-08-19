@@ -492,7 +492,7 @@ $testimonials_items = get_field('testimonials_items');
         );
         $query = new WP_Query($args);
 
-        if ($query->have_posts() && $query->found_posts > 1) :
+        if ($query->have_posts() && $query->found_posts > 9) :
             $count = 1;
             while ($query->have_posts()) : $query->the_post();
                 if ($count === 1) {
@@ -523,9 +523,19 @@ $testimonials_items = get_field('testimonials_items');
                             }
                             ?>
                         </h3>
-                        <?php if ($size_class !== 'small') : ?>
-                            <p><?php echo wp_trim_words(get_the_excerpt(), 25); ?></p>
-                        <?php endif; ?>
+                       <?php
+                        $short_desc = get_field('post_short_description');
+
+                        if ($short_desc) {
+                            if ($size_class === 'big') {
+                                echo '<p>' . mb_strimwidth($short_desc, 0, 225, '...') . '</p>';
+                            } elseif ($size_class === 'medium') {
+                                echo '<p>' . mb_strimwidth($short_desc, 0, 100, '...') . '</p>';
+                            } elseif ($size_class === 'small') {
+                                echo '<p>' . mb_strimwidth($short_desc, 0, 112, '...') . '</p>';
+                            }
+                        }
+                        ?>
                         <a href="<?php the_permalink(); ?>">Read More >></a>
                     </div>
                 </article>
@@ -542,7 +552,6 @@ $testimonials_items = get_field('testimonials_items');
                 <div class="new_content">
                     <span>22/09/2018</span>
                     <h3>Actor, Sir Michael Caine’s first car, heads to auction...</h3>
-                    <p>Iconic British actor...</p>
                     <a href="#">Read More >></a>
                 </div>
             </article>
@@ -555,7 +564,6 @@ $testimonials_items = get_field('testimonials_items');
                     <div class="new_content">
                         <span>22/09/2018</span>
                         <h3>Eric Clapton's 2004 Ferrari 612 Scaglietti F1</h3>
-                        <p>Rock Music Legend...</p>
                         <a href="#">Read More >></a>
                     </div>
                 </article>
@@ -566,7 +574,6 @@ $testimonials_items = get_field('testimonials_items');
                     <div class="new_content">
                         <span>22/09/2018</span>
                         <h3>Eric Clapton's 2004 Ferrari 612 Scaglietti F1</h3>
-                        <p>Rock Music Legend...</p>
                         <a href="#">Read More >></a>
                     </div>
                 </article>
