@@ -748,3 +748,11 @@
         margin-bottom: 24px;
     }
 }
+
+@mixin text-base($font-family, $weight, $size, $line-height: normal, $letter-spacing: normal) {
+    font-family: $font-family;
+    font-weight: $weight;
+    font-size: $size;
+    line-height: $line-height;
+    letter-spacing: $letter-spacing;
+}

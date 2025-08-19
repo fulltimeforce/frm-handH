@@ -5,12 +5,13 @@
 
 get_header();
 
+$bg_image = get_field('breadcrumb_image');
 $subtitle = get_field('specialist_subtitle');
 $text = get_field('specialist_text');
 $button = get_field('specialist_button');
-?>
 
-<?php get_template_part('inc/sections/breadcrumb'); ?>
+get_banner('Homepage / About / Meet the team', esc_url($bg_image), 'Meet the team');
+?>
 
 <section class="specialist_page">
     <div class="container">
@@ -22,8 +23,8 @@ $button = get_field('specialist_button');
                 <div class="specialist_text text">
                 <?php echo $text; ?>
                     <?php if ($button): ?>
-                        <a class="primary_btn" href="<?php echo esc_url($button['url']); ?>" target="<?php echo esc_attr($button['target']); ?>">
-                            <?php echo esc_html($button['title']); ?>
+                        <a class="link_btn" href="<?php echo esc_url($button['url']); ?>" target="<?php echo esc_attr($button['target']); ?>">
+                            <span><?php echo esc_html($button['title']); ?></span>
                             <img src="<?php echo IMG; ?>/arrow.svg">
                         </a>
                     <?php endif; ?>
@@ -61,15 +62,51 @@ $button = get_field('specialist_button');
                         
                         <div class="specialist_row">
                             <?php while ($team_query->have_posts()) : $team_query->the_post(); ?>
-                                <div class="specialist_item">
-                                    <?php if (has_post_thumbnail()) : ?>
-                                        <div class="specialist_image">
-                                            <?php the_post_thumbnail('medium'); ?>
+                                <div class="specialist_item_wrapper">
+                                    <div class="specialist_item">
+                                        <div class="specialist_item_header">
+                                            <?php if (has_post_thumbnail()) : ?>
+                                                <a href="<?php the_permalink(); ?>" class="specialist_item_image">
+                                                    <?php the_post_thumbnail('medium'); ?>
+                                                </a>
+                                            <?php endif; ?>
+                                            <div class="specialist_item_container">
+                                                <div class="specialist_item_info">
+                                                    <p class="specialist_item_name"><?php the_title(); ?></p>
+                                                    <?php if (get_field('job_position')) : ?>
+                                                        <span class="specialist_item_job"><?php the_field('job_position'); ?></span>
+                                                    <?php endif; ?>
+                                                </div>
+                                                <button class="specialist_toggle" aria-expanded="false" type="button">
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M3 11.9994L21 11.9994M11.9997 3L11.9997 21" stroke="#F5F2EE" stroke-width="2"/>
+                                                    </svg>
+                                                </button>
+                                            </div>
                                         </div>
-                                    <?php endif; ?>
-                                    <div>
-                                        <p><?php the_title(); ?></p>
-                                        <span></span>
+                                        <div class="specialist_item_body">
+                                            <div>
+                                                <p class="specialist_item_body_name"><?php the_title(); ?></p>
+                                                <?php if (get_field('job_position')) : ?>
+                                                    <span class="specialist_item_body_job"><?php the_field('job_position'); ?></span>
+                                                <?php endif; ?>
+                                            </div>
+                                            <div>
+                                                <?php if (get_field('team_email')) : ?>
+                                                    <p class="specialist_item_body_email">Email: <strong><?php the_field('team_email'); ?></strong></p>
+                                                <?php endif; ?>
+    
+                                                <?php if (get_field('team_phone')) : ?>
+                                                    <p class="specialist_item_body_tel">Tel: <strong><?php the_field('team_phone'); ?></strong></p>
+                                                <?php endif; ?>
+                                            </div>
+
+                                            <div class="specialist_item_body_description">
+                                                <?php the_excerpt(); ?>
+                                            </div>
+
+                                            <a href="<?php the_permalink(); ?>" class="specialist_readmore">Read More</a>
+                                        </div>
                                     </div>
                                 </div>
                             <?php endwhile; ?>

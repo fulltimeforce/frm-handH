@@ -3,3 +3,5 @@ src/node_modules
 images/*.mp4
 *.mp4
 *.m4v
+public/css
+public/js
