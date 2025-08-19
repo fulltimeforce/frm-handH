@@ -149,3 +149,43 @@ video {
         font-size: 20px;
     }
 }
+.p24 {
+    font-size: m.px-to-vw(24px);
+    @include m.tv {
+        font-size: 24px;
+    }
+}
+.title_watermark {
+    position: relative;
+    @include m.tablet {
+         overflow: hidden;
+    }
+}
+.watermark {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translateX(49%);
+  font-size: m.px-to-vw(136px);
+  white-space: nowrap;
+  transition: transform 4s ease-out;
+  color: v.$clear_brown;
+  z-index: -1;
+  p {
+      font-family: v.$goudy;
+      text-transform: uppercase;
+  }
+  @include m.tv {
+    font-size: 100px;
+  }
+  @include m.desktop {
+    font-size: 70px;
+  }
+  @include m.tablet {
+    display: none;
+  }
+}
+
+.title_watermark.in-view .watermark {
+  transform: translateX(26%);
+}

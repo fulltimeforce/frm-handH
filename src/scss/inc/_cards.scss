@@ -16,9 +16,14 @@
             align-items: center;
         }
 
-        @include m.tv {}
+        @include m.tv {
+            display: grid;
+            grid-template-columns: 407px 418px;
+            grid-gap: 12px;
+            align-items: center;
+        }
         @include m.tablet {
-            max-width: 300px;
+            max-width: 100%;
         }
         &>* {
             width: 100%;
@@ -35,7 +40,7 @@
 
         @include m.tv {
             border: 1px solid v.$light_brown;
-            padding: 12px;
+            padding: 15px;
         }
     }
 
@@ -86,7 +91,7 @@
             }
 
             @include m.tv {
-                max-width: 36px;
+                max-width: 42.25px;
             }
         }
 
@@ -103,7 +108,9 @@
             padding-inline: m.px-to-vw(24px);
         }
 
-        @include m.tv {}
+        @include m.tv {
+            padding-inline: 24px;
+        }
 
         p,
         span {
@@ -229,9 +236,9 @@
                 }
 
                 @include m.tv {
-                    @include m.square(24.6px);
+                    @include m.square(30px);
                     @include m.flex(center);
-                    padding: 5px !important;
+                    padding: 8px !important;
                 }
 
                 svg {
@@ -283,7 +290,7 @@
         }
 
         @include m.tv {
-            padding: 18px;
+            padding: 24px;
             border: 1px solid v.$light_brown;
             border-top: none;
         }
@@ -295,7 +302,8 @@
             }
 
             @include m.tv {
-                font-size: 20px;
+                font-size: 24px;
+                letter-spacing: 1.44px;
             }
 
             span {
@@ -328,6 +336,8 @@
 
                 @include m.tv {
                     font-size: 13px;
+                    letter-spacing: 0.84px;
+                    line-height: 19.6px;
                 }
             }
 
@@ -346,7 +356,7 @@
         }
 
         @include m.tv {
-            margin-bottom: 16.6px;
+            margin-bottom: 20px;
         }
     }
 }
@@ -361,8 +371,10 @@
     }
 
     @include m.tv {
-        font-size: 12.6px;
+        font-size: 14px;
+        letter-spacing: 0.84px;
         line-height: 1.1em;
+
     }
 }
 
@@ -371,7 +383,9 @@
         height: m.px-to-vw(539px);
     }
 
-    @include m.tv {}
+    @include m.tv {
+        height: 539px;
+    }
 }
 
 .vehicle {
@@ -379,6 +393,9 @@
 
     @media (min-width: v.$tv) {
         width: m.px-to-vw(506px);
+    }
+    @include m.tv {
+        width: 506px;
     }
 
     @include m.tablet {
@@ -403,8 +420,8 @@
         }
 
         @include m.tv {
-            left: 7px;
-            @include m.square(140px);
+            left: 12px;
+            @include m.square(180px);
         }
     }
 
@@ -420,7 +437,10 @@
         @media (min-width: v.$tv){
             padding-left: m.px-to-vw(62px);
         }
-        @include m.tv{
+         @include m.tv{
+            padding-left: 62px;
+        }
+        @include m.tablet{
             padding-left: 38px;
         }
 
@@ -435,6 +455,11 @@
                 left: m.px-to-vw(12px);
             }
             @include m.tv{
+                width: 30px;
+                height: 1px;
+                left: 12px;
+            }
+            @include m.tablet{
                 width: 24px;
                 height: 1px;
                 left: 7px;
@@ -456,7 +481,7 @@
                 margin-top: m.px-to-vw(12px);
             }
             @include m.tv{
-                margin-top: 8px;
+                margin-top: 12px;
             }
         }
     }
@@ -489,7 +514,9 @@
                 max-height: m.px-to-vw(360px);
             }
 
-            @include m.tv {}
+            @include m.tv {
+                max-height: 360px;
+            }
         }
     }
 
@@ -504,7 +531,8 @@
         }
 
         @include m.tv {
-            padding: 28px;
+            bottom: 89px;
+            padding: 36px;
         }
         @include m.tablet {
             padding: 20px;
@@ -539,7 +567,7 @@
                 }
 
                 @include m.tv {
-                    margin-bottom: 6px;
+                    margin-bottom: 12px;
                 }
             }
         }
@@ -552,7 +580,7 @@
             }
 
             @include m.tv {
-                margin-block: 24px;
+                margin-block: 32px;
             }
 
             li {
@@ -568,7 +596,7 @@
             }
 
             @include m.tv {
-                @include m.flex(flex-start, 8px);
+                @include m.flex(flex-start, 12px);
             }
 
             a {

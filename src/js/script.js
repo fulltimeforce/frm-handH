@@ -191,8 +191,9 @@ import "@splidejs/splide/css";
             },
             breakpoints: {
                 1540: {
-                    gap: '16px'
+                    gap: '16px',
                 },
+
                 768: {
                     perPage: 1
                 }
@@ -219,5 +220,91 @@ import "@splidejs/splide/css";
 
         splide.mount();
     }
+    if (document.querySelector('#whychooseSplide')) {
+        const interval = 5000;
+        const progress = document.querySelector('.progress');
+        const chooseus = new Splide('#whychooseSplide', {
+            type      : 'fade',
+            rewind    : true,
+            autoplay  : true,
+            interval  : 5000,
+            speed     : 1000,
+            arrows    : false,
+            pagination: false 
+        });
+        chooseus.on('mounted move', () => {
+            progress.style.transition = 'none';
+            progress.style.width = '0%';
+            void progress.offsetWidth;
+            progress.style.transition = `width ${interval}ms linear`;
+            progress.style.width = '100%';
+            
+        });
+        chooseus.mount();
+    }
 
 })();
+
+document.addEventListener("DOMContentLoaded", () => {
+  const sections = document.querySelectorAll(".title_watermark");
+
+  if (sections.length > 0) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("in-view");
+        }
+      });
+    }, { threshold: 0.3 });
+
+    sections.forEach(section => observer.observe(section));
+  }
+
+  const searchInput    = document.getElementById("blog-search");
+  const categorySelect = document.getElementById("blog-category");
+  const perPageSelect  = document.getElementById("blog-perpage");
+
+  if (searchInput || categorySelect || perPageSelect) {
+    if (searchInput) {
+      searchInput.addEventListener("keypress", function(e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          updateFilters();
+        }
+      });
+    }
+
+    if (categorySelect) {
+      categorySelect.addEventListener("change", updateFilters);
+    }
+
+    if (perPageSelect) {
+      perPageSelect.addEventListener("change", updateFilters);
+    }
+
+    function updateFilters() {
+      let url = new URL(window.location.href);
+
+      if (searchInput && searchInput.value) {
+        url.searchParams.set("s", searchInput.value);
+      } else {
+        url.searchParams.delete("s");
+      }
+
+      if (categorySelect && categorySelect.value) {
+        url.searchParams.set("category_name", categorySelect.value);
+      } else {
+        url.searchParams.delete("category_name");
+      }
+
+      if (perPageSelect && perPageSelect.value) {
+        url.searchParams.set("posts_per_page", perPageSelect.value);
+      } else {
+        url.searchParams.delete("posts_per_page");
+      }
+
+      url.searchParams.delete("paged");
+      window.location.href = url.toString();
+    }
+  }
+});

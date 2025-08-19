@@ -10,7 +10,9 @@
         padding-block: m.px-to-vw(64px) m.px-to-vw(30px);
     }
 
-    @include m.tv {}
+    @include m.tv {
+        padding-block: 64px 30px;
+    }
 
     &_container {
         width: 100%;
@@ -19,7 +21,13 @@
             padding-inline: m.px-to-vw(180px);
         }
 
-        @include m.tv {}
+        @include m.tv {
+            padding-inline: 90px;
+            max-width: 1560px;
+        }
+        @include m.tablet {
+            padding-inline: 15px;
+        }
     }
 
     &_top {
@@ -30,7 +38,9 @@
             margin-bottom: m.px-to-vw(20px);
         }
 
-        @include m.tv {}
+        @include m.tv {
+            margin-bottom: 20px;
+        }
 
         &::before,
         &::after {
@@ -46,6 +56,7 @@
 
             @include m.tv {
                 height: 1px;
+                width: calc(50% - 100px);
             }
         }
 
@@ -86,9 +97,14 @@
             grid-gap: m.px-to-vw(20px);
         }
 
-        @include m.tv {}
+        @include m.tv {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            grid-gap: 20px;
+        }
         @include m.tablet {
             padding: 0 15px;
+            grid-template-columns: 1fr;
         }
     }
 
@@ -99,7 +115,11 @@
             margin-bottom: m.px-to-vw(56px);
         }
 
-        @include m.tv {}
+        @include m.tv {
+            @include m.flex(center, 20px);
+            align-items: flex-start;
+            margin-bottom: 56px;
+        }
 
         &>* {
             flex: 1;
@@ -115,7 +135,9 @@
                 margin-bottom: m.px-to-vw(30px);
             }
 
-            @include m.tv {}
+            @include m.tv {
+                margin-bottom: 30px;
+            }
             @include m.tablet {
                 padding-bottom: 10px;
             }
@@ -145,7 +167,11 @@
                 align-items: flex-start;
             }
 
-            @include m.tv {}
+            @include m.tv {
+                @include m.flex(center, 18px);
+                flex-direction: column;
+                align-items: flex-start;
+            }
 
             div {
                 width: 100%;
@@ -154,7 +180,9 @@
                     max-width: m.px-to-vw(268px);
                 }
 
-                @include m.tv {}
+                @include m.tv {
+                    max-width: 268px;
+                }
             }
 
             b {
@@ -164,7 +192,9 @@
                     margin-bottom: m.px-to-vw(8px);
                 }
 
-                @include m.tv {}
+                @include m.tv {
+                    margin-bottom: 8px;
+                }
             }
 
             p,
@@ -184,7 +214,7 @@
                     }
 
                     @include m.tv {
-                        margin-bottom: 3px;
+                        margin-bottom: 6px;
                     }
                 }
             }
@@ -200,7 +230,15 @@
             grid-gap: m.px-to-vw(120px);
         }
 
-        @include m.tv {}
+        @include m.tv {
+            display: grid;
+            grid-template-columns: 670px 1fr;
+            grid-gap: 60px;
+        }
+
+        @include m.tablet {
+            grid-template-columns: 1fr;
+        }
 
         &>* {
             width: 100%;
@@ -241,13 +279,18 @@
             margin-top: m.px-to-vw(67px);
         }
 
-        @include m.tv {}
+        @include m.tv {
+            margin-top: 67px;
+        }
 
         b {
             @include m.p;
             font-family: v.$gotham_m;
             font-weight: 400;
             margin-bottom: m.px-to-vw(12px);
+             @include m.tv {
+                margin-bottom: 12px;
+            }
         }
 
         img {
@@ -293,7 +336,10 @@
                 @include m.flex(flex-start, m.px-to-vw(16px));
             }
 
-            @include m.tv {}
+            @include m.tv {
+                margin-block: 48px 25px;
+                @include m.flex(flex-start, 16px);
+            }
             @include m.tablet {
                 display: flex;
                 gap: 20px;
@@ -306,7 +352,9 @@
                     @include m.square(m.px-to-vw(38px));
                 }
 
-                @include m.tv {}
+                @include m.tv {
+                    @include m.square(38px);
+                }
 
                 svg {
                     @include m.fullWH;
@@ -325,7 +373,9 @@
                 @include m.flex(flex-start, m.px-to-vw(12px));
             }
 
-            @include m.tv {}
+            @include m.tv {
+                @include m.flex(flex-start, 12px);
+            }
              @include m.tablet {
                 display: flex;
                 gap: 20px;
@@ -353,7 +403,7 @@
             }
 
             @include m.tv {
-
+                margin-top: 30px;
             }
             #gform_fields_1 {
                 @include m.tablet {
@@ -379,7 +429,12 @@
                         width: m.px-to-vw(156px) !important;
                     }
                     @include m.tv{
-                     
+                        bottom: 68px !important;
+                        width: 156px !important;
+                    }
+                    @include m.tablet {
+                        position: relative;
+                        margin-top: 100px !important;
                     }
                 }
 
@@ -394,7 +449,9 @@
                             height: m.px-to-vw(52px) !important;
                         }
 
-                        @include m.tv {}
+                        @include m.tv {
+                            height: 52px !important;
+                        }
                     }
 
                     &:not([type="submit"], [type="checkbox"]) {
@@ -427,7 +484,9 @@
                                 @include m.square(m.px-to-vw(16px));
                             }
 
-                            @include m.tv {}
+                            @include m.tv {
+                                @include m.square(16px);
+                            }
                         }
                     }
 
@@ -436,7 +495,7 @@
                             width: calc(100% - m.px-to-vw(168px)) !important;
                         }
                         @include m.tv{
-                         
+                          width: calc(100% - 168px) !important;
                         }
                     }
 
@@ -453,7 +512,9 @@
                         }
 
                         @include m.tv {
-                            font-size: 15.4px;
+                            font-size: 17px !important;
+                            line-height: 23px !important;
+                            letter-spacing: 1.02px !important;
                         }
 
                         width: 100% !important;
@@ -476,7 +537,9 @@
                         gap: m.px-to-vw(12px) !important;
                     }
 
-                    @include m.tv {}
+                    @include m.tv {
+                        gap: 12px !important;
+                    }
 
                     label,
                     input {
@@ -503,7 +566,10 @@
                         row-gap: m.px-to-vw(16px) !important;
                     }
 
-                    @include m.tv {}
+                    @include m.tv {
+                        column-gap: 12px !important;
+                        row-gap: 16px !important;
+                    }
                 }
             }
         }

@@ -1,5 +1,6 @@
 <div class="container_side">
-    <div class="upcoming_head">
+    <div class="upcoming_head title_watermark">
+        <div class="watermark"><p>Upcoming Auctions</p></div>
         <div class="breadlines">
             <p>Explore</p>
         </div>
@@ -20,84 +21,106 @@
                 </button>
             </div>
             <div class="splide__track">
-                <ul class="splide__list">
-                    <?php for ($j = 0; $j < 5; $j++): ?>
-                        <li class="splide__slide">
-                            <div class="vehicle <?php echo $j == 0 ? 'active' : ''; ?>">
-                                <img src="<?php echo IMG; ?>/logo.png" class="vehicle-logo">
-                                <div class="vehicle_bg">
-                                    <img src="<?php echo IMG; ?>/4.png">
-                                </div>
-                                <div class="w-100 vehicle_bottom">
-                                    <div class="w-100 vehicle_content">
-                                        <div class="vehicle-info">
-                                            <h2>
-                                                <span>Classic Motorcars</span>
-                                                Pavilion Gardens
-                                            </h2>
-                                            <ul>
-                                                <li>Date: 12th Feb, 2025 - 9:00 am</li>
-                                                <li>Location: St John's Rd, Buxton SK17 6BE</li>
-                                            </ul>
-                                            <div class="flex">
-                                                <a href="#">View Now</a>
-                                                <a href="#">Venue Details</a>
-                                                <a href="#">Send me a reminder</a>
-                                            </div>
-                                            <div class="lots_live">
-                                                <span class="dot"></span>
-                                                <p>Lots Live (8)</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="vehicle_title">
-                                    <span>Classic Motorcycles</span>
-                                    <h3>National Motorcycle Museum</h3>
-                                </div>
-                            </div>
-                        </li>
-                    <?php endfor; ?>
+              <ul class="splide__list">
+                <?php
+                $args = array(
+                    'post_type'      => 'auction',
+                    'posts_per_page' => 6,
+                    'orderby'        => 'date',
+                    'order'          => 'DESC'
+                );
+                $auctions = new WP_Query($args);
+                if ($auctions->have_posts()) :
+                    $count = 0;
+                    $total = $auctions->post_count;
+                    while ($auctions->have_posts()) : $auctions->the_post();
+
+                        $lots_live        = get_field('lots_live');
+                        $auction_date     = get_field('auction_date');
+                        $auction_location = get_field('auction_location');
+                        $auction_icon     = get_field('auction_icon');
+                ?>
                     <li class="splide__slide">
-                        <div class="vehicle <?php echo $j == 0 ? 'active' : ''; ?>">
-                            <img src="<?php echo IMG; ?>/logo.png" class="vehicle-logo">
+                        <div class="vehicle <?php echo $count === 0 ? 'active' : ''; ?>">
+
+                            <?php if ($auction_icon): ?>
+                                <img src="<?php echo esc_url($auction_icon); ?>" alt="<?php the_title(); ?>" class="vehicle-logo">
+                            <?php endif; ?>
+
                             <div class="vehicle_bg">
-                                <img src="<?php echo IMG; ?>/4.png">
+                                <?php if (has_post_thumbnail()) : ?>
+                                    <?php the_post_thumbnail('large'); ?>
+                                <?php endif; ?>
                             </div>
+
                             <div class="w-100 vehicle_bottom">
                                 <div class="w-100 vehicle_content">
                                     <div class="vehicle-info">
                                         <h2>
-                                            <span>Classic Motorcars</span>
-                                            Pavilion Gardens
+                                            <span>
+                                                <?php
+                                                    $terms = get_the_terms(get_the_ID(), 'auction_category'); 
+                                                    if ($terms && !is_wp_error($terms)) {
+                                                        echo esc_html($terms[0]->name);
+                                                    } else {
+                                                        echo 'Uncategorized';
+                                                    }
+                                                ?>
+                                            </span>
+                                            <?php the_title(); ?>
                                         </h2>
                                         <ul>
-                                            <li>Date: 12th Feb, 2025 - 9:00 am</li>
-                                            <li>Location: St John's Rd, Buxton SK17 6BE</li>
+                                            <?php if ($auction_date): ?>
+                                                <li>Date: <?php echo esc_html($auction_date); ?></li>
+                                            <?php endif; ?>
+                                            <?php if ($auction_location): ?>
+                                                <li>Location: <?php echo esc_html($auction_location); ?></li>
+                                            <?php endif; ?>
                                         </ul>
                                         <div class="flex">
-                                            <a href="#">View Now</a>
+                                            <a href="<?php the_permalink(); ?>">View Now</a>
                                             <a href="#">Venue Details</a>
                                             <a href="#">Send me a reminder</a>
                                         </div>
-                                        <div class="lots_live">
-                                            <span class="dot"></span>
-                                            <p>Lots Live (8)</p>
-                                        </div>
+                                        <?php if ($lots_live): ?>
+                                            <div class="lots_live">
+                                                <span class="dot"></span>
+                                                <p>Lots Live (<?php echo esc_html($lots_live); ?>)</p>
+                                            </div>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
                             <div class="vehicle_title">
-                                <span>Classic Motorcycles</span>
-                                <h3>National Motorcycle Museum</h3>
+                                <span>
+                                    <?php
+                                        $terms = get_the_terms(get_the_ID(), 'auction_category'); 
+                                        if ($terms && !is_wp_error($terms)) {
+                                            echo esc_html($terms[0]->name);
+                                        } else {
+                                            echo 'Uncategorized';
+                                        }
+                                    ?>
+                                </span>
+                                <h3><?php the_title(); ?></h3>
                             </div>
                         </div>
-                        <div class="vehicle_final">
-                            <h3>Stay tuned for more classic auctions to come</h3>
-                            <img src="<?php echo IMG; ?>/path_car.svg">
-                        </div>
+
+                        <?php if ( ($count + 1) === $total ) : ?>
+                            <div class="vehicle_final">
+                                <h3>Stay tuned for more classic auctions to come</h3>
+                                <img src="<?php echo IMG; ?>/path_car.svg">
+                            </div>
+                        <?php endif; ?>
                     </li>
-                </ul>
+                <?php
+                    $count++;
+                    endwhile;
+                    wp_reset_postdata();
+                endif;
+                ?>
+            </ul>
+
             </div>
         </div>
     </div>

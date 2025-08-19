@@ -5,6 +5,15 @@
     .container {
         max-width: m.px-to-vw(1428px);
         margin-right: m.px-to-vw(180px);
+        @include m.tv {
+            margin-right: 180px;
+            max-width: 1428px;
+        }
+        @include m.tablet {
+            margin-right: 15px;
+            margin-left: 15px;
+            width: calc(100% - 30px);
+        }
     }
     &-box{
         background: white;
@@ -13,6 +22,105 @@
     }
     &-grid{
         @include m.grid(3, m.px-to-vw(36px) m.px-to-vw(21px));
+        @include m.tv {
+            @include m.grid(3, 36px 21px);
+        }
+    }
+    &-filter {
+        display: grid;
+        grid-template-columns: m.px-to-vw(948px) 1fr;
+        justify-content: space-between;
+        margin-bottom:  m.px-to-vw(32px);
+        @include m.tv {
+            grid-template-columns: 948px 1fr;
+            margin-bottom: 32px;
+        }
+        @include m.tablet {
+            grid-template-columns: 1fr;
+        }
+        input, &-select {
+            max-width:  m.px-to-vw(468px);
+            width: 100%;
+            font-family: v.$gotham_light;
+            color: rgba(0, 0, 0, 0.7);
+            padding:  m.px-to-vw(20px);
+            font-size:  m.px-to-vw(17px);
+            border:  m.px-to-vw(1px) solid v.$light_brown;
+            @include m.tv {
+                max-width: 468px;
+                padding: 20px;
+                font-size: 17px;
+                border: 1px solid v.$light_brown;
+            }
+        }
+        &-page {
+            color: v.$light_brown;
+            font-family: v.$gotham_light;
+            padding: m.px-to-vw(9px) m.px-to-vw(6px);
+            border-radius: m.px-to-vw(6px);
+            font-size:  m.px-to-vw(17px);
+            @include m.tv {
+                padding: 9px 6px;
+                border-radius: 6px;
+                font-size: 17px;
+            }
+        }
+        div {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+            gap:  m.px-to-vw(12px);
+            @include m.tv {
+                gap: 12px;
+            }
+            @include m.tablet {
+                flex-direction: column;
+            }
+            p {
+                color: rgba(0, 0, 0, 0.6);
+                font-weight: 600;
+                letter-spacing: 1.02px;
+                @include m.tablet {
+                    margin-top: 12px;
+                }
+            }
+        }
+    }
+    &-pagination {
+        margin-top: m.px-to-vw(64px);
+        text-align: right;
+        @include m.tv {
+            margin-top: 64px;
+        }
+        @include m.tablet {
+            margin-top: 32px;
+            text-align: center;
+        }
+        span, a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: m.px-to-vw(36px);
+            height: m.px-to-vw(36px);
+            border-radius: 50%;
+            font-family: v.$gotham;
+            border: m.px-to-vw(1px) solid v.$light_brown;
+            font-size: m.px-to-vw(17px);
+            color: v.$light_brown;
+            letter-spacing: - m.px-to-vw(1.19px);
+            @include m.tv {
+                width: 36px;
+                height: 36px;
+                border-width: 1px;
+                font-size: 17px;
+                letter-spacing: -1.19px;
+            }
+            &.current {
+                background-color: v.$light_brown;
+                color: #D3C7B6;
+            }
+        }
     }
 }
 
@@ -25,6 +133,10 @@
         padding: m.px-to-vw(36px);
         background: v.$beige;
         border: m.px-to-vw(1px) solid v.$light_brown;
+        @include m.tv {
+            padding: 36px;
+            border: 1px solid v.$light_brown;
+        }
 
         span, a{
             font-family: v.$gotham_light;
@@ -42,10 +154,17 @@
             @include m.h3v2;
             -webkit-line-clamp: 4;
             padding-block: m.px-to-vw(24px);
+            @include m.tv {
+                padding-block: 24px;
+            }
         }
         p {
             padding-bottom: m.px-to-vw(32px);
             letter-spacing: 0.84px;
+            @include m.tv {
+                padding-bottom: 32px;
+            }
         }
+
     }
 }
