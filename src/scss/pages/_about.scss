@@ -1,115 +1,713 @@
 @use "base/mixins" as m;
 @use "base/variables" as v;
 
-%h2{
+%h2 {
     @include m.fz60;
 }
 
-.timeline{
-    &_head{
-        width: 100%;
-        margin-inline: auto;
-        @media (min-width: v.$tv){
-            max-width: m.px-to-vw(715px);
-        }
-        @include m.tv{
-         
-        }
-        h2{
-            @extend %h2;
-        }
+%mt40 {
+    @media (min-width: v.$tv) {
+        width: m.px-to-vw(420px);
+        margin-top: m.px-to-vw(40px);
     }
-    
-    &_body{
-        @include m.splide_arrows;
+
+    @include m.tv {
+        margin-top: 28px;
     }
 }
 
-.timecard{
-    @media (min-width: v.$tv){
-        width: m.px-to-vw(382px);
-    }
-    @include m.tv{
-        
+%mt31 {
+    @media (min-width: v.$tv) {
+        margin-top: m.px-to-vw(31px);
     }
 
-    .round{
-        @media (min-width: v.$tv){
+    @include m.tv {
+        margin-top: 22px;
+    }
+}
+
+%cont {
+    width: 100%;
+
+    @media (min-width: v.$tv) {
+        max-width: m.px-to-vw(calc(1428px + 180px));
+        padding-right: m.px-to-vw(180px);
+    }
+
+    @include m.tv {}
+
+    margin-left: auto;
+}
+
+.heritage {
+    @media (min-width: v.$tv) {
+        padding-top: m.px-to-vw(48px);
+    }
+
+    @include m.tv {
+        padding-top: 32px;
+    }
+
+    @include m.pblock160(true);
+
+    &_container {
+        @extend %cont;
+    }
+
+    .tabs {
+        @include m.flex(center);
+
+        button {
+            flex: 1;
+            background: none;
+            border: none;
+            background: transparent;
+            color: v.$black;
+            text-transform: uppercase;
+            font-family: v.$gotham_m;
+
+            @media (min-width: v.$tv) {
+                font-size: m.px-to-vw(13px);
+                padding-bottom: m.px-to-vw(18px);
+                letter-spacing: m.px-to-vw(1.3px);
+                border-bottom: m.px-to-vw(1px) solid #C0B09B;
+            }
+
+            @include m.tv {
+                font-size: 11px;
+                border-bottom: 1px solid #C0B09B;
+            }
+
+            &:is(.active) {
+                border-color: v.$light_brown;
+            }
+        }
+    }
+}
+
+.meet_our_specialist {
+    @include m.pblock160;
+
+    &-container {
+        width: 100%;
+
+        @media (min-width: v.$tv) {
+            max-width: m.px-to-vw(1608px);
+        }
+
+        @include m.tv {}
+
+        margin-left: auto;
+    }
+
+    &-head {
+        width: 100%;
+        @include m.mb64;
+
+        .breadlines {
+            @include m.breadlines(v.$black, 1);
+        }
+
+        h2 {
+            @include m.h2;
+            @extend %mt31;
+        }
+    }
+
+    &-slider {
+        width: 100%;
+        @include m.splide_arrows;
+
+        .splide {}
+    }
+
+    &-foot {
+        @extend %cont;
+        @media (min-width: v.$tv) {
+            margin-top: m.px-to-vw(80px);
+            display: grid;
+            grid-template-columns: m.px-to-vw(638px) 1fr;
+            grid-gap: m.px-to-vw(103px);
+        }
+
+        @include m.tv {}
+
+        &>* {
+            width: 100%;
+        }
+    }
+
+    &-title {
+        h2 {
+            @include m.fz60;
+            font-weight: 300;
+            text-align: left;
+        }
+    }
+
+    &-content {
+        p {
+            @include m.p;
+        }
+
+        a {
+            @extend %mt40;
+            @media (min-width: v.$tv) {
+                width: m.px-to-vw(420px);
+                justify-content: space-between;
+            }
+
+            @include m.tv {
+
+            }
+        }
+    }
+
+    .specialist_card {
+        position: relative;
+        overflow: hidden;
+
+        @media (min-width: v.$tv) {
+            width: m.px-to-vw(418px);
+            border: m.px-to-vw(1px) solid v.$light_brown;
+        }
+
+        @include m.tv {
+            border: 1px solid v.$light_brown;
+        }
+
+        &>* {
+            width: 100%;
+            background: v.$beige;
+
+            @media (min-width: v.$tv) {
+                padding: m.px-to-vw(36px) m.px-to-vw(24px);
+            }
+
+            @include m.tv {}
+        }
+
+        &-image {
+            width: 100%;
+            aspect-ratio: 1/1;
+            height: auto;
+
+            @media (min-width: v.$tv) {
+                margin-bottom: m.px-to-vw(51px);
+            }
+
+            @include m.tv {
+                margin-bottom: 36px;
+            }
+
+            img {
+                @include m.fullWH;
+                object-fit: cover;
+                object-position: center;
+            }
+        }
+
+        &-toggle {
+            width: 100%;
+
+            @media (min-width: v.$tv) {
+                display: grid;
+                grid-template-columns: 1fr m.px-to-vw(60px);
+                grid-gap: m.px-to-vw(40px);
+                align-items: center;
+            }
+
+            @include m.tv {}
+
+            p {
+                @include m.h3(v.$black, v.$gotham_m, false);
+            }
+
+            span {
+                @include m.p;
+                opacity: 0.8;
+            }
+
+            button {
+                width: 100%;
+                aspect-ratio: 1/1;
+                height: auto;
+                border-radius: 50%;
+                background: v.$light_brown;
+                @include m.flex(center);
+                border: none;
+                @include m.transition(.5s);
+
+                svg {
+                    @include m.transition(.5s);
+                    pointer-events: none;
+
+                    @media (min-width: v.$tv) {
+                        @include m.square(m.px-to-vw(18px));
+                    }
+
+                    @include m.tv {
+                        @include m.square(14px);
+                    }
+                }
+
+                &:not(.minus) {
+                    &:is(:hover) {
+                        svg {
+                            transform: scale(1.2) rotate(180deg);
+                        }
+                    }
+                }
+
+                &.minus {
+                    @media (min-width: v.$tv) {
+                        @include m.square(m.px-to-vw(50px));
+                        @include m.flex(center);
+                    }
+
+                    @include m.tv {}
+                }
+            }
+        }
+
+        &-back {
+            overflow: hidden;
+            @include m.fullWH;
+            position: absolute;
+            opacity: 0;
+
+            @media (min-width: v.$tv) {
+                top: calc(100% + m.px-to-vw(2px));
+            }
+
+            @include m.tv {
+                top: calc(100% + 2px);
+            }
+
+            left: 0;
+            z-index: 3;
+            @include m.transition(.5s);
+
+            @include m.flex(space-between);
+            align-items: flex-start;
+            flex-direction: column;
+
+            &>a {
+                display: block;
+                width: fit-content;
+                @include m.p(v.$light_brown, v.$gotham_m);
+                opacity: 0.8;
+                text-decoration: underline;
+            }
+        }
+
+        &-content {
+            width: 100%;
+
+            ul,
+            ol {
+                list-style: none;
+
+                @media (min-width: v.$tv) {
+                    margin-bottom: m.px-to-vw(36px);
+                }
+
+                @include m.tv {
+                    margin-bottom: 24px;
+                }
+            }
+
+            a,
+            li,
+            p {
+                @include m.p;
+            }
+
+            a {
+                font-family: v.$gotham_m;
+            }
+        }
+
+        &.active {
+            .specialist_card {
+                &-back {
+                    top: 0;
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}
+
+.timecard {
+    @media (min-width: v.$tv) {
+        width: m.px-to-vw(382px);
+    }
+
+    @include m.tv {}
+
+    .round {
+        @media (min-width: v.$tv) {
             @include m.square(m.px-to-vw(150px));
         }
-        @include m.tv{
+
+        @include m.tv {
             @include m.square(110px);
         }
+
         border-radius: 50%;
         object-fit: cover !important;
     }
-    &-grid{
-        @media (min-width: v.$tv){
+
+    &-grid {
+        @media (min-width: v.$tv) {
             display: grid;
-            grid-template-rows: m.px-to-vw(371px) m.px-to-vw(361px);
+            // grid-template-rows: m.px-to-vw(371px) m.px-to-vw(361px);
+            grid-template-rows: m.px-to-vw(371px) m.px-to-vw(371px);
             grid-gap: 0;
         }
-        @include m.tv{
-            
-        }
 
-        img{
+        @include m.tv {}
+
+        img {
             max-width: 100%;
         }
-        &>*{
+
+        &>* {
             width: 100%;
 
-            &:nth-child(odd){
-                @media (min-width: v.$tv){
+            &:nth-child(odd) {
+                @media (min-width: v.$tv) {
                     @include m.flex(flex-end, m.px-to-vw(20px));
                     flex-direction: column;
                 }
-                @include m.tv{
+
+                @include m.tv {
                     @include m.flex(flex-end, 10.6px);
                     flex-direction: column;
                 }
             }
-            &:nth-child(even){
-                @media (min-width: v.$tv){
+
+            &:nth-child(even) {
+                @media (min-width: v.$tv) {
                     @include m.flex(flex-start, m.px-to-vw(20px));
                     flex-direction: column;
                 }
-                @include m.tv{
+
+                @include m.tv {
                     @include m.flex(flex-start, 10.6px);
                     flex-direction: column;
                 }
             }
 
         }
-        .content{
-            p, span{
+
+        .content {
+
+            p,
+            span {
                 opacity: 0.9;
                 leading-trim: both;
                 text-edge: cap;
                 text-align: center;
                 font-weight: 600;
                 font-style: normal;
-    
-                @media (min-width: v.$tv){
+
+                @media (min-width: v.$tv) {
                     font-size: m.px-to-vw(14px);
                     line-height: m.px-to-vw(19.6px);
                     letter-spacing: m.px-to-vw(0.84px);
                 }
-                @include m.tv{
-                 
-                }
+
+                @include m.tv {}
             }
-            span{
+
+            span {
                 color: v.$light_brown;
             }
         }
     }
-    &-time{
-        span{
+
+    &-time {
+        span {
             text-align: center;
             display: block;
             @include m.h4v2;
             margin-inline: auto;
+        }
+    }
+}
+
+.timeline {
+    &_head {
+        width: 100%;
+        margin-inline: auto;
+
+        @media (min-width: v.$tv) {
+            max-width: m.px-to-vw(715px);
+        }
+
+        @include m.tv {}
+
+        h2 {
+            @extend %h2;
+            font-weight: 300;
+        }
+    }
+
+    &_body {
+        @include m.mt48;
+        @include m.splide_arrows;
+    }
+
+    .splide {
+        &__arrows {
+            @media (min-width: v.$tv) {
+                padding-left: m.px-to-vw(121px);
+            }
+
+            @include m.tv {}
+        }
+
+        &__list {
+            position: relative;
+
+            &::before {
+                position: absolute;
+                content: '';
+                top: 50%;
+                transform: translateY(-50%);
+                // background: v.$light_brown;
+                background: linear-gradient(90deg, rgba(140, 110, 71, 1) 97.5%, rgba(255, 255, 255, 0.5) 100%);
+                // width: calc(100% - (m.px-to-vw(191px * 2)));
+                // width: calc(100% * 100);
+                left: m.px-to-vw(191px);
+
+                @media (min-width: v.$tv) {
+                    height: m.px-to-vw(3px);
+                }
+
+                @include m.tv {}
+            }
+        }
+
+        &__slide {
+            &:nth-child(even) {
+                .timecard-grid {
+                    div:nth-child(1) {
+                        @media (min-width: v.$tv) {
+                            padding-bottom: m.px-to-vw(21px);
+                        }
+
+                        @include m.tv {
+                            padding-bottom: 15px;
+                        }
+                    }
+
+                    div:nth-child(2) {
+                        svg {
+                            order: -2;
+                        }
+
+                        .timecard-time {
+                            order: -1;
+                        }
+
+                        img {
+                            order: 2;
+                        }
+                    }
+                }
+            }
+
+            &:nth-child(odd) {}
+        }
+    }
+}
+
+.upcoming {
+    &_container {
+        @extend %cont;
+
+        @media (min-width: v.$tv) {
+            margin-top: m.px-to-vw(120px);
+        }
+
+        @include m.tv {
+            margin-top: 80px;
+        }
+    }
+
+    &_info {
+        @media (min-width: v.$tv) {
+            display: grid;
+            grid-template-columns: m.px-to-vw(480px) 1fr;
+            grid-gap: m.px-to-vw(142px);
+            padding-left: m.px-to-vw(36px);
+        }
+
+        @include m.tv {}
+
+        &-content {
+            @media (min-width: v.$tv) {
+                padding-top: m.px-to-vw(16px);
+            }
+
+            @include m.tv {
+                padding-top: 10px;
+            }
+
+            p {
+                @include m.p;
+            }
+        }
+
+        &-title {
+            h2 {
+                @include m.fz60;
+                font-weight: 300;
+                text-align: left;
+            }
+        }
+
+        &-actions {
+            @include m.flex(center, m.px-to-vw(20px));
+            flex-direction: column;
+
+            @extend %mt40;
+
+            &>* {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    }
+}
+
+.tailored {
+    &_container {
+        width: 100%;
+
+        @media (min-width: v.$tv) {
+            max-width: m.px-to-vw(calc(1513px + 95px));
+            padding-right: m.px-to-vw(95px);
+        }
+
+        @include m.tv {}
+
+        margin-left: auto;
+    }
+
+    &-flex {
+        @include m.flex(space-between);
+        align-items: flex-start;
+        position: relative;
+    }
+
+    &_info {
+        min-height: 100vh;
+        @include m.flex(center);
+
+        position: sticky;
+        top: 0;
+        left: 0;
+
+        @media (min-width: v.$tv) {
+            width: m.px-to-vw(638px);
+        }
+
+        @include m.tv {}
+
+        &-box {
+            @media (min-width: v.$tv) {
+                padding-top: m.px-to-vw(35px);
+            }
+
+            @include m.tv {
+                padding-top: 24px;
+            }
+
+            width: 100%;
+
+            .breadlines {
+                @include m.breadlines(v.$black, 1);
+            }
+
+            h2 {
+                @include m.h2;
+                @extend %mt31;
+            }
+
+            a {
+                @media (min-width: v.$tv) {
+                    width: 100%;
+                    max-width: m.px-to-vw(420px);
+                    justify-content: space-between;
+                }
+
+                @include m.tv {}
+            }
+        }
+
+        &-content {
+            @media (min-width: v.$tv) {
+                margin-block: m.px-to-vw(40px);
+            }
+
+            @include m.tv {
+                margin-block: 30px;
+            }
+
+            p {
+                @include m.p;
+            }
+        }
+    }
+
+
+
+    &_images {
+        @media (min-width: v.$tv) {
+            width: m.px-to-vw(802px);
+            padding-inline: m.px-to-vw(16px);
+        }
+
+        @include m.tv {
+            padding-inline: 10px;
+        }
+    }
+
+    &_image {
+        width: 100%;
+        min-height: 100vh;
+        @include m.flex(center);
+
+        img {
+            width: 100%;
+        }
+
+        position: sticky;
+        top: 0;
+        left: 0;
+
+        &:nth-child(1) {
+            z-index: 1;
+        }
+
+        &:nth-child(2) {
+            z-index: 2;
+        }
+
+        &:nth-child(3) {
+            z-index: 3;
+        }
+
+        &:nth-child(4) {
+            z-index: 4;
+        }
+
+        &:nth-child(5) {
+            z-index: 5;
         }
     }
 }

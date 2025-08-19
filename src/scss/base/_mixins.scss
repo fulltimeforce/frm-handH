@@ -52,6 +52,7 @@
     display: grid;
     grid-template-columns: repeat($n, 1fr);
     grid-gap: $gap;
+
     @include tablet {
         grid-template-columns: 1fr;
     }
@@ -109,6 +110,7 @@
         @if($just_bottom ==false) {
             padding-top: 116px;
         }
+
         padding-bottom: 116px;
     }
 
@@ -116,6 +118,7 @@
         @if($just_bottom ==false) {
             padding-top: 58px;
         }
+
         padding-bottom: 58px;
     }
 }
@@ -164,6 +167,7 @@
                 padding-left: 26px;
                 margin-bottom: 18px;
             }
+
             @include tablet {
                 padding-left: 0;
                 margin-bottom: 24px;
@@ -206,9 +210,9 @@
     @return $res;
 }
 
-@mixin p($color: v.$black) {
+@mixin p($color: v.$black, $ff: v.$gotham_light) {
     color: $color;
-    font-family: v.$gotham_light;
+    font-family: $ff;
     font-weight: 300;
 
     @media (min-width: v.$tv) {
@@ -269,7 +273,7 @@
     padding: 0 !important;
     @include flex(center);
     width: fit-content;
-    
+
     @media (min-width: v.$tv) {
         -webkit-text-stroke: px-to-vw(0.5px);
         letter-spacing: px-to-vw(0.5px);
@@ -326,6 +330,7 @@
             border: 1px solid v.$white;
             font-size: 15px;
         }
+
         @include tablet {
             padding: 10px 16px;
         }
@@ -356,6 +361,7 @@
     @include tv {
         font-size: 36px;
     }
+
     @include tablet {
         font-size: 30px;
     }
@@ -688,16 +694,13 @@
     }
 }
 
-
 @mixin icon_text_buttonReturn {
 
     @media (min-width: v.$tv) {
         padding-top: px-to-vw(80px);
     }
 
-    @include tv {
-
-    }
+    @include tv {}
 
     svg {
         @media (min-width: v.$tv) {
@@ -711,13 +714,12 @@
     h2 {
         @include fz39;
         text-align: center;
-        
-        @media (min-width: v.$tv){
+
+        @media (min-width: v.$tv) {
             max-width: px-to-vw(843px);
         }
-        @include tv{
-         
-        }
+
+        @include tv {}
 
         margin-inline: auto;
     }
@@ -730,5 +732,19 @@
         }
 
         @include tv {}
+    }
+}
+
+@mixin mb64 {
+    @media (min-width: v.$tv) {
+        margin-bottom: px-to-vw(64px);
+    }
+
+    @include tv {
+        margin-bottom: 42px;
+    }
+
+    @include tablet {
+        margin-bottom: 24px;
     }
 }

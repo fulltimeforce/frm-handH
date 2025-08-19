@@ -718,16 +718,7 @@
 .upcoming,
 .clients {
     &_head {
-        @media (min-width: v.$tv) {
-            margin-bottom: m.px-to-vw(64px);
-        }
-
-        @include m.tv {
-            margin-bottom: 42px;
-        }
-        @include m.tablet {
-            margin-bottom: 24px;
-        }
+        @include m.mb64;
     }
 
     &_body {

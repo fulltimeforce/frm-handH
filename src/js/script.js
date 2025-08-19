@@ -11,6 +11,9 @@ import "@splidejs/splide/css";
             pagination: false,
             autoWidth: true,
             gap: '1.406vw',
+            padding: {
+                right: '21.979vw'
+            },
         }).mount();
     }
 
@@ -128,6 +131,34 @@ import "@splidejs/splide/css";
         })
     }
 
+    let specialist = document.querySelector('#specialist')
+    if (specialist) {
+        new Splide('#specialist', {
+            type: 'slider',
+            arrows: true,
+            pagination: false,
+            autoWidth: true,
+            gap: '1.094vw',
+            breakpoints: {
+                1540: {
+                    gap: '17px'
+                },
+                768: {
+                    perPage: 1,
+                }
+            }
+        }).mount();
+
+        let card_toggles = specialist.querySelectorAll('.card_toggle');
+        if(card_toggles){
+            Array.from(card_toggles).forEach(toggle=>{
+                toggle.addEventListener('click', (e)=>{
+                    e.preventDefault();
+                    e.currentTarget.closest('.specialist_card').classList.toggle('active');
+                })
+            })
+        }
+    }
 
     if (document.querySelector('#clients')) {
         new Splide('#clients', {
