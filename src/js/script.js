@@ -4,7 +4,7 @@ import "@splidejs/splide/css";
 
 (function () {
 
-    if(document.querySelector('#images')){
+    if (document.querySelector('#images')) {
         new Splide('#images', {
             type: 'fade',
             arrows: false,
@@ -17,7 +17,7 @@ import "@splidejs/splide/css";
         }).mount();
     }
 
-    if(document.querySelector('#timeline')){
+    if (document.querySelector('#timeline')) {
         new Splide('#timeline', {
             arrows: true,
             drag: 'free',
@@ -30,7 +30,7 @@ import "@splidejs/splide/css";
         }).mount();
     }
 
-    if(document.querySelector('#gallery')){
+    if (document.querySelector('#gallery')) {
         new Splide('#gallery', {
             type: 'splide',
             arrows: false,
@@ -162,9 +162,9 @@ import "@splidejs/splide/css";
         }).mount();
 
         let card_toggles = specialist.querySelectorAll('.card_toggle');
-        if(card_toggles){
-            Array.from(card_toggles).forEach(toggle=>{
-                toggle.addEventListener('click', (e)=>{
+        if (card_toggles) {
+            Array.from(card_toggles).forEach(toggle => {
+                toggle.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.currentTarget.closest('.specialist_card').classList.toggle('active');
                 })
@@ -232,17 +232,18 @@ import "@splidejs/splide/css";
 
         splide.mount();
     }
+
     if (document.querySelector('#whychooseSplide')) {
         const interval = 5000;
         const progress = document.querySelector('.progress');
         const chooseus = new Splide('#whychooseSplide', {
-            type      : 'fade',
-            rewind    : true,
-            autoplay  : true,
-            interval  : 5000,
-            speed     : 1000,
-            arrows    : false,
-            pagination: false 
+            type: 'fade',
+            rewind: true,
+            autoplay: true,
+            interval: 5000,
+            speed: 1000,
+            arrows: false,
+            pagination: false
         });
         chooseus.on('mounted move', () => {
             progress.style.transition = 'none';
@@ -250,78 +251,11 @@ import "@splidejs/splide/css";
             void progress.offsetWidth;
             progress.style.transition = `width ${interval}ms linear`;
             progress.style.width = '100%';
-            
+
         });
         chooseus.mount();
     }
 
-<<<<<<< HEAD
-})();
-
-document.addEventListener("DOMContentLoaded", () => {
-  const sections = document.querySelectorAll(".title_watermark");
-
-  if (sections.length > 0) {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("in-view");
-        }
-      });
-    }, { threshold: 0.3 });
-
-    sections.forEach(section => observer.observe(section));
-  }
-
-  const searchInput    = document.getElementById("blog-search");
-  const categorySelect = document.getElementById("blog-category");
-  const perPageSelect  = document.getElementById("blog-perpage");
-
-  if (searchInput || categorySelect || perPageSelect) {
-    if (searchInput) {
-      searchInput.addEventListener("keypress", function(e) {
-        if (e.key === "Enter") {
-          e.preventDefault();
-          updateFilters();
-        }
-      });
-    }
-
-    if (categorySelect) {
-      categorySelect.addEventListener("change", updateFilters);
-    }
-
-    if (perPageSelect) {
-      perPageSelect.addEventListener("change", updateFilters);
-    }
-
-    function updateFilters() {
-      let url = new URL(window.location.href);
-
-      if (searchInput && searchInput.value) {
-        url.searchParams.set("s", searchInput.value);
-      } else {
-        url.searchParams.delete("s");
-      }
-
-      if (categorySelect && categorySelect.value) {
-        url.searchParams.set("category_name", categorySelect.value);
-      } else {
-        url.searchParams.delete("category_name");
-      }
-
-      if (perPageSelect && perPageSelect.value) {
-        url.searchParams.set("posts_per_page", perPageSelect.value);
-      } else {
-        url.searchParams.delete("posts_per_page");
-      }
-
-      url.searchParams.delete("paged");
-      window.location.href = url.toString();
-    }
-  }
-});
-=======
     if (document.querySelector('#pavilionGardens')) {
         const pavilionSplide = new Splide('#pavilionSlider', {
             focus: 0,
@@ -347,5 +281,68 @@ document.addEventListener("DOMContentLoaded", () => {
         pavilionSplide.mount();
     }
 
+    document.addEventListener("DOMContentLoaded", () => {
+        const sections = document.querySelectorAll(".title_watermark");
+
+        if (sections.length > 0) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("in-view");
+                    }
+                });
+            }, { threshold: 0.3 });
+
+            sections.forEach(section => observer.observe(section));
+        }
+
+        const searchInput = document.getElementById("blog-search");
+        const categorySelect = document.getElementById("blog-category");
+        const perPageSelect = document.getElementById("blog-perpage");
+
+        if (searchInput || categorySelect || perPageSelect) {
+            if (searchInput) {
+                searchInput.addEventListener("keypress", function (e) {
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                        updateFilters();
+                    }
+                });
+            }
+
+            if (categorySelect) {
+                categorySelect.addEventListener("change", updateFilters);
+            }
+
+            if (perPageSelect) {
+                perPageSelect.addEventListener("change", updateFilters);
+            }
+
+            function updateFilters() {
+                let url = new URL(window.location.href);
+
+                if (searchInput && searchInput.value) {
+                    url.searchParams.set("s", searchInput.value);
+                } else {
+                    url.searchParams.delete("s");
+                }
+
+                if (categorySelect && categorySelect.value) {
+                    url.searchParams.set("category_name", categorySelect.value);
+                } else {
+                    url.searchParams.delete("category_name");
+                }
+
+                if (perPageSelect && perPageSelect.value) {
+                    url.searchParams.set("posts_per_page", perPageSelect.value);
+                } else {
+                    url.searchParams.delete("posts_per_page");
+                }
+
+                url.searchParams.delete("paged");
+                window.location.href = url.toString();
+            }
+        }
+    });
+
 })();
->>>>>>> feat/team-pages
