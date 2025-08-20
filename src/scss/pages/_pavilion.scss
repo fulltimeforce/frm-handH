@@ -1,0 +1,153 @@
+@use "base/mixins" as m;
+@use "base/variables" as v;
+
+.pavilion {
+  &_page {
+    padding-top: m.px-to-vw(160px);
+    @include m.pblock160('bottom');
+
+    @include m.tv {
+      padding-top: 40px;
+    }
+
+    .custom-carousel {
+      position: relative;
+      max-width: 100%;
+
+      h2 {
+        margin-top: 48px;
+        margin-bottom: 160px;
+        font-family: v.$gotham_m;
+        font-weight: 500;
+        font-size: 24px;
+        line-height: 140%;
+        letter-spacing: 6%;
+        text-align: center;
+      }
+
+      .splide__track, .splide__slide, .slide-wrapper {
+        width: m.px-to-vw(1328px);
+        height: m.px-to-vw(668px);
+      }
+      
+      .slide-wrapper {
+        position: relative;
+
+        .slide-image-container {
+          width: 100%;
+          height: 100%;
+          padding: m.px-to-vw(16px) !important;
+          border: 1px solid v.$light_brown;
+          
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+
+        .my-progress {
+          position: absolute;
+          bottom: 10px;
+          left: 10px;
+          width: 80px;
+          height: 3px;
+          background: rgba(255,255,255,0.3);
+          overflow: hidden;
+
+          &-bar {
+            height: 100%;
+            width: 0%;
+            background: white;
+            transition: width 0.3s linear;
+          }
+        }
+      }
+    }
+
+    .custom-arrows {
+      display: flex;
+      justify-content: center;
+      margin-top: 48px;
+      gap: 20px;
+
+      .splide__arrow {
+        position: static;
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+      }
+    }
+
+    .auctions {
+      margin-bottom: 120px;
+
+      &_container {
+        display: flex;
+        gap: 46px;
+        justify-content: center;
+        width: 1296px;
+
+        &_title {
+          font-family: v.$cormorant;
+          font-weight: 300;
+          font-size: 60px;
+          line-height: 100%;
+          letter-spacing: -3%;
+          width: 480px;
+        }
+
+        &_content {
+          width: 770px;
+
+          p {
+            font-family: v.$gotham_light;
+            font-weight: 300;
+            font-size: 17px;
+            line-height: 140%;
+            letter-spacing: 6%;
+            opacity: 0.9;
+          }
+        }
+      }
+    }
+
+    .consign, .how-to-get {
+      width: 770px !important;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto 96px;
+
+      h2 {
+        font-family: v.$goudysb;
+        font-weight: 400;
+        font-size: 36px;
+        line-height: 114%;
+        letter-spacing: 0;
+        margin-bottom: 64px;
+      }
+
+      h3 {
+        font-family: v.$goudysb;
+        font-weight: 400;
+        font-size: 26px;
+        line-height: 120%;
+        letter-spacing: 0;
+        margin-bottom: 32px;
+      }
+
+      p {
+        font-family: v.$gotham_light;
+        font-weight: 300;
+        font-size: 17px;
+        line-height: 140%;
+        letter-spacing: 6%;
+        text-align: center;
+        margin-bottom: 32px;
+      }
+    }
+  }
+}

@@ -77,7 +77,7 @@ get_banner('Homepage / About / Meet the team', esc_url($bg_image), 'Meet the tea
                                                         <span class="specialist_item_job"><?php the_field('job_position'); ?></span>
                                                     <?php endif; ?>
                                                 </div>
-                                                <button class="specialist_toggle" aria-expanded="false" type="button">
+                                                <button class="specialist_toggle open" aria-expanded="false" type="button">
                                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M3 11.9994L21 11.9994M11.9997 3L11.9997 21" stroke="#F5F2EE" stroke-width="2"/>
                                                     </svg>
@@ -85,11 +85,18 @@ get_banner('Homepage / About / Meet the team', esc_url($bg_image), 'Meet the tea
                                             </div>
                                         </div>
                                         <div class="specialist_item_body">
-                                            <div>
-                                                <p class="specialist_item_body_name"><?php the_title(); ?></p>
-                                                <?php if (get_field('job_position')) : ?>
-                                                    <span class="specialist_item_body_job"><?php the_field('job_position'); ?></span>
-                                                <?php endif; ?>
+                                            <div class="specialist_item_card_header">
+                                                <div>
+                                                    <p class="specialist_item_body_name"><?php the_title(); ?></p>
+                                                    <?php if (get_field('job_position')) : ?>
+                                                        <span class="specialist_item_body_job"><?php the_field('job_position'); ?></span>
+                                                    <?php endif; ?>
+                                                </div>
+                                                <button class="specialist_toggle close" aria-expanded="false" type="button">
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M3 12L21 12" stroke="#F5F2EE" stroke-width="2"/>
+                                                    </svg>
+                                                </button>
                                             </div>
                                             <div>
                                                 <?php if (get_field('team_email')) : ?>

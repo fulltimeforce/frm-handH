@@ -5,7 +5,7 @@
 get_header(); ?>
 
 <main class="single_team_page">
-  <div class="container">
+  <div class="single_team_page_wrapper">
     <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
 
       <article id="post-<?php the_ID(); ?>" <?php post_class('single_team'); ?>>
@@ -21,7 +21,11 @@ get_header(); ?>
           <div class="single_team_info">
             
             <?php if (get_field('job_position')) : ?>
-              <p class="single_team_job"><?php the_field('job_position'); ?></p>
+              <div class="single_team_job_wrapper">
+                <div class="breadlines">
+                  <p class="single_team_job"><?php the_field('job_position'); ?></p>
+                </div>
+              </div>
             <?php endif; ?>
 
             <h1 class="single_team_name"><?php the_title(); ?></h1>
@@ -45,6 +49,15 @@ get_header(); ?>
               </p>
             <?php endif; ?>
 
+            <?php if (get_field('linkedin_url')) : ?>
+              <div class="single_team_back">
+                <a class="link_btn" href="<?php the_field('linkedin_url'); ?>">
+                  <span>Connect via LinkedIn</span>
+                  <img src="<?php echo IMG; ?>/arrow.svg">
+                </a>
+              </div>
+            <?php endif; ?>
+
             <div class="single_team_back">
               <a class="link_btn" href="/meet-the-team">
                 <span>Meet The Team</span>
@@ -52,12 +65,14 @@ get_header(); ?>
               </a>
             </div>
 
-            <div class="single_team_back">
-              <a class="link_btn" href="<?php the_field('linkedin_url'); ?>">
-                <span>Connect via LinkedIn</span>
-                <img src="<?php echo IMG; ?>/arrow.svg">
-              </a>
-            </div>
+            <?php if (get_field('team_achievements')) : ?>
+              <?php
+                $achievement_img = get_field('team_achievements')
+              ?>
+              <div class="single_team_achievements">
+                <img src="<?php echo esc_url($achievement_img); ?>" alt="Team achievements logos">
+              </div>
+            <?php endif; ?>
 
           </div>
         </div>

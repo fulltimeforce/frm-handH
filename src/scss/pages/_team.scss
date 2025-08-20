@@ -1,26 +1,60 @@
 @use "base/mixins" as m;
 @use "base/variables" as v;
 
+%mt8 {
+  @media (min-width: v.$tv) {
+    margin-top: m.px-to-vw(8px);
+  }
+
+  @include m.tv {
+    margin-top: 8px;
+  }
+}
+
 .single_team_page {
-  margin-top: m.px-to-vw(180px);
+  margin-top: m.px-to-vw(220px);
   margin-bottom: m.px-to-vw(180px);
+
+  @media (max-width: v.$phone) {
+    margin-top: 120px;
+    margin-bottom: 80px;
+  }
+
+  &_wrapper {
+    width: m.px-to-vw(1364px);
+    margin: 0 auto;
+
+    @media (max-width: v.$phone) {
+      width: 100%;
+      padding: 0 20px;
+    }
+  }
 
   .single_team_wrapper {
     display: flex;
-    gap: m.px-to-vw(56px) !important;
+    gap: m.px-to-vw(56px);
     align-items: flex-start;
+    justify-content: center;
+    margin-left: m.px-to-vw(40px);
 
-    @media (max-width: 768px) {
+    @media (max-width: v.$phone) {
       flex-direction: column;
+      width: 100% !important;
+      margin-left: 0px;
     }
   }
 
   .single_team_image {
-    flex: 0 0 40%;
-    width: m.px-to-vw(638px);
-    height: auto;
+    width: m.px-to-vw(670px) !important;
+    height: m.px-to-vw(957px);
     padding: m.px-to-vw(16px);
     border: 1px solid v.$light_brown;
+
+    @media (max-width: v.$phone) {
+      width: 100% !important;
+      height: auto;
+      padding: 10px;
+    }
 
     img {
       width: 100%;
@@ -30,20 +64,44 @@
   }
 
   .single_team_info {
-    flex: 1;
+    width: m.px-to-vw(675px);
 
-    .single_team_job {
-      @include m.text-base(v.$gotham_light, 300, m.px-to-vw(17px), 100%, 10%);
-      text-transform: uppercase;
-      color: v.$black;
-      margin-bottom: m.px-to-vw(31px);
+    @media (max-width: v.$phone) {
+      width: 100%;
+    }
+
+    .single_team_job_wrapper {
+      margin-bottom: m.px-to-vw(20px);
+
+      @media (max-width: v.$phone) {
+        margin-bottom: 20px;
+      }
+
+      .breadlines {
+        @include m.breadlines(v.$black, 1);
+      }
+
+      .single_team_job {
+        @include m.text-base(v.$gotham_light, 300, m.px-to-vw(17px), 100%, 10%);
+        text-transform: uppercase;
+        color: v.$black;
+
+        @media (max-width: v.$phone) {
+          @include m.text-base(v.$gotham_light, 300, 17px, 100%, 10%);
+        }
+      }
     }
 
     .single_team_name {
       @include m.text-base(v.$goudysb, 400, m.px-to-vw(50px), 114%, 0);
       text-transform: uppercase;
       color: v.$light_brown;
-      margin-bottom: m.px-to-vw(40px);
+      margin-bottom: m.px-to-vw(25px);
+
+      @media (max-width: v.$phone) {
+        @include m.text-base(v.$goudysb, 400, 30px, 114%, 0%);
+        margin-bottom: 25px;
+      }
     }
 
     .single_team_content {
@@ -53,12 +111,22 @@
         @include m.text-base(v.$gotham_light, 400, m.px-to-vw(20px), 140%, 6%);
         color: v.$black;
         margin-bottom: m.px-to-vw(15px);
+
+        @media (max-width: v.$phone) {
+          @include m.text-base(v.$gotham_light, 400, 20px, 140%, 6%);
+          margin-bottom: 15px;
+        }
       }
 
       p {
         @include m.text-base(v.$gotham_light, 300, m.px-to-vw(17px), 140%, 6%);
         color: v.$black;
         margin-bottom: m.px-to-vw(15px);
+
+        @media (max-width: v.$phone) {
+          @include m.text-base(v.$gotham_light, 300, 17px, 140%, 6%);
+          margin-bottom: 15px;
+        }
       }
 
       strong {
@@ -71,11 +139,19 @@
       @include m.text-base(v.$gotham_light, 300, m.px-to-vw(17px), 140%, 6%);
       color: v.$black;
 
+      @media (max-width: v.$phone) {
+        @include m.text-base(v.$gotham_light, 200, 17px, 140%, 6%);
+      }
+
       a {
         color: v.$light_brown;
         font-weight: 600;
         text-decoration: underline;
         margin-bottom: m.px-to-vw(5px);
+        
+        @media (max-width: v.$phone) {
+          margin-bottom: 5px;
+        }
       }
 
       strong {
@@ -84,12 +160,23 @@
     }
 
     .single_team_back {
-      margin-top: 2rem;
-
       a {
         font-weight: bold;
         color: #9a7a4f;
         text-decoration: none;
+      }
+    }
+
+    .single_team_achievements {
+      margin-top: m.px-to-vw(40px);
+
+      @media (max-width: v.$phone) {
+        margin-top: 40px;
+        width: 280px;
+
+        img {
+          width: 100%;
+        }
       }
     }
   }
