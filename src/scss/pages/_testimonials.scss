@@ -1,0 +1,77 @@
+@use "base/mixins" as m;
+@use "base/variables" as v;
+
+.testimonials {
+    &_page {
+        padding-block: m.px-to-vw(160px);
+        h2 {
+            text-transform: uppercase;
+            font-family: v.$gotham_m;
+            text-align: center;
+            font-weight: 400;
+            padding-block: 0 m.px-to-vw(24px);
+        }
+    }
+    &_video {
+        .video {
+            border: 1px solid v.$light_brown;
+            padding: m.px-to-vw(16px);
+        }
+        p {
+            padding-block: m.px-to-vw(48px);
+            opacity: 0.8;
+            font-family: v.$gotham_m;
+            font-weight: 400;
+            text-align: center;
+        }
+    }
+}
+.trustpilot {
+    &_reviews {
+        text-align: center;
+        &-subtitle {
+            padding-block: m.px-to-vw(64px) m.px-to-vw(40px);
+            font-family: v.$goudy;
+            text-transform: uppercase;
+        }
+        &-text {
+            margin: auto;
+            max-width: m.px-to-vw(770px);
+            p {
+                font-family: v.$cormorant;
+                font-size: m.px-to-vw(27px);
+                line-height: 160%;
+            }
+        }
+        .comment_author {
+            flex-direction: column;
+            align-items: center;
+            padding-block: m.px-to-vw(40px)  m.px-to-vw(64px);
+            span {
+                opacity: 0.6;
+                font-size: m.px-to-vw(17px);
+                text-transform: uppercase;
+            }
+        }
+    }
+    &_actions {
+        display: flex;
+        gap: m.px-to-vw(12px);
+        justify-content: center;
+            a {
+                padding: m.px-to-vw(20px);
+                font-family: v.$gotham_light;
+                text-transform: uppercase;
+                letter-spacing: 0.8px;
+                border: 1px solid v.$light_brown;
+            }
+            & a:nth-of-type(1) {
+                background-color: v.$light_brown;
+                color: v.$white;
+            }
+            & a:nth-of-type(2) {
+                background-color: transparent;
+                color: black;
+            }
+    }
+}

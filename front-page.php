@@ -126,9 +126,27 @@ $testimonials_items = get_field('testimonials_items');
                     <p><?php echo $why_text; ?></p>
                 <?php endif; ?>
             </div>
-            <div class="image">
-                <img src="<?php echo IMG; ?>/5.png">
-            </div>
+            <?php if( have_rows('whychoose_images') ): ?>
+                <div class="image">
+                    <div class="splide" id="whychooseSplide" aria-label="Why Choose Us Images">
+                    <div class="splide__track">
+                        <ul class="splide__list">
+                        <?php while( have_rows('whychoose_images') ): the_row(); 
+                            $image = get_sub_field('whychoose_image');
+                            if( $image ): ?>
+                            <li class="splide__slide">
+                                <img src="<?php echo esc_url($image); ?>" alt="">
+                            </li>
+                            <?php endif; ?>
+                        <?php endwhile; ?>
+                        </ul>
+                    </div>
+                    </div>
+                    <div class="image_progress">
+                        <div class="progress"></div>
+                    </div>
+                </div>
+            <?php endif; ?>
         </div>
         <?php if (have_rows('stats')): ?>
             <div class="why_choose_us-stats">
@@ -309,7 +327,8 @@ $testimonials_items = get_field('testimonials_items');
 
 <section class="discover">
     <div class="container">
-        <div class="discover_head">
+        <div class="discover_head title_watermark">
+            <div class="watermark"><p>Vehicles For Sale</p></div>
             <div class="breadlines">
                 <p>Discover</p>
             </div>
@@ -381,7 +400,10 @@ $testimonials_items = get_field('testimonials_items');
 
 <section class="clients">
     <div class="container_side">
-        <div class="clients_head">
+        <div class="clients_head title_watermark">
+            <?php if ($testimonials_title): ?>
+            <div class="watermark"><p><?php echo $testimonials_title; ?></p></div>
+            <?php endif; ?>
             <?php if ($testimonials_subtitle): ?>
                 <div class="breadlines">
                     <p><?php echo $testimonials_subtitle; ?></p>
@@ -455,13 +477,14 @@ $testimonials_items = get_field('testimonials_items');
 
 <section class="featured_articles">
     <div class="container">
-        <div class="featured_articles_head">
-            <div class="breadlines">
-                <p>News and Insights</p>
-            </div>
-            <h2>Featured Articles</h2>
+    <div class="featured_articles_head title_watermark">
+        <div class="watermark"><p>Featured Articles</p></div>
+        <div class="breadlines">
+            <p>News and Insights</p>
         </div>
-        <div class="featured_articles-body">
+        <h2>Featured Articles</h2>
+    </div>
+    <div class="featured_articles-body">
         <?php
         $args = array(
             'post_type'      => 'post',
@@ -469,7 +492,7 @@ $testimonials_items = get_field('testimonials_items');
         );
         $query = new WP_Query($args);
 
-        if ($query->have_posts() && $query->found_posts > 1) :
+        if ($query->have_posts() && $query->found_posts > 9) :
             $count = 1;
             while ($query->have_posts()) : $query->the_post();
                 if ($count === 1) {
@@ -481,15 +504,38 @@ $testimonials_items = get_field('testimonials_items');
                 }
                 ?>
                 <article class="new <?php echo $size_class; ?>" data-nro="<?php echo $count; ?>">
-                    <?php if (has_post_thumbnail()) : ?>
+                    <?php if ($size_class !== 'small' && has_post_thumbnail()) : ?>
                         <div class="new_image">
                             <?php the_post_thumbnail('medium'); ?>
                         </div>
                     <?php endif; ?>
                     <div class="new_content">
-                        <span><?php echo get_the_date(); ?></span>
-                        <h3><?php the_title(); ?></h3>
-                        <p><?php echo wp_trim_words(get_the_excerpt(), 25); ?></p>
+                        <span><?php echo get_the_date('d/m/y'); ?></span>
+                        <h3>
+                            <?php
+                            $title = get_the_title();
+                            if ($size_class === 'medium') {
+                                echo mb_strimwidth($title, 0, 70, '...');
+                            } elseif ($size_class === 'small') {
+                                echo mb_strimwidth($title, 0, 56, '...');
+                            } else {
+                                echo $title;
+                            }
+                            ?>
+                        </h3>
+                       <?php
+                        $short_desc = get_field('post_short_description');
+
+                        if ($short_desc) {
+                            if ($size_class === 'big') {
+                                echo '<p>' . mb_strimwidth($short_desc, 0, 225, '...') . '</p>';
+                            } elseif ($size_class === 'medium') {
+                                echo '<p>' . mb_strimwidth($short_desc, 0, 100, '...') . '</p>';
+                            } elseif ($size_class === 'small') {
+                                echo '<p>' . mb_strimwidth($short_desc, 0, 112, '...') . '</p>';
+                            }
+                        }
+                        ?>
                         <a href="<?php the_permalink(); ?>">Read More >></a>
                     </div>
                 </article>
@@ -501,12 +547,11 @@ $testimonials_items = get_field('testimonials_items');
             ?>
             <article class="new big" data-nro="1">
                 <div class="new_image">
-                    <img src="<?php echo IMG; ?>/new1.png">
+                    <img src="<?php echo IMG; ?>/new1.png" alt="Demo">
                 </div>
                 <div class="new_content">
                     <span>22/09/2018</span>
-                    <h3>Actor, Sir Michael Caine’s first car, heads to auction. £100,000 - £150,000 Being Offered with H&H Classics...</h3>
-                    <p>Iconic British actor, Sir Michael Caine CBE’s, first ever car, a 1968 Rolls-Royce Silver Shadow Drophead Coupe with a fascinating history, is being offered for sale at auction on 15 March at the Imperial War Museum, Duxford.</p>
+                    <h3>Actor, Sir Michael Caine’s first car, heads to auction...</h3>
                     <a href="#">Read More >></a>
                 </div>
             </article>
@@ -514,12 +559,11 @@ $testimonials_items = get_field('testimonials_items');
             <?php for ($i = 2; $i < 6; $i++): ?>
                 <article class="new medium" data-nro="<?php echo $i; ?>">
                     <div class="new_image">
-                        <img src="<?php echo IMG; ?>/new1.png">
+                        <img src="<?php echo IMG; ?>/new1.png" alt="Demo">
                     </div>
                     <div class="new_content">
                         <span>22/09/2018</span>
                         <h3>Eric Clapton's 2004 Ferrari 612 Scaglietti F1</h3>
-                        <p>Rock Music Legend, Eric Clapton’s Mirabeau Blue right-hand drive 2004 Ferrari 612 Scaglietti F1 with 29,700 miles...</p>
                         <a href="#">Read More >></a>
                     </div>
                 </article>
@@ -530,13 +574,14 @@ $testimonials_items = get_field('testimonials_items');
                     <div class="new_content">
                         <span>22/09/2018</span>
                         <h3>Eric Clapton's 2004 Ferrari 612 Scaglietti F1</h3>
-                        <p>Rock Music Legend, Eric Clapton’s Mirabeau Blue right-hand drive 2004 Ferrari 612 Scaglietti F1 with 29,700 miles...</p>
                         <a href="#">Read More >></a>
                     </div>
                 </article>
             <?php endfor; ?>
         <?php endif; ?>
     </div>
+</div>
+
         <a href="#" class="permalink" alt="View All Vehicles">
             View All Articles
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
