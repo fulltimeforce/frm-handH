@@ -1,21 +1,33 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const toggles = document.querySelectorAll(".specialist_toggle");
+  const openButtons = document.querySelectorAll(".specialist_toggle.open");
+  const closeButtons = document.querySelectorAll(".specialist_toggle.close");
 
-  toggles.forEach((btn) => {
+  openButtons.forEach((btn) => {
     btn.addEventListener("click", function (e) {
       e.stopPropagation();
       const wrapper = this.closest(".specialist_item_wrapper");
-      const expanded = this.getAttribute("aria-expanded") === "true";
 
       document.querySelectorAll(".specialist_item_wrapper").forEach((w) => {
         w.classList.remove("active");
-        w.querySelector(".specialist_toggle").setAttribute("aria-expanded", "false");
+        w.querySelectorAll(".specialist_toggle").forEach((t) =>
+          t.setAttribute("aria-expanded", "false")
+        );
       });
 
-      if (!expanded) {
-        wrapper.classList.add("active");
-        this.setAttribute("aria-expanded", "true");
-      }
+      wrapper.classList.add("active");
+      this.setAttribute("aria-expanded", "true");
+    });
+  });
+
+  closeButtons.forEach((btn) => {
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      const wrapper = this.closest(".specialist_item_wrapper");
+
+      wrapper.classList.remove("active");
+      wrapper.querySelectorAll(".specialist_toggle").forEach((t) =>
+        t.setAttribute("aria-expanded", "false")
+      );
     });
   });
 });

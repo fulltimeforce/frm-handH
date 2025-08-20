@@ -4,32 +4,52 @@
 .specialist {
   &_page {
     padding-top: m.px-to-vw(160px);
+    @include m.pblock160('bottom');
 
     @include m.tv {
-      padding-top: 76px;
+      padding-top: 40px;
     }
-
-    @include m.pblock160('bottom');
   }
 
   &_content {
     display: flex;
+    justify-content: center;
     gap: m.px-to-vw(36px);
     margin-bottom: m.px-to-vw(96px) !important;
+
+    @include m.tablet {
+      flex-direction: column;
+      margin-bottom: 40px !important;
+      padding: 10px;
+    }
 
     h2 {
       font-family: v.$cormorant;
       font-weight: 300;
       font-size: m.px-to-vw(60px);
       max-width: m.px-to-vw(540px);
+
+      @include m.tablet {
+        font-size: 40px;
+        max-width: 100%;
+        margin-bottom: 15px;
+      }
     }
 
     .specialist_text {
       max-width: m.px-to-vw(770px);
 
+      @include m.tablet {
+        max-width: 100%;
+      }
+
       p {
         @include m.text-base(v.$gotham_light, 300, m.px-to-vw(17px), 140%, 6%); 
         color: rgba(v.$black, 0.9);
+
+        @include m.tablet {
+          font-size: 17px;
+        }
 
         strong {
           font-family: v.$gotham_m;
@@ -41,6 +61,7 @@
           text-decoration: underline;
           text-decoration-skip-ink: auto;
         }
+
       }
     }
   }
@@ -50,9 +71,14 @@
     grid-template-columns: repeat(3, 1fr);
     gap: m.px-to-vw(32px) m.px-to-vw(21px);
 
-    @media (max-width: v.$tv) {
+    @media (max-width: v.$tablet) {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px 21px;
+    }
+
+    @media (max-width: v.$phone) {
       grid-template-columns: 1fr;
-      gap: m.px-to-vw(20px);
+      gap: 20px;
     }
   }
 
@@ -66,33 +92,55 @@
     @media (min-width: v.$tv) {
       font-size: m.px-to-vw(50px);
     }
+
+    @media (max-width: v.$phone) {
+      font-size: 25px;
+      margin: 40px auto;
+      text-align: center;
+    }
   }
 
   &_item_wrapper {
     .specialist_item_body {
-      display: none;
       position: absolute;
       inset: 0;
       background: v.$beige;
       padding: m.px-to-vw(36px) m.px-to-vw(24px);
       flex-direction: column;
-      gap: m.px-to-vw(20px);
+      gap: m.px-to-vw(31px);
       z-index: 10;
+      opacity: 0;
+      transform: translateY(100%);
+      pointer-events: none;
+      transition: opacity 0.35s ease, transform 0.35s ease;
 
-      &_name,
-      &_email,
-      &_tel,
-      &_job,
-      &_description {
+      @media (max-width: v.$phone) {
+        padding: 28px 16px;
+        gap: 20px;
+      }
+
+      .specialist_item_card_header {
+        @include m.flex(space-between)
+      }
+
+      &_name, &_email, &_tel, &_job, &_description {
         @include m.text-base(v.$gotham_light, 325, m.px-to-vw(17px), 140%, 6%);
         color: v.$black;
         opacity: 0.8;
+
+        @media (max-width: v.$phone) {
+          @include m.text-base(v.$gotham_light, 325, 17px, 140%, 6%);
+        }
       }
 
       &_name {
         font-weight: 350;
         font-size: m.px-to-vw(24px);
         opacity: 1;
+
+        @media (max-width: v.$phone) {
+          font-size: 24px;
+        }
       }
 
       strong {
@@ -108,12 +156,19 @@
         letter-spacing: 6%;
         color: v.$light_brown;
         text-decoration: underline;
+
+        @media (max-width: v.$phone) {
+          font-size: 17px;
+        }
       }
     }
 
     &.active {
       .specialist_item_body {
+        opacity: 1;
         display: flex;
+        transform: translateY(0);
+        pointer-events: auto;
       }
     }
   }
@@ -127,6 +182,13 @@
     flex-direction: column;
     padding: m.px-to-vw(36px) m.px-to-vw(24px);
     border: 1px solid v.$light_brown;
+
+    @media (max-width: v.$phone) {
+      width: 350px;
+      height: 464px;
+      padding: 28px 16px !important;
+      margin: 0 auto;
+    }
 
     &_header {
       display: flex;
@@ -146,6 +208,11 @@
       width: m.px-to-vw(370px);
       height: m.px-to-vw(370px);
 
+      @media (max-width: v.$phone) {
+        width: 320px;
+        height: 320px;
+      }
+
       img {
         object-fit: cover;
         width: 100%;
@@ -156,28 +223,57 @@
     &_info {
       display: flex;
       flex-direction: column;
-      gap: m.px-to-vw(12px);
+      gap: 12px;
     }
 
     &_name {
       @include m.text-base(v.$gotham_light, 400, m.px-to-vw(24px), 140%, 1.44px);
       opacity: 0.8;
+
+      @media (max-width: v.$phone) {
+        @include m.text-base(v.$gotham_light, 400, 24px, 140%, 1.44px);
+      }
     }
 
     &_job {
       @include m.text-base(v.$gotham_light, 300, m.px-to-vw(17px), 140%, 1.02px);
       opacity: 0.8;
+
+      @media (max-width: v.$phone) {
+        @include m.text-base(v.$gotham_light, 300, 17px, 140%, 1.02px);
+      }
     }
   }
 
   &_toggle {
-    width: m.px-to-vw(60px);
-    height: m.px-to-vw(60px);
     border-radius: 50%;
     border: none;
     background-color: v.$light_brown;
     color: v.$beige;
-    padding: m.px-to-vw(18px);
+
+    &.open {
+      width: 60px;
+      height: 60px;
+      padding: 18px;
+
+      @media (max-width: v.$phone) {
+        width: 40px;
+        height: 40px;
+        padding: 8px;
+      }
+    }
+
+    &.close {
+      width: 50px;
+      height: 50px;
+      padding: 13px;
+
+      @media (max-width: v.$phone) {
+        width: 42px;
+        height: 42px;
+        padding: 9px;
+      }
+    }
   }
 }
 
@@ -186,13 +282,17 @@
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid v.$light_brown;
-  margin-top: m.px-to-vw(40px);
-  padding-bottom: m.px-to-vw(17px);
+  margin-top: 40px;
+  padding-bottom: 17px;
   color: v.$light_brown;
   font-family: v.$canela_text;
   font-weight: 300;
-  font-size: m.px-to-vw(24px);
+  font-size: 24px;
   max-width: m.px-to-vw(420px);
+
+  @include m.tablet {
+    max-width: 80%;
+  }
 
   span {
     font-weight: 300;
