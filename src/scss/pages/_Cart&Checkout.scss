@@ -29,6 +29,29 @@
             display: none;
         }
     }
+    &-container{
+        @media (min-width: v.$tv){
+            display: grid;
+            grid-template-columns: 1fr m.px-to-vw(395px);
+            grid-gap: m.px-to-vw(32px);
+            align-items: flex-start;
+        }
+        @include m.tv{
+            
+        }
+
+        &>*{
+            width: 100%;
+        }
+
+        .cart-collaterals{
+            @include m.delete_pseudo;
+        }
+        .cart_totals{
+            width: 100% !important;
+            float: none !important;
+        }
+    }
 }
 
 .page_404{

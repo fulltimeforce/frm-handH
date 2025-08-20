@@ -24,7 +24,7 @@ function general_scripts()
     // JavaScript
     wp_enqueue_script('main-js', get_template_directory_uri() . '/public/js/main.min.js', [], '1.0.0', true);
 
-    if(is_page('frequently-asked-questions') || is_page('faq') || is_page('careers')){
+    if (is_page('frequently-asked-questions') || is_page('faq') || is_page('careers')) {
         wp_enqueue_style('accordioncss', CSS . '/accordion.css', [], '1.0.0', 'all');
         wp_enqueue_script('jquerycustom', JS . '/jquery.min.js', [], '1.0.0', true);
         wp_enqueue_script('accordionjs', JS . '/accordion.min.js', ['jquerycustom'], '1.0.0', true);
@@ -131,14 +131,11 @@ function get_card_product($product_id)
 <?php
 }
 
-<<<<<<< HEAD
-
-
-
+// -------------------------------------------------------------------------------------
 
 add_filter('gform_submit_button', function ($button_html, $form) {
 
-    if (in_array((int) $form['id'], [2, 7], true)) {
+    if (in_array((int) $form['id'], [2, 3], true)) {
         // Extrae attrs del input original
         preg_match('/id="([^"]+)"/', $button_html, $mId);
         preg_match('/class="([^"]+)"/', $button_html, $mClass);
@@ -151,7 +148,7 @@ add_filter('gform_submit_button', function ($button_html, $form) {
         $label   = $mValue[1]   ?? __('Submit', 'gravityforms');
 
         // SVG (hereda color del texto)
-        $svg = '<img src="'.IMG.'/arrow.png">';
+        $svg = '<img src="' . IMG . '/arrow.png">';
 
         return sprintf(
             '<button type="submit" id="%s" class="%s custom-submit"%s>
@@ -167,75 +164,22 @@ add_filter('gform_submit_button', function ($button_html, $form) {
 
     // <- IMPORTANTÍSIMO: devolver el HTML original si no aplica
     return $button_html;
-
 }, 10, 2);
-=======
-// Register Custom Post Type: Auctions
-function register_auctions_cpt() {
-    $labels = array(
-        'name'                  => 'Auctions',
-        'singular_name'         => 'Auction',
-        'menu_name'             => 'Auctions',
-        'name_admin_bar'        => 'Auction',
-        'add_new'               => 'Add New',
-        'add_new_item'          => 'Add New Auction',
-        'new_item'              => 'New Auction',
-        'edit_item'             => 'Edit Auction',
-        'view_item'             => 'View Auction',
-        'all_items'             => 'All Auctions',
-        'search_items'          => 'Search Auctions',
-        'not_found'             => 'No auctions found.',
-        'not_found_in_trash'    => 'No auctions found in Trash.',
-    );
 
-    $args = array(
-        'labels'             => $labels,
-        'public'             => true,
-        'publicly_queryable' => true,
-        'show_ui'            => true,
-        'show_in_menu'       => true,
-        'query_var'          => true,
-        'rewrite'            => array('slug' => 'auctions'),
-        'capability_type'    => 'post',
-        'has_archive'        => true,
-        'hierarchical'       => false,
-        'menu_position'      => 5,
-        'menu_icon'          => 'dashicons-tag',
-        'supports'           => array('title', 'editor', 'thumbnail', 'excerpt'),
-        'show_in_rest'       => true,
-    );
+add_filter('gform_field_content_3', function ($content, $field, $value, $entry_id, $form_id) {
 
-    register_post_type('auction', $args);
-}
-add_action('init', 'register_auctions_cpt');
+    if ((int) $field->id === 8 && $field->type === 'fileupload') {
+        return '<div class="my-filewrap">'
+            . $content .
+            '<img src="' . IMG . '/upload.png">
+            <p>Drag and drop files here to upload, or click to select.</p>
+            <span class="browse_file">Browse File</span>
+        </div>';
+    }
+    return $content;
+}, 10, 5);
 
-// Register Custom Taxonomy: Auction Categories
-function register_auction_categories_taxonomy() {
-    $labels = array(
-        'name'              => 'Auction Categories',
-        'singular_name'     => 'Auction Category',
-        'search_items'      => 'Search Auction Categories',
-        'all_items'         => 'All Auction Categories',
-        'parent_item'       => 'Parent Category',
-        'parent_item_colon' => 'Parent Category:',
-        'edit_item'         => 'Edit Auction Category',
-        'update_item'       => 'Update Auction Category',
-        'add_new_item'      => 'Add New Auction Category',
-        'new_item_name'     => 'New Auction Category Name',
-        'menu_name'         => 'Auction Categories',
-    );
+// -------------------------------------------------------------------------------------
 
-    $args = array(
-        'hierarchical'      => true,
-        'labels'            => $labels,
-        'show_ui'           => true,
-        'show_admin_column' => true,
-        'query_var'         => true,
-        'rewrite'           => array('slug' => 'auction-category'),
-        'show_in_rest'      => true,
-    );
-
-    register_taxonomy('auction_category', array('auction'), $args);
-}
-add_action('init', 'register_auction_categories_taxonomy');
->>>>>>> homepage
+require_once get_template_directory() . '/inc/modules/cpt_auctions.php';
+require_once get_template_directory() . '/inc/hooks.php';

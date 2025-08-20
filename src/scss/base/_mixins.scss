@@ -99,7 +99,7 @@
 
 @mixin pblock160($just_bottom: false) {
     @media (min-width: v.$tv) {
-        @if($just_bottom ==false) {
+        @if($just_bottom == false) {
             padding-top: px-to-vw(160px);
         }
 
@@ -115,7 +115,7 @@
     }
 
     @include desktop {
-        @if($just_bottom ==false) {
+        @if($just_bottom == false) {
             padding-top: 86px;
         }
 
@@ -123,7 +123,7 @@
     }
 
     @include tablet {
-        @if($just_bottom ==false) {
+        @if($just_bottom == false) {
             padding-top: 58px;
         }
 
@@ -136,7 +136,9 @@
         padding-top: px-to-vw(230px);
     }
 
-    @include tv {}
+    @include tv {
+
+    }
 }
 
 @mixin mt48 {
@@ -218,6 +220,140 @@
     @return $res;
 }
 
+@mixin gform {
+
+    width: 100%;
+
+    .gform_heading {
+        display: none !important;
+    }
+
+    .gform_footer {
+        @media (min-width: v.$tv) {
+            margin-top: px-to-vw(16px) !important;
+        }
+
+        @include tv {
+            margin-top: 12px !important;
+        }
+    }
+
+    .gform_fields {
+        @media (min-width: v.$tv) {
+            column-gap: px-to-vw(12px) !important;
+            row-gap: px-to-vw(16px) !important;
+        }
+
+        @include tv {
+            row-gap: 12px !important;
+            column-gap: 8px !important;
+        }
+
+        @include tablet {
+            grid-template-columns: 100% !important;
+
+            &>* {
+                grid-column: 1/2 !important;
+            }
+        }
+    }
+
+    [type="submit"],
+    input:not([type="submit"]),
+    textarea {
+        font-family: v.$gotham_light !important;
+    }
+
+    [type="submit"],
+    input:not([type="submit"]),
+    textarea,
+    .browse_file {
+        width: 100% !important;
+        outline: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+
+        @media (min-width: v.$tv) {
+            height: px-to-vw(52px) !important;
+            font-size: px-to-vw(17px) !important;
+        }
+
+        @include tv {
+            height: 40px !important;
+            font-size: 14px !important;
+            line-height: 1.2em !important;
+        }
+    }
+
+    input:not([type="submit"]),
+    textarea {
+        background: v.$white !important;
+        color: v.$black;
+
+        @media (min-width: v.$tv) {
+            letter-spacing: px-to-vw(1.02px) !important;
+            border: px-to-vw(1px) solid v.$light_brown !important;
+            padding-inline: px-to-vw(21px) !important;
+        }
+
+        @include tv {
+            border: 1px solid v.$light_brown !important;
+            letter-spacing: 0.3px !important;
+            padding-inline: 14px !important;
+        }
+
+        &::placeholder {
+            opacity: 0.6 !important;
+        }
+    }
+
+    [type="submit"] {
+        border: none !important;
+        padding: 0 !important;
+        text-transform: uppercase !important;
+        background: v.$light_brown !important;
+
+        @media (min-width: v.$tv) {
+            @include flex(center, px-to-vw(16px) !important);
+            max-width: px-to-vw(244px) !important;
+        }
+
+        @include tv {
+            @include flex(center, 10px !important);
+            max-width: 180px !important;
+        }
+
+        @include tablet {
+            max-width: 100% !important;
+        }
+
+        svg,
+        img {
+            @media (min-width: v.$tv) {
+                @include square(px-to-vw(24px));
+            }
+
+            @include tv {
+                @include square(17.6px);
+            }
+        }
+    }
+
+    textarea {
+        @media (min-width: v.$tv) {
+            padding-block: px-to-vw(20px) !important;
+            height: px-to-vw(156px) !important;
+            min-block-size: px-to-vw(156px) !important;
+        }
+
+        @include tv {
+            padding-block: 13px !important;
+            height: 115px !important;
+            min-block-size: 115px !important;
+        }
+    }
+}
+
 @mixin p($color: v.$black, $ff: v.$gotham_light) {
     color: $color;
     font-family: $ff;
@@ -260,7 +396,7 @@
         margin-bottom: 68px;
     }
 
-    @include desktop{
+    @include desktop {
         margin-bottom: 52px;
     }
 }
@@ -314,7 +450,7 @@
         font-size: px-to-vw(60px);
         line-height: px-to-vw(60px);
     }
-    
+
     @include tv {
         letter-spacing: -.7px;
         font-size: 42px;
@@ -326,7 +462,7 @@
     }
 }
 
-@mixin link_actions {
+@mixin link_actions($format: true, $width_of_buttons: 240px) {
 
     @media (min-width: v.$tv) {
         @include flex(center, px-to-vw(12px));
@@ -345,7 +481,7 @@
         @media (min-width: v.$tv) {
             letter-spacing: px-to-vw(0.8px);
             border: px-to-vw(1px) solid v.$white;
-            width: px-to-vw(240px);
+            width: px-to-vw($width_of_buttons);
             height: px-to-vw(51px);
             font-size: px-to-vw(16px);
         }
@@ -358,14 +494,29 @@
             letter-spacing: 0.4px;
         }
 
-        &:nth-child(even) {
-            color: v.$white;
-            background: transparent;
+        @if($format) {
+            &:nth-child(even) {
+                color: v.$white;
+                background: transparent;
+            }
+
+            &:nth-child(odd) {
+                background: v.$white;
+                color: v.$black;
+            }
         }
 
-        &:nth-child(odd) {
-            background: v.$white;
-            color: v.$black;
+        @else {
+            &:nth-child(even) {
+                background: transparent;
+                border-color: v.$light_brown;
+                color: v.$light_brown;
+            }
+            
+            &:nth-child(odd) {
+                color: v.$white;
+                background: v.$light_brown;
+            }
         }
     }
 }
@@ -414,7 +565,8 @@
     }
 
     @include tv {
-        font-size: 21px;
+        font-size: 17.6px;
+        line-height: 1.2em;
     }
 
     @include lines(3);
@@ -462,12 +614,15 @@
     }
 }
 
-@mixin h4v2($color: v.$light_brown) {
+@mixin h4v2($color: v.$light_brown, $ff: v.$goudysb, $upper: true) {
     color: $color;
-    font-family: v.$goudysb;
+    font-family: $ff;
     leading-trim: both;
     text-edge: cap;
-    text-transform: uppercase;
+
+    @if($upper) {
+        text-transform: uppercase;
+    }
 
     @media (min-width: v.$tv) {
         font-size: px-to-vw(40px);
@@ -776,24 +931,24 @@
 
 @mixin container_side($space_in_right: 180px) {
     width: 100%;
-    
+
     @media (min-width: v.$tv) {
         max-width: px-to-vw(calc(1428px + $space_in_right));
         padding-right: px-to-vw($space_in_right);
         margin-left: auto;
     }
-    
+
     @include tv {
         padding-left: 15%;
         padding-right: 8%;
     }
 
-    @include desktop{
+    @include desktop {
         padding-left: 11%;
         padding-right: 4%;
     }
 
-    @include laptop{
+    @include laptop {
         padding-left: 4%;
     }
 
@@ -807,19 +962,68 @@
     letter-spacing: $letter-spacing;
 }
 
-@mixin mt40_for_actions{
+@mixin mt40_for_actions($with_width: true) {
     @media (min-width: v.$tv) {
-        width: px-to-vw(420px);
+        @if($with_width){
+            width: px-to-vw(420px);
+        }
         margin-top: px-to-vw(40px);
     }
 
     @include tv {
-        width: 100%;
-        max-width: 310px;
+        @if($with_width){
+            width: 100%;
+            max-width: 310px;
+        }
         margin-top: 28px;
     }
 
-    @include desktop{
+    @include desktop {
         margin-top: 24px;
+    }
+}
+
+@mixin social_list_link {
+    list-style: none;
+
+    @media (min-width: v.$tv) {
+        @include flex(flex-start, px-to-vw(16px));
+    }
+
+    @include tv {
+        @include flex(flex-start, 16px);
+    }
+
+    @include tablet {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    a {
+        @media (min-width: v.$tv) {
+            @include square(px-to-vw(38px));
+        }
+
+        @include tv {
+            @include square(38px);
+        }
+
+        svg {
+            @include fullWH;
+            object-fit: contain;
+            object-position: center;
+
+            @include tablet {
+                width: 32px;
+                height: 32px;
+            }
+        }
+    }
+}
+
+@mixin delete_pseudo{
+    &::before, &::after{
+        display: none !important;
     }
 }
