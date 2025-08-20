@@ -220,4 +220,29 @@ import "@splidejs/splide/css";
         splide.mount();
     }
 
+    if (document.querySelector('#pavilionGardens')) {
+        const pavilionSplide = new Splide('#pavilionSlider', {
+            focus: 0,
+            start: 0,
+            type: 'loop',
+            arrows: true,
+            pagination: false,
+            autoWidth: true,
+            gap: '1.042vw',
+            padding: {
+                right: '9.375vw'
+            },
+            breakpoints: {
+                1540: {
+                    gap: '16px'
+                },
+                768: {
+                    perPage: 1
+                }
+            },
+        });
+
+        pavilionSplide.mount();
+    }
+
 })();

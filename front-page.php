@@ -75,31 +75,6 @@ $testimonials_items = get_field('testimonials_items');
 
 <section class="upcoming" id="upcoming-auctions">
     <?php get_template_part('inc/sections/upcoming'); ?>
-    <div class="container">
-        <div class="upcoming_foot">
-            <?php if ($upcoming_text): ?>
-                <div>
-                    <p><?php echo $upcoming_text; ?></p>
-                </div>
-            <?php endif; ?>
-            <?php if ($upcoming_button1): ?>
-                <a href="<?php echo esc_url($upcoming_button1['url']); ?>" target="<?php echo esc_attr($upcoming_button1['target'] ?: '_self'); ?>" class="permalink" alt="<?php echo esc_html($upcoming_button1['title']); ?>">
-                    <?php echo esc_html($upcoming_button1['title']); ?>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 19 19" fill="none">
-                    <path d="M9.49999 -3.93403e-07L9.49999 12M9.49999 12L15.5 6M9.49999 12L3.49999 6M18.5 13L18.5 18L0.499999 18L0.499999 13" stroke="#8C6E47"/>
-                    </svg>
-                </a>
-            <?php endif; ?>
-        </div>
-        <?php if ($upcoming_button2): ?>
-            <a href="<?php echo esc_url($upcoming_button2['url']); ?>" target="<?php echo esc_attr($upcoming_button2['target'] ?: '_self'); ?>" class="permalink_border">
-                <?php echo esc_html($upcoming_button2['title']); ?>
-                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
-                    <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
-                </svg>
-            </a>
-        <?php endif; ?>
-    </div>
 </section>
 
 <?php if ($why_video): ?>
