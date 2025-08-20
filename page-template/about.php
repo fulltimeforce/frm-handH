@@ -20,7 +20,7 @@ get_banner('Homepage / About / About H&H Classics', '', 'About H&H Classics');
         </div>
         <div class="heritage_information">
             <div class="heritage_images">
-
+                
             </div>
             <div class="heritage_content">
                 <div class="breadlines">

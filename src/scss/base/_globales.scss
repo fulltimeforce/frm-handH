@@ -84,7 +84,18 @@ video {
     }
 
     @include m.tv {
-        max-width: 1300px;
+        width: 100%;
+        padding-left: 15%;
+        padding-right: 8%;
+    }
+
+    @include m.desktop{
+        padding-left: 11%;
+        padding-right: 4%;
+    }
+
+    @include m.laptop{
+        padding-left: 4%;
     }
 
     margin-inline: auto;

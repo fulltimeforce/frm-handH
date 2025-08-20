@@ -23,6 +23,12 @@ function general_scripts()
 
     // JavaScript
     wp_enqueue_script('main-js', get_template_directory_uri() . '/public/js/main.min.js', [], '1.0.0', true);
+
+    if(is_page('frequently-asked-questions') || is_page('faq')){
+        wp_enqueue_style('accordioncss', CSS . '/accordion.css', [], '1.0.0', 'all');
+        wp_enqueue_script('jquerycustom', JS . '/jquery.min.js', [], '1.0.0', true);
+        wp_enqueue_script('accordionjs', JS . '/accordion.min.js', ['jquerycustom'], '1.0.0', true);
+    }
 }
 add_action('wp_enqueue_scripts', 'general_scripts');
 
@@ -124,3 +130,41 @@ function get_card_product($product_id)
     </a>
 <?php
 }
+
+
+
+
+
+add_filter('gform_submit_button', function ($button_html, $form) {
+
+    if (in_array((int) $form['id'], [2, 7], true)) {
+        // Extrae attrs del input original
+        preg_match('/id="([^"]+)"/', $button_html, $mId);
+        preg_match('/class="([^"]+)"/', $button_html, $mClass);
+        preg_match('/onclick="([^"]+)"/', $button_html, $mOnclick);
+        preg_match('/value="([^"]+)"/', $button_html, $mValue);
+
+        $id      = $mId[1]      ?? '';
+        $class   = $mClass[1]   ?? 'gform_button button';
+        $onclick = isset($mOnclick[1]) ? ' onclick="' . esc_attr($mOnclick[1]) . '"' : '';
+        $label   = $mValue[1]   ?? __('Submit', 'gravityforms');
+
+        // SVG (hereda color del texto)
+        $svg = '<img src="'.IMG.'/arrow.png">';
+
+        return sprintf(
+            '<button type="submit" id="%s" class="%s custom-submit"%s>
+                %s %s
+            </button>',
+            esc_attr($id),
+            esc_attr($class . ' has-icon'),
+            $onclick,
+            esc_html($label),
+            $svg
+        );
+    }
+
+    // <- IMPORTANTÍSIMO: devolver el HTML original si no aplica
+    return $button_html;
+
+}, 10, 2);

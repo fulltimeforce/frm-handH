@@ -67,7 +67,14 @@
         padding-inline: m.px-to-vw(180px);
     }
 
-    @media (max-width: v.$tv) {}
+    @media (max-width: v.$tv) {
+        padding-block: 20px;
+        padding-inline: 8%;
+    }
+
+    @include m.desktop{
+        padding-inline: 4%;
+    }
 
     &.white_bg {
         background: white;
@@ -83,11 +90,15 @@
             left: m.px-to-vw(216px) !important;
         }
         @include m.tv{
-            height: calc(100vh - 100px) !important;
+            height: 100vh !important;
             width: 25px !important;
-            left: 37px !important;
+            left: 9.5% !important;
         }
-        @include m.tablet {
+        @include m.desktop{
+            width: 22px !important;
+            left: 6% !important;
+        }
+        @include m.laptop {
             display: none;
         }
         user-select: none;
@@ -108,11 +119,8 @@
             display: grid;
             gap: 20px;
             grid-template-columns: 112px 1fr;
-            padding: 0 15px 15px;
         }
-        @include m.tablet {
-            padding: 10px 20px;
-        }
+
         a,
         button {
             font-family: 'GothamLight';
@@ -130,7 +138,6 @@
             }
         }
     }
-
 
     &_logo {
         @media (min-width: v.$tv) {
@@ -157,6 +164,10 @@
 
         }
 
+        @include m.desktop{
+            display: none;
+        }
+
         &--bg {
             @media (min-width: v.$tv) {
                 display: none;
@@ -169,7 +180,7 @@
             }
 
             @include m.tv {
-                padding-top: 34px;
+
             }
             @include m.tablet {
                 display: none;
@@ -387,15 +398,6 @@
         }
     }
 
-    &_logo {
-        @include m.tv {
-            padding-top: 34px;
-        }
-        @include m.tablet {
-            padding-top: 0;
-        }
-    }
-
     &_actions {
         mix-blend-mode: difference;
 
@@ -406,7 +408,6 @@
 
         @media (max-width: v.$tv) {
             @include m.flex(flex-end, 12px);
-            padding-top: 34px;
             font-size: 13px;
         }
 

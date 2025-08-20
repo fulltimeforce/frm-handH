@@ -159,6 +159,7 @@
 
 .cta {
     position: relative;
+    overflow: hidden;
     @include m.flex(center);
     flex-direction: column;
 
@@ -166,7 +167,13 @@
         height: m.px-to-vw(636px);
     }
 
-    @include m.tv {}
+    @include m.tv {
+        height: 470px;
+    }
+
+    @include m.desktop{
+        height: 400px;
+    }
 
     &_bg {
         position: absolute;
@@ -214,7 +221,9 @@
             max-width: m.px-to-vw(997px);
         }
 
-        @include m.tv {}
+        @include m.tv {
+            max-width: 720px;
+        }
 
         margin-inline: auto;
     }

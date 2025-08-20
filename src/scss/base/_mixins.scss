@@ -114,6 +114,14 @@
         padding-bottom: 116px;
     }
 
+    @include desktop {
+        @if($just_bottom ==false) {
+            padding-top: 86px;
+        }
+
+        padding-bottom: 86px;
+    }
+
     @include tablet {
         @if($just_bottom ==false) {
             padding-top: 58px;
@@ -222,7 +230,9 @@
     }
 
     @include tv {
-        font-size: 15.4px;
+        font-size: 14.5px;
+        line-height: 1.3em;
+        letter-spacing: 0.4px;
     }
 }
 
@@ -246,7 +256,13 @@
         margin-bottom: px-to-vw(96px);
     }
 
-    @include tv {}
+    @include tv {
+        margin-bottom: 68px;
+    }
+
+    @include desktop{
+        margin-bottom: 52px;
+    }
 }
 
 @mixin fz39($color: v.$light_brown) {
@@ -298,8 +314,16 @@
         font-size: px-to-vw(60px);
         line-height: px-to-vw(60px);
     }
+    
+    @include tv {
+        letter-spacing: -.7px;
+        font-size: 42px;
+        line-height: 1.2em;
+    }
 
-    @include tv {}
+    @include desktop {
+        font-size: 36px;
+    }
 }
 
 @mixin link_actions {
@@ -309,7 +333,7 @@
     }
 
     @include tv {
-        @include flex(center, 7px);
+        @include flex(center, 9px);
     }
 
     a {
@@ -328,11 +352,10 @@
 
         @include tv {
             border: 1px solid v.$white;
-            font-size: 15px;
-        }
-
-        @include tablet {
-            padding: 10px 16px;
+            font-size: 12px;
+            width: 180px;
+            height: 38px;
+            letter-spacing: 0.4px;
         }
 
         &:nth-child(even) {
@@ -362,7 +385,7 @@
         font-size: 36px;
     }
 
-    @include tablet {
+    @include desktop {
         font-size: 30px;
     }
 
@@ -692,6 +715,8 @@
     @include tablet {
         font-size: 18px;
     }
+
+    text-transform: capitalize;
 }
 
 @mixin icon_text_buttonReturn {
@@ -749,10 +774,52 @@
     }
 }
 
+@mixin container_side($space_in_right: 180px) {
+    width: 100%;
+    
+    @media (min-width: v.$tv) {
+        max-width: px-to-vw(calc(1428px + $space_in_right));
+        padding-right: px-to-vw($space_in_right);
+        margin-left: auto;
+    }
+    
+    @include tv {
+        padding-left: 15%;
+        padding-right: 8%;
+    }
+
+    @include desktop{
+        padding-left: 11%;
+        padding-right: 4%;
+    }
+
+    @include laptop{
+        padding-left: 4%;
+    }
+
+}
+
 @mixin text-base($font-family, $weight, $size, $line-height: normal, $letter-spacing: normal) {
     font-family: $font-family;
     font-weight: $weight;
     font-size: $size;
     line-height: $line-height;
     letter-spacing: $letter-spacing;
+}
+
+@mixin mt40_for_actions{
+    @media (min-width: v.$tv) {
+        width: px-to-vw(420px);
+        margin-top: px-to-vw(40px);
+    }
+
+    @include tv {
+        width: 100%;
+        max-width: 310px;
+        margin-top: 28px;
+    }
+
+    @include desktop{
+        margin-top: 24px;
+    }
 }

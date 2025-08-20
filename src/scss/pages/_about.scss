@@ -6,14 +6,7 @@
 }
 
 %mt40 {
-    @media (min-width: v.$tv) {
-        width: m.px-to-vw(420px);
-        margin-top: m.px-to-vw(40px);
-    }
-
-    @include m.tv {
-        margin-top: 28px;
-    }
+    @include m.mt40_for_actions;
 }
 
 %mt31 {
@@ -27,16 +20,7 @@
 }
 
 %cont {
-    width: 100%;
-
-    @media (min-width: v.$tv) {
-        max-width: m.px-to-vw(calc(1428px + 180px));
-        padding-right: m.px-to-vw(180px);
-    }
-
-    @include m.tv {}
-
-    margin-left: auto;
+    @include m.container_side;
 }
 
 .heritage {

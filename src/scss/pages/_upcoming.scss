@@ -11,7 +11,10 @@
         padding-block: m.px-to-vw(72px);
     }
 
-    @include m.tv {}
+    @include m.tv {
+        min-height: 384px;
+        padding-block: 52px;
+    }
 
     &__bg {
         position: absolute;

@@ -1,0 +1,445 @@
+@use "base/mixins" as m;
+@use "base/variables" as v;
+
+%pr {
+    @media (min-width: v.$tv) {
+        padding-right: m.px-to-vw(132px);
+    }
+
+    @include m.tv {
+        padding-right: 9%;
+        // padding-right: 92px;
+    }
+
+    @include m.desktop {
+        padding-right: 0;
+    }
+}
+
+.private_sales,
+.faq {
+    @include m.pblock160;
+
+    &-title {
+        h2 {
+            @include m.fz60;
+            font-weight: 300;
+            text-align: left;
+        }
+    }
+
+    &-content {
+        @media (min-width: v.$tv) {
+            padding-top: m.px-to-vw(16px);
+        }
+
+        @include m.tv {
+            padding-top: 10px;
+        }
+
+        .actions {
+            @include m.mt40_for_actions;
+
+            a {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        .content {
+            &>* {
+                &:not(:last-child) {
+                    @media (min-width: v.$tv) {
+                        margin-bottom: m.px-to-vw(20px);
+                    }
+
+                    @include m.tv {
+                        margin-bottom: 12px;
+                    }
+                }
+            }
+
+            li,
+            p,
+            span {
+                @include m.p;
+                opacity: 0.9;
+            }
+        }
+    }
+}
+
+.private_sales {
+    &-container {
+        @include m.container_side(114px);
+    }
+
+    &-top {
+        width: 100%;
+        @extend %pr;
+        @include m.mb96;
+
+        @media (min-width: v.$tv) {
+            display: grid;
+            grid-template-columns: m.px-to-vw(490px) 1fr;
+            grid-gap: m.px-to-vw(36px);
+        }
+
+        @include m.tv {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            grid-gap: 26px;
+        }
+
+        @include m.desktop {
+            grid-template-columns: 100%;
+        }
+    }
+
+    &-images {
+        width: 100%;
+        @extend %pr;
+        @include m.mb96;
+    }
+
+    &-slider {
+        width: 100%;
+        position: relative;
+
+        @media (min-width: v.$tv) {
+            height: m.px-to-vw(636px);
+        }
+
+        @include m.tv {
+            height: 470px;
+        }
+
+        @include m.tablet {
+            height: 350px;
+        }
+
+        @include m.phone {
+            height: 270px;
+        }
+
+        &::before {
+            position: absolute;
+            content: '';
+            @include m.centerXY;
+
+            @media (min-width: v.$tv) {
+                width: calc(100% + m.px-to-vw(32px));
+                height: calc(100% + m.px-to-vw(32px));
+                border: m.px-to-vw(1px) solid v.$light_brown;
+            }
+
+            @include m.tv {
+                width: calc(100% + 14px);
+                height: calc(100% + 14px);
+                border: 1px solid v.$light_brown;
+            }
+        }
+
+        .splide {
+            @include m.fullWH;
+
+            &__track,
+            &__list,
+            &__slide,
+            &__slide img {
+                @include m.fullWH;
+            }
+
+            &__pagination {
+                padding: 0 !important;
+                align-items: center;
+                justify-content: flex-start;
+                width: fit-content !important;
+
+                @media (min-width: v.$tv) {
+                    left: m.px-to-vw(24px) !important;
+                    bottom: m.px-to-vw(24px) !important;
+                }
+
+                @include m.tv {
+                    left: 16px !important;
+                    bottom: 16px !important;
+                }
+
+                &__page {
+                    transform: none !important;
+                    border-radius: 0 !important;
+                    margin: 0 !important;
+                    background: v.$white !important;
+                    opacity: 0.5 !important;
+
+                    @media (min-width: v.$tv) {
+                        width: m.px-to-vw(88px) !important;
+                        height: m.px-to-vw(2px) !important;
+                    }
+
+                    @include m.tv {
+                        width: 60px !important;
+                        height: 2px !important;
+                    }
+
+                    &.is-active {
+                        opacity: 1 !important;
+                    }
+                }
+            }
+        }
+
+        img {
+            object-fit: cover;
+            object-position: center;
+        }
+    }
+
+    &-bottom {
+        width: 100%;
+
+        @media (min-width: v.$tv) {
+            display: grid;
+            grid-template-columns: m.px-to-vw(638px) 1fr;
+            grid-gap: m.px-to-vw(20px);
+            align-items: flex-start;
+        }
+
+        @include m.tv {
+            display: grid;
+            grid-template-columns: 469px 1fr;
+            grid-gap: 16px;
+            align-items: flex-start;
+        }
+
+        @include m.desktop {
+            grid-template-columns: 100%;
+            grid-gap: 24px;
+        }
+
+        &-col {
+            width: 100%;
+
+            &>div {
+                width: 100%;
+
+                &:first-child {
+                    @media (min-width: v.$tv) {
+                        padding-bottom: m.px-to-vw(40px);
+                        border-bottom: m.px-to-vw(1px) solid v.$light_brown;
+                        margin-bottom: m.px-to-vw(40px);
+                    }
+
+                    @include m.tv {
+                        padding-bottom: 28px;
+                        margin-bottom: 28px;
+                        border-bottom: 1px solid v.$light_brown;
+                    }
+
+                    @include m.desktop {
+                        padding-bottom: 24px;
+                        margin-bottom: 24px;
+                    }
+                }
+            }
+        }
+
+        .head {
+            @media (min-width: v.$tv) {
+                margin-bottom: m.px-to-vw(24px);
+            }
+
+            @include m.tv {
+                margin-bottom: 16px;
+            }
+
+            @include m.desktop {
+                margin-bottom: 14px;
+            }
+        }
+
+        ul,
+        ol {
+            list-style: none;
+        }
+
+        li,
+        p,
+        a {
+            @include m.p;
+            opacity: 0.8;
+        }
+
+        .email {
+            text-decoration: underline;
+            color: v.$light_brown;
+        }
+
+        b,
+        strong,
+        a {
+            font-family: v.$gotham_m;
+        }
+
+        h3 {
+            font-family: v.$goudysb;
+            color: v.$light_brown;
+            font-weight: 500;
+
+            @media (min-width: v.$tv) {
+                font-size: m.px-to-vw(30px);
+            }
+
+            @include m.tv {
+                font-size: 24px;
+            }
+
+            @include m.desktop {
+                font-size: 21px;
+            }
+        }
+    }
+}
+
+.faq {
+    &_container {
+        @include m.container_side;
+    }
+
+    &_information {
+        width: 100%;
+        @include m.mb96;
+
+        @media (min-width: v.$tv) {
+            display: grid;
+            padding-left: m.px-to-vw(36px);
+            grid-template-columns: m.px-to-vw(480px) 1fr;
+            grid-gap: m.px-to-vw(142px);
+            align-items: flex-start;
+        }
+
+        @include m.tv {
+            display: grid;
+            grid-template-columns: 357px 1fr;
+            grid-gap: 90px;
+            align-items: flex-start;
+            padding-left: 24px;
+        }
+
+        @include m.desktop {
+            grid-template-columns: 100%;
+            padding-left: 0;
+            grid-gap: 26px;
+        }
+    }
+
+    &_list {
+        width: 100%;
+
+        ul {
+            width: 100%;
+
+            .acc_head {
+                @include m.flex(space-between, 1.5rem);
+                flex-wrap: nowrap;
+
+                @media (min-width: v.$tv) {
+                    padding-block: m.px-to-vw(49px);
+                }
+
+                @include m.tv {
+                    padding-block: 34px;
+                }
+
+                h3 {
+                    width: fit-content;
+                    font-family: v.$goudysb;
+                    color: v.$black;
+                    font-weight: 500;
+
+                    @media (min-width: v.$tv) {
+                        font-size: m.px-to-vw(31px);
+                        padding-left: m.px-to-vw(8px);
+                    }
+
+                    @include m.tv {
+                        font-size: 25px;
+                        padding-left: 4px;
+                    }
+
+                    @include m.desktop {
+                        font-size: 22px;
+                    }
+                }
+
+                svg {
+                    @include m.transition(.45s);
+
+                    @media (min-width: v.$tv) {
+                        @include m.square(m.px-to-vw(18px));
+                        min-width: m.px-to-vw(18px);
+                    }
+
+                    @include m.tv {
+                        @include m.square(15px);
+                        min-width: 15px;
+                    }
+                }
+            }
+
+            li {
+                background: rgba($color: v.$light_brown, $alpha: 0);
+
+                @media (min-width: v.$tv) {
+                    border-bottom: m.px-to-vw(1px) solid v.$light_brown;
+                }
+
+                @include m.tv {
+                    border-bottom: 1px solid v.$light_brown;
+                }
+
+                &:is(:hover) {
+                    .acc_head {
+                        svg {
+                            transform: scale(1.2) rotate(90deg);
+                        }
+                    }
+                }
+
+                &.acc_active {
+                    background: rgba($color: v.$light_brown, $alpha: 0.05);
+                }
+            }
+
+            .acc_content {
+                @media (min-width: v.$tv) {
+                    padding-inline: m.px-to-vw(36px);
+                    padding-bottom: m.px-to-vw(48px);
+                }
+
+                @include m.tv {
+                    padding-inline: 24px;
+                    padding-bottom: 36px;
+                }
+
+                p,
+                li,
+                span {
+                    @include m.p;
+                    opacity: 0.9;
+                }
+            }
+
+            .description {
+                width: 100%;
+
+                @media (min-width: v.$tv) {
+                    max-width: m.px-to-vw(1033px);
+                }
+
+                @include m.tv {}
+            }
+        }
+    }
+}

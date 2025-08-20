@@ -4,6 +4,19 @@ import "@splidejs/splide/css";
 
 (function () {
 
+    if(document.querySelector('#images')){
+        new Splide('#images', {
+            type: 'fade',
+            arrows: false,
+            pagination: true,
+            perPage: 1,
+            perMove: 1,
+            rewind: true,
+            breakpoints: {
+            }
+        }).mount();
+    }
+
     if(document.querySelector('#timeline')){
         new Splide('#timeline', {
             arrows: true,
@@ -114,7 +127,6 @@ import "@splidejs/splide/css";
             }
         }).mount({ AutoScroll });
     }
-
 
     let vehiclesThumbs = document.querySelectorAll('.vehicle_card-thumbs')
     if (vehiclesThumbs) {
