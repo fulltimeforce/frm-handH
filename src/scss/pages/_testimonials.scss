@@ -57,11 +57,11 @@
             padding-block: 0 80px;
         }
         &-item {
-            @include m.flex(start, m.px-to-vw(30px));
+            @include m.flex(flex-start, m.px-to-vw(30px));
             padding-bottom: m.px-to-vw(60px);
             border-bottom: 1px solid v.$light_brown;
             flex-wrap: nowrap;
-            align-items: start;
+            align-items: flex-start;
             &:not(:first-child) {
                 padding-top: m.px-to-vw(60px);
                 @include m.tv {
@@ -72,11 +72,11 @@
                 }
             }
             @include m.tv {
-                @include m.flex(start, 30px);
+                @include m.flex(flex-start, 30px);
                 padding-bottom: 60px;
             }
             @include m.tablet {
-                @include m.flex(start, 15px);
+                @include m.flex(flex-start, 15px);
                 padding-bottom: 30px;
             }
         }
