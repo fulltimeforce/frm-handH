@@ -131,11 +131,6 @@ function get_card_product($product_id)
 <?php
 }
 
-<<<<<<< HEAD
-
-
-
-
 add_filter('gform_submit_button', function ($button_html, $form) {
 
     if (in_array((int) $form['id'], [2, 7], true)) {
@@ -169,8 +164,7 @@ add_filter('gform_submit_button', function ($button_html, $form) {
     return $button_html;
 
 }, 10, 2);
-=======
-// Register Custom Post Type: Auctions
+
 function register_auctions_cpt() {
     $labels = array(
         'name'                  => 'Auctions',
@@ -238,4 +232,3 @@ function register_auction_categories_taxonomy() {
     register_taxonomy('auction_category', array('auction'), $args);
 }
 add_action('init', 'register_auction_categories_taxonomy');
->>>>>>> homepage
