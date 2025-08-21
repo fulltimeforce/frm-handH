@@ -296,6 +296,7 @@
 }
 
 .upcoming {
+    overflow: hidden;
     &.pb160 {
         @include m.pblock160;
     }
@@ -1565,3 +1566,4 @@
         }
     }
 }
+

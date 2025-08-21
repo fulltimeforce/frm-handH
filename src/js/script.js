@@ -281,68 +281,88 @@ import "@splidejs/splide/css";
         pavilionSplide.mount();
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
-        const sections = document.querySelectorAll(".title_watermark");
+    if(document.querySelector('.trustpilot_reviews')) {
+        const trustpilot = new Splide('.trustpilot_reviews', {
+            type: 'loop',
+            perPage: 1,
+            perMove: 1,
+            pagination: false,
+            arrows: true,
+            gap: '1rem',
+        });
 
-        if (sections.length > 0) {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add("in-view");
-                    }
-                });
-            }, { threshold: 0.3 });
+        trustpilot.mount();
+        
+        const prev = trustpilot.root.querySelector('.splide__arrow--prev');
+        const next = trustpilot.root.querySelector('.splide__arrow--next');
 
-            sections.forEach(section => observer.observe(section));
+        if (prev) {
+            prev.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="26" viewBox="0 0 15 26" fill="none">
+            <path d="M1 1L13 13L1 25" stroke="#8C6E47" stroke-width="2"/>
+            </svg>`;
         }
 
-        const searchInput = document.getElementById("blog-search");
-        const categorySelect = document.getElementById("blog-category");
-        const perPageSelect = document.getElementById("blog-perpage");
-
-        if (searchInput || categorySelect || perPageSelect) {
-            if (searchInput) {
-                searchInput.addEventListener("keypress", function (e) {
-                    if (e.key === "Enter") {
-                        e.preventDefault();
-                        updateFilters();
-                    }
-                });
-            }
-
-            if (categorySelect) {
-                categorySelect.addEventListener("change", updateFilters);
-            }
-
-            if (perPageSelect) {
-                perPageSelect.addEventListener("change", updateFilters);
-            }
-
-            function updateFilters() {
-                let url = new URL(window.location.href);
-
-                if (searchInput && searchInput.value) {
-                    url.searchParams.set("s", searchInput.value);
-                } else {
-                    url.searchParams.delete("s");
-                }
-
-                if (categorySelect && categorySelect.value) {
-                    url.searchParams.set("category_name", categorySelect.value);
-                } else {
-                    url.searchParams.delete("category_name");
-                }
-
-                if (perPageSelect && perPageSelect.value) {
-                    url.searchParams.set("posts_per_page", perPageSelect.value);
-                } else {
-                    url.searchParams.delete("posts_per_page");
-                }
-
-                url.searchParams.delete("paged");
-                window.location.href = url.toString();
-            }
+        if (next) {
+            next.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="26" viewBox="0 0 15 26" fill="none">
+            <path d="M1 1L13 13L1 25" stroke="#8C6E47" stroke-width="2"/>
+            </svg>`;
         }
+    }
+
+    if (document.querySelector('#imagelider')) {
+    const imagelid = new Splide('#imagelider', {
+        type: 'slide',
+        direction: 'ttb',
+        height: '466px',     
+        perPage: 1, 
+        perMove: 1,
+        pagination: false,
+        arrows: false,
+        wheel: true,
+        speed: 0,
     });
 
-})();
+    const slides = document.querySelectorAll('#imagelider .splide__slide');
+
+    slides.forEach(slide => {
+        slide.style.position = 'absolute';
+        slide.style.top = '0';
+        slide.style.left = '0';
+        slide.style.width = '100%';
+        slide.style.height = '100%';
+    });
+
+    imagelid.on('move', (newIndex) => {
+        slides.forEach((slide, index) => {
+        slide.style.zIndex = index <= newIndex ? index + 1 : 0;
+        });
+    });
+
+    imagelid.mount();
+    }
+
+    })();
+
+document.addEventListener("DOMContentLoaded", () => {
+    const sections = document.querySelectorAll(".title_watermark");
+
+    if (sections.length > 0) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("in-view");
+                }
+            });
+        }, { threshold: 0.3 });
+
+        sections.forEach(section => observer.observe(section));
+    }
+
+    if(document.getElementById('blog-perpage')) {
+        document.getElementById('blog-perpage').addEventListener('change', function() {
+            const url = new URL(window.location.href);
+            url.searchParams.set('posts_per_page', this.value);
+            window.location.href = url.toString();
+        });
+    }
+});

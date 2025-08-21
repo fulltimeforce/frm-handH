@@ -4,25 +4,157 @@
 .testimonials {
     &_page {
         padding-block: m.px-to-vw(160px);
+        @include m.tv {
+            padding-block: 160px;
+        }
+        @include m.tablet {
+            padding-block: 80px;
+        }
         h2 {
             text-transform: uppercase;
             font-family: v.$gotham_m;
             text-align: center;
             font-weight: 400;
             padding-block: 0 m.px-to-vw(24px);
+            @include m.tv {
+                padding-block: 0 24px;
+            }
         }
     }
     &_video {
+        padding-block: m.px-to-vw(144px) 0;
+        @include m.tv {
+            padding-block: 144px 0;
+        }
+        @include m.tablet {
+            padding-block: 70px 0;
+        }
         .video {
             border: 1px solid v.$light_brown;
             padding: m.px-to-vw(16px);
+            @include m.tv {
+                padding: 16px;
+            }
         }
         p {
-            padding-block: m.px-to-vw(48px);
+            padding-block: m.px-to-vw(48px) 0;
             opacity: 0.8;
             font-family: v.$gotham_m;
             font-weight: 400;
             text-align: center;
+            letter-spacing: 1.44px;
+            @include m.tv {
+                padding-block: 48px 0;
+            }
+        }
+    }
+    &_list {
+        padding-block: 0 m.px-to-vw(160px);
+        @include m.tv {
+            padding-block: 0 160px;
+        }
+         @include m.tablet {
+            padding-block: 0 80px;
+        }
+        &-item {
+            @include m.flex(start, m.px-to-vw(30px));
+            padding-bottom: m.px-to-vw(60px);
+            border-bottom: 1px solid v.$light_brown;
+            flex-wrap: nowrap;
+            align-items: start;
+            &:not(:first-child) {
+                padding-top: m.px-to-vw(60px);
+                @include m.tv {
+                    padding-top: 60px;
+                }
+                @include m.tablet {
+                    padding-top: 30px;
+                }
+            }
+            @include m.tv {
+                @include m.flex(start, 30px);
+                padding-bottom: 60px;
+            }
+            @include m.tablet {
+                @include m.flex(start, 15px);
+                padding-bottom: 30px;
+            }
+        }
+        &-icon {
+            max-width: m.px-to-vw(60px);
+            height: m.px-to-vw(60px);
+            background-color: v.$light_brown;
+            border-radius: 50%;
+            @include m.flex(center);
+            @include m.tv {
+                max-width: 60px;
+                height: 60px;
+            }
+            @include m.tablet {
+                max-width: 40px;
+                height: 40px;
+            }
+            p {
+                color: white;
+                font-family: v.$goudy;
+                @include m.tablet {
+                    font-size: 20px;
+                }
+            }
+        }
+        &-info {
+            .p24 {
+                font-family: v.$goudy;
+                text-transform: uppercase;
+                padding-block: m.px-to-vw(16px) 0;
+                @include m.tv {
+                    padding-block: 16px 0;
+                }
+            }
+        }
+        &-text {
+            padding-block: m.px-to-vw(30px);
+            max-width: m.px-to-vw(1075px);
+            @include m.tv {
+                padding-block: 30px;
+                max-width: 1075px;
+            }
+            p {
+                font-family: v.$cormorant;
+                font-size: m.px-to-vw(27px);
+                letter-spacing: 0.27px;
+                line-height: 160%;
+                @include m.tv {
+                    font-size: 27px;
+                }
+                @include m.tablet {
+                    font-size: 22px;
+                }
+            }
+        }
+        &-date {
+            @include m.flex(space-between);
+            flex-wrap: nowrap;
+            max-width: m.px-to-vw(1075px);
+            align-items: baseline;
+            @include m.tv {
+                max-width: 1075px;
+            }
+            .p24 {
+                opacity: 0.8;
+                letter-spacing: 1.44px;
+                font-family: v.$gotham_m;
+                font-weight: 400;
+                text-transform: capitalize;
+                @include m.tablet {
+                    font-size: 20px;
+                }
+            }
+            .p14 {
+                text-transform: uppercase;
+                opacity: 0.8;
+                letter-spacing: 0.84px;
+            }
         }
     }
 }
@@ -33,24 +165,57 @@
             padding-block: m.px-to-vw(64px) m.px-to-vw(40px);
             font-family: v.$goudy;
             text-transform: uppercase;
+            @include m.tv {
+                padding-block: 64px 40px;
+            }
         }
         &-text {
             margin: auto;
             max-width: m.px-to-vw(770px);
+            @include m.tv {
+                max-width: 770px;
+            }
             p {
                 font-family: v.$cormorant;
                 font-size: m.px-to-vw(27px);
                 line-height: 160%;
+                @include m.tv {
+                    font-size: 27px;
+                }
             }
         }
         .comment_author {
             flex-direction: column;
             align-items: center;
             padding-block: m.px-to-vw(40px)  m.px-to-vw(64px);
+            @include m.tv {
+                padding-block: 40px 64px;
+            }
             span {
                 opacity: 0.6;
                 font-size: m.px-to-vw(17px);
                 text-transform: uppercase;
+                letter-spacing: 1.02px;
+                @include m.tv {
+                    font-size: 17px;
+                }
+            }
+        }
+        .comment_photo {
+            @include m.tablet {
+                font-size: 20px;
+            }
+        }
+        .splide__arrow {
+            background-color: transparent;
+            svg {
+                fill: none;
+                width: m.px-to-vw(12px);
+                height: m.px-to-vw(24px);
+                @include m.tv {
+                    width: 12px;
+                    height: 24px;
+                }
             }
         }
     }
@@ -58,12 +223,22 @@
         display: flex;
         gap: m.px-to-vw(12px);
         justify-content: center;
+        @include m.tv {
+            gap: 12px;
+        }
+        @include m.tablet {
+            flex-direction: column;
+            text-align: center;
+        }
             a {
                 padding: m.px-to-vw(20px);
                 font-family: v.$gotham_light;
                 text-transform: uppercase;
                 letter-spacing: 0.8px;
                 border: 1px solid v.$light_brown;
+                @include m.tv {
+                    padding: 20px;
+                }
             }
             & a:nth-of-type(1) {
                 background-color: v.$light_brown;

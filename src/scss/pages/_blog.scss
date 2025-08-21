@@ -53,6 +53,9 @@
                 border: 1px solid v.$light_brown;
             }
         }
+        #blog-category {
+            appearance: none;
+        }
         &-page {
             color: v.$light_brown;
             font-family: v.$gotham_light;
@@ -65,7 +68,7 @@
                 font-size: 17px;
             }
         }
-        div {
+        div,form {
             display: flex;
             width: 100%;
             align-items: center;
