@@ -22,7 +22,7 @@ $second_link = get_field('second_link');
                     <?php endif; ?>
 
                     <?php if (!empty($second_link)): ?>
-                        <a href="<?php echo $first_link['url'] ?>" alt="<?php echo $first_link['title'] ?>"><?php echo $first_link['title'] ?></a>
+                        <a href="<?php echo $second_link['url'] ?>" alt="<?php echo $second_link['title'] ?>"><?php echo $second_link['title'] ?></a>
                     <?php endif; ?>
                 </div>
             </div>
