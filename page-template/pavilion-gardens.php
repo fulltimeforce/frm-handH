@@ -13,7 +13,7 @@ $button = get_field('pavilion_hero_button');
 get_banner('Homepage / Classic Auctions / Pavilion Gardens', esc_url($bg_image), 'Pavillion Gardens');
 ?>
 
-<main class="pavilion_page">
+<div class="pavilion_page">
   <div class="container">
 
     <section id="pavilionGardens" class="custom-carousel">
@@ -71,15 +71,18 @@ get_banner('Homepage / Classic Auctions / Pavilion Gardens', esc_url($bg_image),
         </div>
       </div>
     </section>
+  </div>
+</div>
+<?php get_template_part('inc/sections/cta'); ?>
+<div class="pavilion_page">
+  <div class="container">
 
     <section class="consign">
       <h2>Consign with H&H</h2>
-      <p>To consign your classic motorcar into an auction at the Pavilion Gardens please call us on 01925 210035, email sales@HandH.co.uk or fill out the form on the Value My Classic page. All our valuations for sale are complimentary and without obligation.</p>
+      <p>To consign your classic motorcar into an auction at the Pavilion Gardens please call us on 01925 210035, email <a>sales@HandH.co.uk</a> or fill out the form on the <a>Value My Classic</a> page. All our valuations for sale are complimentary and without obligation.</p>
       <a href="">https://www.handh.co.uk/consign</a>
       <p>Bidding is available live at the auction venue, online, by telephone and commission. For details please call us on 01925 210035 or send an email to sales@HandH.co.uk</p>
     </section>
-
-    <?php get_template_part('inc/sections/cta'); ?>
 
     <section class="how-to-get">
       <h2>How to get to the Pavilion Gardens </h2>
@@ -88,12 +91,27 @@ get_banner('Homepage / Classic Auctions / Pavilion Gardens', esc_url($bg_image),
       <h3>By Car from M6</h3>
       <p>Leave the M6 at junction 19 (Knutsford) and take the A537 through Macclesfield. Sat Nav’s will take you to this entrance using the postcode SK17 6BE</p>
     </section>
+
+    <?php
+      $map = get_field('pavilion_map_image');
+    ?>
+
+    <section class="pavilion_map">
+      <div class="pavilion_map_container">
+        <?php if (!empty($map)): ?>
+          <img class="pavilion_map_image" 
+              src="<?php echo esc_url($map['url']); ?>" 
+              alt="<?php echo esc_attr($map['alt']); ?>">
+        <?php endif; ?>
+      </div>
+    </section>
+
       
     <section class="upcoming" id="upcoming-auctions">
       <?php get_template_part('inc/sections/upcoming'); ?>
-  </section>
+    </section>
   </div>
-</main>
+</div>
 
 <?php get_footer(); ?>
 

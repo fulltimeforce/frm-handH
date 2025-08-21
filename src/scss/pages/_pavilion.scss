@@ -10,24 +10,39 @@
       padding-top: 40px;
     }
 
+    @media (max-width: v.$desktop) {
+      padding-top: 40px;
+    }
+
     .custom-carousel {
       position: relative;
       max-width: 100%;
 
       h2 {
-        margin-top: 48px;
-        margin-bottom: 160px;
+        margin-top: m.px-to-vw(48px);
+        margin-bottom: m.px-to-vw(160px);
         font-family: v.$gotham_m;
         font-weight: 500;
         font-size: 24px;
         line-height: 140%;
         letter-spacing: 6%;
         text-align: center;
+
+        @media (max-width: v.$phone) {
+          margin-bottom: 20px;
+          margin-bottom: 60px;
+          font-size: 20px;
+        }
       }
 
       .splide__track, .splide__slide, .slide-wrapper {
         width: m.px-to-vw(1328px);
         height: m.px-to-vw(668px);
+
+        @media (max-width: v.$phone) {
+          width: 100%;
+          height: 100%;
+        }
       }
       
       .slide-wrapper {
@@ -81,13 +96,21 @@
     }
 
     .auctions {
-      margin-bottom: 120px;
+      margin-bottom: m.px-to-vw(120px);
+      @media (max-width: v.$phone) {
+        margin-bottom: 40px;
+      }
 
       &_container {
         display: flex;
         gap: 46px;
         justify-content: center;
-        width: 1296px;
+        width: m.px-to-vw(1296px);
+
+        @media (max-width: v.$phone) {
+          width: 100%;
+          flex-direction: column;
+        }
 
         &_title {
           font-family: v.$cormorant;
@@ -95,11 +118,20 @@
           font-size: 60px;
           line-height: 100%;
           letter-spacing: -3%;
-          width: 480px;
+          width: m.px-to-vw(480px);
+
+          @media (max-width: v.$phone) {
+            width: 100%;
+            font-size: 32px;
+          }
         }
 
         &_content {
-          width: 770px;
+          width: m.px-to-vw(770px);
+
+          @media (max-width: v.$phone) {
+            width: 100%;
+          }
 
           p {
             font-family: v.$gotham_light;
@@ -113,13 +145,30 @@
       }
     }
 
+    .consign {
+      p {
+        margin-bottom: 32px;
+      }
+    }
+
+    .how-to-get {
+      p {
+        margin-bottom: 64px;
+      }
+    }
+
     .consign, .how-to-get {
-      width: 770px !important;
+      width: m.px-to-vw(770px) !important;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      margin: 0 auto 96px;
+      margin: 0 auto m.px-to-vw(96px);
+
+      @media (max-width: v.$phone) {
+        width: 100% !important;
+        margin: 40px auto 0px;
+      }
 
       h2 {
         font-family: v.$goudysb;
@@ -128,6 +177,7 @@
         line-height: 114%;
         letter-spacing: 0;
         margin-bottom: 64px;
+        text-align: center;
       }
 
       h3 {
@@ -146,8 +196,41 @@
         line-height: 140%;
         letter-spacing: 6%;
         text-align: center;
-        margin-bottom: 32px;
+
+        a {
+          margin-bottom: 0px !important;
+        }
       }
+
+      a {
+        font-family: v.$gotham_m;
+        font-weight: 500;
+        font-size: 17px;
+        line-height: 140%;
+        letter-spacing: 6%;
+        text-align: center;
+        margin-bottom: 32px;
+        color: v.$light_brown;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &_map {
+    &_container {
+      width: m.px-to-vw(1328px);
+      height: m.px-to-vw(656px);
+
+      @media (max-width: v.$phone) {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    &_image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
   }
 }

@@ -1,0 +1,239 @@
+@use "base/mixins" as m;
+@use "base/variables" as v;
+
+.buying_at_auction {
+  &_page {
+    padding-top: m.px-to-vw(160px);
+    @include m.pblock160('bottom');
+
+    @include m.tv {
+      padding-top: 40px;
+    }
+
+    @media (max-width: v.$desktop) {
+      padding-top: 40px;
+    }
+
+    .how-to-buy {
+      width: 1165px;
+      margin: 0 auto 87px;
+
+      h2 {
+        color: #000;
+        text-align: center;
+        font-family: v.$cormorant;
+        font-size: 60px;
+        font-style: normal;
+        font-weight: 300;
+        line-height: 100%;
+        letter-spacing: -1.8px;
+        margin-bottom: 40px;
+      }
+
+      p {
+        color: rgba(0, 0, 0, 0.90);
+        text-align: center;
+        leading-trim: both;
+        text-edge: cap;
+        font-family: v.$gotham_light;
+        font-size: 17px;
+        font-style: normal;
+        font-weight: 300;
+        line-height: 140%;
+        letter-spacing: 1.02px;
+        margin-bottom: 64px;
+
+        a {
+          color: rgba(0, 0, 0, 0.90);
+          leading-trim: both;
+          text-edge: cap;
+          font-family: v.$gotham;
+          font-size: 17px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 140%;
+          letter-spacing: 1.02px;
+        }
+      }
+
+      .cta_links {
+        a {
+          font-family: v.$gotham_light;
+          font-weight: 300;
+          width: 327px;
+          &:nth-child(even) {
+            color: v.$light_brown;
+            background: transparent;
+            border: 1px solid v.$light_brown;
+          }
+
+          &:nth-child(odd) {
+            background: v.$light_brown;
+            color: v.$white;
+          }
+        }
+      }
+    }
+
+    .insurance {
+      width: 784px;
+      margin: 0 auto;
+
+      &_banner {
+        height: 283px;
+        width: 1412px;
+      }
+
+      h2 {
+        color: #FFF;
+        text-align: center;
+        leading-trim: both;
+        text-edge: cap;
+        font-family: v.$goudysb;
+        font-size: 36px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 115%;
+        text-transform: uppercase;
+      }
+
+      p {
+        color: rgba(0, 0, 0, 0.90);
+        text-align: center;
+        leading-trim: both;
+        text-edge: cap;
+        font-family: v.$gotham_light;
+        font-size: 17px;
+        font-style: normal;
+        font-weight: 300;
+        line-height: 140%;
+        letter-spacing: 1.02px;
+        width: 785px;
+        margin: 40px auto 64px;
+      }
+
+      a {
+        width: 292px;
+        font-family: v.$gotham_light;
+        font-weight: 300;
+        line-height: 115%;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        border: 1px solid v.$light_brown;
+      }
+
+      hr {
+        margin-top: 96px;
+      }
+
+      h3 {
+        color: #000;
+        text-align: center;
+        font-family: v.$cormorant;
+        font-size: 60px;
+        font-style: normal;
+        font-weight: 300;
+        line-height: 100%;
+        letter-spacing: -1.8px;
+        margin-top: 96px;
+        margin-bottom: 40px;
+      }
+    }
+  }
+}
+
+.auction-tabs {
+  width: 1428px;
+  margin: 0 auto 120px;
+
+  .auction-tabs-nav {
+    display: flex;
+    gap: 2rem;
+    border-bottom: 1px solid #ccc;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem 0;
+
+    li {
+      cursor: pointer;
+      padding: 1rem 0;
+      font-weight: 600;
+      position: relative;
+
+      color: #000;
+      text-align: center;
+      leading-trim: both;
+      text-edge: cap;
+      font-family: v.$gotham_light;
+      font-size: 17px;
+      font-style: normal;
+      font-weight: 300;
+      line-height: normal;
+      letter-spacing: 1.02px;
+      text-transform: uppercase;
+
+      &.active {
+        border-bottom: 2px solid #000;
+      }
+    }
+  }
+
+  .auction-tabs-content {
+    .tab-panel {
+      display: none;
+
+      &.active {
+        display: block;
+      }
+    }
+  }
+
+  .auction-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+
+    .auction-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .auction-info {
+      h2 {
+        margin-bottom: 1rem;
+        font-family: v.$goudysb;
+        color: #000;
+        leading-trim: both;
+        text-edge: cap;
+        font-size: 50px;
+        line-height: 115%;
+        text-transform: uppercase;
+      }
+
+      p {
+        color: #000;
+        leading-trim: both;
+        text-edge: cap;
+        font-family: v.$gotham_light;
+        font-size: 17px;
+        font-style: normal;
+        font-weight: 300;
+        line-height: 140%; /* 23.8px */
+        letter-spacing: 1.02px;
+      }
+
+      .auction-cards {
+        display: grid;
+        gap: 1rem;
+        margin-top: 2rem;
+
+        .auction-card {
+          border: 1px solid #ccc;
+          padding: 1rem;
+          background: transparent;
+        }
+      }
+    }
+  }
+}
