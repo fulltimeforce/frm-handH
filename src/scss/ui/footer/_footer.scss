@@ -25,6 +25,7 @@
             padding-inline: 90px;
             max-width: 1560px;
         }
+
         @include m.tablet {
             padding-inline: 15px;
         }
@@ -62,6 +63,7 @@
 
         &::before {
             left: 0;
+
             @include m.tablet {
                 width: 120px;
             }
@@ -69,6 +71,7 @@
 
         &::after {
             right: 0;
+
             @include m.tablet {
                 width: 120px;
             }
@@ -85,9 +88,8 @@
             max-width: 108px;
             margin-bottom: 36px;
         }
-        @include m.tablet {
 
-        }
+        @include m.tablet {}
     }
 
     &_grid {
@@ -102,6 +104,7 @@
             grid-template-columns: 300px 1fr;
             grid-gap: 20px;
         }
+
         @include m.tablet {
             padding: 0 15px;
             grid-template-columns: 1fr;
@@ -130,6 +133,7 @@
         @include m.tablet {
             padding-bottom: 20px;
         }
+
         &-head {
             @media (min-width: v.$tv) {
                 margin-bottom: m.px-to-vw(30px);
@@ -138,6 +142,7 @@
             @include m.tv {
                 margin-bottom: 30px;
             }
+
             @include m.tablet {
                 padding-bottom: 10px;
             }
@@ -155,6 +160,7 @@
 
         &-description {
             @include m.p;
+
             @include m.tablet {
                 padding-bottom: 20px;
             }
@@ -260,6 +266,7 @@
             border-top: 1px solid v.$light_brown;
             padding-top: 16px;
         }
+
         @include m.tablet {
             text-align: center;
             padding-inline: 15px;
@@ -288,7 +295,8 @@
             font-family: v.$gotham_m;
             font-weight: 400;
             margin-bottom: m.px-to-vw(12px);
-             @include m.tv {
+
+            @include m.tv {
                 margin-bottom: 12px;
             }
         }
@@ -304,6 +312,7 @@
             @include m.tv {
                 max-width: 240px;
             }
+
             @include m.tablet {
                 padding-block: 20px;
             }
@@ -314,12 +323,16 @@
         @include m.tablet {
             text-align: center;
         }
+
         &>img {
             @media (min-width: v.$tv) {
                 max-width: m.px-to-vw(183.19px);
             }
 
-            @include m.tv {max-width: 183px;}
+            @include m.tv {
+                max-width: 183px;
+            }
+
             @include m.tablet {
                 margin: auto;
                 max-width: 100px;
@@ -329,42 +342,18 @@
         }
 
         .social {
-            list-style: none;
+            @include m.social_list_link;
 
             @media (min-width: v.$tv) {
                 margin-block: m.px-to-vw(48px) m.px-to-vw(25px);
-                @include m.flex(flex-start, m.px-to-vw(16px));
             }
 
             @include m.tv {
                 margin-block: 48px 25px;
-                @include m.flex(flex-start, 16px);
             }
+
             @include m.tablet {
-                display: flex;
-                gap: 20px;
-                justify-content: center;
                 margin-top: 30px;
-            }
-
-            a {
-                @media (min-width: v.$tv) {
-                    @include m.square(m.px-to-vw(38px));
-                }
-
-                @include m.tv {
-                    @include m.square(38px);
-                }
-
-                svg {
-                    @include m.fullWH;
-                    object-fit: contain;
-                    object-position: center;
-                    @include m.tablet {
-                        width: 32px;
-                        height: 32px;
-                    }
-                }
             }
         }
 
@@ -376,7 +365,8 @@
             @include m.tv {
                 @include m.flex(flex-start, 12px);
             }
-             @include m.tablet {
+
+            @include m.tablet {
                 display: flex;
                 gap: 20px;
                 justify-content: center;
@@ -396,6 +386,7 @@
         @include m.tablet {
             margin-bottom: 40px;
         }
+
         &-form {
 
             @media (min-width: v.$tv) {
@@ -405,6 +396,7 @@
             @include m.tv {
                 margin-top: 30px;
             }
+
             #gform_fields_1 {
                 @include m.tablet {
                     gap: 12px;
@@ -420,18 +412,21 @@
                 width: 100%;
                 position: relative;
 
-                .gform-footer{
+                .gform-footer {
                     position: absolute;
                     margin: 0 !important;
                     right: 0;
-                    @media (min-width: v.$tv){
+
+                    @media (min-width: v.$tv) {
                         top: m.px-to-vw(68px) !important;
                         width: m.px-to-vw(156px) !important;
                     }
-                    @include m.tv{
+
+                    @include m.tv {
                         bottom: 68px !important;
                         width: 156px !important;
                     }
+
                     @include m.tablet {
                         position: relative;
                         margin-top: 100px !important;
@@ -480,6 +475,7 @@
 
                         &::before {
                             color: v.$light_brown !important;
+
                             @media (min-width: v.$tv) {
                                 @include m.square(m.px-to-vw(16px));
                             }
@@ -490,12 +486,13 @@
                         }
                     }
 
-                    &[type="email"]{
-                        @media (min-width: v.$tv){
+                    &[type="email"] {
+                        @media (min-width: v.$tv) {
                             width: calc(100% - m.px-to-vw(168px)) !important;
                         }
-                        @include m.tv{
-                          width: calc(100% - 168px) !important;
+
+                        @include m.tv {
+                            width: calc(100% - 168px) !important;
                         }
                     }
 
@@ -522,7 +519,7 @@
                         @media (min-width: v.$tv) {
                             border: m.px-to-vw(1px) solid v.$light_brown !important;
                         }
-                        
+
                         @include m.tv {
                             border: 1px solid v.$light_brown !important;
                         }

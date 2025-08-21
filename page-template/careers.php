@@ -40,7 +40,7 @@ $link = get_field('link_careers');
 </section>
 
 <?php if (have_rows('opportunities')): ?>
-    <section class="opportunities">
+    <section class="opportunities" data-state="0">
         <div class="opportunities_container">
             <div class="opportunities_row">
                 <div class="opportunities_information">
@@ -70,7 +70,7 @@ $link = get_field('link_careers');
                     </div>
                 </div>
                 <div class="opportunities_images">
-                    <div class="spacing"></div>
+                    <!-- <div class="spacing"></div> -->
                     <div class="opportunities_images-collection">
                         <?php while (have_rows('opportunities')): the_row(); ?>
                             <img
@@ -88,6 +88,21 @@ $link = get_field('link_careers');
     </section>
 <?php endif; ?>
 
+<section class="apply_to">
+    <div class="apply_to-container">
+        <div class="apply_to-head">
+            <h2>Apply to join H&H Classics</h2>
+        </div>
+        <div class="apply_to_form">
+            <?php echo do_shortcode('[gravityform id="3" title="true" ajax="true"]'); ?>
+        </div>
+        <div class="apply_to-connect">
+            <p>Connect with H&H Classics on our social media channels today</p>
+            <?php get_template_part('inc/sections/social-list-links'); ?>
+        </div>
+    </div>
+</section>
+
 <?php get_footer(); ?>
 
 <script>
@@ -97,10 +112,8 @@ $link = get_field('link_careers');
         slideSpeed: 150,
         activeIndex: 100,
         openSection: function(section) {
-            console.log(section)
-        },
-        beforeOpenSection: function(section) {
-            console.log(section)
-        },
+            let index = $(section).index();
+            $(".opportunities").attr('data-state', index);
+        }
     });
 </script>
