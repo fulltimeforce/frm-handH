@@ -99,7 +99,7 @@
 
 @mixin pblock160($just_bottom: false) {
     @media (min-width: v.$tv) {
-        @if($just_bottom == false) {
+        @if($just_bottom ==false) {
             padding-top: px-to-vw(160px);
         }
 
@@ -115,7 +115,7 @@
     }
 
     @include desktop {
-        @if($just_bottom == false) {
+        @if($just_bottom ==false) {
             padding-top: 86px;
         }
 
@@ -123,7 +123,7 @@
     }
 
     @include tablet {
-        @if($just_bottom == false) {
+        @if($just_bottom ==false) {
             padding-top: 58px;
         }
 
@@ -140,7 +140,7 @@
         padding-top: 170px;
     }
 
-    @include tablet{
+    @include tablet {
         padding-top: 142px;
     }
 }
@@ -434,9 +434,7 @@
         letter-spacing: px-to-vw(-1.17px);
     }
 
-    @include tv {
-        
-    }
+    @include tv {}
 }
 
 @mixin button_woocommerce($bgColor: v.$light_brown, $color: v.$white) {
@@ -456,12 +454,17 @@
 
         padding-inline: px-to-vw(18px) !important;
         height: px-to-vw(44px) !important;
-
+        
         font-size: px-to-vw(16px) !important;
         line-height: px-to-vw(24px) !important;
     }
-
-    @include tv {}
+    
+    @include tv {
+        padding-inline: 12.4px !important;
+        height: 33px !important;
+        font-size: 12px !important;
+        line-height: 1.2em !important;
+    }
 }
 
 @mixin fz60($color: v.$black) {
@@ -536,7 +539,7 @@
                 border-color: v.$light_brown;
                 color: v.$light_brown;
             }
-            
+
             &:nth-child(odd) {
                 color: v.$white;
                 background: v.$light_brown;
@@ -904,15 +907,28 @@
         padding-top: px-to-vw(80px);
     }
 
-    @include tv {}
+    @include tv {
+        padding-top: 58px;
+    }
+
+    @include desktop {
+        padding-top: 43px;
+    }
+
+    @include tablet {
+        padding-top: 29px;
+    }
 
     svg {
         @media (min-width: v.$tv) {
             @include square(px-to-vw(64px));
             margin: 0 auto px-to-vw(8px);
         }
-
-        @include tv {}
+        
+        @include tv {
+            @include square(47px);
+            margin: 0 auto 4.8px;
+        }
     }
 
     h2 {
@@ -923,7 +939,9 @@
             max-width: px-to-vw(843px);
         }
 
-        @include tv {}
+        @include tv {
+            max-width: 600px;
+        }
 
         margin-inline: auto;
     }
@@ -934,8 +952,10 @@
         @media (min-width: v.$tv) {
             margin: px-to-vw(40px) auto 0;
         }
-
-        @include tv {}
+        
+        @include tv {
+            margin: 28px auto 0;
+        }
     }
 }
 
@@ -988,17 +1008,19 @@
 
 @mixin mt40_for_actions($with_width: true) {
     @media (min-width: v.$tv) {
-        @if($with_width){
+        @if($with_width) {
             width: px-to-vw(420px);
         }
+
         margin-top: px-to-vw(40px);
     }
 
     @include tv {
-        @if($with_width){
+        @if($with_width) {
             width: 100%;
             max-width: 310px;
         }
+
         margin-top: 28px;
     }
 
@@ -1046,8 +1068,40 @@
     }
 }
 
-@mixin delete_pseudo{
-    &::before, &::after{
+@mixin delete_pseudo {
+
+    &::before,
+    &::after {
         display: none !important;
     }
+}
+
+@mixin buttonHeight44($bg: v.$light_brown_2) {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 0 !important;
+    color: white !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: $bg !important;
+
+    @media (min-width: v.$tv) {
+        height: px-to-vw(44px) !important;
+        font-size: px-to-vw(16px) !important;
+    }
+
+    @include tv {
+        height: 33px !important;
+        font-size: 12px !important;
+    }
+}
+
+@mixin form-row{
+    width: 100% !important;
+    float: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    @include delete_pseudo;
 }
