@@ -57,6 +57,9 @@
                 font-size: 36px;
                 padding-block: 24px 0
             }
+            @include m.tablet {
+                font-size: 30px;
+            }
         }
         &-count {
             @include m.flex(end, m.px-to-vw(9px));
@@ -262,11 +265,12 @@
             @include m.tv {
                 border-radius: 8px;
                 background-size: 480px;
-                padding: 64px 0;
+                padding: 24px;
+                margin: 64px 0;
             }
             @include m.tablet {
                 gap: 20px;
-                padding: 24px;
+                margin: 32px 0;
                 background-position: center;
             }
             .listing_btn-white {
@@ -354,6 +358,9 @@
                     font-size: 40px;
                     letter-spacing: -1.2px;
                 }
+                @include m.tablet {
+                    font-size: 30px;
+                }
             }
             p, li {
                 font-size: m.px-to-vw(17px);
@@ -401,13 +408,17 @@
                         text-transform: capitalize;
                         font-family: v.$cormorant;
                         font-size: m.px-to-vw(40px);
+                        line-height: 1;
                         @include m.tv {
                             font-size: 40px;
                         }
                         @include m.tablet {
-                            
+                            font-size: 30px;
                         }
                     }
+                }
+                .acc_section {
+                    border-color: rgba(140, 110, 71, 0.5);
                 }
             }
         }
@@ -447,10 +458,6 @@
                     width: 38px;
                     height: 38px;
                 }
-                @include m.tablet {
-                    width: 30px;
-                    height: 30px;
-                }
             }
         }
         &-notes {
@@ -468,7 +475,7 @@
                 border: 1px solid v.$light_brown;
                 border-bottom: 1px solid v.$white;
                 background-color: v.$white;
-                margin-bottom: -1px;
+                margin-bottom: -2px;
                 position: relative;
                 @include m.tv {
                     max-width: 348px;
@@ -498,6 +505,12 @@
                 }
                 p, ul {
                     opacity: 0.9;
+                }
+                a {
+                    color: v.$light_brown;
+                    font-family: v.$gotham_m;
+                    font-weight: 400;
+                    text-decoration: underline;
                 }
             }
         }
