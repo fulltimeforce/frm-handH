@@ -137,7 +137,11 @@
     }
 
     @include tv {
+        padding-top: 170px;
+    }
 
+    @include tablet{
+        padding-top: 142px;
     }
 }
 
@@ -372,9 +376,9 @@
     }
 }
 
-@mixin p2($color: v.$black) {
+@mixin p2($color: v.$black, $ff: v.$gotham_light) {
     color: $color;
-    font-family: v.$gotham_light;
+    font-family: $ff;
     font-weight: 300;
 
     @media (min-width: v.$tv) {
@@ -384,6 +388,24 @@
 
     @include tv {
         font-size: 14.2px;
+    }
+}
+
+@mixin p3($color: v.$light_brown, $ff: v.$gotham_m) {
+    color: $color;
+    font-family: $ff;
+    font-weight: 300;
+
+    @media (min-width: v.$tv) {
+        font-size: px-to-vw(18px);
+        line-height: px-to-vw(32.4px);
+        letter-spacing: px-to-vw(1.08px);
+    }
+
+    @include tv {
+        font-size: 13.8px;
+        line-height: 1.32em;
+        letter-spacing: 0.45px;
     }
 }
 
@@ -412,7 +434,9 @@
         letter-spacing: px-to-vw(-1.17px);
     }
 
-    @include tv {}
+    @include tv {
+        
+    }
 }
 
 @mixin button_woocommerce($bgColor: v.$light_brown, $color: v.$white) {
