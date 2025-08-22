@@ -1,0 +1,505 @@
+@use "base/mixins" as m;
+@use "base/variables" as v;
+
+.listing {
+    &_head {
+        padding-block: m.px-to-vw(230px) m.px-to-vw(40px);
+        @include m.tv {
+            padding-block: 230px 40px;
+        }
+        @include m.tablet {
+            padding-block: 130px 20px;
+        }
+        .container {
+            @include m.flex(flex-start, m.px-to-vw(158px));
+            align-items: flex-end;
+            max-width: m.px-to-vw(1428px);
+            margin-right: m.px-to-vw(180px);
+            flex-wrap: nowrap;
+            @include m.tv {
+                @include m.flex(flex-start,158px);
+                max-width: 1428px;
+                margin-right: 180px;
+            }
+            @include m.tablet {
+                @include m.flex(flex-start,30px);
+                flex-direction: column;
+                margin-right: 0;
+            }
+        }
+        &-col {
+            &:first-of-type {
+                max-width: m.px-to-vw(750px);
+                @include m.tv {
+                    max-width: 750px;
+                }
+                div {
+                    @include m.flex(flex-start, m.px-to-vw(24px));
+                    @include m.tv {
+                        @include m.flex(flex-start, 24px);
+                    }
+                }
+            }
+            .p20 {
+                font-family: v.$gotham_m;
+                font-weight: 300;
+                color: v.$light_brown;
+                letter-spacing: 1.2px;
+            }
+        }
+        &-title {
+            font-family: v.$goudy;
+            font-size: m.px-to-vw(36px);
+            text-transform: uppercase;
+            line-height: 115%;
+            padding-block: m.px-to-vw(24px) 0;
+            @include m.tv {
+                font-size: 36px;
+                padding-block: 24px 0
+            }
+        }
+        &-count {
+            @include m.flex(end, m.px-to-vw(9px));
+            padding-bottom: m.px-to-vw(27px);
+            @include m.tv {
+                @include m.flex(flex-end, 9px);
+                padding-bottom: 27px;
+            }
+            @include m.tablet {
+                @include m.flex(flex-start, 9px);
+            }
+            .p17 {
+                font-family: v.$gotham_m;
+                font-weight: 400;
+                font-size: m.px-to-vw(17px);
+                opacity: 0.8;
+                letter-spacing: m.px-to-vw(1.02px);
+                @include m.tv {
+                    font-size: 17px;
+                    letter-spacing: 1.02px;
+                }
+            }
+            .p24 {
+                font-family: v.$gotham_m;
+                font-weight: 400;
+                background-color: v.$light_brown;
+                color: v.$white;
+                border-radius: m.px-to-vw(4px);
+                padding: m.px-to-vw(4px) m.px-to-vw(10px);
+                letter-spacing: m.px-to-vw(1.44px);
+                @include m.tv {
+                    border-radius: 4px;
+                    padding: 4px 10px;
+                    letter-spacing: 1.44px;
+                }
+            }
+
+        }
+        &-actions {
+            @include m.flex(end, m.px-to-vw(10px));
+            @include m.tv {
+                @include m.flex(flex-end, 10px);
+            }
+            @include m.tablet {
+                @include m.flex(flex-start, 10px);
+            }
+        }
+    }
+    &_btn {
+        @include m.flex(center, m.px-to-vw(9px));
+        border-radius: m.px-to-vw(4px);
+        padding: m.px-to-vw(12px);
+        font-family: v.$gotham_m;
+        font-weight: 300;
+        display: inline-flex;
+        @include m.tv {
+            @include m.flex(center, 9px);
+            border-radius: 4px;
+            padding: 12px;
+        }
+
+        &-white {
+            @extend .listing_btn;
+            background-color: v.$white;
+            color: v.$black;
+            opacity: 0.8;
+        }
+        &-brown {
+            @extend .listing_btn;
+            background-color: v.$light_brown;
+            color: v.$white;
+            opacity: 0.8;
+        }
+    }
+    &_divider {
+        width: 100%;
+        height: 1px;
+        background-color: v.$light_brown;
+        margin: m.px-to-vw(48px) 0;
+        @include m.tv {
+            margin: 48px 0;
+        }
+        @include m.tablet {
+            margin: 24px 0;
+        }
+    }
+    &_images {
+        .container {
+           max-width: m.px-to-vw(1428px);
+           margin-right: m.px-to-vw(180px); 
+           @include m.grid(2, m.px-to-vw(8px));
+           grid-template-columns: m.px-to-vw(900px) 1fr;
+           @include m.tv {
+            max-width: 1428px;
+            margin-right: 180px;
+            @include m.grid(2, 8px);
+            grid-template-columns: 900px 1fr;
+           }
+           @include m.tablet {
+            margin-right: 0;
+            @include m.grid(2, 8px);
+            grid-template-columns: 1fr;
+           }
+        }
+        &-main {
+            img {
+                max-height: m.px-to-vw(600px);
+                height: 100%;
+                object-fit: cover;
+                @include m.tv {
+                    max-height: 600px;
+                }
+            }
+        }
+    }
+    &_info {
+         .container {
+           max-width: m.px-to-vw(1428px);
+           margin-right: m.px-to-vw(180px); 
+           @include m.tv {
+            max-width: 1428px;
+            margin-right: 180px;
+           }
+           @include m.tablet {
+            margin-right: 0;
+           }
+        }
+        h1 {
+            padding-block: m.px-to-vw(64px) m.px-to-vw(24px);
+            font-family: v.$cormorant;
+            font-size: m.px-to-vw(50px);
+            font-weight: 500;
+            letter-spacing: - m.px-to-vw(1.5px);
+            @include m.tv {
+                padding-block: 64px 24px;
+                font-size: 50px;
+                letter-spacing: - 1.5px;
+            }
+            @include m.tablet {
+                font-size: 40px;
+            }
+        }
+        &-subtitle {
+            font-family: v.$gotham_light;
+            opacity: 0.6;
+            letter-spacing: m.px-to-vw(1.44px);
+            @include m.tv {
+                letter-spacing: 1.44px;
+            }
+            @include m.tablet {
+                font-size: 20px;
+            }
+        }
+        &-bid {
+            @include m.flex(flex-start, m.px-to-vw(138px));
+            align-items: start;
+            @include m.tv {
+                @include m.flex(flex-start, 138px);
+            }
+            @include m.tablet {
+                @include m.flex(flex-start, 40px);
+            }
+            .p17 {
+                font-size: m.px-to-vw(17px);
+                letter-spacing: 1.02px;
+                font-family: v.$gotham_light;
+                opacity: 0.9;
+                @include m.tv {
+                    font-size: 17px;
+                }
+            }
+            div {
+                &:last-of-type {
+                      .p17 {
+                        font-family: v.$gotham_m;
+                        font-weight: 400;
+                        opacity: 0.8;
+                    }
+                }
+            }
+            .gold-text {
+                font-size: m.px-to-vw(36px);
+                font-family: v.$gotham_m;
+                font-weight: 400;
+                color: v.$light_brown;
+                @include m.tv {
+                    font-size: 36px;
+                }
+            }
+        }
+        &-contact {
+            @include m.flex(space-between);
+            align-items: flex-end;
+            border-radius: m.px-to-vw(8px);
+            background-color: v.$light_brown;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='481' height='198' viewBox='0 0 481 198' fill='none'><g opacity='0.4'><path fill-rule='evenodd' clip-rule='evenodd' d='M0.550781 -19H67.4079V78.9731H151.662V-19H218.329V216.552H151.662V118.86H67.4079L67.2175 216.558L0.550781 216.552V-19ZM180.019 115.485H188.211L190.893 107.368H203.947L206.624 115.485H214.816L202.352 79.8886H192.501L180.019 115.485ZM202.01 101.493L197.568 88.0228H197.285L192.834 101.493H202.01Z' fill='%23A38B6C'/><path fill-rule='evenodd' clip-rule='evenodd' d='M262.773 -19V216.552H329.44V119.394L413.884 118.776V216.552H480.551V-19H413.884V78.7762H329.44V-19H262.773ZM268.651 115.288H281.468C285.14 115.288 288.294 114.575 290.93 113.15C293.578 111.725 295.609 109.679 297.021 107.014C298.445 104.349 299.157 101.163 299.157 97.4549C299.157 93.7586 298.445 90.5837 297.021 87.9302C295.609 85.2767 293.59 83.2432 290.966 81.8296C288.341 80.4043 285.21 79.6917 281.574 79.6917H268.651V115.288ZM276.295 108.839H281.15C283.41 108.839 285.31 108.445 286.852 107.657C288.406 106.858 289.571 105.624 290.348 103.955C291.136 102.275 291.531 100.108 291.531 97.4549C291.531 94.8246 291.136 92.6752 290.348 91.0066C289.571 89.3381 288.412 88.1098 286.87 87.3219C285.328 86.534 283.427 86.14 281.168 86.14H276.295V108.839Z' fill='%23A38B6C'/><path d='M255.872 79.6917V115.288H249.269L233.539 92.8838H233.275V115.288H225.63V79.6917H232.339L247.945 102.078H248.263V79.6917H255.872Z' fill='%23A38B6C'/></g></svg>");
+            background-repeat: no-repeat;
+            background-size: m.px-to-vw(480px);
+            background-position: 90% center;
+            padding: m.px-to-vw(24px);
+            color: v.$white;
+            margin: m.px-to-vw(64px) 0;
+            @include m.tv {
+                border-radius: 8px;
+                background-size: 480px;
+                padding: 64px 0;
+            }
+            @include m.tablet {
+                gap: 20px;
+                padding: 24px;
+                background-position: center;
+            }
+            .listing_btn-white {
+                opacity: 1;
+                max-width: m.px-to-vw(240px);
+                width: 100%;
+                @include m.tv {
+                    max-width: 240px;
+                }
+            }
+            &-btn {
+                max-width: m.px-to-vw(240px);
+                @include m.tv {
+                    max-width: 240px;
+                }
+            }
+            &-info {
+                @include m.flex(center, m.px-to-vw(20px));
+                @include m.tv {
+                    @include m.flex(center, 20px);
+                }
+                img {
+                    width: m.px-to-vw(150px);
+                    height: m.px-to-vw(150px);
+                    object-fit: cover;
+                    border-radius: 50%;
+                    border: m.px-to-vw(2px) solid v.$white;
+                    @include m.tv {
+                        width: 150px;
+                        height: 150px;
+                        border: 2px solid v.$white;
+                    }
+                      @include m.tablet {
+                        width: 75px;
+                        height: 75px;
+                    }
+                }
+            }
+            &-subtitle {
+                font-family: v.$gotham_m;
+                font-weight: 400;
+                font-size: m.px-to-vw(17px);
+                opacity: 0.8;
+                padding-block: 0 m.px-to-vw(8px);
+                @include m.tv {
+                    font-size: 17px;
+                    padding-block:  0 8px;
+                }
+            }
+            &-title {
+                padding-block: 0 m.px-to-vw(8px);
+                font-family: v.$goudy;
+                font-size: m.px-to-vw(30px);
+                @include m.tv {
+                    font-size: 30px;
+                    padding-block: 0 8px;
+                }
+            }
+            &-text {
+                font-size: m.px-to-vw(17px);
+                letter-spacing: m.px-to-vw(1.02px);
+                line-height: 140%;
+                opacity: 0.8;
+                @include m.tv {
+                    font-size: 17px;
+                    letter-spacing: 1.02px;
+                }
+                span {
+                    font-family: v.$gotham_m;
+                    font-weight: 400;
+                    a {
+                        text-decoration: underline;
+                        color: v.$white;
+                    }
+                }
+            }
+        }
+        &-details {
+            h3 {
+                font-family: v.$cormorant;
+                font-size: m.px-to-vw(40px);
+                font-weight: 500;
+                letter-spacing: - m.px-to-vw(1.2px);
+                @include m.tv {
+                    font-size: 40px;
+                    letter-spacing: -1.2px;
+                }
+            }
+            p, li {
+                font-size: m.px-to-vw(17px);
+                font-family: v.$gotham_light;
+                letter-spacing: m.px-to-vw(1.02px);
+                line-height: 140%;
+                @include m.tv {
+                    font-size: 17px;
+                    letter-spacing: 1.02px;
+                }
+            }
+            strong {
+                font-family: v.$gotham_m;
+                font-weight: 400;
+            }
+            &-first {
+                padding-block: m.px-to-vw(32px);
+                border-top: 1px solid v.$light_brown;
+                border-bottom: 1px solid v.$light_brown;
+                @include m.tv {
+                    padding-block: 32px;
+                }
+                h3 {
+                    padding-bottom: m.px-to-vw(32px);
+                    @include m.tv {
+                        padding-bottom: 32px;
+                    }
+                }
+                ul {
+                    padding-top: m.px-to-vw(16px);
+                    padding-left: m.px-to-vw(18px);
+                    @include m.tv {
+                        padding-top: 16px;
+                        padding-left: 18px;
+                    }
+                }
+            }
+            #listingTab {
+                margin-bottom: m.px-to-vw(64px);
+                @include m.tv {
+                    margin-bottom: 64px;
+                }
+                .acc_head {
+                    h3 {
+                        text-transform: capitalize;
+                        font-family: v.$cormorant;
+                        font-size: m.px-to-vw(40px);
+                        @include m.tv {
+                            font-size: 40px;
+                        }
+                        @include m.tablet {
+                            
+                        }
+                    }
+                }
+            }
+        }
+        &-image {
+            border: 1px solid v.$light_brown;
+            padding: m.px-to-vw(16px);
+            @include m.tv {
+                padding: 16px;
+            }
+        }
+        &-share {
+            padding-top: m.px-to-vw(64px);
+            @include m.tv {
+                padding-top: 64px;
+            }
+            p {
+                font-size: m.px-to-vw(17px);
+                font-family: v.$gotham_m;
+                font-weight: 400;
+                opacity: 0.8;
+                padding-bottom: m.px-to-vw(24px);
+                @include m.tv {
+                    font-size: 17px;
+                    padding-bottom: 24px;
+                }
+            }
+            div {
+                @include m.flex(flex-start, m.px-to-vw(16px));
+                @include m.tv {
+                    @include m.flex(flex-start,16px);
+                }
+            }
+            img {
+                width: m.px-to-vw(38px);
+                height: m.px-to-vw(38px);
+                @include m.tv {
+                    width: 38px;
+                    height: 38px;
+                }
+                @include m.tablet {
+                    width: 30px;
+                    height: 30px;
+                }
+            }
+        }
+        &-notes {
+            padding-block: m.px-to-vw(80px) m.px-to-vw(160px);
+            @include m.tv {
+                padding-block: 80px 160px;
+            }
+            @include m.tablet {
+                padding-block: 40px 80px;
+            }
+            &-head {
+                z-index: 1;
+                max-width: m.px-to-vw(348px);
+                padding: m.px-to-vw(20px) m.px-to-vw(21px);
+                border: 1px solid v.$light_brown;
+                border-bottom: 1px solid v.$white;
+                background-color: v.$white;
+                margin-bottom: -1px;
+                position: relative;
+                @include m.tv {
+                    max-width: 348px;
+                    padding: 20px 21px;
+                }
+                p {
+                    font-family: v.$gotham_m;
+                    font-weight: 400;
+                    opacity: 0.8;
+                    letter-spacing: 1.7px;
+                }
+            }
+            &-body {
+                font-size: m.px-to-vw(17px);
+                letter-spacing: 1.02px;
+                line-height: 140%;
+                padding: m.px-to-vw(36px);
+                background-color: v.$white;
+                border: 1px solid v.$light_brown;
+                max-height: m.px-to-vw(600px);
+                overflow: auto;
+                font-family: v.$gotham_light;
+                @include m.tv {
+                    font-size: 17px;
+                    padding: 36px;
+                    max-height: 600px;
+                }
+                p, ul {
+                    opacity: 0.9;
+                }
+            }
+        }
+    }
+}

@@ -10,9 +10,8 @@
             max-width: 1428px;
         }
         @include m.tablet {
-            margin-right: 15px;
-            margin-left: 15px;
-            width: calc(100% - 30px);
+            margin-right: 0;
+            margin-left: 0;
         }
     }
     &-box{
@@ -25,6 +24,9 @@
         @include m.tv {
             @include m.grid(3, 36px 21px);
         }
+        @include m.desktop {
+            @include m.grid(2, 36px 21px);
+        }
     }
     &-filter {
         display: grid;
@@ -32,7 +34,7 @@
         justify-content: space-between;
         margin-bottom:  m.px-to-vw(32px);
         @include m.tv {
-            grid-template-columns: 948px 1fr;
+            grid-template-columns: 1fr 1fr;
             margin-bottom: 32px;
         }
         @include m.tablet {

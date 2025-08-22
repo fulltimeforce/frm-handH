@@ -234,13 +234,13 @@ import "@splidejs/splide/css";
     }
 
     if (document.querySelector('#whychooseSplide')) {
-        const interval = 5000;
+        const interval = 6000;
         const progress = document.querySelector('.progress');
         const chooseus = new Splide('#whychooseSplide', {
             type: 'fade',
             rewind: true,
             autoplay: true,
-            interval: 5000,
+            interval: 6000,
             speed: 1000,
             arrows: false,
             pagination: false
@@ -309,36 +309,100 @@ import "@splidejs/splide/css";
         }
     }
 
-    if (document.querySelector('#imagelider')) {
-    const imagelid = new Splide('#imagelider', {
-        type: 'slide',
-        direction: 'ttb',
-        height: '466px',     
-        perPage: 1, 
-        perMove: 1,
-        pagination: false,
-        arrows: false,
-        wheel: true,
-        speed: 0,
-    });
-
-    const slides = document.querySelectorAll('#imagelider .splide__slide');
-
-    slides.forEach(slide => {
-        slide.style.position = 'absolute';
-        slide.style.top = '0';
-        slide.style.left = '0';
-        slide.style.width = '100%';
-        slide.style.height = '100%';
-    });
-
-    imagelid.on('move', (newIndex) => {
-        slides.forEach((slide, index) => {
-        slide.style.zIndex = index <= newIndex ? index + 1 : 0;
+    if (document.querySelector('#heritage')) {
+        const interval = 6000;
+        const progress = document.querySelector('.progress');
+        const heritageMain = document.querySelector('.heritage_images-main');
+        const heritage = new Splide('#heritage', {
+            type: 'fade',
+            rewind: true,
+            autoplay: true,
+            interval: interval,
+            speed: 1000,
+            arrows: false,
+            pagination: false
         });
-    });
 
-    imagelid.mount();
+        heritage.on('mounted move', () => {
+            progress.style.transition = 'none';
+            progress.style.width = '0%';
+            void progress.offsetWidth;
+            progress.style.transition = `width ${interval}ms linear`;
+            progress.style.width = '100%';
+        });
+
+        heritage.on('move', (newIndex, oldIndex) => {
+            const oldSlide = heritage.Components.Slides.getAt(oldIndex).slide;
+            const oldImg = oldSlide.querySelector('img');
+
+            if (oldImg) {
+                heritageMain.src = oldImg.src;
+            }
+        });
+
+        heritage.mount();
+    }
+
+
+    // scrolled section - about
+    if (document.querySelector('.imagelider')) {
+        const wrapper = document.querySelector(".imagelider-wrapper");
+        const viewportMask = document.querySelector(".imagelider");
+        const slides = document.querySelectorAll(".imagelider .slide");
+        if (!wrapper || !viewportMask || !slides.length) return;
+
+        const SLIDE_H = 466;
+        const N = slides.length;
+
+        const setWrapperHeight = () => {
+            const wrapperHeight = (SLIDE_H * N) + 250;
+            wrapper.style.height = wrapperHeight + "px";
+            const info = document.querySelector(".tailored_info-box");
+            if (info) {
+                console.log('entro')
+                info.style.height = wrapperHeight + "px";
+            }
+        };
+
+        const setZIndex = () => {
+            slides.forEach((s, i) => (s.style.zIndex = i + 1));
+        };
+
+        const update = () => {
+            const rect = wrapper.getBoundingClientRect();
+            const totalScrollable = wrapper.offsetHeight - SLIDE_H;
+            if (totalScrollable <= 0) return;
+
+            const scrolledInside = Math.min(Math.max(-rect.top, 0), totalScrollable);
+            const t = scrolledInside / totalScrollable;
+            const phase = t * (N - 1);
+            const i = Math.floor(phase);
+            const p = phase - i;
+
+            slides.forEach((s, k) => {
+            if (k < i) {
+                s.style.transform = "translateY(0%)";
+            } else if (k === i) {
+                s.style.transform = "translateY(0%)";
+            } else if (k === i + 1) {
+                s.style.transform = `translateY(${(1 - p) * 100}%)`;
+            } else {
+                s.style.transform = "translateY(100%)";
+            }
+            });
+        };
+
+        const onResize = () => {
+            setWrapperHeight();
+            update();
+        };
+
+        setWrapperHeight();
+        setZIndex();
+        update();
+
+        window.addEventListener("scroll", update, { passive: true });
+        window.addEventListener("resize", onResize);
     }
 
     })();
