@@ -183,3 +183,24 @@ add_filter('gform_field_content_3', function ($content, $field, $value, $entry_i
 
 require_once get_template_directory() . '/inc/modules/cpt_auctions.php';
 require_once get_template_directory() . '/inc/hooks.php';
+
+// -------------------------------------------------------------------------------------
+
+function editing_navigation_account($items)
+{
+    // Agregar un elemento personalizado al menú de 'Mi cuenta'
+    $items['wishlist'] = __('Wishlist', 'text-domain');
+
+    // Eliminar un elemento existente del menú de 'Mi cuenta'
+    unset($items['downloads']);
+    unset($items['customer-logout']);
+    
+    // Cambiando los labels
+    $items['dashboard'] = 'Panel';
+    $items['edit-account'] = '<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
+        <path d="M18.3333 19.6667C22.9357 19.6667 26.6667 15.9357 26.6667 11.3333C26.6667 6.73096 22.9357 3 18.3333 3C13.731 3 10 6.73096 10 11.3333C10 15.9357 13.731 19.6667 18.3333 19.6667ZM18.3333 19.6667C21.8696 19.6667 25.2609 21.0714 27.7614 23.5719C30.2619 26.0724 31.6667 29.4638 31.6667 33M18.3333 19.6667C14.7971 19.6667 11.4057 21.0714 8.90524 23.5719C6.40476 26.0724 5 29.4638 5 33" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg> Profile';
+
+    return $items;
+}
+add_filter('woocommerce_account_menu_items', 'editing_navigation_account');
