@@ -175,6 +175,9 @@
             @include m.tv {
                 max-width: 770px;
             }
+            @include m.tablet {
+                max-width: 80%;
+            }
             p {
                 font-family: v.$cormorant;
                 font-size: m.px-to-vw(27px);
@@ -216,6 +219,16 @@
                     width: 12px;
                     height: 24px;
                 }
+            }
+        }
+        .splide__arrow--prev {
+            @include m.tablet {
+                left: 0;
+            }
+        }
+        .splide__arrow--next {
+            @include m.tablet {
+                right: 0;
             }
         }
     }

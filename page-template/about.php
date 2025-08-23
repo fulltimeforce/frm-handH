@@ -20,7 +20,31 @@ get_banner('Homepage / About / About H&H Classics', '', 'About H&H Classics');
         </div>
         <div class="heritage_information">
             <div class="heritage_images">
+                <img class="heritage_images-main" src="<?php echo IMG; ?>/about/4.png">
+                <div class="heritage_images-slider">
+                    <div id="heritage" class="splide">
+                        <div class="splide__track">
+                            <ul class="splide__list">
+                                <li class="splide__slide">
+                                    <img src="<?php echo IMG; ?>/1.jpg" alt="Imagen 1">
+                                </li>
+                                <li class="splide__slide">
+                                    <img src="<?php echo IMG; ?>/about/4.png" alt="Imagen 2">
+                                </li>
+                                <li class="splide__slide">
+                                    <img src="<?php echo IMG; ?>/1.jpg" alt="Imagen 3">
+                                </li>
+                                <li class="splide__slide">
+                                    <img src="<?php echo IMG; ?>/about/4.png" alt="Imagen 2">
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
 
+                    <div class="image_progress">
+                        <div class="progress"></div>
+                    </div>
+                </div>
             </div>
             <div class="heritage_content">
                 <div class="breadlines">
@@ -69,7 +93,7 @@ $title = get_field('title_timeline');
 <section class="timeline">
     <div class="container">
         <div class="timeline_head">
-            <h2><?php echo $title; ?></h2>
+            <h2>A timeline of our journey over the past three decades</h2>
         </div>
     </div>
     <div class="container_side">
@@ -401,74 +425,48 @@ $images = get_field('images_pv');
         <div class="tailored-flex">
             <div class="tailored_info">
                 <div class="tailored_info-box">
-                    <div class="breadlines">
-                        <p>Tailored for Every Client</p>
+                    <div class="tailored_info-box-ss">
+                        <div class="breadlines">
+                            <p>Tailored for Every Client</p>
+                        </div>
+                        <?php if (empty($title)): ?>
+                        <h2>BESPOKE PRIVATE SALES</h2>
+                        <?php endif; ?>
+
+                        <?php if (empty($description)): ?>
+                        <div class="tailored_info-content">
+                            <P>At H&H Classics, we recognise that auctions aren't always the preferred route for everyone.
+                                That's why we've developed our bespoke Private Sales and Confidential Sales services,
+                                catering to clients who desire a more discreet and tailored approach to buying or selling
+                                classic vehicles.
+
+                                Our Private Sales Office ensures a seamless, stress-free experience, handling everything
+                                from sourcing rare vehicles to discreetly finding the right buyers for your classic car or
+                                motorcycle. With a commitment to flexibility and professionalism, we cater to the unique
+                                needs of each client.</P>
+                        </div>
+                        <?php endif; ?>
+
+
+                        <a href="<?php echo $link['url']; ?>" class="permalink_border" alt="<?php echo $link['title']; ?>">
+                            Learn More About Private Sales
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
+                                <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
+                            </svg>
+                        </a>
                     </div>
-                    <?php if (empty($title)): ?>
-                    <h2>BESPOKE PRIVATE SALES</h2>
-                    <?php endif; ?>
-
-                    <?php if (empty($description)): ?>
-                    <div class="tailored_info-content">
-                        <P>At H&H Classics, we recognise that auctions aren't always the preferred route for everyone.
-                            That's why we've developed our bespoke Private Sales and Confidential Sales services,
-                            catering to clients who desire a more discreet and tailored approach to buying or selling
-                            classic vehicles.
-
-                            Our Private Sales Office ensures a seamless, stress-free experience, handling everything
-                            from sourcing rare vehicles to discreetly finding the right buyers for your classic car or
-                            motorcycle. With a commitment to flexibility and professionalism, we cater to the unique
-                            needs of each client.</P>
-                    </div>
-                    <?php endif; ?>
-
-
-                    <a href="<?php echo $link['url']; ?>" class="permalink_border" alt="<?php echo $link['title']; ?>">
-                        Learn More About Private Sales
-                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
-                            <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
-                        </svg>
-                    </a>
 
                 </div>
             </div>
 
 
             <div class="tailored_images">
-                <!-- <div class="tailored_image">
-                    <img src="https://images.classic.com/vehicles/6eaf5413545febe6cbe56037734f09c7acbf8e19?w=1200&h=676&fit=crop"
-                        alt="<?php echo get_sub_field('image_pv')['title'] ?>">
-                </div>
-                <div class="tailored_image">
-                    <img src="https://images.classic.com/vehicles/6eaf5413545febe6cbe56037734f09c7acbf8e19?w=1200&h=676&fit=crop"
-                        alt="<?php echo get_sub_field('image_pv')['title'] ?>">
-                </div>
-                <div class="tailored_image">
-                    <img src="https://images.classic.com/vehicles/6eaf5413545febe6cbe56037734f09c7acbf8e19?w=1200&h=676&fit=crop"
-                        alt="<?php echo get_sub_field('image_pv')['title'] ?>">
-                </div>
-                <div class="tailored_image">
-                    <img src="https://images.classic.com/vehicles/6eaf5413545febe6cbe56037734f09c7acbf8e19?w=1200&h=676&fit=crop"
-                        alt="<?php echo get_sub_field('image_pv')['title'] ?>">
-                </div> -->
+                <div class="imagelider-wrapper">
                 <div class="imagelider">
-                        <div id="imagelider" class="splide">
-                        <div class="splide__track">
-                            <ul class="splide__list">
-                            <li class="splide__slide">
-                                <img src="https://images.classic.com/vehicles/6eaf5413545febe6cbe56037734f09c7acbf8e19?w=1200&h=676&fit=crop"
-                                    alt="<?php echo get_sub_field('image_pv')['title'] ?>">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://imageio.forbes.com/specials-images/imageserve/5d35eacaf1176b0008974b54/0x0.jpg?format=jpg&crop=4560,2565,x790,y784,safe&height=900&width=1600&fit=bounds" alt="Otra imagen">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.classic.com/vehicles/6eaf5413545febe6cbe56037734f09c7acbf8e19?w=1200&h=676&fit=crop" alt="Otra imagen">
-                            </li>
-                            </ul>
-                        </div>
-                    </div>
-
+                    <div class="slide"><img src="https://images.classic.com/vehicles/6eaf5413545febe6cbe56037734f09c7acbf8e19?w=1200&h=676&fit=crop"></div>
+                    <div class="slide"><img src="https://imageio.forbes.com/specials-images/imageserve/5d35eacaf1176b0008974b54/0x0.jpg?format=jpg&crop=4560,2565,x790,y784,safe&height=900&width=1600&fit=bounds"></div>
+                    <div class="slide"><img src="https://images.classic.com/vehicles/6eaf5413545febe6cbe56037734f09c7acbf8e19?w=1200&h=676&fit=crop"></div>
+                </div>
                 </div>
                 
             </div>

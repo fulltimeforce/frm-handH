@@ -38,6 +38,53 @@
         @extend %cont;
     }
 
+    &_images {
+        &-main {
+            max-width: m.px-to-vw(395px);
+            height: m.px-to-vw(520px);
+            object-fit: cover;
+            padding: m.px-to-vw(10px);
+            background-color: v.$beige;
+            transition: opacity 0.6s ease;
+            opacity: 1;
+        }
+        &-slider {
+            margin-top: - m.px-to-vw(428px);
+            margin-left: m.px-to-vw(260px);
+            position: relative;
+            .image_progress {
+                position: absolute;
+                bottom: m.px-to-vw(28px);
+                left: m.px-to-vw(28px);
+                width: m.px-to-vw(88px);
+                height: 1px;
+                background: v.$light_brown;
+                overflow: hidden;
+                @include m.tv {
+                    bottom: 28px;
+                    left: 28px;
+                    width: 88px;
+                }
+            }
+            .progress {
+                width: 0%;
+                height: 100%;
+                background: v.$white;
+                transition: width linear;
+            }
+        }
+        #heritage {
+            max-width: m.px-to-vw(395px);
+            padding: m.px-to-vw(10px);
+            background-color: v.$beige;
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+    }
+
     .tabs {
         @include m.flex(center);
 
@@ -45,7 +92,9 @@
             margin-bottom: m.px-to-vw(80px);
         }
 
-        @include m.tv {}
+        @include m.tv {
+            margin-bottom: 40px;
+        }
 
         button {
             flex: 1;
@@ -65,6 +114,8 @@
 
             @include m.tv {
                 font-size: 11px;
+                padding-bottom: 18px;
+                letter-spacing: 1.3px;
                 border-bottom: 1px solid #C0B09B;
             }
 
@@ -82,7 +133,12 @@
             grid-gap: m.px-to-vw(103px);
         }
 
-        @include m.tv {}
+        @include m.tv {
+            grid-template-columns: 638px 1fr
+        }
+        @include m.tablet {
+            grid-template-columns: 1fr
+        }
     }
 
     &_content {
@@ -117,6 +173,13 @@
             flex-direction: column;
             @extend %mt40;
 
+            @include m.tv {
+                @include m.flex(flex-start, 20px);
+            }
+            @include m.tablet {
+                align-items: baseline;
+            }
+
             a {
                 @media (min-width: v.$tv) {
                     width: 100%;
@@ -139,7 +202,9 @@
             max-width: m.px-to-vw(1608px);
         }
 
-        @include m.tv {}
+        @include m.tv {
+            max-width: 1608px;
+        }
 
         margin-left: auto;
     }
@@ -162,7 +227,6 @@
         width: 100%;
         @include m.splide_arrows;
 
-        .splide {}
     }
 
     &-foot {
@@ -175,7 +239,11 @@
             grid-gap: m.px-to-vw(103px);
         }
 
-        @include m.tv {}
+        @include m.tv {
+            margin-top: 80px;
+            grid-template-columns: 638px 1fr;
+            grid-gap: 103px;
+        }
 
         &>* {
             width: 100%;
@@ -203,7 +271,12 @@
                 justify-content: space-between;
             }
 
-            @include m.tv {}
+            @include m.tv {
+                width: 420px;
+            }
+            @include m.tablet {
+                width: fit-content;
+            }
         }
     }
 }
@@ -218,7 +291,11 @@
     }
 
     @include m.tv {
+        width: 418px;
         border: 1px solid v.$light_brown;
+    }
+    @include m.tablet {
+        width: auto;
     }
 
     &>* {
@@ -229,7 +306,9 @@
             padding: m.px-to-vw(36px) m.px-to-vw(24px);
         }
 
-        @include m.tv {}
+        @include m.tv {
+            padding: 36px 24px;
+        }
     }
 
     &-image {
@@ -262,7 +341,15 @@
             align-items: center;
         }
 
-        @include m.tv {}
+        @include m.tv {
+            grid-template-columns: 1fr 60px;
+            grid-gap: 40px;
+        }
+
+        @include m.tablet {
+            display: flex;
+            justify-content: space-between;
+        }
 
         p {
             @include m.h3(v.$black, v.$gotham_m, false);
@@ -274,7 +361,8 @@
         }
 
         button {
-            width: 100%;
+            width: m.px-to-vw(60px);
+            height: m.px-to-vw(60px);
             aspect-ratio: 1/1;
             height: auto;
             border-radius: 50%;
@@ -282,7 +370,14 @@
             @include m.flex(center);
             border: none;
             @include m.transition(.5s);
-
+            @include m.tv {
+                width: 60px;
+                height: 60px;
+            }
+            @include m.tablet {
+                width: 40px;
+                height: 40px;
+            }
             svg {
                 @include m.transition(.5s);
                 pointer-events: none;
@@ -310,7 +405,9 @@
                     @include m.flex(center);
                 }
 
-                @include m.tv {}
+                @include m.tv {
+                    @include m.square(50px);
+                }
             }
         }
     }
@@ -388,7 +485,9 @@
         width: m.px-to-vw(382px);
     }
 
-    @include m.tv {}
+    @include m.tv {
+        width: 382px;
+    }
 
     .round {
         @media (min-width: v.$tv) {
@@ -411,7 +510,9 @@
             grid-gap: 0;
         }
 
-        @include m.tv {}
+        @include m.tv {
+            grid-template-rows: 371px 371px;
+        }
 
         img {
             max-width: 100%;
@@ -463,7 +564,11 @@
                     letter-spacing: m.px-to-vw(0.84px);
                 }
 
-                @include m.tv {}
+                @include m.tv {
+                    font-size: 14px;
+                    line-height: 19.6px;
+                    letter-spacing: 0.84px;
+                }
             }
 
             span {
@@ -629,8 +734,10 @@
 }
 
 .tailored {
+    padding-bottom: m.px-to-vw(130px);
     &_container {
         width: 100%;
+        margin-left: auto;
 
         @media (min-width: v.$tv) {
             max-width: m.px-to-vw(calc(1513px + 95px));
@@ -638,8 +745,10 @@
         }
 
         @include m.tv {}
-
-        margin-left: auto;
+        @include m.tablet {
+            max-width: calc(100% - 30px);
+            margin-inline: auto;
+        }
     }
 
     &-flex {
@@ -651,10 +760,8 @@
     &_info {
         min-height: 100vh;
         @include m.flex(center);
-
-        position: sticky;
-        top:  0;
-        // left: 0;
+        align-items: baseline;
+        position: relative;
 
         @media (min-width: v.$tv) {
             width: m.px-to-vw(638px);
@@ -663,6 +770,8 @@
         @include m.tv {}
 
         &-box {
+            position: relative;
+            width: 100%;
             @media (min-width: v.$tv) {
                 padding-top: m.px-to-vw(35px);
             }
@@ -670,8 +779,10 @@
             @include m.tv {
                 padding-top: 24px;
             }
-
-            width: 100%;
+            &-ss {
+                position: sticky;
+                top: 250px;
+            }
 
             .breadlines {
                 @include m.breadlines(v.$black, 1);
@@ -711,8 +822,8 @@
 
 
     &_images {
-        position: sticky;
-        min-height: 100vh;
+        position: relative;
+        // min-height: 100vh;
 
         @media (min-width: v.$tv) {
             width: m.px-to-vw(802px);
@@ -722,34 +833,41 @@
         @include m.tv {
             padding-inline: 10px;
         }
+
+
+        .imagelider-wrapper {
+            /* La altura total la definimos desde JS según el # de slides */
+            position: relative;
+        }
+
         .imagelider {
-        height: 100vh;
-        margin: auto;
-        display: flex;
-        align-items: center;
-        }
-       #imagelider {
-        position: relative;
-        width: 100%;
-        height: 466px;
-        overflow: hidden;
+            border: 1px solid v.$light_brown;
+            position: sticky;
+            top: 250px;
+            height: 466px;
+            overflow: hidden;
+            border: 16px solid #f5f2ee;
+            box-shadow: 0 0 0 1px v.$light_brown;
         }
 
-        #imagelider img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+        .slide {
+            position: absolute;
+            inset: 0;
+            transform: translateY(100%);
+            will-change: transform;
         }
 
-        #imagelider .splide__slide {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        transition: none;
-        z-index: 0;
+        .slide:first-child {
+            transform: translateY(0%);
         }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
     }
 
     &_image {
@@ -783,6 +901,28 @@
 
         &:nth-child(5) {
             z-index: 5;
+        }
+    }
+}
+
+.page-template-about {
+    .meet_our_specialist {
+        padding-bottom: m.px-to-vw(240px);
+    }
+    .meet_our_specialist-container {
+        @include m.tablet {
+            max-width: calc(100% - 30px);
+            margin-inline: auto;
+        }
+    }
+    .meet_our_specialist-title {
+        @include m.tablet {
+            margin-bottom: 20px;
+        }
+    }
+    .splide__slide {
+        @include m.tablet {
+            width: 100%;
         }
     }
 }
