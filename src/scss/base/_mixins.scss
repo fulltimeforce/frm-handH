@@ -262,12 +262,14 @@
         }
     }
 
+    select,
     [type="submit"],
     input:not([type="submit"]),
     textarea {
         font-family: v.$gotham_light !important;
     }
 
+    select,
     [type="submit"],
     input:not([type="submit"]),
     textarea,
@@ -289,11 +291,14 @@
         }
     }
 
+    select {
+        color: rgba($color: v.$black, $alpha: 0.6) !important;
+        @include flex(flex-start);
+    }
+
+    select,
     input:not([type="submit"]),
     textarea {
-        background: v.$white !important;
-        color: v.$black;
-
         @media (min-width: v.$tv) {
             letter-spacing: px-to-vw(1.02px) !important;
             border: px-to-vw(1px) solid v.$light_brown !important;
@@ -309,6 +314,12 @@
         &::placeholder {
             opacity: 0.6 !important;
         }
+    }
+
+    input:not([type="submit"]),
+    textarea {
+        color: v.$black;
+        background: v.$white !important;
     }
 
     [type="submit"] {
@@ -354,6 +365,121 @@
             padding-block: 13px !important;
             height: 115px !important;
             min-block-size: 115px !important;
+        }
+    }
+
+    #field_3_8,
+    #field_4_8 {
+        background: v.$white;
+
+        @media (min-width: v.$tv) {
+            height: px-to-vw(274px);
+            border: px-to-vw(2px) dashed v.$light_brown;
+        }
+
+        @include tv {
+            height: 200px;
+            border: 2px dashed v.$light_brown;
+        }
+
+        @include tablet {
+            height: 250px;
+        }
+
+
+        .gfield_description,
+        .gfield_label {
+            display: none;
+        }
+
+        .my-filewrap {
+            cursor: pointer;
+            @include fullWH;
+            position: relative;
+
+            [type="file"] {
+                width: 100% !important;
+                height: 100% !important;
+                padding: 0 !important;
+            }
+
+            img {
+                @media (min-width: v.$tv) {
+                    @include square(px-to-vw(56px));
+                }
+
+                @include tv {
+                    @include square(40px);
+                }
+            }
+
+            .ginput_container {
+                @include fullWH;
+                position: absolute;
+                inset: 0;
+                opacity: 0 !important;
+                z-index: 3;
+
+            }
+
+            p {
+                @include h3(v.$light_brown, v.$gotham_light, false);
+                opacity: 0.4;
+                text-align: center;
+
+                @media (min-width: v.$tv) {
+                    max-width: px-to-vw(492px);
+                }
+
+                @include tv {
+                    max-width: 363px;
+                }
+
+                @include phone {
+                    padding-inline: 12px;
+                }
+            }
+
+            .browse_file {
+                @include flex(center);
+                font-family: v.$gotham_m;
+                color: v.$light_brown;
+
+                @media (min-width: v.$tv) {
+                    border: px-to-vw(2px) solid v.$light_brown;
+                    max-width: px-to-vw(157px);
+                }
+
+                @include tv {
+                    max-width: 120px;
+                    border: 2px solid v.$light_brown;
+                }
+
+                @include transition();
+                margin-inline: auto;
+            }
+
+            @media (min-width: v.$tv) {
+                @include flex(center, px-to-vw(32px));
+                flex-direction: column;
+            }
+
+            @include tv {
+                @include flex(center, 22px);
+                flex-direction: column;
+            }
+
+            &:is(:hover) {
+                .browse_file {
+                    @media (min-width: v.$tv) {
+                        max-width: px-to-vw(220px);
+                    }
+
+                    @include tv {
+                        max-width: 162px;
+                    }
+                }
+            }
         }
     }
 }
@@ -454,11 +580,11 @@
 
         padding-inline: px-to-vw(18px) !important;
         height: px-to-vw(44px) !important;
-        
+
         font-size: px-to-vw(16px) !important;
         line-height: px-to-vw(24px) !important;
     }
-    
+
     @include tv {
         padding-inline: 12.4px !important;
         height: 33px !important;
@@ -467,9 +593,9 @@
     }
 }
 
-@mixin fz60($color: v.$black) {
+@mixin fz60($color: v.$black, $text-align: center) {
     font-family: v.$cormorant;
-    text-align: center;
+    text-align: $text-align;
     color: $color;
 
     @media (min-width: v.$tv) {
@@ -924,7 +1050,7 @@
             @include square(px-to-vw(64px));
             margin: 0 auto px-to-vw(8px);
         }
-        
+
         @include tv {
             @include square(47px);
             margin: 0 auto 4.8px;
@@ -952,7 +1078,7 @@
         @media (min-width: v.$tv) {
             margin: px-to-vw(40px) auto 0;
         }
-        
+
         @include tv {
             margin: 28px auto 0;
         }
@@ -970,6 +1096,161 @@
 
     @include tablet {
         margin-bottom: 24px;
+    }
+}
+
+@mixin social_connect_in_bottom {
+    @media (min-width: v.$tv) {
+        @include flex(flex-start, px-to-vw(55px));
+        padding-left: px-to-vw(24px);
+    }
+
+    @include tv {
+        @include flex(flex-start, 32px);
+        padding-left: 16px;
+    }
+
+    @include desktop {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+        padding-left: 0;
+    }
+
+    p {
+        @include p(v.$black, v.$gotham_m);
+        text-align: left;
+    }
+
+    .social {
+        @include social_list_link;
+    }
+}
+
+@mixin dropdowns {
+    ul {
+        width: 100%;
+
+        .acc_head {
+            @include flex(space-between, 1.5rem);
+            flex-wrap: nowrap;
+
+            @media (min-width: v.$tv) {
+                padding-block: px-to-vw(49px);
+                padding-right: px-to-vw(24px);
+            }
+
+            @include tv {
+                padding-block: 34px;
+                padding-right: 15px;
+            }
+
+            h3 {
+                width: fit-content;
+                font-family: v.$goudysb;
+                color: v.$black;
+                font-weight: 500;
+
+                @media (min-width: v.$tv) {
+                    font-size: px-to-vw(31px);
+                    padding-left: px-to-vw(8px);
+                }
+
+                @include tv {
+                    font-size: 25px;
+                    padding-left: 4px;
+                }
+
+                @include desktop {
+                    font-size: 22px;
+                }
+            }
+
+            svg {
+                @include transition(.45s);
+
+                @media (min-width: v.$tv) {
+                    @include square(px-to-vw(18px));
+                    min-width: px-to-vw(18px);
+                }
+
+                @include tv {
+                    @include square(15px);
+                    min-width: 15px;
+                }
+            }
+        }
+
+        li.acc_section {
+            background: rgba($color: v.$light_brown, $alpha: 0);
+
+            @media (min-width: v.$tv) {
+                border-bottom: px-to-vw(1px) solid v.$light_brown;
+            }
+
+            @include tv {
+                border-bottom: 1px solid v.$light_brown;
+            }
+
+            &:is(:hover) {
+                .acc_head {
+                    svg {
+                        transform: scale(1.2) rotate(90deg);
+                    }
+                }
+            }
+
+            &.acc_active {
+                background: rgba($color: v.$light_brown, $alpha: 0.05);
+            }
+        }
+
+        .acc_content {
+            @media (min-width: v.$tv) {
+                padding-inline: px-to-vw(32px);
+                padding-bottom: px-to-vw(48px);
+            }
+
+            @include tv {
+                padding-inline: 24px;
+                padding-bottom: 36px;
+            }
+
+            p,
+            li,
+            span {
+                @include p;
+                opacity: 0.9;
+            }
+
+            b,
+            strong {
+                font-family: v.$gotham_m;
+            }
+
+            ul {
+                list-style: disc;
+            }
+
+            ul,
+            ol {
+                @media (min-width: v.$tv) {
+                    padding-left: px-to-vw(32px);
+                }
+
+                @include tv {
+                    padding-left: 24px;
+                }
+            }
+        }
+
+        .description {
+            width: 100%;
+
+            @media (min-width: v.$tv) {
+                max-width: px-to-vw(1033px);
+            }
+        }
     }
 }
 
@@ -1098,7 +1379,7 @@
     }
 }
 
-@mixin form-row{
+@mixin form-row {
     width: 100% !important;
     float: none !important;
     margin: 0 !important;

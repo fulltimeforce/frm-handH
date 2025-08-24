@@ -1,20 +1,235 @@
 @use "base/mixins" as m;
 @use "base/variables" as v;
 
-.advertise{
+.advertise {
     overflow: hidden;
     @include m.pblock160;
-    &_container{
+
+    &_container {
         @include m.container_side;
     }
-    h2{
+
+    h2 {
         @include m.fz60;
         text-align: center;
         font-weight: 300;
         @include m.mb96;
     }
 
-    &_form{
+    &_form {
         @include m.gform;
+    }
+}
+
+.showcase,
+.valuation_info {
+    @include m.pblock160;
+
+    &-container {
+        width: 100%;
+
+        @media (min-width: v.$tv) {
+            max-width: m.px-to-vw(calc(1165px + 311px));
+            padding-right: m.px-to-vw(311px);
+            margin-left: auto;
+        }
+
+        @include m.tv {
+            padding-left: 15%;
+            padding-right: 8%;
+        }
+
+        @include m.desktop {
+            padding-left: 11%;
+            padding-right: 4%;
+        }
+
+        @include m.laptop {
+            padding-left: 4%;
+        }
+    }
+
+    &-title {
+        width: 100%;
+    }
+}
+
+.valuation_info {
+    &-title {
+        @media (min-width: v.$tv) {
+            padding-right: m.px-to-vw(180px);
+        }
+
+        @include m.tv {
+            padding-right: 130px;
+        }
+
+        @include m.desktop {
+            padding-right: 0;
+        }
+
+        @include m.mb64;
+
+        h2 {
+            @include m.fz60(v.$black, left);
+            font-weight: 300;
+            text-align: left;
+        }
+
+    }
+    &-row{
+        @media (min-width: v.$tv){
+            @include m.flex(space-between, m.px-to-vw(1px));
+            align-items: unset;
+        }
+        @include m.tv{
+            @include m.flex(space-between, 1px);
+            align-items: unset;
+        }
+        @include m.desktop{
+            gap: 0;
+        }
+    }
+    &-col{
+        @media (min-width: v.$desktop){
+            flex: 1;
+        }
+
+        @media (min-width: v.$tv){
+            padding-block: m.px-to-vw(16px);
+            @include m.flex(flex-start, m.px-to-vw(24px));
+            flex-direction: column;
+            padding-right: 7.5%;
+        }
+        @include m.tv{
+            padding-block: 10px;
+            @include m.flex(flex-start, 16px);
+            flex-direction: column;
+            padding-right: 12%;
+        }
+        @include m.desktop{
+            width: 100%;
+            padding-block: 16px;
+        }
+
+        &>*{
+            width: 100%;
+        }
+
+        ol{
+            @media (min-width: v.$tv){
+                padding-left: m.px-to-vw(23px);
+            }
+            @include m.tv{
+                padding-left: 17px;
+            }
+        }
+        ul{
+            list-style: none inside;
+        }
+        p, li{
+            @include m.p(rgba($color: v.$black, $alpha: 1));
+            // @include m.p(rgba($color: v.$black, $alpha: 0.8));
+        }
+        b, strong{
+            font-family: v.$gotham_m;
+            color: v.$black;
+        }
+        a{
+            font-family: v.$gotham_m;
+            color: v.$light_brown;
+            text-decoration: underline;
+        }
+        h3 {
+            flex-flow: v.$goudysb;
+            font-weight: 300;
+            color: v.$light_brown;
+            text-transform: uppercase;
+            text-align: left;
+            @media (min-width: v.$tv) {
+                font-size: m.px-to-vw(30px);
+                line-height: m.px-to-vw(34.5px);
+            }
+    
+            @include m.tv {
+                font-size: 22px;
+            }
+        }
+
+        &:last-child{
+            @media (min-width: v.$tv){
+                border-left: m.px-to-vw(1px) solid v.$light_brown;
+                padding-left: m.px-to-vw(21px);
+            }
+            @include m.tv{
+                border-left: 1px solid v.$light_brown;
+                padding-left: 15px;
+            }
+            @include m.desktop{
+                padding-left: 0;
+                border-top: 1px solid v.$light_brown;
+                border-left: none;
+            }
+        }
+    }
+}
+
+.showcase {
+    background: #E5DDD2;
+
+    &-title {
+        @media (min-width: v.$tv) {
+            padding-right: m.px-to-vw(100px);
+        }
+
+        @include m.tv {
+            padding-right: 70px;
+        }
+
+        @include m.desktop {
+            padding-right: 0;
+        }
+
+        h2 {
+            @include m.h4v2(v.$black, v.$cormorant, false);
+            @include m.mb64;
+            font-weight: 300;
+        }
+    }
+
+    &-form {
+        @include m.mb64;
+        @include m.gform;
+    }
+
+    &-connect {
+        @include m.social_connect_in_bottom;
+        @include m.mb64;
+
+        p {
+            @media (min-width: v.$tv) {
+                width: m.px-to-vw(280px);
+            }
+
+            @include m.tv {
+                width: 200px;
+            }
+        }
+    }
+
+    &-dropdown {
+        width: 100%;
+
+        @include m.dropdowns;
+
+        .acc_head {
+            @media (min-width: v.$tv) {
+                padding-left: m.px-to-vw(24px);
+            }
+
+            @include m.tv {
+                padding-left: 15px;
+            }
+        }
     }
 }

@@ -24,7 +24,7 @@ function general_scripts()
     // JavaScript
     wp_enqueue_script('main-js', get_template_directory_uri() . '/public/js/main.min.js', [], '1.0.0', true);
 
-    if (is_page('frequently-asked-questions') || is_page('faq') || is_page('careers') || is_singular('vehicles')) {
+    if (is_page('frequently-asked-questions') || is_page('faq') || is_page('careers') || is_page('get-a-valuation') || is_singular('vehicles')) {
         wp_enqueue_style('accordioncss', CSS . '/accordion.css', [], '1.0.0', 'all');
         wp_enqueue_script('jquerycustom', JS . '/jquery.min.js', [], '1.0.0', true);
         wp_enqueue_script('accordionjs', JS . '/accordion.min.js', ['jquerycustom'], '1.0.0', true);
@@ -135,7 +135,7 @@ function get_card_product($product_id)
 
 add_filter('gform_submit_button', function ($button_html, $form) {
 
-    if (in_array((int) $form['id'], [2, 3], true)) {
+    if (in_array((int) $form['id'], [2, 3, 4], true)) {
         // Extrae attrs del input original
         preg_match('/id="([^"]+)"/', $button_html, $mId);
         preg_match('/class="([^"]+)"/', $button_html, $mClass);
@@ -167,7 +167,18 @@ add_filter('gform_submit_button', function ($button_html, $form) {
 }, 10, 2);
 
 add_filter('gform_field_content_3', function ($content, $field, $value, $entry_id, $form_id) {
+    if ((int) $field->id === 8 && $field->type === 'fileupload') {
+        return '<div class="my-filewrap">'
+            . $content .
+            '<img src="' . IMG . '/upload.png">
+            <p>Drag and drop files here to upload, or click to select.</p>
+            <span class="browse_file">Browse File</span>
+        </div>';
+    }
+    return $content;
+}, 10, 5);
 
+add_filter('gform_field_content_4', function ($content, $field, $value, $entry_id, $form_id) {
     if ((int) $field->id === 8 && $field->type === 'fileupload') {
         return '<div class="my-filewrap">'
             . $content .
