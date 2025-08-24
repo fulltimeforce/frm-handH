@@ -4,12 +4,38 @@
 .specialist {
   &_page {
     padding-top: m.px-to-vw(160px);
-    @include m.pblock160('bottom');
+    @include m.pblock160("bottom");
 
     @include m.tv {
       padding-top: 40px;
     }
+
+    &-container {
+      width: 100%;
+  
+      @media (min-width: v.$tv) {
+        max-width: m.px-to-vw(calc(1296px + 246px));
+        padding-right: m.px-to-vw(246px);
+        margin-left: auto;
+      }
+  
+      @include m.tv {
+        padding-left: 15%;
+        padding-right: 8%;
+      }
+  
+      @include m.desktop {
+        padding-left: 11%;
+        padding-right: 4%;
+      }
+  
+      @include m.laptop {
+        padding-left: 4%;
+      }
+    }
+    
   }
+
 
   &_content {
     display: flex;
@@ -44,7 +70,7 @@
       }
 
       p {
-        @include m.text-base(v.$gotham_light, 300, m.px-to-vw(17px), 140%, 6%); 
+        @include m.text-base(v.$gotham_light, 300, m.px-to-vw(17px), 140%, 6%);
         color: rgba(v.$black, 0.9);
 
         @include m.tablet {
@@ -61,7 +87,6 @@
           text-decoration: underline;
           text-decoration-skip-ink: auto;
         }
-
       }
     }
   }
@@ -120,10 +145,14 @@
       }
 
       .specialist_item_card_header {
-        @include m.flex(space-between)
+        @include m.flex(space-between);
       }
 
-      &_name, &_email, &_tel, &_job, &_description {
+      &_name,
+      &_email,
+      &_tel,
+      &_job,
+      &_description {
         @include m.text-base(v.$gotham_light, 325, m.px-to-vw(17px), 140%, 6%);
         color: v.$black;
         opacity: 0.8;
@@ -227,7 +256,11 @@
     }
 
     &_name {
-      @include m.text-base(v.$gotham_light, 400, m.px-to-vw(24px), 140%, 1.44px);
+      @include m.text-base(v.$gotham_light,
+        400,
+        m.px-to-vw(24px),
+        140%,
+        1.44px);
       opacity: 0.8;
 
       @media (max-width: v.$phone) {
@@ -236,7 +269,11 @@
     }
 
     &_job {
-      @include m.text-base(v.$gotham_light, 300, m.px-to-vw(17px), 140%, 1.02px);
+      @include m.text-base(v.$gotham_light,
+        300,
+        m.px-to-vw(17px),
+        140%,
+        1.02px);
       opacity: 0.8;
 
       @media (max-width: v.$phone) {

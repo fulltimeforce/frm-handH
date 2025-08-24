@@ -814,6 +814,7 @@
 
 .discover,
 .clients {
+    overflow: hidden;
     @include m.pblock160;
 
     &_head {
@@ -1326,6 +1327,7 @@
 }
 
 .featured_articles {
+    overflow: hidden;
     @media (min-width: v.$tv) {
         padding-block: m.px-to-vw(160px) m.px-to-vw(120px);
     }
