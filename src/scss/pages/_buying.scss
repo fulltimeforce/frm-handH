@@ -1,73 +1,170 @@
 @use "base/mixins" as m;
 @use "base/variables" as v;
 
+%h2-cormorant {
+  font-family: v.$cormorant;
+  font-size: 60px;
+  line-height: 100%;
+  letter-spacing: -1.8px;
+  color: #000;
+  text-align: center;
+}
+
+%h2-goudysb {
+  font-family: v.$goudysb;
+  font-size: 50px;
+  line-height: 115%;
+  text-transform: uppercase;
+  color: #000;
+}
+
+%h3-cormorant {
+  font-family: v.$cormorant;
+  font-size: 40px;
+  line-height: 115%;
+  letter-spacing: -1.2px;
+  color: #000;
+}
+
+%p-gotham-light {
+  font-family: v.$gotham_light;
+  font-size: 17px;
+  line-height: 140%;
+  letter-spacing: 1.02px;
+  color: rgba(0, 0, 0, 0.90);
+  text-align: center;
+}
+
 .buying_at_auction {
   &_page {
-    padding-top: m.px-to-vw(160px);
+    @media (min-width: v.$tv) {
+      padding-top: m.px-to-vw(160px);
+    }
+    @include m.tv {
+      padding-top: 160px;
+    }
+    @include m.desktop {
+      padding-top: 120px;
+    }
+    @include m.tablet {
+      padding-top: 40px;
+    }
+
     @include m.pblock160('bottom');
 
-    @include m.tv {
-      padding-top: 40px;
-    }
-
-    @media (max-width: v.$desktop) {
-      padding-top: 40px;
-    }
-
     .how-to-buy {
-      width: 1165px;
-      margin: 0 auto 87px;
+      width: 100%;
+      margin: 0 auto;
+
+      @media (min-width: v.$tv) {
+        max-width: m.px-to-vw(1165px);
+        margin-bottom: m.px-to-vw(87px);
+      }
+      @include m.tv {
+        max-width: 1165px;
+        margin-bottom: 87px;
+      }
+      @include m.desktop {
+        max-width: 1000px;
+        margin-bottom: 60px;
+      }
+      @include m.tablet {
+        max-width: 100%;
+        margin-bottom: 40px;
+        padding: 0 20px;
+      }
 
       h2 {
-        color: #000;
-        text-align: center;
-        font-family: v.$cormorant;
-        font-size: 60px;
-        font-style: normal;
-        font-weight: 300;
-        line-height: 100%;
-        letter-spacing: -1.8px;
-        margin-bottom: 40px;
+        @extend %h2-cormorant;
+        @media (min-width: v.$tv) {
+          margin-bottom: m.px-to-vw(40px);
+        }
+        @include m.tv {
+          margin-bottom: 40px;
+        }
+        @include m.desktop {
+          font-size: 40px;
+        }
+        @include m.tablet {
+          font-size: 28px;
+          margin-bottom: 24px;
+        }
       }
 
       p {
-        color: rgba(0, 0, 0, 0.90);
-        text-align: center;
-        leading-trim: both;
-        text-edge: cap;
-        font-family: v.$gotham_light;
-        font-size: 17px;
-        font-style: normal;
-        font-weight: 300;
-        line-height: 140%;
-        letter-spacing: 1.02px;
-        margin-bottom: 64px;
+        @extend %p-gotham-light;
+        @media (min-width: v.$tv) {
+          margin-bottom: m.px-to-vw(64px);
+        }
+        @include m.tv {
+          margin-bottom: 64px;
+        }
+        @include m.desktop {
+          font-size: 15px;
+        }
+        @include m.tablet {
+          font-size: 14px;
+          margin-bottom: 32px;
+        }
+
+        strong, a {
+          font-family: v.$gotham_m;
+          font-size: 17px;
+          line-height: 140%;
+          letter-spacing: 6%;
+
+          @include m.desktop {
+            font-size: 15px;
+          }
+          @include m.tablet {
+            font-size: 14px;
+          }
+        }
 
         a {
-          color: rgba(0, 0, 0, 0.90);
-          leading-trim: both;
-          text-edge: cap;
-          font-family: v.$gotham;
-          font-size: 17px;
-          font-style: normal;
-          font-weight: 400;
-          line-height: 140%;
-          letter-spacing: 1.02px;
+          color: v.$light_brown;
         }
       }
 
       .cta_links {
+        display: flex;
+        gap: 12px;
+        @include m.tablet {
+          flex-direction: column;
+        }
+
         a {
           font-family: v.$gotham_light;
-          font-weight: 300;
-          width: 327px;
+
+          @media (min-width: v.$tv) {
+            font-size: m.px-to-vw(16px);
+            max-width: m.px-to-vw(369px);
+            width: 100%;
+            height: m.px-to-vw(51px);
+          }
+          @include m.tv {
+            font-size: 16px;
+            max-width: 369px;
+            width: 100%;
+            height: 51px;
+          }
+          @include m.desktop {
+            max-width: 320px;
+            width: 100%;
+            height: 48px;
+            font-size: 15px;
+          }
+          @include m.tablet {
+            max-width: 100%;
+            height: 44px;
+            font-size: 14px;
+          }
 
           &:nth-child(even) {
             color: v.$light_brown;
             background: transparent;
             border: 1px solid v.$light_brown;
           }
-
           &:nth-child(odd) {
             background: v.$light_brown;
             color: v.$white;
@@ -77,104 +174,265 @@
     }
 
     .insurance {
-      width: 784px;
+      width: 100%;
       margin: 0 auto;
 
-      &_banner {
-        height: 283px;
-        width: 1412px;
+      @media (min-width: v.$tv) {
+        max-width: m.px-to-vw(1412px);
+      }
+      @include m.tv {
+        max-width: 1412px;
+      }
+      @include m.desktop {
+        max-width: 1200px;
+      }
+      @include m.tablet {
+        max-width: 100%;
+        padding: 0 20px;
       }
 
-      h2 {
-        color: #FFF;
-        text-align: center;
-        leading-trim: both;
-        text-edge: cap;
-        font-family: v.$goudysb;
-        font-size: 36px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 115%;
-        text-transform: uppercase;
+      &_banners {
+        @media (min-width: v.$tv) {
+          margin-bottom: m.px-to-vw(40px);
+        }
+        @include m.tv {
+          margin-bottom: 40px;
+        }
+        @include m.desktop {
+          margin-bottom: 32px;
+        }
+      }
+
+      &_banners {
+        width: 100%;
+
+        @media (min-width: v.$tv) {
+          max-width: m.px-to-vw(1412px);
+          height: m.px-to-vw(283px);
+        }
+        @include m.tv {
+          max-width: 1412px;
+          height: 283px;
+        }
+        @include m.desktop {
+          max-width: 1200px;
+          height: 220px;
+        }
+        @include m.tablet {
+          max-width: 100%;
+          height: auto;
+        }
+
+        div {
+          position: relative;
+
+          @media (min-width: v.$tv) {
+            height: m.px-to-vw(283px);
+          }
+          @include m.tv {
+            height: 283px;
+          }
+          @include m.desktop {
+            height: 220px;
+          }
+          @include m.laptop {
+            height: m.px-to-vw(196px);
+          }
+
+          h2 {
+            position: absolute;
+            z-index: 3;
+            @include m.centerXY;
+            font-family: v.$goudysb;
+            text-transform: uppercase;
+            color: #fff;
+
+            @media (min-width: v.$tv) {
+              font-size: m.px-to-vw(36px);
+              line-height: 115%;
+            }
+            @include m.tv {
+              font-size: 36px;
+              line-height: 115%;
+            }
+            @include m.desktop {
+              font-size: 28px;
+            }
+            @include m.tablet {
+              font-size: 24px;
+              text-align: center;
+            }
+          }
+        }
+
+        img {
+          @include m.fullWH;
+          object-fit: cover;
+          object-position: center;
+          opacity: 0.2;
+          user-select: none;
+          pointer-events: none;
+          position: relative;
+          display: block;
+        }
       }
 
       p {
-        color: rgba(0, 0, 0, 0.90);
-        text-align: center;
-        leading-trim: both;
-        text-edge: cap;
-        font-family: v.$gotham_light;
-        font-size: 17px;
-        font-style: normal;
-        font-weight: 300;
-        line-height: 140%;
-        letter-spacing: 1.02px;
-        width: 785px;
-        margin: 40px auto 64px;
+        @extend %p-gotham-light;
+        @media (min-width: v.$tv) {
+          max-width: m.px-to-vw(784px);
+          margin: m.px-to-vw(40px) auto m.px-to-vw(64px);
+        }
+        @include m.tv {
+          max-width: 784px;
+          margin: 40px auto 64px;
+        }
+        @include m.desktop {
+          max-width: 640px;
+          font-size: 15px;
+        }
+        @include m.tablet {
+          max-width: 100%;
+          margin: 24px auto 32px;
+          font-size: 14px;
+        }
       }
 
       a {
-        width: 292px;
         font-family: v.$gotham_light;
-        font-weight: 300;
         line-height: 115%;
         letter-spacing: 0.8px;
         text-transform: uppercase;
         border: 1px solid v.$light_brown;
+
+        @media (min-width: v.$tv) {
+          max-width: m.px-to-vw(292px);
+          width: 100%;
+        }
+        @include m.tv {
+          max-width: 292px;
+          width: 100%;
+        }
+        @include m.desktop {
+          max-width: 240px;
+          width: 100%;
+          font-size: 15px;
+          padding: 10px 0;
+        }
+        @include m.tablet {
+          max-width: 100%;
+          text-align: center;
+          font-size: 14px;
+          padding: 12px 0;
+        }
       }
 
       hr {
-        margin-top: 96px;
+        @media (min-width: v.$tv) {
+          margin-top: m.px-to-vw(96px);
+        }
+        @include m.tv {
+          margin-top: 96px;
+        }
+        @include m.desktop {
+          margin-top: 72px;
+        }
       }
 
       h3 {
-        color: #000;
-        text-align: center;
-        font-family: v.$cormorant;
-        font-size: 60px;
-        font-style: normal;
-        font-weight: 300;
-        line-height: 100%;
-        letter-spacing: -1.8px;
-        margin-top: 96px;
-        margin-bottom: 40px;
+        @extend %h2-cormorant;
+        @media (min-width: v.$tv) {
+          margin: m.px-to-vw(96px) 0 m.px-to-vw(40px);
+        }
+        @include m.tv {
+          margin: 96px 0 40px;
+        }
+        @include m.desktop {
+          font-size: 32px;
+          margin: 72px 0 32px;
+        }
+        @include m.tablet {
+          font-size: 24px;
+          margin: 48px 0 24px;
+        }
       }
     }
   }
 }
 
 .auction-tabs {
-  width: 1428px;
-  margin: 0 auto 120px;
+  width: 100%;
+
+  @media (min-width: v.$tv) {
+    max-width: m.px-to-vw(1428px);
+    height: m.px-to-vw(1415px);
+  }
+  @include m.tv {
+    max-width: 1428px;
+    height: 1415px;
+  }
+  @include m.desktop {
+    max-width: 1200px;
+    height: auto;
+  }
+  @include m.tablet {
+    max-width: 100%;
+    height: auto;
+    padding: 0 20px;
+  }
 
   .auction-tabs-nav {
     display: flex;
-    gap: 2rem;
-    border-bottom: 1px solid #ccc;
+    justify-content: space-around;
+    border-bottom: 1px solid #C0B09B;
     list-style: none;
     padding: 0;
-    margin: 0 0 2rem 0;
+
+    @media (min-width: v.$tv) {
+      margin-bottom: m.px-to-vw(65px);
+    }
+    @include m.tv {
+      margin-bottom: 65px;
+    }
+    @include m.desktop {
+      margin-bottom: 48px;
+    }
+    @include m.tablet {
+      flex-direction: column;
+      gap: 8px;
+      border-bottom: none;
+    }
 
     li {
       cursor: pointer;
-      padding: 1rem 0;
-      font-weight: 600;
       position: relative;
-
+      @extend %p-gotham-light;
       color: #000;
       text-align: center;
-      leading-trim: both;
-      text-edge: cap;
-      font-family: v.$gotham_light;
-      font-size: 17px;
-      font-style: normal;
-      font-weight: 300;
-      line-height: normal;
-      letter-spacing: 1.02px;
       text-transform: uppercase;
 
+      @media (min-width: v.$tv) {
+        padding: m.px-to-vw(24px) 0;
+        min-width: m.px-to-vw(476px);
+      }
+      @include m.tv {
+        padding: 24px 0;
+        min-width: 476px;
+      }
+      @include m.desktop {
+        min-width: 380px;
+        font-size: 15px;
+      }
+      @include m.tablet {
+        width: 100%;
+        min-width: auto;
+        font-size: 14px;
+        padding: 12px 0;
+      }
+
       &.active {
-        border-bottom: 2px solid #000;
+        font-family: v.$gotham_m;
+        border-bottom: 1px solid v.$light_brown;
       }
     }
   }
@@ -182,7 +440,6 @@
   .auction-tabs-content {
     .tab-panel {
       display: none;
-
       &.active {
         display: block;
       }
@@ -194,46 +451,207 @@
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
 
-    .auction-image img {
+    @include m.desktop {
+      gap: 1.5rem;
+    }
+    @include m.tablet {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .auction-image {
       width: 100%;
-      height: auto;
-      display: block;
+
+      @media (min-width: v.$tv) {
+        max-width: m.px-to-vw(649px);
+        height: m.px-to-vw(638px);
+      }
+      @include m.tv {
+        max-width: 649px;
+        height: 638px;
+      }
+      @include m.desktop {
+        max-width: 500px;
+        height: auto;
+      }
+      @include m.tablet {
+        max-width: 100%;
+        height: auto;
+      }
+
+      img {
+        @include m.fullWH;
+        object-fit: cover;
+      }
     }
 
     .auction-info {
+      overflow-y: auto;
+      width: 100%;
+
+      @media (min-width: v.$tv) {
+        max-width: m.px-to-vw(770px);
+        height: m.px-to-vw(1150px);
+        padding-top: m.px-to-vw(32px);
+      }
+      @include m.tv {
+        max-width: 770px;
+        height: 1150px;
+        padding-top: 32px;
+      }
+      @include m.desktop {
+        max-width: 600px;
+        height: auto;
+        padding-top: 28px;
+      }
+      @include m.tablet {
+        max-width: 100%;
+        height: auto;
+        padding-top: 20px;
+      }
+
+      &-header {
+        @media (min-width: v.$tv) {
+          margin-bottom: m.px-to-vw(40px);
+        }
+        @include m.tv {
+          margin-bottom: 40px;
+        }
+        @include m.desktop {
+          margin-bottom: 32px;
+        }
+      }
+
+      .auction-text p {
+        @media (min-width: v.$tv) {
+          margin-bottom: m.px-to-vw(32px);
+        }
+        @include m.tv {
+          margin-bottom: 32px;
+        }
+        @include m.desktop {
+          font-size: 15px;
+        }
+        strong {
+          font-family: v.$gotham_m;
+        }
+      }
+
       h2 {
+        @extend %h2-goudysb;
         margin-bottom: 1rem;
-        font-family: v.$goudysb;
-        color: #000;
-        leading-trim: both;
-        text-edge: cap;
-        font-size: 50px;
-        line-height: 115%;
-        text-transform: uppercase;
+
+        @include m.desktop {
+          font-size: 32px;
+        }
+        @include m.tablet {
+          font-size: 24px;
+        }
       }
 
       p {
+        @extend %p-gotham-light;
         color: #000;
-        leading-trim: both;
-        text-edge: cap;
-        font-family: v.$gotham_light;
-        font-size: 17px;
-        font-style: normal;
-        font-weight: 300;
-        line-height: 140%;
-        /* 23.8px */
-        letter-spacing: 1.02px;
+        text-align: left;
       }
 
       .auction-cards {
-        display: grid;
-        gap: 1rem;
-        margin-top: 2rem;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+        @media (min-width: v.$tv) {
+          gap: m.px-to-vw(12px);
+          margin-top: m.px-to-vw(40px);
+          max-width: m.px-to-vw(706px);
+          height: m.px-to-vw(199px);
+        }
+        @include m.tv {
+          max-width: 706px;
+          height: 199px;
+          margin-top: 40px;
+          gap: 12px;
+        }
+        @include m.desktop {
+          max-width: 560px;
+          height: auto;
+        }
+        @include m.tablet {
+          max-width: 100%;
+          height: auto;
+        }
 
         .auction-card {
-          border: 1px solid #ccc;
-          padding: 1rem;
+          border: 1px solid v.$light_brown;
           background: transparent;
+
+          @media (min-width: v.$tv) {
+            padding: m.px-to-vw(32px);
+          }
+          @include m.tv {
+            padding: 32px;
+          }
+          @include m.desktop {
+            padding: 28px;
+          }
+          @include m.tablet {
+            padding: 20px;
+          }
+
+          h3 {
+            @extend %h3-cormorant;
+            @media (min-width: v.$tv) {
+              margin-bottom: m.px-to-vw(32px);
+            }
+            @include m.tv {
+              margin-bottom: 32px;
+            }
+            @include m.desktop {
+              font-size: 28px;
+              margin-bottom: 24px;
+            }
+            @include m.tablet {
+              font-size: 24px;
+              margin-bottom: 20px;
+            }
+          }
+
+          p {
+            @extend %p-gotham-light;
+            text-align: left;
+
+            @include m.desktop {
+              font-size: 15px;
+            }
+            @include m.tablet {
+              font-size: 14px;
+            }
+
+            a {
+              color: v.$light_brown;
+              font-family: v.$gotham_m;
+              text-decoration: underline;
+
+              @include m.desktop {
+                font-size: 15px;
+              }
+              @include m.tablet {
+                font-size: 14px;
+              }
+            }
+
+            strong {
+              font-family: v.$gotham_m;
+              color: rgba(0, 0, 0, 0.90);
+
+              @include m.desktop {
+                font-size: 15px;
+              }
+              @include m.tablet {
+                font-size: 14px;
+              }
+            }
+          }
         }
       }
     }

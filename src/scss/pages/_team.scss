@@ -9,6 +9,9 @@
   @include m.tv {
     margin-top: 8px;
   }
+  @include m.desktop {
+    margin-top: 6px;
+  }
 }
 
 .single_team_page {
@@ -18,15 +21,28 @@
   @media (max-width: v.$phone) {
     margin-top: 120px;
     margin-bottom: 80px;
+    width: 100%;
+  }
+  @include m.desktop {
+    margin-top: 160px;
+    margin-bottom: 120px;
+    width: 100%;
   }
 
   &_wrapper {
-    width: m.px-to-vw(1364px);
+    max-width: m.px-to-vw(1364px);
+    width: 100%;
     margin: 0 auto;
 
+    @include m.tablet {
+      max-width: 100%;
+    }
+
     @media (max-width: v.$phone) {
+      max-width: 100%;
       width: 100%;
       padding: 0 20px;
+      margin: 0;
     }
   }
 
@@ -37,9 +53,14 @@
     justify-content: center;
     margin-left: m.px-to-vw(40px);
 
-    @media (max-width: v.$phone) {
+    @include m.desktop {
+      gap: 40px;
+      margin-left: 20px;
+    }
+
+    @media (max-width: v.$tablet) {
       flex-direction: column;
-      width: 100% !important;
+      max-width: 100% !important;
       margin-left: 0px;
     }
   }
@@ -56,6 +77,12 @@
       padding: 10px;
     }
 
+    @include m.desktop {
+      max-width: 480px !important;
+      height: auto;
+      padding: 12px;
+    }
+
     img {
       width: 100%;
       height: 100%;
@@ -64,10 +91,14 @@
   }
 
   .single_team_info {
-    width: m.px-to-vw(675px);
+    max-width: m.px-to-vw(675px);
+    width: 100%;
 
     @media (max-width: v.$phone) {
       width: 100%;
+    }
+    @include m.desktop {
+      max-width: 480px;
     }
 
     .single_team_job_wrapper {
@@ -75,6 +106,9 @@
 
       @media (max-width: v.$phone) {
         margin-bottom: 20px;
+      }
+      @include m.desktop {
+        margin-bottom: 16px;
       }
 
       .breadlines {
@@ -89,6 +123,9 @@
         @media (max-width: v.$phone) {
           @include m.text-base(v.$gotham_light, 300, 17px, 100%, 10%);
         }
+        @include m.desktop {
+          font-size: 15px;
+        }
       }
     }
 
@@ -102,10 +139,18 @@
         @include m.text-base(v.$goudysb, 400, 30px, 114%, 0%);
         margin-bottom: 25px;
       }
+      @include m.desktop {
+        font-size: 36px;
+        margin-bottom: 20px;
+      }
     }
 
     .single_team_content {
       margin-bottom: m.px-to-vw(40px);
+
+      @include m.desktop {
+        margin-bottom: 28px;
+      }
 
       h3 {
         @include m.text-base(v.$gotham_light, 400, m.px-to-vw(20px), 140%, 6%);
@@ -115,6 +160,10 @@
         @media (max-width: v.$phone) {
           @include m.text-base(v.$gotham_light, 400, 20px, 140%, 6%);
           margin-bottom: 15px;
+        }
+        @include m.desktop {
+          font-size: 18px;
+          margin-bottom: 12px;
         }
       }
 
@@ -126,6 +175,10 @@
         @media (max-width: v.$phone) {
           @include m.text-base(v.$gotham_light, 300, 17px, 140%, 6%);
           margin-bottom: 15px;
+        }
+        @include m.desktop {
+          font-size: 15px;
+          margin-bottom: 12px;
         }
       }
 
@@ -142,6 +195,9 @@
       @media (max-width: v.$phone) {
         @include m.text-base(v.$gotham_light, 200, 17px, 140%, 6%);
       }
+      @include m.desktop {
+        font-size: 15px;
+      }
 
       a {
         color: v.$light_brown;
@@ -151,6 +207,9 @@
         
         @media (max-width: v.$phone) {
           margin-bottom: 5px;
+        }
+        @include m.desktop {
+          margin-bottom: 4px;
         }
       }
 
@@ -177,6 +236,10 @@
         img {
           width: 100%;
         }
+      }
+      @include m.desktop {
+        margin-top: 28px;
+        width: 220px;
       }
     }
   }
