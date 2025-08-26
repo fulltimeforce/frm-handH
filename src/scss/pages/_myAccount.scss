@@ -50,7 +50,7 @@
     }
 }
 
-#customer_login {
+.woocommerce_form_custom {
     @include m.delete_pseudo;
 
     @media (min-width: v.$tv) {
@@ -67,7 +67,7 @@
         @include m.form-row;
     }
 
-    .woocommerce-form {
+    .woocommerce-ResetPassword, .woocommerce-form {
         @include m.form-row;
         border: none !important;
 
@@ -216,7 +216,7 @@
             background: v.$light_brown !important;
             border-radius: 0 !important;
             text-transform: uppercase;
-            color: v.$white;
+            color: v.$white !important;
             font-family: v.$gotham_light !important;
             font-weight: 300 !important;
 

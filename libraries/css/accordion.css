@@ -7,22 +7,12 @@
 .accordionjs .acc_section {
   position: relative;
   z-index: 10;
-  margin-top: -1px;
+  margin-top: 0;
   overflow: hidden;
 }
 .accordionjs .acc_section .acc_head {
   position: relative;
   cursor: pointer;
-}
-.accordionjs .acc_section:first-of-type,
-.accordionjs .acc_section:first-of-type .acc_head {
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
-}
-.accordionjs .acc_section:last-of-type,
-.accordionjs .acc_section:last-of-type .acc_content {
-  border-bottom-left-radius: 3px;
-  border-bottom-right-radius: 3px;
 }
 .accordionjs .acc_section.acc_active > .acc_content {
   display: block;

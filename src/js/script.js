@@ -17,6 +17,52 @@ import "@splidejs/splide/css";
         }).mount();
     }
 
+    if (document.querySelector('#logos1')) {
+        new Splide('#logos1', {
+            type: 'loop',
+            arrows: false,
+            pagination: false,
+            rewind: true,
+            autoWidth: true,
+            gap: '5vw',
+            autoScroll: {
+                pauseOnFocus: false,
+                pauseOnHover: false,
+            },
+            breakpoints: {
+                1420: {
+                    gap: '52px'
+                },
+                768: {
+                    gap: '36px'
+                }
+            }
+        }).mount({ AutoScroll });
+    }
+
+    if (document.querySelector('#logos2')) {
+        new Splide('#logos2', {
+            type: 'loop',
+            arrows: false,
+            pagination: false,
+            rewind: true,
+            autoWidth: true,
+            gap: '7.5vw',
+            autoScroll: {
+                pauseOnFocus: false,
+                pauseOnHover: false,
+            },
+            breakpoints: {
+                1420: {
+                    gap: '64px'
+                },
+                768: {
+                    gap: '44px'
+                }
+            }
+        }).mount({ AutoScroll });
+    }
+
     if (document.querySelector('#timeline')) {
         new Splide('#timeline', {
             arrows: true,
@@ -56,7 +102,7 @@ import "@splidejs/splide/css";
                 pauseOnHover: false,
             },
             breakpoints: {
-                1540: {
+                1420: {
                     gap: '16px'
                 }
             }
@@ -77,7 +123,7 @@ import "@splidejs/splide/css";
                 pauseOnHover: false,
             },
             breakpoints: {
-                1540: {
+                1420: {
                     gap: '16px'
                 }
             }
@@ -99,7 +145,7 @@ import "@splidejs/splide/css";
                 pauseOnHover: false,
             },
             breakpoints: {
-                1540: {
+                1420: {
                     gap: '36px'
                 }
             }
@@ -121,7 +167,7 @@ import "@splidejs/splide/css";
                 pauseOnHover: false,
             },
             breakpoints: {
-                1540: {
+                1420: {
                     gap: '36px'
                 }
             }
@@ -152,7 +198,7 @@ import "@splidejs/splide/css";
             autoWidth: true,
             gap: '1.094vw',
             breakpoints: {
-                1540: {
+                1420: {
                     gap: '17px'
                 },
                 768: {
@@ -180,7 +226,7 @@ import "@splidejs/splide/css";
             autoWidth: true,
             gap: '1.094vw',
             breakpoints: {
-                1540: {
+                1420: {
                     gap: '17px'
                 },
                 768: {
@@ -202,7 +248,7 @@ import "@splidejs/splide/css";
                 right: '9.375vw'
             },
             breakpoints: {
-                1540: {
+                1420: {
                     gap: '16px',
                 },
 
@@ -269,7 +315,7 @@ import "@splidejs/splide/css";
                 right: '9.375vw'
             },
             breakpoints: {
-                1540: {
+                1420: {
                     gap: '16px'
                 },
                 768: {
