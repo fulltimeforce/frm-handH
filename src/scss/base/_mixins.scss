@@ -153,6 +153,10 @@
     @include tv {
         margin-top: 32px;
     }
+
+    @include desktop{
+        margin-top: 24px;
+    }
 }
 
 @mixin space-left {
@@ -490,15 +494,15 @@
     font-weight: 300;
 
     @media (min-width: v.$tv) {
-        font-size: px-to-vw(17px);
-        line-height: px-to-vw(23.8px);
-        letter-spacing: px-to-vw(1.02px);
+        font-size: px-to-vw(17px) !important;
+        line-height: px-to-vw(23.8px) !important;
+        letter-spacing: px-to-vw(1.02px) !important;
     }
 
     @include tv {
-        font-size: 14.5px;
-        line-height: 1.3em;
-        letter-spacing: 0.4px;
+        font-size: 14.5px !important;
+        line-height: 1.3em !important;
+        letter-spacing: 0.4px !important;
     }
 }
 
@@ -733,7 +737,7 @@
     @include lines(3);
 }
 
-@mixin h3v2($color: v.$black, $ff: v.$goudysb, $upper: true) {
+@mixin h3v2($color: v.$black, $ff: v.$goudysb, $upper: true, $max_lines: true) {
     font-family: $ff;
     font-weight: 400;
     color: $color;
@@ -755,7 +759,13 @@
         font-size: 17px;
     }
 
-    @include lines(3);
+    @include desktop{
+        font-size: 15.6px;
+    }
+
+    @if($max_lines){
+        @include lines(3);
+    }
 }
 
 @mixin h4($color: v.$black) {
@@ -1139,24 +1149,38 @@
     }
 }
 
-@mixin fz31 {
-    font-family: v.$goudysb;
+@mixin fz31($minus_1px: false, $font: v.$goudysb) {
+    font-family: $font;
     color: v.$black;
     font-weight: 500;
     font-style: normal;
 
     @media (min-width: v.$tv) {
-        font-size: px-to-vw(31px);
-        line-height: px-to-vw(35.65px);
+        @if($minus_1px){
+            font-size: px-to-vw(30px);
+            line-height: px-to-vw(30px);
+            letter-spacing: px-to-vw(-0.9px);
+        }@else{
+            font-size: px-to-vw(31px);
+            line-height: px-to-vw(35.65px);
+        }
     }
 
     @include tv {
-        font-size: 25px;
+        @if($minus_1px){
+            font-size: 24px;
+        }@else{
+            font-size: 25px;
+        }
         line-height: 1.2em;
     }
 
     @include desktop {
-        font-size: 22px;
+        @if($minus_1px){
+            font-size: 21.2px;
+        }@else{
+            font-size: 22px;
+        }
     }
 }
 
