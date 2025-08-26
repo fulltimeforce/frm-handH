@@ -67,7 +67,8 @@
         @include m.form-row;
     }
 
-    .woocommerce-ResetPassword, .woocommerce-form {
+    .woocommerce-ResetPassword,
+    .woocommerce-form {
         @include m.form-row;
         border: none !important;
 
@@ -292,14 +293,45 @@
 
 }
 
-.woocommerce-MyAccount {
-
-    &-navigation,
-    &-content {
-        @include m.form-row;
+%padding48 {
+    @media (min-width: v.$tv) {
+        padding: m.px-to-vw(48px) !important;
     }
 
+    @include m.tv {
+        padding: 36px !important;
+    }
+}
+
+%a {
+    width: fit-content;
+
+    @media (min-width: v.$tv) {
+        @include m.flex(flex-start, m.px-to-vw(16px));
+    }
+
+    @include m.tv {
+        @include m.flex(flex-start, 10px);
+    }
+
+    @include m.p;
+
+    svg {
+        @media (min-width: v.$tv) {
+            @include m.square(m.px-to-vw(24px));
+        }
+
+        @include m.tv {
+            @include m.square(18px);
+        }
+    }
+}
+
+.woocommerce-MyAccount {
+
     &-navigation {
+        @include m.form-row;
+
         @media (min-width: v.$tv) {
             padding-top: m.px-to-vw(16px);
         }
@@ -311,6 +343,14 @@
         ul,
         ol {
             list-style: none;
+
+            @media (min-width: v.$tv) {
+                padding-top: m.px-to-vw(16px);
+            }
+
+            @include m.tv {
+                padding-top: 10px;
+            }
         }
 
         &-link {
@@ -318,8 +358,11 @@
 
             a {
                 width: 100%;
+                @include m.p2;
+                text-transform: uppercase;
 
                 @media (min-width: v.$tv) {
+                    letter-spacing: m.px-to-vw(0.8px);
                     @include m.flex(flex-start, m.px-to-vw(16px));
                     padding: m.px-to-vw(20px) m.px-to-vw(21px);
                 }
@@ -329,16 +372,129 @@
                     padding: 14px 15px;
                 }
             }
+
+            &.is-active {
+                a {
+                    font-family: v.$gotham_m;
+                    font-weight: 300;
+                    background: v.$light_brown_2;
+                }
+            }
         }
     }
 
-    &-content {}
+    &-content {
+        float: none !important;
+        margin: 0 !important;
+        width: 100% !important;
+        @extend %padding48;
+
+        @media (min-width: v.$tv) {
+            border: m.px-to-vw(1px) solid v.$light_brown;
+        }
+
+        @include m.tv {
+            border: 1px solid v.$light_brown;
+        }
+
+        .profile {
+            width: 100%;
+
+            h3 {
+                @include m.fz31;
+            }
+
+            &_data {
+                @include m.mt48;
+
+                @media (min-width: v.$tv) {
+                    padding-left: m.px-to-vw(64px);
+                }
+
+                @include m.tv {
+                    padding-left: 42px;
+                }
+
+                @include m.tablet {
+                    padding-left: 24px;
+                }
+
+                &-row {
+                    width: 100%;
+                    @include m.flex(space-between);
+                    align-items: flex-start;
+
+                    &:not(:last-child) {
+                        @media (min-width: v.$tv) {
+                            margin-bottom: m.px-to-vw(32px);
+                        }
+
+                        @include m.tv {
+                            margin-bottom: 24px;
+                        }
+                    }
+
+                    &>a {
+                        @extend %a;
+                        margin-left: auto;
+                    }
+                }
+            }
+
+            .table {
+                width: fit-content;
+                display: grid;
+                grid-template-columns: auto auto;
+
+                @media (min-width: v.$tv) {
+                    grid-gap: m.px-to-vw(32px);
+                }
+
+                @include m.tv {
+                    grid-gap: 24px;
+                }
+
+                a{
+                    @extend %a;
+                }
+
+                .th {
+                    @media (min-width: v.$tv) {
+                        min-width: m.px-to-vw(190px);
+                    }
+
+                    @include m.tv {}
+                }
+
+                .th,
+                .th * {
+                    @include m.fz31(true, v.$cormorant);
+                }
+
+                .td,
+                .td * {
+                    @include m.h3v2(v.$black, v.$gotham_light, false, false);
+                    opacity: 0.9;
+
+                    @media (min-width: v.$tv) {
+                        letter-spacing: m.px-to-vw(1.2px);
+                    }
+
+                    @include m.tv {
+                        letter-spacing: 0.36px;
+                    }
+                }
+            }
+        }
+
+    }
 
     &-header_profile {
-        @media (min-width: v.$tv){
+        @media (min-width: v.$tv) {
             margin-bottom: m.px-to-vw(52px);
         }
-        @include m.tv{
+
+        @include m.tv {
             margin-bottom: 38px;
         }
 
@@ -369,12 +525,13 @@
             text-transform: uppercase;
             font-family: v.$gotham_m;
             font-weight: 300;
+
             @media (min-width: v.$tv) {
                 letter-spacing: m.px-to-vw(0.8px);
                 @include m.flex(flex-start, m.px-to-vw(16px));
                 padding: m.px-to-vw(20px) m.px-to-vw(21px);
             }
-            
+
             @include m.tv {
                 letter-spacing: 0.05px;
                 @include m.flex(flex-start, 10px);
@@ -384,15 +541,57 @@
 
         div {
             @include m.flex(space-between);
-            @media (min-width: v.$tv){
+
+            @media (min-width: v.$tv) {
                 padding-right: m.px-to-vw(48px);
             }
-            @include m.tv{
+
+            @include m.tv {
                 padding-right: 36px;
             }
-            @include m.desktop{
+
+            @include m.desktop {
                 padding-right: 0;
             }
         }
+    }
+}
+
+.modal {
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    inset: 0;
+    z-index: 110;
+
+    &>* {
+        position: absolute;
+        width: 100%;
+    }
+
+    &_bg {
+        height: 100%;
+        inset: 0;
+        background: v.$black;
+        opacity: 0.4;
+        z-index: 111;
+    }
+
+    &_box {
+        z-index: 112;
+        @extend %padding48;
+
+        @media (min-width: v.$tv) {
+            max-width: m.px-to-vw(1165px);
+        }
+
+        @include m.tv {}
+
+        margin-inline: auto;
+    }
+
+    &:not(.active) {
+        opacity: 0;
+        pointer-events: none;
     }
 }
