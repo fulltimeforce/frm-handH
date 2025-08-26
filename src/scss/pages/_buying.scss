@@ -6,7 +6,7 @@
   font-size: 60px;
   line-height: 100%;
   letter-spacing: -1.8px;
-  color: #000;
+  color: v.$black;
   text-align: center;
 }
 
@@ -31,7 +31,7 @@
   font-size: 17px;
   line-height: 140%;
   letter-spacing: 1.02px;
-  color: rgba(0, 0, 0, 0.90);
+  color: rgba(v.$black, 0.90);
   text-align: center;
 }
 
@@ -642,7 +642,7 @@
 
             strong {
               font-family: v.$gotham_m;
-              color: rgba(0, 0, 0, 0.90);
+              color: rgba(v.$black, 0.90);
 
               @include m.desktop {
                 font-size: 15px;
