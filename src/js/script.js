@@ -451,6 +451,137 @@ import "@splidejs/splide/css";
         window.addEventListener("resize", onResize);
     }
 
+    if(document.querySelector('.listing_images-slider')) {
+        const listing = new Splide( '.listing_images-slider', {
+            type: 'loop',
+            direction: 'ttb',
+            height: '31.25vw',
+            perPage: 2,
+            perMove: 1,
+            gap: '8px',
+            pagination: false,
+            arrows: true,
+            wheel: true,
+            breakpoints: {
+                768: {
+                    height: '400px',
+                },
+                1420: {
+                    height: '450px',
+                }
+            }
+        });
+        listing.mount();
+        listing.go(1);
+
+        const prev = listing.root.querySelector('.splide__arrow--prev');
+        const next = listing.root.querySelector('.splide__arrow--next');
+
+        if (prev) {
+            prev.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="26" viewBox="0 0 15 26" fill="none">
+            <path d="M1 1L13 13L1 25" stroke="#8C6E47" stroke-width="2"/>
+            </svg>`;
+        }
+
+        if (next) {
+            next.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="26" viewBox="0 0 15 26" fill="none">
+            <path d="M1 1L13 13L1 25" stroke="#8C6E47" stroke-width="2"/>
+            </svg>`;
+        }
+        const mainImage = document.querySelector('.listing_images-main img');
+        const counter   = document.getElementById('openFullView');
+        const slides    = document.querySelectorAll('.listing_images-slider .splide__slide img');
+        const total     = counter ? counter.dataset.total : slides.length;  
+
+        if (counter) {
+            counter.textContent = `1/${total}`;
+        }
+        const firstActive = document.querySelector('.listing_images-slider .splide__slide.is-active img');
+        if (firstActive && mainImage) {
+            mainImage.src = firstActive.src;
+        }
+
+        listing.on('move', function (newIndex) {
+            const activeSlide = document.querySelector('.listing_images-slider .splide__slide.is-active img');
+            if (activeSlide && mainImage) {
+                mainImage.src = activeSlide.src;
+            }
+            if (counter) {
+                counter.textContent = `${newIndex + 1}/${total}`;
+            }
+        });
+
+    }
+
+    if(document.querySelector(".listing_grid")) {
+        const grid = document.querySelector(".listing_grid");
+        const openBtn  = document.getElementById("openGrid");
+        const closeBtn = document.querySelector(".listing_grid-close");
+
+         openBtn.addEventListener("click", () => {
+            grid.classList.add("active");
+            document.body.style.overflow = "hidden";
+            document.body.style.height = "100vh";
+        });
+
+        closeBtn.addEventListener("click", () => {
+            grid.classList.remove("active");
+            document.body.style.overflow = "";
+            document.body.style.height = "auto";
+        });
+    }
+
+    if(document.querySelector(".listing_fullview")) {
+        const fullView = document.querySelector(".listing_fullview");
+        const openBtn  = document.getElementById("openFullView");
+        const openBtn2  = document.getElementById("openGridView");
+        const closeBtn = document.querySelector(".listing_fullview-close");
+
+        const fullViewSlide = new Splide( '.listing_fullview-slide', {
+            type      : 'loop',
+            perPage   : 1,
+            perMove   : 1,
+            arrows    : true,
+            pagination: false,
+            heightRatio: 0.75,
+        });
+        fullViewSlide.mount();
+
+        const prev = fullViewSlide.root.querySelector('.splide__arrow--prev');
+        const next = fullViewSlide.root.querySelector('.splide__arrow--next');
+
+        if (prev) {
+            prev.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="26" viewBox="0 0 15 26" fill="none">
+            <path d="M1 1L13 13L1 25" stroke="#8C6E47" stroke-width="2"/>
+            </svg>`;
+        }
+
+        if (next) {
+            next.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="26" viewBox="0 0 15 26" fill="none">
+            <path d="M1 1L13 13L1 25" stroke="#8C6E47" stroke-width="2"/>
+            </svg>`;
+        }
+
+        openBtn.addEventListener("click", () => {
+            fullView.classList.add("active");
+            document.body.style.overflow = "hidden";
+            document.body.style.height = "100vh";
+        });
+
+        openBtn2.addEventListener("click", () => {
+            fullView.classList.remove("active");
+            document.querySelector(".listing_grid").classList.add("active");
+            document.body.style.overflow = "hidden";
+            document.body.style.height = "100vh";
+        });
+
+        closeBtn.addEventListener("click", () => {
+            fullView.classList.remove("active");
+            document.body.style.overflow = "";
+            document.body.style.height = "auto";
+        });
+    }
+
     })();
 
 document.addEventListener("DOMContentLoaded", () => {
