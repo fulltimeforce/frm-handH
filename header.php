@@ -25,7 +25,7 @@
             </a>
             <nav>
                 <div class="header_navigation">
-                    <div class="header_navigation--bg"></div>
+                    <div class="header_navigation--bg header_toggle"></div>
                     <div class="header_navigation--list">
                         <ul class="ul_menu">
                             <li>
@@ -303,13 +303,13 @@
                                     </button>
                                     <div class="submenu">
                                         <div class="submenu_content">
-                                            <a href="<?php echo esc_url(home_url('my-account')) ?>?register" class="submenu-link" alt="Register An Account">
+                                            <a href="<?php echo esc_url(home_url('my-account')) ?>?register" class="submenu-link big" alt="Register An Account">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
                                                     <path d="M3 31.5C2.99987 29.1905 3.6662 26.93 4.91902 24.9898C6.17183 23.0496 7.95791 21.5122 10.0629 20.562C12.1679 19.6118 14.5024 19.2893 16.7861 19.633C19.0699 19.9768 21.206 20.9723 22.938 22.5M28.5 24V33M33 28.5H24M22.5 12C22.5 16.1421 19.1421 19.5 15 19.5C10.8579 19.5 7.5 16.1421 7.5 12C7.5 7.85786 10.8579 4.5 15 4.5C19.1421 4.5 22.5 7.85786 22.5 12Z" stroke="#8C6E47" stroke-width="1.125" stroke-linecap="round" stroke-linejoin="round" />
                                                 </svg>
                                                 <p>Register An Account</p>
                                             </a>
-                                            <a href="<?php echo esc_url(home_url('my-account')) ?>" class="submenu-link" alt="Sign into your Accout">
+                                            <a href="<?php echo esc_url(home_url('my-account')) ?>" class="submenu-link big" alt="Sign into your Accout">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
                                                     <path d="M22.5 4.5H28.5C29.2956 4.5 30.0587 4.81607 30.6213 5.37868C31.1839 5.94129 31.5 6.70435 31.5 7.5V28.5C31.5 29.2956 31.1839 30.0587 30.6213 30.6213C30.0587 31.1839 29.2956 31.5 28.5 31.5H22.5M15 25.5L22.5 18M22.5 18L15 10.5M22.5 18H4.5" stroke="#8C6E47" stroke-width="1.125" stroke-linecap="round" stroke-linejoin="round" />
                                                 </svg>
@@ -341,6 +341,11 @@
                     </a>
                 </div>
             </nav>
+            <button class="header_toggle header_button-menu" type="button" alt="Menú">
+                <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M80 160h352M80 256h352M80 352h352" />
+                </svg>
+            </button>
         </div>
     </header>
 

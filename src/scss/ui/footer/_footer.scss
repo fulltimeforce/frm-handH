@@ -239,7 +239,7 @@
 
         @include m.tv {
             display: grid;
-            grid-template-columns: 670px 1fr;
+            grid-template-columns: 57% 1fr;
             grid-gap: 60px;
         }
 
@@ -331,7 +331,7 @@
             }
 
             @include m.tv {
-                max-width: 183px;
+                max-width: 133px;
             }
 
             @include m.tablet {
@@ -364,7 +364,7 @@
             }
 
             @include m.tv {
-                @include m.flex(flex-start, 12px);
+                @include m.flex(flex-start, 7px);
             }
 
             @include m.tablet {

@@ -36,6 +36,14 @@
     }
 
     @include m.content_center;
+
+    .actions{
+        a{
+            @include m.tv{
+                width: 264px;
+            }
+        }
+    }
 }
 
 .contact_information,
