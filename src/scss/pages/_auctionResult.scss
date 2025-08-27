@@ -120,15 +120,14 @@
             &-search {
                 display: flex;
                 input {
+                    @include m.p;
                     width: 100%;
                     background-color: v.$white;
                     border: m.px-to-vw(1px) solid v.$light_brown;
                     padding: m.px-to-vw(20px);
-                    font-size: m.px-to-vw(17px);
                     @include m.tv {
                         border-width: 1px;
                         padding: 20px;
-                        font-size: 17px;
                     }
                 }
                 button {
@@ -176,15 +175,14 @@
             }
             &-select, &-year {
                 select {
+                    @include m.p;
                     background-color: v.$white;
                     border: m.px-to-vw(1px) solid v.$light_brown;
                     padding: m.px-to-vw(20px);
-                    font-size: m.px-to-vw(17px);
                     appearance: none;
                     @include m.tv {
                         border-width: 1px;
                         padding: 20px;
-                        font-size: 17px;
                     }
                 }
             }
@@ -285,13 +283,10 @@
                             padding-right: 0;
                         }
                         p {
+                            @include m.p;
                             font-family: v.$gotham_m;
                             letter-spacing: 1.4px;
                             line-height: 140%;
-                            font-size: m.px-to-vw(17px);
-                            @include m.tv {
-                                font-size: 17px;
-                            }
                             span {
                                 font-family: v.$gotham_light;
                             }
@@ -306,12 +301,9 @@
                             padding-left: 0;
                         }
                         p {
+                            @include m.p;
                             opacity: 0.8;
-                            font-size: m.px-to-vw(17px);
                             line-height: 140%;
-                            @include m.tv {
-                                font-size: 17px;
-                            }
                         }
                         .gold-text {
                             color: v.$light_brown;
@@ -326,13 +318,12 @@
                 }
             }
             &-description {
+                @include m.p;
                 max-width: m.px-to-vw(726px);
-                font-size: m.px-to-vw(17px);
                 line-height: 140%;
                 letter-spacing: 1px;
                 @include m.tv {
                     max-width: 726px;
-                    font-size: 17px;
                 }
             }
         }
@@ -356,6 +347,7 @@
                 background-color: v.$white;
             }
             span, a {
+                @include m.p;
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
@@ -364,14 +356,12 @@
                 border-radius: 50%;
                 font-family: v.$gotham;
                 border: m.px-to-vw(1px) solid v.$light_brown;
-                font-size: m.px-to-vw(17px);
                 color: v.$light_brown;
                 letter-spacing: - m.px-to-vw(1.19px);
                 @include m.tv {
                     width: 36px;
                     height: 36px;
                     border-width: 1px;
-                    font-size: 17px;
                     letter-spacing: -1.19px;
                 }
                 &.current {

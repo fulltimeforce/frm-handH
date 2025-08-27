@@ -606,4 +606,41 @@ document.addEventListener("DOMContentLoaded", () => {
             window.location.href = url.toString();
         });
     }
+
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const textElement = document.querySelector(".animated_text-item");
+
+  if (textElement) {
+    const text = textElement.textContent.trim();
+    textElement.textContent = "";
+
+    const words = text.split(" ");
+    words.forEach((word, wIndex) => {
+      const wordSpan = document.createElement("span");
+      wordSpan.classList.add("word");
+
+      word.split("").forEach(char => {
+        const charSpan = document.createElement("span");
+        charSpan.textContent = char;
+        charSpan.classList.add("char");
+        wordSpan.appendChild(charSpan);
+      });
+
+      textElement.appendChild(wordSpan);
+
+      if (wIndex < words.length - 1) {
+        textElement.appendChild(document.createTextNode(" "));
+      }
+    });
+
+    const spans = textElement.querySelectorAll(".char");
+
+    spans.forEach((span, i) => {
+      setTimeout(() => {
+        span.classList.add("visible");
+      }, i * 80);
+    });
+  }
 });

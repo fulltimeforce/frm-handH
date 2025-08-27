@@ -40,38 +40,50 @@ $auction_button = get_field('auction_button');
             </div>
         </div>
         <div class="celebrating-subtitles">
-            <div>
-                <div class="breadlines">
-                    <p>Classic Auction Experience</p>
-                </div>
-                <h3>H&H Classic Auctions</h3>
+        <div>
+            <div class="breadlines">
+                <p>Classic Auction Experience</p>
             </div>
-            <div>
-                <div class="breadlines">
-                    <p>Warrington 2024</p>
-                </div>
-                <h3>Voted best auction house</h3>
-            </div>
+            <h3><?php the_field('celebrating_section1'); ?></h3>
         </div>
-        <div class="celebrating-images">
-            <div class="image">
-                <a href="#" class="permalink">Learn More</a>
-                <img src="<?php echo IMG; ?>/vector2.svg" class="image-vector">
-                <img src="<?php echo IMG; ?>/1.jpg" class="image-thumb">
+        <div>
+            <div class="breadlines">
+                <p>Warrington 2024</p>
             </div>
-            <div class="image">
-                <a href="#" class="permalink">Learn More</a>
-                <img src="<?php echo IMG; ?>/vector1.svg" class="image-vector">
-                <img src="<?php echo IMG; ?>/2.png" class="image-thumb">
-            </div>
+            <h3><?php the_field('celebrating_section2'); ?></h3>
         </div>
-        <div class="celebrating-descriptions">
-            <div>
-                <p>H&H Classic Auctions are fabulous events where car and bike aficionados can browse and bid in relaxed environments alongside like-minded enthusiasts.</p>
-            </div>
-            <div>
-                <p>H&H Classics - Classic Car & Motorbikes was awarded The Best Auction House in Warrington for 2024. An overall quality score exceeding 95% was achieved, making them the top ranked in Warrington.</p>
-            </div>
+    </div>
+    <div class="celebrating-images">
+        <div class="image">
+            <?php if( $link1 = get_field('section_link1') ): ?>
+                <a href="<?php echo esc_url($link1['url']); ?>" class="permalink">Learn More</a>
+            <?php endif; ?>
+            <?php if( $icon1 = get_field('section_icon1') ): ?>
+                <img src="<?php echo $icon1; ?>" alt="icon" class="image-vector">
+            <?php endif; ?>
+            <?php if( $image1 = get_field('section_image1') ): ?>
+                <img src="<?php echo $image1; ?>" alt="image" class="image-thumb">
+            <?php endif; ?>
         </div>
+        <div class="image">
+            <?php if( $link2 = get_field('section_link2') ): ?>
+                <a href="<?php echo esc_url($link2['url']); ?>" class="permalink">Learn More</a>
+            <?php endif; ?>
+            <?php if( $icon2 = get_field('section_icon2') ): ?>
+                <img src="<?php echo $icon2; ?>" alt="icon" class="image-vector">
+            <?php endif; ?>
+            <?php if( $image2 = get_field('section_image2') ): ?>
+                <img src="<?php echo $image2; ?>" alt="image" class="image-thumb">
+            <?php endif; ?>
+        </div>
+    </div>
+    <div class="celebrating-descriptions">
+        <div>
+            <p><?php the_field('section_text1'); ?></p>
+        </div>
+        <div>
+            <p><?php the_field('section_text2'); ?></p>
+        </div>
+    </div>
     </div>
 </section>

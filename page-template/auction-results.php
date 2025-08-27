@@ -5,7 +5,7 @@
 
 get_header();
 
-get_banner('Homepage / classic auctions / Auction Results', '', 'Auction Results');
+get_banner('Homepage / classic auctions / Auction Results', get_the_post_thumbnail_url(get_the_ID(), 'full'), 'Auction Results');
 //get fields
 $title = get_field('auction_result_title');
 $description = get_field('auction_result_description');
@@ -136,7 +136,7 @@ $description = get_field('auction_result_description');
                     $vehicle_estimate          = get_field('vehicle_estimate');
                     $vehicle_short_description = get_field('vehicle_short_description');
 
-                    $image = get_the_post_thumbnail_url(get_the_ID(), 'medium');
+                    $image = get_the_post_thumbnail_url(get_the_ID(), 'full');
                     if (!$image) {
                         $image = IMG . '/car.png';
                     }
