@@ -40,6 +40,7 @@
 
     &_images {
         &-main {
+            width: 100%;
             max-width: m.px-to-vw(395px);
             height: m.px-to-vw(520px);
             object-fit: cover;
@@ -47,11 +48,30 @@
             background-color: v.$beige;
             transition: opacity 0.6s ease;
             opacity: 1;
+            border: m.px-to-vw(1px) solid v.$light_brown;
+            @include m.tv {
+                max-width: 395px;
+                height: 520px;
+                padding: 10px;
+                border: 1px solid v.$light_brown;
+            }
+            @include m.laptop {
+                max-width: 300px;
+                height: 420px;
+            }
         }
         &-slider {
             margin-top: - m.px-to-vw(428px);
             margin-left: m.px-to-vw(260px);
             position: relative;
+            @include m.tv {
+                margin-top: -428px;
+                margin-left: 260px;
+            }
+            @include m.laptop {
+                margin-left: 150px;
+                margin-top: -220px;
+            }
             .image_progress {
                 position: absolute;
                 bottom: m.px-to-vw(28px);
@@ -74,9 +94,57 @@
             }
         }
         #heritage {
+            position: relative;
             max-width: m.px-to-vw(395px);
             padding: m.px-to-vw(10px);
             background-color: v.$beige;
+            border: m.px-to-vw(1px) solid v.$light_brown;
+            @include m.tv {
+                max-width: 395px;
+                border: 1px solid v.$light_brown;
+                padding: 10px;
+            }
+            @include m.laptop {
+                max-width: 300px;
+            }
+            &::before {
+                background: v.$beige;
+                content: "";
+                height: m.px-to-vw(427px);
+                left: - m.px-to-vw(1px);
+                position: absolute;
+                top: - m.px-to-vw(1px);
+                width: m.px-to-vw(2px);
+                z-index: 2;
+                @include m.tv {
+                    height: 427px;
+                    left: -1px;
+                    top: -1px;
+                    width: 2px;
+                }
+                @include m.laptop {
+                    height: 219px;
+                }
+            }
+             &::after {
+                background: v.$beige;
+                content: "";
+                height: m.px-to-vw(2px);
+                left: - m.px-to-vw(1px);
+                position: absolute;
+                top: - m.px-to-vw(1px);
+                width: m.px-to-vw(134px);
+                z-index: 2;
+                @include m.tv {
+                    height: 2px;
+                    left: -1px;
+                    top: -1px;
+                    width: 134px;
+                }
+                @include m.laptop {
+                    width: 148px;
+                }
+            }
             img {
                 width: 100%;
                 height: 100%;
@@ -94,6 +162,10 @@
 
         @include m.tv {
             margin-bottom: 40px;
+        }
+
+        @include m.tablet {
+            flex-direction: column;
         }
 
         button {
@@ -119,6 +191,11 @@
                 border-bottom: 1px solid #C0B09B;
             }
 
+            @include m.tablet {
+                padding-top: 18px;
+                width: 100%;
+            }
+
             &:is(.active) {
                 border-color: v.$light_brown;
             }
@@ -126,18 +203,26 @@
     }
 
     &_information {
+        display: grid;
         @media (min-width: v.$tv) {
-            display: grid;
             grid-template-columns: m.px-to-vw(638px) 1fr;
             align-items: center;
             grid-gap: m.px-to-vw(103px);
         }
 
         @include m.tv {
-            grid-template-columns: 638px 1fr
+            grid-template-columns: 588px 1fr;
+            grid-gap: 50px;
+        }
+        @include m.desktop {
+            gap: 40px;
+        }
+        @include m.laptop {
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
         }
         @include m.tablet {
-            grid-template-columns: 1fr
+            grid-template-columns: 1fr;
         }
     }
 
@@ -181,6 +266,8 @@
             }
 
             a {
+                font-family: v.$canela_text;
+                text-decoration: none;
                 @media (min-width: v.$tv) {
                     width: 100%;
                     justify-content: space-between;
@@ -188,6 +275,17 @@
 
                 @include m.tv {}
             }
+        }
+
+        strong {
+            font-family: v.$gotham_m;
+        }
+
+        a {
+            font-family: v.$gotham_m;
+            font-weight: 400;
+            text-decoration: underline;
+            color: v.$light_brown;
         }
     }
 }
@@ -755,6 +853,9 @@
         @include m.flex(space-between);
         align-items: flex-start;
         position: relative;
+        @include m.tablet {
+            gap: 40px;
+        }
     }
 
     &_info {
@@ -834,9 +935,13 @@
             padding-inline: 10px;
         }
 
+        @include m.tablet {
+            width: 100%;
+            padding-inline: 0;
+        }
+
 
         .imagelider-wrapper {
-            /* La altura total la definimos desde JS según el # de slides */
             position: relative;
         }
 
@@ -844,10 +949,13 @@
             border: 1px solid v.$light_brown;
             position: sticky;
             top: 250px;
-            height: 466px;
+            height: m.px-to-vw(466px);
             overflow: hidden;
             border: 16px solid #f5f2ee;
             box-shadow: 0 0 0 1px v.$light_brown;
+            @include m.tv {
+                height: 466px;
+            }
         }
 
         .slide {

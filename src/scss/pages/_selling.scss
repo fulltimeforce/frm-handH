@@ -1,0 +1,242 @@
+@use "base/mixins" as m;
+@use "base/variables" as v;
+
+.selling {
+    &_heritage {
+        padding-block: m.px-to-vw(140px);
+        @include m.tv {
+            padding-block: 140px;
+        }
+        @include m.laptop {
+            padding-block: 70px;
+        }
+        @include m.tablet {
+            padding-block: 40px 60px;
+        }
+    }
+    &_tabs {
+        @include m.container_side;
+        margin: inherit;
+        padding-bottom: m.px-to-vw(160px);
+        @include m.tv {
+            padding-bottom: 160px;
+        }
+        @include m.laptop {
+            padding-bottom: 80px;
+        }
+        @include m.tablet {
+            padding-bottom: 40px;
+        }
+        .auction-info {
+            strong {
+                font-family: v.$gotham_m;
+                font-weight: 400;
+            }
+            h2 {
+                font-size: m.px-to-vw(50px) !important;
+                @include m.tv {
+                    font-size: 50px !important;
+                }
+                @include m.tablet {
+                    font-size: 24px !important;
+                }
+            }
+        }
+        .container {
+            width: 100%;
+            max-width: 100%;
+            @include m.tv {
+                padding-left: 0;
+                padding-right: 0;
+            }
+        }
+        .auction-grid {
+            gap: m.px-to-vw(50px);
+            grid-template-columns: m.px-to-vw(638px) 1fr;
+            @include m.tv {
+                gap: 50px;
+                grid-template-columns: 1fr 1fr;
+            }
+            @include m.tablet {
+                gap: 20px;
+                grid-template-columns: 1fr;
+            }
+        }
+        .auction-info {
+            div {
+                max-width: m.px-to-vw(696px);
+                @include m.tv {
+                    max-width: 696px;
+                }
+                p, h6 {
+                    opacity: 0.8;
+                }
+            }
+            h6 {
+                font-size: m.px-to-vw(20px);
+                font-family: v.$gotham_light;
+                font-weight: 400;
+                font-style: normal;
+                letter-spacing: 1.02px;
+                line-height: 140%;
+                @include m.tv {
+                    font-size: 20px;
+                }
+                @include m.tablet {
+                    font-size: 18px;
+                }
+            }
+            a {
+                color: v.$light_brown;
+                font-family: v.$gotham_m;
+                font-weight: 400;
+                text-decoration: underline;
+            }
+            P {
+                @include m.p;
+            }
+        }
+        .auction-tabs-nav {
+            margin-bottom: m.px-to-vw(65px);
+            @include m.grid(4);
+            @include m.tv {
+                margin-bottom: 65px;
+            }
+            @include m.tablet {
+                @include m.grid(1);
+                margin-bottom: 32px;
+                border-bottom: none;
+            }
+            li {
+                @include m.tablet {
+                    border-bottom: 1px solid #ccc;
+                }
+            }
+            li.active {
+                border-color: v.$light_brown;
+                font-family: v.$gotham_m;
+                font-weight: 400;
+            }
+        }
+        .auction-cards {
+            margin-block: m.px-to-vw(32px);
+            @include m.tv {
+                margin-block: 32px;
+            }
+            h5 {
+                width: 90%;
+                font-family: v.$cormorant;
+                font-size: m.px-to-vw(40px);
+                font-weight: 500;
+                letter-spacing: -0.8px;
+                margin-bottom: m.px-to-vw(16px);
+                @include m.tv {
+                    font-size: 40px;
+                    margin-bottom: 16px;
+                }
+                @include m.tablet {
+                    font-size: 24px;
+                }
+            }
+            p {
+                opacity: 1;
+            }
+            .auction-card {
+                border-color: v.$light_brown !important;
+            }
+        }
+        .faq_list {
+            padding-top: m.px-to-vw(90px);
+            @include m.tv {
+                padding-top: 90px;
+            }
+            @include m.tablet {
+                padding-top: 45px;
+            }
+            .acc_head h3 {
+                @include m.tv {
+                    margin-left: 15px;
+                }
+            }
+        }
+    }
+    &_insurance {
+        &-banner {
+            @include m.flex(center);
+            position: relative;
+            border: 1px solid v.$light_brown;
+            height: m.px-to-vw(283px);
+            transform: translate(m.px-to-vw(10px));
+            @include m.tv {
+                transform: translate(10px);
+                height: 283px;
+            }
+            @include m.tablet {
+                height: 183px;
+            }
+            img {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                transform: translate(- m.px-to-vw(16px), - m.px-to-vw(16px));
+                z-index: -1;
+                object-fit: cover;
+                @include m.tv {
+                    transform: translate(-16px, -16px);
+                }
+                @include m.tv {
+                    transform: translate(-10px, -10px);
+                }
+            }
+            h2 {
+                color: v.$white;
+                font-family: v.$goudy;
+                font-size: m.px-to-vw(36px);
+                font-weight: 500;
+                text-transform: uppercase;
+                @include m.tv {
+                    font-size: 36px;
+                }
+                @include m.tablet {
+                    font-size: 24px;
+                }
+            }
+        }
+        &-text {
+            @include m.p;
+            max-width: m.px-to-vw(780px);
+            margin-block: m.px-to-vw(40px) m.px-to-vw(64px);
+            margin-inline: auto;
+            opacity: 0.9;
+            text-align: center;
+            letter-spacing: 1.02px;
+            line-height: 140%;
+            @include m.tv {
+                max-width: 780px;
+                margin-block: 40px 64px;
+            }
+            @include m.tablet {
+                margin-block: 24px;
+            }
+            a {
+                font-family: v.$gotham_m;
+                font-weight: 400;
+                color: v.$light_brown;
+            }
+        }
+    }
+}
+
+.page-template-selling-at-auction {
+    .container_side {
+        @include m.tv {
+            width: 85%;
+        }
+        @include m.desktop {
+            width: 89%;
+        }
+        @include m.laptop {
+            width: 96%;
+        }
+    }
+}

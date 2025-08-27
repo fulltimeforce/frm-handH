@@ -934,7 +934,9 @@
             @include flex(center, px-to-vw(16px));
         }
 
-        @include tv {}
+        @include tv {
+            @include flex(center, 16px);
+        }
     }
 
     @media (min-width: v.$tv) {
@@ -948,7 +950,10 @@
     }
 
     @include tv {
+        @include flex(center);
         border: px-to-vw(1px) solid v.$light_brown;
+        font-size: 14.5px;
+        letter-spacing: 1.7px;
     }
 
     @include flex(flex-start);
@@ -975,7 +980,16 @@
             }
         }
 
-        @include tv {}
+        @include tv {
+             @if($hover) {
+                width: 24px;
+                right: 85px;
+            }
+
+            @else {
+                width: 18px;
+            }
+        }
 
         height: auto;
     }
