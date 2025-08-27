@@ -4,7 +4,7 @@
 add_action('woocommerce_before_cart', 'mi_contenido_personalizado_cart');
 function mi_contenido_personalizado_cart() {
     if (is_cart()) {
-        echo '<div class="cart_page-box">';
+        echo '<div class="cart_page-pt w-100">';
     }
 }
 

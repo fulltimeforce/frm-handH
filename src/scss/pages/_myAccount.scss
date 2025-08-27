@@ -301,6 +301,10 @@
     @include m.tv {
         padding: 36px !important;
     }
+
+    @include m.desktop {
+        padding: 24px !important;
+    }
 }
 
 %a {
@@ -454,7 +458,7 @@
                     grid-gap: 24px;
                 }
 
-                a{
+                a {
                     @extend %a;
                 }
 
@@ -557,6 +561,25 @@
     }
 }
 
+%input {
+    color: v.$black !important;
+    border-radius: 0 !important;
+
+    @media (min-width: v.$tv) {
+        padding: 0 m.px-to-vw(16px) !important;
+        height: m.px-to-vw(52px) !important;
+        font-size: m.px-to-vw(17px) !important;
+        letter-spacing: m.px-to-vw(1.7px) !important;
+    }
+
+    @include m.tv {
+        padding: 0 12px !important;
+        height: 38px !important;
+        font-size: 14.5px !important;
+        line-height: 1.2em !important;
+    }
+}
+
 .modal {
     width: 100%;
     height: 100vh;
@@ -579,15 +602,112 @@
 
     &_box {
         z-index: 112;
+        background: v.$white;
         @extend %padding48;
+        @include m.centerX;
 
         @media (min-width: v.$tv) {
+            top: m.px-to-vw(120px);
             max-width: m.px-to-vw(1165px);
+            border: m.px-to-vw(1px) solid v.$light_brown;
         }
 
-        @include m.tv {}
+        @include m.tv {
+
+            border: 1px solid v.$light_brown;
+        }
 
         margin-inline: auto;
+
+        &-header {
+            @include m.flex(space-between);
+
+            @media (min-width: v.$tv) {
+                padding-bottom: m.px-to-vw(48px);
+            }
+
+            @include m.tv {
+                padding-bottom: 36px;
+            }
+
+            @include m.desktop {
+                padding-bottom: 24px;
+            }
+
+            h4 {
+                @include m.fz31;
+            }
+
+            button {
+                background: none;
+                border: none;
+
+                @media (min-width: v.$tv) {
+                    @include m.square(m.px-to-vw(24px));
+                }
+
+                @include m.tv {
+                    @include m.square(18px);
+                }
+
+                svg {
+                    @include m.fullWH;
+                    object-fit: contain;
+                    object-position: center;
+                }
+            }
+        }
+
+        &-body, &-footer{
+            width: 100%;
+            @media (min-width: v.$tv) {
+                border-top: m.px-to-vw(1px) solid v.$light_brown;
+                padding-top: m.px-to-vw(48px);
+            }
+    
+            @include m.tv {
+                border-top: 1px solid v.$light_brown;
+                padding-top: 36px;
+            }
+    
+            @include m.desktop {
+                padding-top: 24px;
+            }
+        }
+
+        &-body {
+            form {
+                .form-row {
+                    @include m.form-row;
+
+                    label{
+                        color: v.$black;
+                        opacity: 0.6;
+                        text-align: left;
+                        font-family: v.$gotham_m;
+                        font-weight: 300;
+                        line-height: normal !important;
+                        @media (min-width: v.$tv){
+                            letter-spacing: m.px-to-vw(1.4px);
+                            font-size: m.px-to-vw(14px);
+                            margin-bottom: m.px-to-vw(12px);
+                        }
+                        @include m.tv{
+                            font-size: 11.6px;
+                            margin-bottom: 7px;
+                        }
+                    }
+                    input {
+                        @extend %input;
+                    }
+                }
+            }
+
+        }
+
+        &-footer{
+            @include m.flex(space-between);
+        }
     }
 
     &:not(.active) {

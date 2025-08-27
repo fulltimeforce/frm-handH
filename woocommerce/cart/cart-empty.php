@@ -21,9 +21,13 @@ defined('ABSPATH') || exit;
 /*
  * @hooked wc_empty_cart_message - 10
  */
-do_action('woocommerce_cart_is_empty');
+do_action('woocommerce_cart_is_empty'); ?>
 
-if (wc_get_page_id('shop') > 0) : ?>
+<style>
+	.woocommerce-notices-wrapper{display: none !important;}
+</style>
+
+<?php if (wc_get_page_id('shop') > 0) : ?>
 	<div class="container">
 		<div class="cart_page-empty">
 			<svg xmlns="http://www.w3.org/2000/svg" width="65" height="64" viewBox="0 0 65 64" fill="none">

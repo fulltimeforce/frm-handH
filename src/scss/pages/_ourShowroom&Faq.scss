@@ -326,6 +326,10 @@
     }
 }
 
+.in_services_page {
+    @include m.pblock160;
+}
+
 .faq {
     &_container {
         @include m.container_side;
@@ -334,7 +338,7 @@
     &_information {
         width: 100%;
 
-        &:not(.mb_64) {
+        &:not(.mb_64, .mb_0) {
             @include m.mb96;
         }
 
@@ -374,6 +378,74 @@
 .opportunities {
     &_container {
         @include m.container_side;
+    }
+
+    &-buttons {
+        @include m.container_side;
+
+        @media (min-width: v.$tv) {
+            margin-bottom: m.px-to-vw(78px);
+        }
+
+        @include m.tv {
+            margin-bottom: 54px;
+        }
+
+        @include m.flex(space-between, 26px 0);
+
+        button {
+            flex: 1;
+            position: relative;
+            background: none;
+            border: none;
+            @include m.flex(center);
+            @include m.p;
+            text-transform: uppercase;
+
+            @media (min-width: v.$tv) {
+                height: m.px-to-vw(60px);
+            }
+
+            @include m.tv {
+                height: 40px;
+                min-width: 270px;
+            }
+
+            &::before {
+                position: absolute;
+                content: '';
+                width: 100%;
+
+                @media (min-width: v.$tv) {
+                    height: m.px-to-vw(1px);
+                    top: calc(100% + m.px-to-vw(12px));
+                }
+
+                @include m.tv {
+                    height: 1px;
+                    top: calc(100% + 7px);
+                }
+
+                @include m.centerX;
+                background: #C0B09B;
+            }
+
+            &.active {
+                font-family: v.$gotham_m;
+
+                &::before {
+                    @media (min-width: v.$tv) {
+                        height: m.px-to-vw(2px);
+                    }
+
+                    @include m.tv {
+                        height: 2px;
+                    }
+
+                    background: v.$light_brown;
+                }
+            }
+        }
     }
 
     &_row {
@@ -471,6 +543,37 @@
         }
     }
 
+    &-column {
+
+        &>* {
+            &:not(:last-child) {
+                .opportunities_row {
+                    @media (min-width: v.$tv) {
+                        padding-bottom: m.px-to-vw(80px);
+                        border-bottom: m.px-to-vw(1px) solid v.$light_brown;
+                        margin-bottom: m.px-to-vw(80px);
+                    }
+
+                    @include m.tv {
+                        padding-bottom: 58px;
+                        border-bottom: 1px solid v.$light_brown;
+                        margin-bottom: 58px;
+                    }
+
+                    @include m.desktop {
+                        padding-bottom: 43px;
+                        margin-bottom: 43px;
+                    }
+
+                    @include m.tablet {
+                        padding-bottom: 29px;
+                        margin-bottom: 29px;
+                    }
+                }
+            }
+        }
+    }
+
     .spacing {
         width: 100%;
 
@@ -547,6 +650,7 @@
 
     &-connect {
         @include m.social_connect_in_bottom;
+
         p {
             @media (min-width: v.$tv) {
                 width: m.px-to-vw(326px);
@@ -554,6 +658,50 @@
 
             @include m.tv {
                 width: 263px;
+            }
+        }
+    }
+}
+
+.request_quote {
+    @include m.pblock160;
+
+    h3 {
+        @include m.h4v2(v.$black, v.$cormorant, false);
+        @include m.mb64;
+    }
+
+    &-container {
+        @include m.container_side;
+    }
+
+    &-box {
+        width: 100%;
+        @include m.gform();
+
+        #field_5_13 {
+
+            @media (min-width: v.$tv) {
+                padding-top: m.px-to-vw(48px) !important;
+                margin-bottom: m.px-to-vw(48px) !important;
+            }
+
+            @include m.tv {
+                padding-top: 32px !important;
+                margin-bottom: 32px !important;
+            }
+
+            @include m.desktop {
+                padding-top: 24px !important;
+                margin-bottom: 24px !important;
+            }
+
+            @media (min-width: v.$tv) {
+                border-block-end: m.px-to-vw(1px) solid v.$light_brown !important;
+            }
+
+            @include m.tv {
+                border-block-end: 1px solid v.$light_brown !important;
             }
         }
     }
