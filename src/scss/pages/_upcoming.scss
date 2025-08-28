@@ -64,7 +64,10 @@
 
 .auction_list {
     @include m.pblock160;
-    @include m.space-left;
+    // @include m.space-left;
+    &-container{
+        @include m.container_side;
+    }
 }
 
 .auction {

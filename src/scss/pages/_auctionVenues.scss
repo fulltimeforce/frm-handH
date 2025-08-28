@@ -3,6 +3,19 @@
 
 .big_video {
     @include m.pblock160;
+
+    .video{
+        position: relative;
+        @include m.mb64;
+        width: 100%;
+        &::before{
+            position: absolute;
+            content: '';
+        }
+    }
+    video{
+        width: 100%;
+    }
 }
 
 .interactive_map,

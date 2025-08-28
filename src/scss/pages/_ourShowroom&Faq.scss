@@ -628,6 +628,66 @@
             }
         }
     }
+
+    &[data-state="3"] {
+        .opportunities {
+            &_images-collection {
+                img:not(:nth-child(4)) {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    &[data-state="4"] {
+        .opportunities {
+            &_images-collection {
+                img:not(:nth-child(5)) {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    &[data-state="5"] {
+        .opportunities {
+            &_images-collection {
+                img:not(:nth-child(6)) {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    &[data-state="6"] {
+        .opportunities {
+            &_images-collection {
+                img:not(:nth-child(7)) {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    &[data-state="7"] {
+        .opportunities {
+            &_images-collection {
+                img:not(:nth-child(8)) {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    &[data-state="8"] {
+        .opportunities {
+            &_images-collection {
+                img:not(:nth-child(9)) {
+                    display: none;
+                }
+            }
+        }
+    }
 }
 
 .apply_to {

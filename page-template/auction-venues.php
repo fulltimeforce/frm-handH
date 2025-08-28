@@ -11,7 +11,12 @@ get_banner('Homepage / Classic Auctions / Auction Venues', '', 'H&H Auction Venu
 
 <section class="big_video">
     <div class="big_video-container">
-        
+        <div class="video">
+            <video poster="">
+                <source src="<?php echo IMG; ?>/auction-venues.mp4">
+            </video>
+        </div>
+        <h2>H&H Auction Venues 2025</h2>
     </div>
 </section>
 

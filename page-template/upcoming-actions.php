@@ -10,7 +10,7 @@ get_banner('Homepage / classic auctions / Upcoming Auctions');
 ?>
 
 <section class="auction_list">
-    <div class="container-pages">
+    <div class="auction_list-container">
         <?php for ($j = 0; $j < 5; $j++): ?>
             <div class="auction">
                 <div class="auction_thumb">
