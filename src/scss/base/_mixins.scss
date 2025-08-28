@@ -1124,6 +1124,10 @@
         @include tv {
             @include flex(flex-start, 22px);
         }
+        
+        @include desktop{
+            gap: 12px;
+        }
     }
 
     @include tablet {
