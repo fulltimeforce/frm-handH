@@ -4,17 +4,143 @@
 .big_video {
     @include m.pblock160;
 
-    .video{
+    .video {
         position: relative;
         @include m.mb64;
         width: 100%;
-        &::before{
+        aspect-ratio: 16/9;
+
+        &>*{
+            width: 100%;
             position: absolute;
+            top: 0;
+            cursor: pointer;
+            left: 0;
+            @include m.transition;
+        }
+
+        &::before,
+        .play_icon {
+            position: absolute;
+            @include m.centerXY;
+            background: none;
+        }
+
+        &::before {
             content: '';
+            z-index: 2;
+            pointer-events: none;
+
+            @media (min-width: v.$tv) {
+                width: calc(100% + m.px-to-vw(32px));
+                height: calc(100% + m.px-to-vw(32px));
+                border: m.px-to-vw(1px) solid v.$light_brown;
+            }
+
+            @include m.tv {
+                border: 1px solid v.$light_brown;
+                width: calc(100% + 24px);
+                height: calc(100% + 24px);
+            }
+            
+            @include m.desktop{
+                width: calc(100% + 16px);
+                height: calc(100% + 16px);
+            }
+        }
+
+        &_poster {
+            width: 100%;
+            .play_icon {
+                border: none;
+                border-radius: 50%;
+                z-index: 4;
+
+                @media (min-width: v.$tv) {
+                    @include m.square(m.px-to-vw(120px));
+                }
+
+                @include m.tv {
+                    @include m.square(90px);
+                }
+                
+                @include m.desktop{
+                    @include m.square(60px);
+                }
+                
+                @include m.tablet{
+                    @include m.square(52px);
+                }
+
+                svg {
+                    @include m.fullWH;
+                    object-fit: contain;
+                    object-position: center;
+                    *{
+                        @include m.transition;
+                    }
+                }
+
+            }
+        }
+
+        &:is(:hover){
+            .play_icon{
+                #triangle{
+                    fill: v.$light_brown !important;
+                }
+                #circle{
+                    fill: v.$white !important;
+                }
+            }
+        }
+
+        &[data-state="1"]{
+            .video{
+                &_poster{
+                    z-index: 3;
+                }
+                &_src{
+                    z-index: 1;
+                    opacity: 0;
+                    pointer-events: none;
+                    user-select: none;
+                }
+            }
+        }
+        &[data-state="2"]{
+            .video{
+                &_poster{
+                    z-index: 1;
+                    opacity: 0;
+                    pointer-events: none;
+                    user-select: none;
+                }
+                &_src{
+                    z-index: 3;
+                }
+            }
         }
     }
-    video{
+
+    video {
         width: 100%;
+    }
+
+    h2 {
+        @include m.h4(v.$black, v.$gotham_m, false);
+        font-weight: 300 !important;
+        opacity: 0.8;
+        display: block;
+        text-align: center;
+        margin-inline: auto;
+
+        @media (min-width: v.$tv){
+            letter-spacing: m.px-to-vw(2.16px);
+        }
+        @include m.tv{
+            letter-spacing: 1.03px;
+        }
     }
 }
 
@@ -227,7 +353,7 @@
                     }
                 }
 
-                @media (max-width: 600px){
+                @media (max-width: 600px) {
                     width: 30px;
                     height: 40px;
 
@@ -297,7 +423,7 @@
                 margin-inline: auto !important;
             }
 
-            @media (max-width: 600px){
+            @media (max-width: 600px) {
                 max-width: 450px;
             }
         }
@@ -335,7 +461,7 @@
                 grid-gap: 12px;
             }
 
-            @include m.tablet{
+            @include m.tablet {
                 grid-template-columns: 100%;
             }
 
@@ -353,6 +479,10 @@
 
                 @include m.tv {
                     border-radius: 6px 0 0 6px;
+                }
+
+                @include m.tablet{
+                    border-radius: 12px;
                 }
             }
 

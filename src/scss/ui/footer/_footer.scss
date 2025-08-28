@@ -41,7 +41,7 @@
         }
 
         @include m.tv {
-            margin-bottom: 20px;
+            margin-bottom: 14px;
         }
 
         &::before,
@@ -58,7 +58,7 @@
 
             @include m.tv {
                 height: 1px;
-                width: calc(50% - 100px);
+                width: calc(50% - 80px);
             }
         }
 
@@ -86,8 +86,8 @@
         }
 
         @include m.tv {
-            max-width: 108px;
-            margin-bottom: 36px;
+            max-width: 80px;
+            margin-bottom: 25px;
         }
 
         @include m.tablet {}
@@ -120,9 +120,9 @@
         }
 
         @include m.tv {
-            @include m.flex(center, 20px);
+            @include m.flex(center, 14px);
             align-items: flex-start;
-            margin-bottom: 56px;
+            margin-bottom: 40px;
         }
 
         &>* {
@@ -141,7 +141,7 @@
             }
 
             @include m.tv {
-                margin-bottom: 30px;
+                margin-bottom: 22px;
             }
 
             @include m.tablet {
@@ -221,7 +221,7 @@
                     }
 
                     @include m.tv {
-                        margin-bottom: 6px;
+                        margin-bottom: 4px;
                     }
                 }
             }
@@ -265,7 +265,7 @@
         @include m.tv {
             margin-top: 34px;
             border-top: 1px solid v.$light_brown;
-            padding-top: 16px;
+            padding-top: 20px;
         }
 
         @include m.tablet {
@@ -288,7 +288,7 @@
         }
 
         @include m.tv {
-            margin-top: 67px;
+            margin-top: 48px;
         }
 
         b {
@@ -307,10 +307,12 @@
             object-fit: contain;
 
             @media (min-width: v.$tv) {
+                margin-top: m.px-to-vw(18px);
                 max-width: m.px-to-vw(265.79px);
             }
-
+            
             @include m.tv {
+                margin-top: 13px;
                 max-width: 240px;
             }
 
@@ -350,7 +352,7 @@
             }
 
             @include m.tv {
-                margin-block: 48px 25px;
+                margin-block: 35px 18px;
             }
 
             @include m.tablet {
@@ -424,7 +426,7 @@
                     }
 
                     @include m.tv {
-                        bottom: 68px !important;
+                        bottom: 36px !important;
                         width: 156px !important;
                     }
 
@@ -434,11 +436,44 @@
                     }
                 }
 
+                [type="submit"] {
+                    width: 100% !important;
+
+                    color: v.$light_brown !important;
+                    font-family: v.$gotham_light !important;
+                    font-weight: 300 !important;
+                    text-transform: uppercase !important;
+
+                    @media (min-width: v.$tv) {
+                        font-size: px-to-vw(17px) !important;
+                        line-height: px-to-vw(23.8px) !important;
+                        letter-spacing: px-to-vw(1.02px) !important;
+                    }
+
+                    @include m.tv {
+                        font-size: 14.5px !important;
+                        line-height: 1.3em !important;
+                        letter-spacing: 0.4px !important;
+                    }
+
+                    @media (min-width: v.$tv) {
+                        border: m.px-to-vw(1px) solid v.$light_brown !important;
+                    }
+
+                    @include m.tv {
+                        border: 1px solid v.$light_brown !important;
+                    }
+                }
+
+                [type="submit"],
                 input {
                     border-radius: 0 !important;
                     box-shadow: none !important;
                     outline: none !important;
                     background: transparent !important;
+                }
+
+                input {
 
                     &:not([type="checkbox"]) {
                         @media (min-width: v.$tv) {
@@ -446,7 +481,7 @@
                         }
 
                         @include m.tv {
-                            height: 52px !important;
+                            height: 38px !important;
                         }
                     }
 
