@@ -56,6 +56,10 @@
         }
     }
 
+    &.small-banner {
+        min-height: 357px !important;
+    }
+
     .breadcrumb {
         opacity: 0.6;
 

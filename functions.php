@@ -90,7 +90,7 @@ function get_banner($breadcrumb = '', $image_url = '', $title = '')
     </section>';
 }
 
-function get_centered_banner($image_url = '', $title = '')
+function get_centered_banner($image_url = '', $title = '', $size = 'default')
 {
     if (empty($title)) {
         $title = get_the_title();
@@ -98,8 +98,12 @@ function get_centered_banner($image_url = '', $title = '')
     if (empty($image_url)) {
         $image_url = IMG . '/banner.png';
     }
+    $size_class = '';
+    if ($size === 'small') {
+        $size_class = 'small-banner';
+    }
 
-    echo '<section class="banner centered">
+    echo '<section class="banner centered ' . esc_attr($size_class) . '">
         <div class="banner__bg">
             <img src="' . $image_url . '">
         </div>
