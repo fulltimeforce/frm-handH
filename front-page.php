@@ -132,7 +132,7 @@ $testimonials_items = get_field('testimonials_items');
                     ?>
                     <div>
                         <?php if ($number): ?>
-                            <h3><?php echo esc_html($number); ?></h3>
+                            <h3 class="stat_number" data-target="<?php echo esc_attr($number); ?>"><?php echo esc_html($number); ?></h3>
                         <?php endif; ?>
                         
                         <?php if ($text): ?>
@@ -590,4 +590,43 @@ $testimonials_items = get_field('testimonials_items');
     </div>
 </section>
 
+<script>
+function animateNumbers() {
+  const items = document.querySelectorAll(".stat_number");
+  const values = [];
+
+  items.forEach(item => {
+    let rawText = item.textContent.trim();
+    let number = parseFloat(rawText.replace(/[^0-9.]/g, "")) || 0;
+    values.push({ el: item, number, rawText });
+  });
+
+  const max = Math.max(...values.map(v => v.number));
+  const duration = 2000;
+  const start = performance.now();
+
+  function update(now) {
+    const progress = Math.min((now - start) / duration, 1);
+
+    values.forEach(v => {
+      let current = Math.floor(v.number * progress);
+      let formatted = current.toLocaleString();
+
+      if (/[a-zA-Z%+$]/.test(v.rawText)) {
+        let suffix = v.rawText.replace(/[0-9.,]/g, "");
+        v.el.textContent = formatted + suffix;
+      } else {
+        v.el.textContent = formatted;
+      }
+    });
+
+    if (progress < 1) {
+      requestAnimationFrame(update);
+    }
+  }
+
+  requestAnimationFrame(update);
+}
+animateNumbers();
+</script>
 <?php get_footer(); ?>
