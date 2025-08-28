@@ -99,7 +99,7 @@
 
 @mixin pblock160($just_bottom: false) {
     @media (min-width: v.$tv) {
-        @if($just_bottom == false) {
+        @if($just_bottom ==false) {
             padding-top: px-to-vw(160px);
         }
 
@@ -115,7 +115,7 @@
     }
 
     @include desktop {
-        @if($just_bottom == false) {
+        @if($just_bottom ==false) {
             padding-top: 86px;
         }
 
@@ -123,7 +123,7 @@
     }
 
     @include tablet {
-        @if($just_bottom == false) {
+        @if($just_bottom ==false) {
             padding-top: 58px;
         }
 
@@ -137,7 +137,11 @@
     }
 
     @include tv {
+        padding-top: 170px;
+    }
 
+    @include tablet {
+        padding-top: 142px;
     }
 }
 
@@ -148,6 +152,10 @@
 
     @include tv {
         margin-top: 32px;
+    }
+
+    @include desktop {
+        margin-top: 24px;
     }
 }
 
@@ -224,6 +232,7 @@
 
     width: 100%;
 
+    .gsection_title,
     .gform_heading {
         display: none !important;
     }
@@ -235,6 +244,42 @@
 
         @include tv {
             margin-top: 12px !important;
+        }
+    }
+
+    .gform-grid-row {
+        margin: 0 !important;
+    }
+
+    .gform-grid-col {
+        padding: 0 !important;
+    }
+
+    .has_street {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+
+        &>* {
+            width: 100% !important;
+            inline-size: 100% !important;
+        }
+
+        @media (min-width: v.$tv) {
+            column-gap: px-to-vw(12px) !important;
+            row-gap: px-to-vw(16px) !important;
+        }
+
+        @include tv {
+            row-gap: 12px !important;
+            column-gap: 8px !important;
+        }
+
+        @include tablet {
+            grid-template-columns: 100% !important;
+
+            &>* {
+                grid-column: 1/2 !important;
+            }
         }
     }
 
@@ -256,14 +301,49 @@
                 grid-column: 1/2 !important;
             }
         }
+
+        .gfield_label,
+        label {
+            color: v.$black !important;
+            opacity: 0.6 !important;
+            font-family: v.$gotham_m !important;
+            font-weight: 300 !important;
+            display: block;
+            line-height: normal !important;
+
+            @media (min-width: v.$tv) {
+                letter-spacing: px-to-vw(1.4px) !important;
+                font-size: px-to-vw(14px) !important;
+                margin: 0 0 px-to-vw(12px) 0 !important;
+            }
+
+            @include tv {
+                font-size: 11.6px !important;
+                margin: 0 0 7px 0 !important;
+            }
+
+            .gfield_required {
+                display: inline-block !important;
+
+                @media (min-width: v.$tv) {
+                    margin-left: px-to-vw(4px);
+                }
+
+                @include tv {
+                    margin-left: 2.4px;
+                }
+            }
+        }
     }
 
+    select,
     [type="submit"],
     input:not([type="submit"]),
     textarea {
         font-family: v.$gotham_light !important;
     }
 
+    select,
     [type="submit"],
     input:not([type="submit"]),
     textarea,
@@ -285,11 +365,14 @@
         }
     }
 
+    select {
+        color: rgba($color: v.$black, $alpha: 0.6) !important;
+        @include flex(flex-start);
+    }
+
+    select,
     input:not([type="submit"]),
     textarea {
-        background: v.$white !important;
-        color: v.$black;
-
         @media (min-width: v.$tv) {
             letter-spacing: px-to-vw(1.02px) !important;
             border: px-to-vw(1px) solid v.$light_brown !important;
@@ -305,6 +388,12 @@
         &::placeholder {
             opacity: 0.6 !important;
         }
+    }
+
+    input:not([type="submit"]),
+    textarea {
+        color: v.$black;
+        background: v.$white !important;
     }
 
     [type="submit"] {
@@ -352,6 +441,121 @@
             min-block-size: 115px !important;
         }
     }
+
+    #field_3_8,
+    #field_4_8 {
+        background: v.$white;
+
+        @media (min-width: v.$tv) {
+            height: px-to-vw(274px);
+            border: px-to-vw(2px) dashed v.$light_brown;
+        }
+
+        @include tv {
+            height: 200px;
+            border: 2px dashed v.$light_brown;
+        }
+
+        @include tablet {
+            height: 250px;
+        }
+
+
+        .gfield_description,
+        .gfield_label {
+            display: none;
+        }
+
+        .my-filewrap {
+            cursor: pointer;
+            @include fullWH;
+            position: relative;
+
+            [type="file"] {
+                width: 100% !important;
+                height: 100% !important;
+                padding: 0 !important;
+            }
+
+            img {
+                @media (min-width: v.$tv) {
+                    @include square(px-to-vw(56px));
+                }
+
+                @include tv {
+                    @include square(40px);
+                }
+            }
+
+            .ginput_container {
+                @include fullWH;
+                position: absolute;
+                inset: 0;
+                opacity: 0 !important;
+                z-index: 3;
+
+            }
+
+            p {
+                @include h3(v.$light_brown, v.$gotham_light, false);
+                opacity: 0.4;
+                text-align: center;
+
+                @media (min-width: v.$tv) {
+                    max-width: px-to-vw(492px);
+                }
+
+                @include tv {
+                    max-width: 363px;
+                }
+
+                @include phone {
+                    padding-inline: 12px;
+                }
+            }
+
+            .browse_file {
+                @include flex(center);
+                font-family: v.$gotham_m;
+                color: v.$light_brown;
+
+                @media (min-width: v.$tv) {
+                    border: px-to-vw(2px) solid v.$light_brown;
+                    max-width: px-to-vw(157px);
+                }
+
+                @include tv {
+                    max-width: 120px;
+                    border: 2px solid v.$light_brown;
+                }
+
+                @include transition();
+                margin-inline: auto;
+            }
+
+            @media (min-width: v.$tv) {
+                @include flex(center, px-to-vw(32px));
+                flex-direction: column;
+            }
+
+            @include tv {
+                @include flex(center, 22px);
+                flex-direction: column;
+            }
+
+            &:is(:hover) {
+                .browse_file {
+                    @media (min-width: v.$tv) {
+                        max-width: px-to-vw(220px);
+                    }
+
+                    @include tv {
+                        max-width: 162px;
+                    }
+                }
+            }
+        }
+    }
 }
 
 @mixin p($color: v.$black, $ff: v.$gotham_light) {
@@ -360,21 +564,21 @@
     font-weight: 300;
 
     @media (min-width: v.$tv) {
-        font-size: px-to-vw(17px);
-        line-height: px-to-vw(23.8px);
-        letter-spacing: px-to-vw(1.02px);
+        font-size: px-to-vw(17px) !important;
+        line-height: px-to-vw(23.8px) !important;
+        letter-spacing: px-to-vw(1.02px) !important;
     }
 
     @include tv {
-        font-size: 14.5px;
-        line-height: 1.3em;
-        letter-spacing: 0.4px;
+        font-size: 14.5px !important;
+        line-height: 1.3em !important;
+        letter-spacing: 0.4px !important;
     }
 }
 
-@mixin p2($color: v.$black) {
+@mixin p2($color: v.$black, $ff: v.$gotham_light) {
     color: $color;
-    font-family: v.$gotham_light;
+    font-family: $ff;
     font-weight: 300;
 
     @media (min-width: v.$tv) {
@@ -384,6 +588,24 @@
 
     @include tv {
         font-size: 14.2px;
+    }
+}
+
+@mixin p3($color: v.$light_brown, $ff: v.$gotham_m) {
+    color: $color;
+    font-family: $ff;
+    font-weight: 300;
+
+    @media (min-width: v.$tv) {
+        font-size: px-to-vw(18px);
+        line-height: px-to-vw(32.4px);
+        letter-spacing: px-to-vw(1.08px);
+    }
+
+    @include tv {
+        font-size: 13.8px;
+        line-height: 1.32em;
+        letter-spacing: 0.45px;
     }
 }
 
@@ -437,12 +659,17 @@
         line-height: px-to-vw(24px) !important;
     }
 
-    @include tv {}
+    @include tv {
+        padding-inline: 12.4px !important;
+        height: 33px !important;
+        font-size: 12px !important;
+        line-height: 1.2em !important;
+    }
 }
 
-@mixin fz60($color: v.$black) {
+@mixin fz60($color: v.$black, $text-align: center) {
     font-family: v.$cormorant;
-    text-align: center;
+    text-align: $text-align;
     color: $color;
 
     @media (min-width: v.$tv) {
@@ -490,31 +717,39 @@
             border: 1px solid v.$white;
             font-size: 12px;
             width: 180px;
+            // padding-inline: 12px;
             height: 38px;
             letter-spacing: 0.4px;
         }
 
         @if($format) {
-            &:nth-child(even) {
+
+            &:nth-child(2),
+            &:nth-child(3),
+            &:nth-child(4) {
                 color: v.$white;
                 background: transparent;
             }
 
-            &:nth-child(odd) {
+            &:nth-child(1) {
                 background: v.$white;
                 color: v.$black;
             }
         }
 
         @else {
-            &:nth-child(even) {
+
+            &:nth-child(2),
+            &:nth-child(3),
+            &:nth-child(4) {
                 background: transparent;
                 border-color: v.$light_brown;
                 color: v.$light_brown;
             }
-            
-            &:nth-child(odd) {
+
+            &:nth-child(1) {
                 color: v.$white;
+                border-color: v.$light_brown;
                 background: v.$light_brown;
             }
         }
@@ -572,7 +807,7 @@
     @include lines(3);
 }
 
-@mixin h3v2($color: v.$black, $ff: v.$goudysb, $upper: true) {
+@mixin h3v2($color: v.$black, $ff: v.$goudysb, $upper: true, $max_lines: true) {
     font-family: $ff;
     font-weight: 400;
     color: $color;
@@ -594,7 +829,13 @@
         font-size: 17px;
     }
 
-    @include lines(3);
+    @include desktop {
+        font-size: 15.6px;
+    }
+
+    @if($max_lines) {
+        @include lines(3);
+    }
 }
 
 @mixin h4($color: v.$black) {
@@ -611,6 +852,10 @@
 
     @include tv {
         font-size: 28px;
+    }
+
+    @include desktop {
+        font-size: 22px;
     }
 }
 
@@ -689,7 +934,9 @@
             @include flex(center, px-to-vw(16px));
         }
 
-        @include tv {}
+        @include tv {
+            @include flex(center, 16px);
+        }
     }
 
     @media (min-width: v.$tv) {
@@ -703,7 +950,10 @@
     }
 
     @include tv {
+        @include flex(center);
         border: px-to-vw(1px) solid v.$light_brown;
+        font-size: 14.5px;
+        letter-spacing: 1.7px;
     }
 
     @include flex(flex-start);
@@ -730,7 +980,16 @@
             }
         }
 
-        @include tv {}
+        @include tv {
+             @if($hover) {
+                width: 24px;
+                right: 85px;
+            }
+
+            @else {
+                width: 18px;
+            }
+        }
 
         height: auto;
     }
@@ -865,6 +1124,10 @@
         @include tv {
             @include flex(flex-start, 22px);
         }
+        
+        @include desktop{
+            gap: 12px;
+        }
     }
 
     @include tablet {
@@ -880,7 +1143,17 @@
         padding-top: px-to-vw(80px);
     }
 
-    @include tv {}
+    @include tv {
+        padding-top: 58px;
+    }
+
+    @include desktop {
+        padding-top: 43px;
+    }
+
+    @include tablet {
+        padding-top: 29px;
+    }
 
     svg {
         @media (min-width: v.$tv) {
@@ -888,7 +1161,10 @@
             margin: 0 auto px-to-vw(8px);
         }
 
-        @include tv {}
+        @include tv {
+            @include square(47px);
+            margin: 0 auto 4.8px;
+        }
     }
 
     h2 {
@@ -899,7 +1175,9 @@
             max-width: px-to-vw(843px);
         }
 
-        @include tv {}
+        @include tv {
+            max-width: 600px;
+        }
 
         margin-inline: auto;
     }
@@ -911,7 +1189,9 @@
             margin: px-to-vw(40px) auto 0;
         }
 
-        @include tv {}
+        @include tv {
+            margin: 28px auto 0;
+        }
     }
 }
 
@@ -926,6 +1206,234 @@
 
     @include tablet {
         margin-bottom: 24px;
+    }
+}
+
+@mixin social_connect_in_bottom {
+    @media (min-width: v.$tv) {
+        @include flex(flex-start, px-to-vw(55px));
+        padding-left: px-to-vw(24px);
+    }
+
+    @include tv {
+        @include flex(flex-start, 32px);
+        padding-left: 16px;
+    }
+
+    @include desktop {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+        padding-left: 0;
+    }
+
+    p {
+        @include p(v.$black, v.$gotham_m);
+        text-align: left;
+    }
+
+    .social {
+        @include social_list_link;
+    }
+}
+
+@mixin fz31($minus_1px: false, $font: v.$goudysb) {
+    font-family: $font;
+    color: v.$black;
+    font-weight: 500;
+    font-style: normal;
+
+    @media (min-width: v.$tv) {
+        @if($minus_1px) {
+            font-size: px-to-vw(30px);
+            line-height: px-to-vw(30px);
+            letter-spacing: px-to-vw(-0.9px);
+        }
+
+        @else {
+            font-size: px-to-vw(31px);
+            line-height: px-to-vw(35.65px);
+        }
+    }
+
+    @include tv {
+        @if($minus_1px) {
+            font-size: 24px;
+        }
+
+        @else {
+            font-size: 25px;
+        }
+
+        line-height: 1.2em;
+    }
+
+    @include desktop {
+        @if($minus_1px) {
+            font-size: 21.2px;
+        }
+
+        @else {
+            font-size: 22px;
+        }
+    }
+}
+
+@mixin dropdowns {
+    ul {
+        width: 100%;
+
+        .acc_head {
+            @include flex(space-between, 1.5rem);
+            flex-wrap: nowrap;
+
+            @media (min-width: v.$tv) {
+                padding-block: px-to-vw(49px);
+                padding-right: px-to-vw(24px);
+            }
+
+            @include tv {
+                padding-block: 34px;
+                padding-right: 15px;
+            }
+
+            svg {
+                @include transition(.45s);
+            }
+
+            h3 {
+                width: fit-content;
+                @include fz31;
+
+                @media (min-width: v.$tv) {
+                    @include flex(flex-start, px-to-vw(16px));
+                    padding-left: px-to-vw(8px);
+                }
+
+                @include tv {
+                    @include flex(flex-start, 11px);
+                    padding-left: 4px;
+                }
+
+                @include desktop {
+                    @include flex(flex-start, 9px);
+                }
+
+                svg {
+                    @media (min-width: v.$tv) {
+                        @include square(px-to-vw(56px));
+                    }
+
+                    @include tv {
+                        @include square(40px);
+                    }
+                }
+            }
+
+            &>svg {
+                @media (min-width: v.$tv) {
+                    @include square(px-to-vw(18px));
+                    min-width: px-to-vw(18px);
+                }
+
+                @include tv {
+                    @include square(15px);
+                    min-width: 15px;
+                }
+            }
+        }
+
+        li.acc_section {
+            background: rgba($color: v.$light_brown, $alpha: 0);
+
+            @media (min-width: v.$tv) {
+                border-bottom: px-to-vw(1px) solid v.$light_brown;
+            }
+
+            @include tv {
+                border-bottom: 1px solid v.$light_brown;
+            }
+
+            &:is(:hover) {
+                .acc_head {
+                    &>svg {
+                        transform: scale(1.2) rotate(90deg);
+                    }
+                }
+            }
+
+            &.acc_active {
+                background: rgba($color: v.$light_brown, $alpha: 0.05);
+            }
+        }
+
+        .acc_content {
+            @media (min-width: v.$tv) {
+                padding-inline: px-to-vw(32px);
+                padding-bottom: px-to-vw(48px);
+            }
+
+            @include tv {
+                padding-inline: 24px;
+                padding-bottom: 36px;
+            }
+
+            p,
+            li,
+            span,
+            a {
+                @include p;
+                opacity: 0.9;
+            }
+
+            a {
+                font-family: v.$gotham_m;
+                color: v.$light_brown;
+                text-decoration: underline;
+            }
+
+            b,
+            strong {
+                font-family: v.$gotham_m;
+            }
+
+            ul {
+                list-style: disc;
+            }
+
+            ul,
+            ol {
+                @media (min-width: v.$tv) {
+                    padding-left: px-to-vw(32px);
+                }
+
+                @include tv {
+                    padding-left: 24px;
+                }
+            }
+        }
+
+        .description {
+            width: 100%;
+
+            @media (min-width: v.$tv) {
+                max-width: px-to-vw(1033px);
+            }
+
+            &>* {
+                @media (min-width: v.$tv) {
+                    margin-bottom: px-to-vw(20px);
+                }
+
+                @include tv {
+                    margin-bottom: 14px;
+                }
+
+                @include desktop {
+                    margin-bottom: 10px;
+                }
+            }
+        }
     }
 }
 
@@ -964,17 +1472,19 @@
 
 @mixin mt40_for_actions($with_width: true) {
     @media (min-width: v.$tv) {
-        @if($with_width){
+        @if($with_width) {
             width: px-to-vw(420px);
         }
+
         margin-top: px-to-vw(40px);
     }
 
     @include tv {
-        @if($with_width){
+        @if($with_width) {
             width: 100%;
             max-width: 310px;
         }
+
         margin-top: 28px;
     }
 
@@ -1006,7 +1516,7 @@
         }
 
         @include tv {
-            @include square(38px);
+            @include square(28px);
         }
 
         svg {
@@ -1022,8 +1532,159 @@
     }
 }
 
-@mixin delete_pseudo{
-    &::before, &::after{
+@mixin delete_pseudo {
+
+    &::before,
+    &::after {
         display: none !important;
     }
+}
+
+@mixin content_center($width_of_buttons: 357px) {
+    .content {
+        @include mt40_for_actions(false);
+        @include mb64;
+
+        li,
+        p {
+            @include p;
+            text-align: center;
+            opacity: 0.9;
+
+            &:not(:last-child) {
+                @media (min-width: v.$tv) {
+                    margin-bottom: px-to-vw(24px);
+                }
+
+                @include tv {
+                    margin-bottom: 16px;
+                }
+            }
+        }
+
+        a {
+            font-family: v.$gotham_m;
+            color: v.$light_brown;
+            text-decoration: underline;
+        }
+    }
+
+    .actions {
+        @include link_actions(false, $width_of_buttons);
+    }
+}
+
+@mixin buttonHeight44($bg: v.$light_brown_2) {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 0 !important;
+    color: white !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: $bg !important;
+
+    @media (min-width: v.$tv) {
+        height: px-to-vw(44px) !important;
+        font-size: px-to-vw(16px) !important;
+    }
+
+    @include tv {
+        height: 33px !important;
+        font-size: 12px !important;
+    }
+}
+
+@mixin banner_with_lines() {
+    width: 100%;
+
+    @media (min-width: v.$tv) {
+        padding-right: px-to-vw(16px);
+        padding-bottom: px-to-vw(16px);
+    }
+
+    @include tv {
+        padding-right: 10px;
+        padding-bottom: 10px;
+    }
+
+    div {
+        width: 100%;
+        position: relative;
+
+        @media (min-width: v.$tv) {
+            height: px-to-vw(283px);
+        }
+
+        @include tv {
+            height: 208px;
+        }
+
+        @include laptop {
+            height: 196px;
+        }
+
+        &::after,
+        &::before,
+        h3 {
+            position: absolute;
+        }
+
+        &::after,
+        &::before {
+            content: '';
+            @include fullWH;
+        }
+
+        &::before {
+            inset: 0;
+            background: #181D24;
+            opacity: 1;
+        }
+
+        &::after {
+            z-index: -2;
+
+            @media (min-width: v.$tv) {
+                top: px-to-vw(16px);
+                left: px-to-vw(16px);
+                border: px-to-vw(1px) solid v.$light_brown;
+            }
+
+            @include tv {
+                top: 10px;
+                left: 10px;
+                border: 1px solid v.$light_brown;
+            }
+        }
+
+        h3 {
+            width: 100%;
+            padding-inline: 5%;
+            z-index: 3;
+            @include centerXY;
+            text-align: center;
+            @include h4(v.$white);
+        }
+    }
+
+    img {
+        display: block;
+        @include fullWH;
+        opacity: 0.2;
+        pointer-events: none;
+        position: relative;
+        user-select: none;
+        object-fit: cover;
+        object-position: center;
+    }
+}
+
+@mixin form-row {
+    width: 100% !important;
+    float: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    @include delete_pseudo;
 }

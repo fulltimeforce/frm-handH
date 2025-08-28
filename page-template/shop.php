@@ -28,9 +28,6 @@ $products = new WP_Query($args);
                 while ($products->have_posts()) {
                     $products->the_post();
                     get_card_product(get_the_ID());
-                    get_card_product(get_the_ID());
-                    get_card_product(get_the_ID());
-                    get_card_product(get_the_ID());
                 }
                 ?>
             </div>

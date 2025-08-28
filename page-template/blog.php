@@ -5,7 +5,7 @@
 
 get_header();
 
-get_banner('Homepage / classic auctions / News and Insights', '', 'News and Insights');
+get_banner('Homepage / classic auctions / News and Insights', get_the_post_thumbnail_url(get_the_ID(), 'full'), 'News and Insights');
 
 ?>
 
@@ -77,7 +77,7 @@ get_banner('Homepage / classic auctions / News and Insights', '', 'News and Insi
                         $date       = get_the_date('d/m/Y');
                         $title      = get_the_title();
                         $permalink  = get_permalink();
-                        $thumbnail  = get_the_post_thumbnail_url(get_the_ID(), 'medium');
+                        $thumbnail  = get_the_post_thumbnail_url(get_the_ID(), 'full');
                     ?>
                         <div class="blog_article">
                             <div class="blog_article-image">

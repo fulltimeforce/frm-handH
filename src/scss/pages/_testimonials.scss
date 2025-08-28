@@ -157,6 +157,70 @@
             }
         }
     }
+    &_pagination {
+        @include m.flex(center, m.px-to-vw(10px));
+        text-align: center;
+        margin-block: m.px-to-vw(90px) m.px-to-vw(24px) ;
+        @include m.tv {
+            margin-block: 90px 24px;
+            gap: 10px;
+        }
+        @include m.tablet {
+            margin-block: 45px;
+        };
+        .next, .prev {
+                background-color: v.$white;
+            }
+            span, a {
+                @include m.p;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: m.px-to-vw(36px);
+                height: m.px-to-vw(36px);
+                border-radius: 50%;
+                font-family: v.$gotham;
+                border: m.px-to-vw(1px) solid v.$light_brown;
+                color: v.$light_brown;
+                letter-spacing: - m.px-to-vw(1.19px);
+                @include m.tv {
+                    width: 36px;
+                    height: 36px;
+                    border-width: 1px;
+                    letter-spacing: -1.19px;
+                }
+                &.current {
+                    background-color: v.$light_brown;
+                    color: #D3C7B6;
+                }
+        }
+    }
+    &_summary {
+        form {
+            @include m.flex(center, m.px-to-vw(8px));
+            @include m.tv {
+                gap: 8px;
+            }
+            font-family: v.$gotham_light;
+            label, span {
+                @include m.p;
+                font-family: v.$gotham_m;
+                font-weight: 400;
+                color: rgba(0, 0, 0, 0.6);
+
+            }
+            select {
+                padding: m.px-to-vw(9px);
+                border-radius: m.px-to-vw(6px);
+                border: 1px solid v.$light_brown;
+                color: v.$light_brown;
+                @include m.tv {
+                    padding: 9px;
+                    border-radius: 6px;
+                }
+            }
+        }
+    }
 }
 .trustpilot {
     &_reviews {
@@ -175,6 +239,9 @@
             @include m.tv {
                 max-width: 770px;
             }
+            @include m.laptop {
+                max-width: 80%;
+            }
             p {
                 font-family: v.$cormorant;
                 font-size: m.px-to-vw(27px);
@@ -192,13 +259,10 @@
                 padding-block: 40px 64px;
             }
             span {
+                @include m.p;
                 opacity: 0.6;
-                font-size: m.px-to-vw(17px);
                 text-transform: uppercase;
                 letter-spacing: 1.02px;
-                @include m.tv {
-                    font-size: 17px;
-                }
             }
         }
         .comment_photo {
@@ -216,6 +280,16 @@
                     width: 12px;
                     height: 24px;
                 }
+            }
+        }
+        .splide__arrow--prev {
+            @include m.tablet {
+                left: 0;
+            }
+        }
+        .splide__arrow--next {
+            @include m.tablet {
+                right: 0;
             }
         }
     }
@@ -248,5 +322,16 @@
                 background-color: transparent;
                 color: black;
             }
+    }
+}
+
+.page-template-testimonials {
+    .container_side {
+        @include m.desktop {
+            width: 89%;
+        }
+        @include m.laptop {
+            width: 96%;
+        }
     }
 }

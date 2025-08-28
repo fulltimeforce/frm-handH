@@ -91,5 +91,15 @@
         });
     });
 
+    let header_toggle = document.querySelectorAll('.header_toggle');
+    if(header_toggle && header){
+        Array.from(header_toggle).forEach(header_toggle=>{
+            header_toggle.addEventListener('click', (e)=>{
+                e.preventDefault();
+                header.classList.toggle('active');
+            })
+        })
+    }
+
 
 })();

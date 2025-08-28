@@ -20,7 +20,13 @@
         padding-top: m.px-to-vw(283px);
     }
 
-    @include m.tv {}
+    @include m.tv {
+        padding-top: 190px;
+    }
+
+    @include m.tablet {
+        padding-top: 162px;
+    }
 
     .container {
         &:not(:last-child) {

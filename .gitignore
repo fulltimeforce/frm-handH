@@ -3,5 +3,7 @@ src/node_modules
 images/*.mp4
 *.mp4
 *.m4v
-public/css/*
-public/js/*
+public/css/app.min.css
+public/css/app.min.css.map
+public/js/main.min.js
+public/js/main.js.min.map

@@ -1,0 +1,441 @@
+@use "base/mixins" as m;
+@use "base/variables" as v;
+
+%mx {
+    width: 100%;
+
+    @media (min-width: v.$tv) {
+        max-width: m.px-to-vw(1155px);
+    }
+
+    @include m.tv {
+        max-width: 852px;
+    }
+
+    margin-inline: auto;
+}
+
+.insurance {
+
+    &_v1 {
+        @media (min-width: v.$tv) {
+            padding-block: m.px-to-vw(160px) 0;
+        }
+
+        @include m.tv {
+            padding-block: 116px 0;
+        }
+
+        @include m.desktop {
+            padding-block: 86px 0;
+        }
+
+        @include m.tablet {
+            padding-block: 58px 0;
+        }
+    }
+
+    &_v2 {
+        @include m.pblock160;
+    }
+
+    &_container {
+        @include m.container_side;
+    }
+
+    &-title,
+    .content {
+        @extend %mx;
+    }
+
+    &-txt {
+        width: 100%;
+        @include m.mt40_for_actions(false);
+
+        @media (min-width: v.$tv) {
+            max-width: m.px-to-vw(892px);
+        }
+
+        @include m.tv {}
+
+        margin-inline: auto;
+
+        li,
+        p {
+            @include m.p;
+            text-align: center;
+            opacity: 0.9;
+
+            &:not(:last-child) {
+                @media (min-width: v.$tv) {
+                    margin-bottom: m.px-to-vw(24px);
+                }
+
+                @include m.tv {
+                    margin-bottom: 16px;
+                }
+            }
+        }
+
+        a {
+            font-family: v.$gotham_m;
+            color: v.$light_brown;
+            text-decoration: underline;
+        }
+    }
+
+    &-title {
+        h2 {
+            @include m.fz60;
+            font-weight: 300;
+        }
+    }
+
+    &_share {
+
+        @include m.content_center(383px);
+
+        .actions {
+            a {
+                @include m.tv {
+                    width: 280px;
+                }
+
+                @include m.phone {
+                    width: 100%;
+                    max-width: 290px;
+                    padding-inline: 6px;
+                }
+            }
+        }
+    }
+
+    &_faq {
+        @include m.pblock160(true);
+
+        &-list {
+            width: 100%;
+            @include m.dropdowns;
+
+            .acc_head {
+                @media (min-width: v.$tv) {
+                    padding-left: m.px-to-vw(24px);
+                }
+
+                @include m.tv {
+                    padding-left: 15px;
+                }
+
+                h3 {
+                    padding-left: 0 !important;
+                }
+            }
+
+            .description {
+                max-width: 100% !important;
+            }
+        }
+    }
+
+    &-compare {
+
+        @media (min-width: v.$tv) {
+            padding-top: m.px-to-vw(53px);
+        }
+
+        @include m.tv {
+            padding-top: 31px;
+        }
+
+        @include m.tablet {
+            padding-top: 26px;
+        }
+
+        h2 {
+            @include m.tablet {
+                br {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    &_slider {
+        @media (min-width: v.$tv) {
+            padding-block: m.px-to-vw(96px);
+        }
+
+        @include m.tv {
+            padding-block: 68px;
+        }
+
+        @include m.desktop {
+            padding-block: 52px;
+        }
+
+        .splide {
+            position: relative;
+
+            &::before,
+            &::after {
+                position: absolute;
+                content: '';
+                height: 100%;
+                top: 0;
+                z-index: 3;
+
+                @media (min-width: v.$tv) {
+                    width: m.px-to-vw(130px);
+                }
+
+                @include m.tv {
+                    width: 92px;
+                }
+
+                background: linear-gradient(270deg, rgba(245, 242, 238, 0.00) 0%, #F5F2EE 100%);
+            }
+
+            &::before {
+                @media (min-width: v.$tv) {
+                    left: m.px-to-vw(-10px);
+                }
+
+                @include m.tv {
+                    left: -5px;
+                }
+            }
+
+            &::after {
+                @media (min-width: v.$tv) {
+                    right: m.px-to-vw(-10px);
+                }
+
+                @include m.tv {
+                    right: -5px;
+                }
+
+                transform: scale(-1);
+            }
+
+            &__slide {
+                @include m.flex(center);
+            }
+
+            img {
+                object-fit: contain;
+                object-position: center;
+            }
+
+            &.splidev1 {
+                img {
+                    @media (min-width: v.$tv) {
+                        max-height: m.px-to-vw(128px);
+                    }
+
+                    @include m.tv {
+                        max-height: 106px;
+                    }
+
+                    @include m.desktop {
+                        max-height: 90px;
+                    }
+
+                    @include m.tablet {
+                        max-height: 74px;
+                    }
+
+                    &.logo1 {
+                        @media (min-width: v.$tv) {
+                            max-width: m.px-to-vw(682px);
+                        }
+
+                        @include m.tv {
+                            max-width: 580px;
+                        }
+
+                        @include m.desktop {
+                            max-width: 453px;
+                        }
+
+                        @include m.tablet {
+                            max-width: 382px;
+                        }
+                    }
+
+                    &.logo2 {
+                        @media (min-width: v.$tv) {
+                            max-width: m.px-to-vw(660px);
+                        }
+
+                        @include m.tv {
+                            max-width: 562px;
+                        }
+
+                        @include m.desktop {
+                            max-width: 440px;
+                        }
+
+                        @include m.tablet {
+                            max-width: 370px;
+                        }
+                    }
+
+                    &.logo3 {
+                        @media (min-width: v.$tv) {
+                            max-width: m.px-to-vw(472px);
+                        }
+
+                        @include m.tv {
+                            max-width: 410px;
+                        }
+
+                        @include m.desktop {
+                            max-width: 350px;
+                        }
+
+                        @include m.tablet {
+                            max-width: 300px;
+                        }
+                    }
+
+                    &.logo4 {
+                        @media (min-width: v.$tv) {
+                            max-width: m.px-to-vw(708px);
+                        }
+
+                        @include m.tv {
+                            max-width: 620px;
+                        }
+
+                        @include m.desktop {
+                            max-width: 563px;
+                        }
+
+                        @include m.tablet {
+                            max-width: 462px;
+                        }
+                    }
+                }
+            }
+
+            &.splidev2 {
+                img {
+                    @media (min-width: v.$tv) {
+                        max-height: m.px-to-vw(198px);
+                    }
+
+                    @include m.tv {
+                        max-height: 146px;
+                    }
+
+                    @include m.desktop {
+                        max-height: 110px;
+                    }
+
+                    @include m.tablet {
+                        max-height: 102px;
+                    }
+
+                    &.logo1 {
+                        @media (min-width: v.$tv) {
+                            max-width: m.px-to-vw(378.67px);
+                        }
+
+                        @include m.tv {
+                            max-width: 280px;
+                        }
+
+                        @include m.desktop {
+                            max-width: 203px;
+                        }
+
+                        @include m.tablet {
+                            max-width: 182px;
+                        }
+                    }
+
+                    &.logo2 {
+                        @media (min-width: v.$tv) {
+                            max-width: m.px-to-vw(376.16px);
+                        }
+
+                        @include m.tv {
+                            max-width: 278.78px;
+                        }
+
+                        @include m.desktop {
+                            max-width: 200px;
+                        }
+
+                        @include m.tablet {
+                            max-width: 180px;
+                        }
+                    }
+
+                    &.logo3 {
+                        @media (min-width: v.$tv) {
+                            max-width: m.px-to-vw(283.4px);
+                        }
+
+                        @include m.tv {
+                            max-width: 210px;
+                        }
+
+                        @include m.desktop {
+                            max-width: 160px;
+                        }
+
+                        @include m.tablet {
+                            max-width: 144px;
+                        }
+                    }
+
+                    &.logo4 {
+                        @media (min-width: v.$tv) {
+                            max-width: m.px-to-vw(386.2px);
+                        }
+
+                        @include m.tv {
+                            max-width: 286.22px;
+                        }
+
+                        @include m.desktop {
+                            max-width: 200px;
+                        }
+
+                        @include m.tablet {
+                            max-width: 176px;
+                        }
+                    }
+
+                    &.logo5 {
+                        @media (min-width: v.$tv) {
+                            max-width: m.px-to-vw(483.96px);
+                        }
+
+                        @include m.tv {
+                            max-width: 358.67px;
+                        }
+
+                        @include m.desktop {
+                            max-width: 270px;
+                        }
+
+                        @include m.tablet {
+                            max-width: 222px;
+                        }
+                    }
+
+                    &.logo6 {
+                        @media (min-width: v.$tv) {}
+
+                        @include m.tv {}
+                    }
+
+                }
+            }
+
+        }
+
+    }
+}

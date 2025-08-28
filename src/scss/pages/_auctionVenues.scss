@@ -1,0 +1,524 @@
+@use "base/mixins" as m;
+@use "base/variables" as v;
+
+.big_video {
+    @include m.pblock160;
+}
+
+.interactive_map,
+.big_video,
+.auction_content {
+    &-container {
+        @include m.container_side;
+    }
+}
+
+.auction_content {
+    padding: 0;
+
+    &-grid {
+        width: 100%;
+
+        @media (min-width: v.$tv) {
+            padding-right: m.px-to-vw(132px);
+            display: grid;
+            grid-template-columns: m.px-to-vw(480px) 1fr;
+            grid-gap: m.px-to-vw(46px);
+        }
+
+        @include m.tv {
+            padding-right: 102px;
+            display: grid;
+            grid-template-columns: 370px 1fr;
+            grid-gap: 34px;
+        }
+
+        @include m.desktop {
+            padding-right: 0;
+            grid-template-columns: 100%;
+            grid-gap: 32px;
+        }
+    }
+
+    &-title {
+        h2 {
+            @include m.fz60(v.$black, left);
+            font-weight: 300;
+        }
+    }
+
+    &-content {
+        @media (min-width: v.$tv) {
+            padding-top: m.px-to-vw(16px);
+        }
+
+        @include m.tv {
+            padding-top: 10px;
+        }
+
+        .actions {
+            @include m.mt40_for_actions;
+
+            a {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        .content {
+            &>* {
+                &:not(:last-child) {
+                    @media (min-width: v.$tv) {
+                        margin-bottom: m.px-to-vw(20px);
+                    }
+
+                    @include m.tv {
+                        margin-bottom: 12px;
+                    }
+                }
+            }
+
+            li,
+            p,
+            span {
+                @include m.p;
+                opacity: 0.9;
+            }
+        }
+    }
+}
+
+%activePin {
+
+    #ellipse,
+    #circle {
+        fill: white;
+    }
+
+    #logo {
+        fill: v.$light_brown;
+
+        path,
+        mask,
+        g {
+            fill: v.$light_brown;
+        }
+    }
+}
+
+.interactive_map {
+    overflow: hidden;
+    @include m.pblock160(true);
+
+    @media (min-width: v.$tv) {
+        padding-top: m.px-to-vw(80px);
+    }
+
+    @include m.tv {
+        padding-top: 58px;
+    }
+
+    @include m.desktop {
+        padding-top: 43px;
+    }
+
+    @include m.tablet {
+        padding-top: 29px;
+    }
+
+    .map {
+        &>svg {
+            width: 100%;
+            height: auto;
+
+            @include m.desktop {
+                display: none;
+            }
+        }
+
+        &_mini {
+            svg {
+                cursor: pointer;
+                overflow: unset;
+
+                * {
+                    pointer-events: none;
+                }
+
+                #ellipse,
+                #logo {
+                    @include m.transition;
+                    transform-origin: center;
+                }
+
+                object-fit: contain;
+                object-position: center;
+
+                @media (min-width: v.$tv) {
+                    width: m.px-to-vw(48px);
+                    height: m.px-to-vw(70px);
+
+                    &:nth-child(1) {
+                        top: m.px-to-vw(21px);
+                        left: m.px-to-vw(345px);
+                    }
+
+                    &:nth-child(2) {
+                        top: m.px-to-vw(48px);
+                        left: m.px-to-vw(457px);
+                    }
+
+                    &:nth-child(3) {
+                        top: m.px-to-vw(162px);
+                        left: m.px-to-vw(368px);
+                    }
+
+                    &:nth-child(4) {
+                        top: m.px-to-vw(229px);
+                        right: m.px-to-vw(231px);
+                    }
+
+                    &:nth-child(5) {
+                        top: m.px-to-vw(220px);
+                        right: m.px-to-vw(162px);
+                    }
+                }
+
+                @include m.tv {
+                    width: 35px;
+                    height: 50px;
+
+                    &:nth-child(1) {
+                        top: 10px;
+                        left: 44%;
+                    }
+
+                    &:nth-child(2) {
+                        left: 59%;
+                        top: 35px;
+                    }
+
+                    &:nth-child(3) {
+                        left: 47%;
+                        top: 120px;
+                    }
+
+                    &:nth-child(4) {
+                        right: 30%;
+                        top: 169px;
+                    }
+
+                    &:nth-child(5) {
+                        right: 20%;
+                        top: 158px;
+                    }
+                }
+
+                @media (max-width: 600px){
+                    width: 30px;
+                    height: 40px;
+
+                    &:nth-child(1) {
+                        top: 10px;
+                        left: 44%;
+                    }
+
+                    &:nth-child(2) {
+                        left: 59%;
+                        top: 35px;
+                    }
+
+                    &:nth-child(3) {
+                        left: 47%;
+                        top: 120px;
+                    }
+
+                    &:nth-child(4) {
+                        right: 30%;
+                        top: 169px;
+                    }
+
+                    &:nth-child(5) {
+                        right: 20%;
+                        top: 158px;
+                    }
+                }
+
+                &:is(:hover) {
+
+                    #ellipse,
+                    #logo {
+                        transform: scale(1.075);
+                    }
+
+                    #ellipse {
+                        fill: #A38B6C;
+                    }
+                }
+            }
+        }
+
+        &_information {
+            @media (min-width: v.$desktop) {
+                position: absolute;
+                top: 0;
+                right: 0;
+            }
+
+            @include m.pt230px;
+
+            @media (min-width: v.$tv) {
+                @include m.flex(center, m.px-to-vw(30px));
+                flex-direction: column;
+                max-width: m.px-to-vw(770px);
+            }
+
+            @include m.tv {
+                @include m.flex(center, 20px);
+                flex-direction: column;
+                max-width: 562px;
+            }
+
+            @include m.desktop {
+                padding-top: 0 !important;
+                margin-inline: auto !important;
+            }
+
+            @media (max-width: 600px){
+                max-width: 450px;
+            }
+        }
+
+        &_place {
+            width: 100%;
+
+            @media (min-width: v.$desktop) {
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+
+            @include m.transition;
+            background: #F5F2EE;
+
+            @media (min-width: v.$tv) {
+                border: m.px-to-vw(1px) solid v.$light_brown;
+                border-radius: m.px-to-vw(24px);
+                padding: m.px-to-vw(16px);
+                min-height: m.px-to-vw(284px);
+                display: grid;
+                align-items: center;
+                grid-template-columns: 1fr 1fr;
+                grid-gap: m.px-to-vw(20px);
+            }
+
+            @include m.tv {
+                border-radius: 20px;
+                border: 1px solid v.$light_brown;
+                padding: 10px;
+                display: grid;
+                align-items: center;
+                grid-template-columns: 1fr 1fr;
+                grid-gap: 12px;
+            }
+
+            @include m.tablet{
+                grid-template-columns: 100%;
+            }
+
+            &>*,
+            img {
+                width: 100%;
+            }
+
+            img {
+                display: block;
+
+                @media (min-width: v.$tv) {
+                    border-radius: m.px-to-vw(8px) 0 0 m.px-to-vw(8px);
+                }
+
+                @include m.tv {
+                    border-radius: 6px 0 0 6px;
+                }
+            }
+
+            &-image {
+                @media (min-width: v.$tv) {
+                    height: 100%;
+
+                    img {
+                        height: 100%;
+                        object-fit: cover;
+                        object-position: center;
+                    }
+                }
+
+                @media (max-width: v.$tv) and (min-width: v.$tablet) {
+                    height: 100%;
+
+                    img {
+                        height: 100%;
+                        object-fit: cover;
+                        object-position: center;
+                    }
+                }
+            }
+
+            &-content {
+
+                @media (min-width: v.$tv) {
+                    padding-block: m.px-to-vw(24px);
+                }
+
+                @include m.tv {
+                    padding-block: 16px;
+                }
+
+                @include m.desktop {
+                    padding-block: 10px;
+                }
+
+                h3 {
+                    text-transform: uppercase;
+                    font-family: v.$goudysb;
+                    font-weight: 500;
+                    font-style: normal;
+                    color: v.$black;
+
+                    @media (min-width: v.$tv) {
+                        line-height: m.px-to-vw(31.2px);
+                        font-size: m.px-to-vw(26px);
+                    }
+
+                    @include m.tv {
+                        font-size: 19px;
+                        line-height: 1.2em;
+                    }
+                }
+
+                .content {
+                    @media (min-width: v.$tv) {
+                        margin-block: m.px-to-vw(24px);
+                    }
+
+                    @include m.tv {
+                        margin-block: 16px;
+                    }
+
+                    @include m.desktop {
+                        margin-block: 10px;
+                    }
+
+                    width: 100%;
+
+                    p,
+                    li,
+                    span {
+                        @include m.p;
+                        opacity: 0.8;
+                    }
+                }
+
+                &>a {
+                    @include m.permalink(false);
+                }
+            }
+        }
+    }
+
+    &[data-state="1"] {
+        .map_mini {
+            svg:nth-child(1) {
+                @extend %activePin;
+            }
+        }
+
+        .map_place:not(:nth-child(1)) {
+            @media (min-width: v.$desktop) {
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            @include m.desktop {
+                display: none;
+            }
+        }
+    }
+
+    &[data-state="2"] {
+        .map_mini {
+            svg:nth-child(2) {
+                @extend %activePin;
+            }
+        }
+
+        .map_place:not(:nth-child(2)) {
+            @media (min-width: v.$desktop) {
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            @include m.desktop {
+                display: none;
+            }
+        }
+    }
+
+    &[data-state="3"] {
+        .map_mini {
+            svg:nth-child(3) {
+                @extend %activePin;
+            }
+        }
+
+        .map_place:not(:nth-child(3)) {
+            @media (min-width: v.$desktop) {
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            @include m.desktop {
+                display: none;
+            }
+        }
+    }
+
+    &[data-state="4"] {
+        .map_mini {
+            svg:nth-child(4) {
+                @extend %activePin;
+            }
+        }
+
+        .map_place:not(:nth-child(4)) {
+            @media (min-width: v.$desktop) {
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            @include m.desktop {
+                display: none;
+            }
+        }
+    }
+
+    &[data-state="5"] {
+        .map_mini {
+            svg:nth-child(5) {
+                @extend %activePin;
+            }
+        }
+
+        .map_place:not(:nth-child(5)) {
+            @media (min-width: v.$desktop) {
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            @include m.desktop {
+                display: none;
+            }
+        }
+    }
+}

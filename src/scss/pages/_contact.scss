@@ -35,29 +35,14 @@
         }
     }
 
-    .content {
-        @include m.mt40_for_actions(false);
-        @include m.mb64;
+    @include m.content_center;
 
-        p {
-            @include m.p;
-            text-align: center;
-            opacity: 0.9;
-
-            &:not(:last-child) {
-                @media (min-width: v.$tv) {
-                    margin-bottom: m.px-to-vw(24px);
-                }
-
-                @include m.tv {
-                    margin-bottom: 16px;
-                }
+    .actions{
+        a{
+            @include m.tv{
+                width: 264px;
             }
         }
-    }
-
-    .actions {
-        @include m.link_actions(false, 357px);
     }
 }
 
@@ -129,86 +114,8 @@
     width: 100%;
 
     &-image {
-        width: 100%;
         @include m.mt40_for_actions(false);
-
-        @media (min-width: v.$tv) {
-            padding-right: m.px-to-vw(16px);
-            padding-bottom: m.px-to-vw(16px);
-        }
-
-        @include m.tv {
-            padding-right: 10px;
-            padding-bottom: 10px;
-        }
-
-        div {
-            width: 100%;
-            position: relative;
-
-            @media (min-width: v.$tv) {
-                height: m.px-to-vw(283px);
-            }
-
-            @include m.tv {
-                height: 208px;
-            }
-
-            @include m.laptop{
-                height: 196px;
-            }
-
-            &::after,
-            &::before,
-            h3 {
-                position: absolute;
-            }
-
-            &::after,
-            &::before {
-                content: '';
-                @include m.fullWH;
-            }
-
-            &::before {
-                inset: 0;
-                background: #181D24;
-                opacity: 1;
-            }
-
-            &::after {
-                z-index: -2;
-
-                @media (min-width: v.$tv) {
-                    top: m.px-to-vw(16px);
-                    left: m.px-to-vw(16px);
-                    border: m.px-to-vw(1px) solid v.$light_brown;
-                }
-
-                @include m.tv {
-                    top: 10px;
-                    left: 10px;
-                    border: 1px solid v.$light_brown;
-                }
-            }
-
-            h3 {
-                z-index: 3;
-                @include m.centerXY;
-                @include m.h4(v.$white);
-            }
-        }
-
-        img {
-            display: block;
-            @include m.fullWH;
-            opacity: 0.2;
-            pointer-events: none;
-            position: relative;
-            user-select: none;
-            object-fit: cover;
-            object-position: center;
-        }
+        @include m.banner_with_lines;
     }
 
     &-content {

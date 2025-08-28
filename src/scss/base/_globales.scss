@@ -188,6 +188,7 @@ video {
   }
   @include m.tv {
     font-size: 100px;
+    top: 16px;
   }
   @include m.desktop {
     font-size: 70px;

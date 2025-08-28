@@ -5,7 +5,7 @@
 
 get_header();
 
-get_banner('Homepage / About / About H&H Classics', '', 'About H&H Classics');
+get_banner('Homepage / About / About H&H Classics', get_the_post_thumbnail_url(get_the_ID(), 'full'), 'About H&H Classics');
 
 ?>
 
@@ -20,7 +20,31 @@ get_banner('Homepage / About / About H&H Classics', '', 'About H&H Classics');
         </div>
         <div class="heritage_information">
             <div class="heritage_images">
+                <img class="heritage_images-main" src="<?php echo IMG; ?>/about/4.png">
+                <div class="heritage_images-slider">
+                    <div id="heritage" class="splide">
+                        <div class="splide__track">
+                            <ul class="splide__list">
+                                <li class="splide__slide">
+                                    <img src="<?php echo IMG; ?>/1.jpg" alt="Imagen 1">
+                                </li>
+                                <li class="splide__slide">
+                                    <img src="<?php echo IMG; ?>/about/4.png" alt="Imagen 2">
+                                </li>
+                                <li class="splide__slide">
+                                    <img src="<?php echo IMG; ?>/1.jpg" alt="Imagen 3">
+                                </li>
+                                <li class="splide__slide">
+                                    <img src="<?php echo IMG; ?>/about/4.png" alt="Imagen 2">
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
 
+                    <div class="image_progress">
+                        <div class="progress"></div>
+                    </div>
+                </div>
             </div>
             <div class="heritage_content">
                 <div class="breadlines">
@@ -69,7 +93,7 @@ $title = get_field('title_timeline');
 <section class="timeline">
     <div class="container">
         <div class="timeline_head">
-            <h2><?php echo $title; ?></h2>
+            <h2>A timeline of our journey over the past three decades</h2>
         </div>
     </div>
     <div class="container_side">
@@ -280,6 +304,11 @@ $title = get_field('title_timeline');
     </div>
 </section>
 
+<?php
+$s_title = get_field('specialists_title');
+$stext =  get_field('specialists_text');
+$s_link = get_field('specialists_btn');
+?>
 <section class="meet_our_specialist">
     <div class="meet_our_specialist-container">
         <div class="meet_our_specialist-head">
@@ -304,48 +333,75 @@ $title = get_field('title_timeline');
                 </div>
                 <div class="splide__track">
                     <ul class="splide__list">
-                        <?php for ($i = 0; $i < 8; $i++): ?>
-                        <li class="splide__slide">
-                            <div class="specialist_card">
-                                <div class="specialist_card-front">
-                                    <div class="specialist_card-image">
-                                        <img src="<?php echo IMG; ?>/member.png">
-                                    </div>
-                                    <div class="specialist_card-info specialist_card-toggle">
-                                        <div>
-                                            <p>Colette McKay</p>
-                                            <span>Managing Director</span>
-                                        </div>
-                                        <button type="button" class="card_toggle">
-                                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M0 8.99943L18 8.99943M8.99969 0L8.99969 18" stroke="#F5F2EE"
-                                                    stroke-width="2" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="specialist_card-back">
-                                    <div class="specialist_card-toggle">
-                                        <div>
-                                            <p>Colette McKay</p>
-                                            <span>Managing Director</span>
-                                        </div>
-                                        <button type="button" class="card_toggle minus">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="2"
-                                                viewBox="0 0 18 2" fill="none">
-                                                <path d="M0 1L18 0.999999" stroke="#F5F2EE" stroke-width="2" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    <div class="specialist_card-content">
-                                        <ul>
-                                            <li>Email: <a
-                                                    href="mailto:colette.mckay@handh.co.uk">colette.mckay@handh.co.uk</a>
-                                            </li>
-                                            <li>Tel: <a href="tel:07527 606312">07527 606312</a></li>
-                                        </ul>
-                                        <p>
+    <?php 
+    $args = array(
+        'post_type'      => 'team',
+        'posts_per_page' => -1, // todos, o cambia a 8 si quieres limitar
+        'orderby'        => 'menu_order',
+        'order'          => 'ASC'
+    );
+    $team_query = new WP_Query($args);
+
+    if ($team_query->have_posts()): 
+        while ($team_query->have_posts()): $team_query->the_post(); 
+            $job_position = get_field('job_position');
+            $team_email   = get_field('team_email');
+            $team_phone   = get_field('team_phone');
+            $content      = get_the_content();
+            $image        = get_the_post_thumbnail_url(get_the_ID(), 'medium'); // usa la imagen destacada
+    ?>
+        <li class="splide__slide">
+            <div class="specialist_card">
+                <div class="specialist_card-front">
+                    <div class="specialist_card-image">
+                        <?php if ($image): ?>
+                            <img src="<?php echo esc_url($image); ?>" alt="<?php the_title_attribute(); ?>">
+                        <?php else: ?>
+                            <img src="<?php echo IMG; ?>/member.png" alt="<?php the_title_attribute(); ?>">
+                        <?php endif; ?>
+                    </div>
+                    <div class="specialist_card-info specialist_card-toggle">
+                        <div>
+                            <p><?php the_title(); ?></p>
+                            <?php if ($job_position): ?>
+                                <span><?php echo esc_html($job_position); ?></span>
+                            <?php endif; ?>
+                        </div>
+                        <button type="button" class="card_toggle">
+                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M0 8.99943L18 8.99943M8.99969 0L8.99969 18" stroke="#F5F2EE"
+                                    stroke-width="2" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="specialist_card-back">
+                    <div class="specialist_card-toggle">
+                        <div>
+                            <p><?php the_title(); ?></p>
+                            <?php if ($job_position): ?>
+                                <span><?php echo esc_html($job_position); ?></span>
+                            <?php endif; ?>
+                        </div>
+                        <button type="button" class="card_toggle minus">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="2"
+                                viewBox="0 0 18 2" fill="none">
+                                <path d="M0 1L18 0.999999" stroke="#F5F2EE" stroke-width="2" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="specialist_card-content">
+                        <ul>
+                            <?php if ($team_email): ?>
+                                <li>Email: <a href="mailto:<?php echo antispambot($team_email); ?>"><?php echo antispambot($team_email); ?></a></li>
+                            <?php endif; ?>
+                            <?php if ($team_phone): ?>
+                                <li>Tel: <a href="tel:<?php echo preg_replace('/\D+/', '', $team_phone); ?>"><?php echo esc_html($team_phone); ?></a></li>
+                            <?php endif; ?>
+                        </ul>
+                        <?php if ($content): ?>
+                            <p>
                                             As a qualified accounting technician, Colette joined H&H in 2012 and has
                                             been involved in all aspects of the business and industry.
                                             <br><br>
@@ -353,124 +409,100 @@ $title = get_field('title_timeline');
                                             and shows. As an adrenaline junkie, she can still be found at the same shows
                                             and race meetings but now with her own sons.
                                         </p>
-                                    </div>
-                                    <a href="#">Read More</a>
-                                </div>
-                            </div>
-                        </li>
-                        <?php endfor; ?>
-                    </ul>
+                        <?php endif; ?>
+                    </div>
+                    <a href="<?php the_permalink(); ?>">Read More</a>
+                </div>
+            </div>
+        </li>
+    <?php 
+        endwhile; 
+        wp_reset_postdata();
+    endif; 
+    ?>
+</ul>
+
                 </div>
             </div>
         </div>
     </div>
     <div class="meet_our_specialist-foot">
+        <?php if (!empty($s_title)): ?>
         <div class="meet_our_specialist-title">
-            <h2>Our specialists are not just professional auctioneers, but genuine enthusiasts</h2>
+            <h2><?php echo $s_title; ?></h2>
         </div>
+        <?php endif; ?>
+        <?php if (!empty($stext)): ?>
         <div class="meet_our_specialist-content">
-            <p>
-                At H&H Classics, our specialists live and breathe classic and collector vehicles. Their passion isn’t
-                just professional—it’s personal. They own, drive, and care for these vehicles with the same enthusiasm
-                as our clients, which gives them unparalleled insight into the market.
-                <br><br>
-                With decades of hands-on experience, our team provides accurate valuations, transparent guidance, and
-                exceptional customer care. Whether you’re selling a Ferrari, a Fiat, or an Austin, you can rely on their
-                expertise to make the process seamless and enjoyable.
-            </p>
-            <a href="#" class="permalink_border">
-                Meet The Team
+            <?php echo $stext; ?>
+            <a href="<?php echo $s_link['url']; ?>" class="permalink_border">
+                <?php echo $s_link['title']; ?>
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
                     <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
                 </svg>
             </a>
         </div>
+        <?php endif; ?>
     </div>
 </section>
 
 <?php get_template_part('inc/sections/cta'); ?>
 
 <?php
-$title = get_field('title_private_sales');
-$description = get_field('description_private_sales');
-$link = get_field('link_private_sales');
-$images = get_field('images_pv');
+$titleb = get_field('title_private_sales');
+$descriptionb = get_field('description_private_sales');
+$linkb = get_field('link_private_sales');
+$imagesb = get_field('images_pv');
 ?>
 <section class="tailored">
     <div class="tailored_container">
         <div class="tailored-flex">
             <div class="tailored_info">
                 <div class="tailored_info-box">
-                    <div class="breadlines">
-                        <p>Tailored for Every Client</p>
+                    <div class="tailored_info-box-ss">
+                        <div class="breadlines">
+                            <p>Tailored for Every Client</p>
+                        </div>
+                        <?php if (!empty($titleb)): ?>
+                        <h2><?php echo $titleb; ?></h2>
+                        <?php endif; ?>
+
+                        <?php if (!empty($descriptionb)): ?>
+                        <div class="tailored_info-content">
+                            <?php echo $descriptionb; ?>
+                        </div>
+                        <?php endif; ?>
+
+
+                        <a href="<?php echo $linkb['url']; ?>" class="permalink_border" alt="<?php echo $linkb['title']; ?>">
+                            <?php echo $linkb['title']; ?>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
+                                <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
+                            </svg>
+                        </a>
                     </div>
-                    <?php if (empty($title)): ?>
-                    <h2>BESPOKE PRIVATE SALES</h2>
-                    <?php endif; ?>
-
-                    <?php if (empty($description)): ?>
-                    <div class="tailored_info-content">
-                        <P>At H&H Classics, we recognise that auctions aren't always the preferred route for everyone.
-                            That's why we've developed our bespoke Private Sales and Confidential Sales services,
-                            catering to clients who desire a more discreet and tailored approach to buying or selling
-                            classic vehicles.
-
-                            Our Private Sales Office ensures a seamless, stress-free experience, handling everything
-                            from sourcing rare vehicles to discreetly finding the right buyers for your classic car or
-                            motorcycle. With a commitment to flexibility and professionalism, we cater to the unique
-                            needs of each client.</P>
-                    </div>
-                    <?php endif; ?>
-
-
-                    <a href="<?php echo $link['url']; ?>" class="permalink_border" alt="<?php echo $link['title']; ?>">
-                        Learn More About Private Sales
-                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
-                            <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
-                        </svg>
-                    </a>
 
                 </div>
             </div>
 
 
             <div class="tailored_images">
-                <!-- <div class="tailored_image">
-                    <img src="https://images.classic.com/vehicles/6eaf5413545febe6cbe56037734f09c7acbf8e19?w=1200&h=676&fit=crop"
-                        alt="<?php echo get_sub_field('image_pv')['title'] ?>">
-                </div>
-                <div class="tailored_image">
-                    <img src="https://images.classic.com/vehicles/6eaf5413545febe6cbe56037734f09c7acbf8e19?w=1200&h=676&fit=crop"
-                        alt="<?php echo get_sub_field('image_pv')['title'] ?>">
-                </div>
-                <div class="tailored_image">
-                    <img src="https://images.classic.com/vehicles/6eaf5413545febe6cbe56037734f09c7acbf8e19?w=1200&h=676&fit=crop"
-                        alt="<?php echo get_sub_field('image_pv')['title'] ?>">
-                </div>
-                <div class="tailored_image">
-                    <img src="https://images.classic.com/vehicles/6eaf5413545febe6cbe56037734f09c7acbf8e19?w=1200&h=676&fit=crop"
-                        alt="<?php echo get_sub_field('image_pv')['title'] ?>">
-                </div> -->
-                <div class="imagelider">
-                        <div id="imagelider" class="splide">
-                        <div class="splide__track">
-                            <ul class="splide__list">
-                            <li class="splide__slide">
-                                <img src="https://images.classic.com/vehicles/6eaf5413545febe6cbe56037734f09c7acbf8e19?w=1200&h=676&fit=crop"
-                                    alt="<?php echo get_sub_field('image_pv')['title'] ?>">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://imageio.forbes.com/specials-images/imageserve/5d35eacaf1176b0008974b54/0x0.jpg?format=jpg&crop=4560,2565,x790,y784,safe&height=900&width=1600&fit=bounds" alt="Otra imagen">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.classic.com/vehicles/6eaf5413545febe6cbe56037734f09c7acbf8e19?w=1200&h=676&fit=crop" alt="Otra imagen">
-                            </li>
-                            </ul>
-                        </div>
+                <div class="imagelider-wrapper">
+                    <div class="imagelider">
+                        <?php if (have_rows('images_pv')): ?>
+                            <?php while (have_rows('images_pv')): the_row(); ?>
+                                <?php 
+                                    $imagepv = get_sub_field('image_pv'); 
+                                    if ($imagepv): 
+                                ?>
+                                    <div class="slide">
+                                        <img src="<?php echo esc_url($imagepv['url']); ?>" alt="<?php echo esc_attr($imagepv['alt']); ?>">
+                                    </div>
+                                <?php endif; ?>
+                            <?php endwhile; ?>
+                        <?php endif; ?>
                     </div>
-
                 </div>
-                
             </div>
 
 

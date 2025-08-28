@@ -14,7 +14,7 @@ get_banner('Homepage / About / Meet the team', esc_url($bg_image), 'Meet the tea
 ?>
 
 <section class="specialist_page">
-    <div class="container">
+    <div class="specialist_page-container">
         <div class="specialist_content">
              <?php if ($subtitle): ?>
                 <h2><?php echo esc_html($subtitle); ?></h2>
