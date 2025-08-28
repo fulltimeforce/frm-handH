@@ -15,103 +15,138 @@ get_banner('Homepage / Classic Auctions / Buying at auction', esc_url($bg_image)
 
 <div class="buying_at_auction_page">
   <div class="container">
-    <section class="how-to-buy">
-      <h2>How to Buy at Auction with H&H Classics</h2>
-      <p>Register for free in advance to enjoy the flexibility of bidding in person, online, or by phone—whichever suits you best! Follow the guide below, and if you need any assistance, feel free to give us a call. We're here to ensure a seamless experience! +44 (0)1925 210035 or email info@handh.co.uk</p>
-      <div class="cta_links">
-        <a href="">Get a complimentary Valuation</a>
-        <a href="">View Our Upcoming Auctions</a>
+    <?php 
+      $title   = get_field('how_to_buy_title');
+      $content = get_field('how_to_buy_content');
+    ?>
+    <?php if( $title || $content ): ?>
+      <section class="how-to-buy">
+        <h2><?php echo esc_html($title); ?></h2>
+        <?php if($content): ?>
+          <div class="how-to-buy-content">
+            <?php echo wp_kses_post($content); ?>
+          </div>
+        <?php endif; ?>
+        <?php if( have_rows('how_to_buy_links') ): ?>
+          <div class="cta_links">
+            <?php while( have_rows('how_to_buy_links') ): the_row(); 
+              $link = get_sub_field('how_to_buy_link'); 
+              if( $link ): ?>
+                <a href="<?php echo esc_url( $link['url'] ); ?>" 
+                  <?php if( $link['target'] ) echo 'target="'. esc_attr( $link['target'] ) .'"'; ?>>
+                  <?php echo esc_html( $link['title'] ); ?>
+                </a>
+              <?php endif; ?>
+            <?php endwhile; ?>
+          </div>
+        <?php endif; ?>
+
+      </section>
+    <?php endif; ?>
+
+    <section class="auction-tabs">
+      <div class="auction-tabs-container">
+
+        <?php if (have_rows('auction_tabs')): ?>
+          <!-- Tabs Nav -->
+          <ul class="auction-tabs-nav">
+            <?php $i = 0; while (have_rows('auction_tabs')): the_row(); ?>
+              <li class="<?php echo $i === 0 ? 'active' : ''; ?>" data-tab="tab-<?php echo $i; ?>">
+                <?php the_sub_field('tab_title'); ?>
+              </li>
+            <?php $i++; endwhile; ?>
+          </ul>
+
+          <!-- Tabs Content -->
+          <div class="auction-tabs-content">
+            <?php 
+              if (have_rows('auction_tabs')): 
+                $i = 0; 
+                while (have_rows('auction_tabs')): the_row(); 
+            ?>
+              <div class="tab-panel <?php echo $i === 0 ? 'active' : ''; ?>" id="tab-<?php echo $i; ?>">
+                <div class="auction-grid">
+                  <div class="auction-image">
+                    <?php $img = get_sub_field('tab_image'); ?>
+                    <?php if ($img): ?>
+                      <img src="<?php echo esc_url($img['url']); ?>" alt="<?php echo esc_attr($img['alt']); ?>">
+                    <?php endif; ?>
+                  </div>
+                  <div class="auction-info hide-scrollbar">
+                    <h2><?php the_sub_field('tab_heading'); ?></h2>
+                    <div class="auction-text">
+                      <?php the_sub_field('tab_content'); ?>
+                    </div>
+
+                    <?php if (have_rows('tab_cards')): ?>
+                      <div class="auction-cards">
+                        <?php while (have_rows('tab_cards')): the_row(); ?>
+                          <div class="auction-card">
+                            <h3><?php the_sub_field('card_title'); ?></h3>
+                            <div class="auction-card-content">
+                              <?php the_sub_field('card_content'); ?>
+                            </div>
+                          </div>
+                        <?php endwhile; ?>
+                      </div>
+                    <?php endif; ?>
+                  </div>
+                </div>
+              </div>
+            <?php $i++; endwhile; endif; ?>
+          </div>
+        <?php endif; ?>
+
       </div>
     </section>
 
-    <section class="auction-tabs">
-  <div class="container">
-    <!-- Tabs Navigation -->
-    <ul class="auction-tabs-nav">
-      <li class="active" data-tab="before">Before the Auction</li>
-      <li data-tab="bidding">Bidding at Auction</li>
-      <li data-tab="after">After the Auction</li>
-    </ul>
-
-    <!-- Tabs Content -->
-    <div class="auction-tabs-content">
-      
-      <!-- TAB 1 -->
-      <div class="tab-panel active" id="before">
-        <div class="auction-grid">
-          <div class="auction-image">
-            <img src="https://via.placeholder.com/600x400" alt="Auction">
-          </div>
-          <div class="auction-info">
-            <h2>Register & Get Started</h2>
-            <p><strong>FREE Online Registration:</strong> Register for free by clicking "Register To Bid/Sign In" at the top of this page. Please note that online bidding incurs an additional fee of 1% + VAT.</p>
-            <p><strong>FREE In-Person Registration:</strong> Prefer to register at the venue? Simply bring a photo ID to the auction and sign up as a bidder upon arrival.</p>
-
-            <div class="auction-cards">
-              <div class="auction-card">
-                <h3>Get the information you need</h3>
-                <p>While you may already know what you're interested in...</p>
-              </div>
-              <div class="auction-card">
-                <h3>Attending in person?</h3>
-                <p>You can inspect every lot and review any supporting documents...</p>
-              </div>
-              <div class="auction-card">
-                <h3>Can’t attend?</h3>
-                <p>No problem—just request Condition Reports...</p>
-              </div>
-              <div class="auction-card">
-                <h3>We are here to help:</h3>
-                <p>Buying a classic might feel intimidating...</p>
+    <section class="insurance">
+      <div class="insurance_banners">
+        <div class="insurance_banners-container">
+          <div class="headquarter">
+            <div class="headquarter-image">
+              <div>
+                <img
+                  src="<?php echo get_field('small_banner_img')['url'] ?>"
+                  title="<?php echo get_field('small_banner_img')['title'] ?>"
+                  alt="<?php echo get_field('small_banner_img')['alt'] ?>"
+                  width="<?php echo get_field('small_banner_img')['width'] ?>"
+                  height="<?php echo get_field('small_banner_img')['height'] ?>"
+                  loading="lazy">
+                <h2><?php echo get_field('small_banner_title'); ?></h2>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- TAB 2 -->
-      <div class="tab-panel" id="bidding">
-        <div class="auction-grid">
-          <div class="auction-image">
-            <img src="https://via.placeholder.com/600x400" alt="Bidding">
-          </div>
-          <div class="auction-info">
-            <h2>Bidding at Auction</h2>
-            <p>Second tab content...</p>
-          </div>
+      <?php 
+        $insurance_content = get_field('insurance_content');
+        $insurance_link    = get_field('insurance_link');
+        $selling_title     = get_field('selling_title');
+        $selling_link      = get_field('selling_link');
+      ?>
+      <div>
+      <p><?php echo wp_kses_post($insurance_content); ?></p>
+      <?php if( $insurance_link ): ?>
+        <div class="cta_links">
+          <a href="<?php echo esc_url( $insurance_link['url'] ); ?>" 
+            <?php if( $insurance_link['target'] ) echo 'target="'. esc_attr( $insurance_link['target'] ) .'"'; ?>>
+            <?php echo esc_html( $insurance_link['title'] ); ?>
+          </a>
         </div>
-      </div>
-
-      <!-- TAB 3 -->
-      <div class="tab-panel" id="after">
-        <div class="auction-grid">
-          <div class="auction-image">
-            <img src="https://via.placeholder.com/600x400" alt="After">
-          </div>
-          <div class="auction-info">
-            <h2>After the Auction</h2>
-            <p>Third tab content...</p>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-    <section class="insurance">
-      <div clas="insurance_banner">
-        <h2>INSURANCE</h2>
-      </div>
-      <p>You’ll also need to think about insuring your new vehicle. At H&H Classics we aim to make every aspect of buying a classic vehicle as straightforward as possible which is why we’re delighted to be able to introduce a new insurance quote and comparison service. Click the button below for more information.</p>
-      <div class="cta_links">
-        <a href="">Get an Insurance Quote</a>
-      </div>
+      <?php endif; ?>
       <hr/>
-      <h3>Thinking of Selling?</h3>
-      <div class="cta_links">
-        <a href="">View Welcome Booklet</a>
-      </div>
+      <?php if( $selling_title ): ?>
+        <h3><?php echo esc_html($selling_title); ?></h3>
+      <?php endif; ?>
+      <?php if( $selling_link ): ?>
+        <div class="cta_links">
+          <a href="<?php echo esc_url( $selling_link['url'] ); ?>" 
+            <?php if( $selling_link['target'] ) echo 'target="'. esc_attr( $selling_link['target'] ) .'"'; ?>>
+            <?php echo esc_html( $selling_link['title'] ); ?>
+          </a>
+        </div>
+      <?php endif; ?>
     </section>
   </div>
 </div>

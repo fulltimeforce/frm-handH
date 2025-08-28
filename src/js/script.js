@@ -327,6 +327,23 @@ import "@splidejs/splide/css";
         pavilionSplide.mount();
     }
 
+    if (document.querySelector('#brandsCar')) {
+        document.addEventListener('DOMContentLoaded', function () {
+            new Splide('#splide-models', {
+                perPage: 4,
+                gap: '20px',
+                rewind: false,
+                arrows: true,
+                pagination: false,
+                breakpoints: {
+                    1024: { perPage: 3 },
+                    768: { perPage: 2 },
+                    480: { perPage: 1 },
+                },
+            }).mount();
+        });
+    }
+
     if(document.querySelector('.trustpilot_reviews')) {
         const trustpilot = new Splide('.trustpilot_reviews', {
             type: 'loop',

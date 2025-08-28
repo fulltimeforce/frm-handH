@@ -756,6 +756,25 @@
     }
 }
 
+@mixin h1($color: v.$white, $font: v.$cormorant) {
+    font-family: $font;
+    font-weight: 500;
+    color: $color;
+
+    @media (min-width: v.$tv) {
+        font-size: px-to-vw(95px);
+        line-height: px-to-vw(105.6px);
+    }
+
+    @include tv {
+        font-size: 40px;
+    }
+
+    @include desktop {
+        font-size: 36px;
+    }
+}
+
 @mixin h2($color: v.$black, $font: v.$goudysb) {
     font-family: $font;
     font-weight: 300;

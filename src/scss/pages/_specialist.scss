@@ -9,6 +9,12 @@
     @include m.tv {
       padding-top: 40px;
     }
+    @include m.desktop {
+      padding-top: 120px;
+    }
+    @include m.tablet {
+      padding-top: 60px;
+    }
 
     &-container {
       width: 100%;
@@ -33,7 +39,6 @@
         padding-left: 4%;
       }
     }
-    
   }
 
 
@@ -42,31 +47,55 @@
     justify-content: center;
     gap: m.px-to-vw(36px);
     margin-bottom: m.px-to-vw(96px) !important;
+    width: m.px-to-vw(1296px);
 
     @include m.tablet {
       flex-direction: column;
       margin-bottom: 40px !important;
       padding: 10px;
+      width: 100%;
+    }
+    @include m.desktop {
+      gap: 24px;
+      margin-bottom: 60px !important;
+      width: 100%;
+      max-width: 1296px;
     }
 
     h2 {
       font-family: v.$cormorant;
       font-weight: 300;
       font-size: m.px-to-vw(60px);
-      max-width: m.px-to-vw(540px);
+      width: m.px-to-vw(550px);
 
       @include m.tablet {
         font-size: 40px;
         max-width: 100%;
+        width: 100%;
+        margin-bottom: 15px;
+      }
+      @include m.desktop {
+        font-size: 48px;
+        max-width: 550px;
+        width: 100%;
+      }
+
+      @include m.phone {
+        font-size: 40px;
+        max-width: 100%;
+        width: 100%;
         margin-bottom: 15px;
       }
     }
 
     .specialist_text {
-      max-width: m.px-to-vw(770px);
+      max-width: m.px-to-vw(730px);
 
       @include m.tablet {
         max-width: 100%;
+      }
+      @include m.desktop {
+        max-width: 600px;
       }
 
       p {
@@ -75,6 +104,9 @@
 
         @include m.tablet {
           font-size: 17px;
+        }
+        @include m.desktop {
+          font-size: 15px;
         }
 
         strong {
@@ -105,6 +137,9 @@
       grid-template-columns: 1fr;
       gap: 20px;
     }
+    @include m.desktop {
+      gap: 24px 16px;
+    }
   }
 
   &_position {
@@ -122,6 +157,11 @@
       font-size: 25px;
       margin: 40px auto;
       text-align: center;
+    }
+
+    @include m.desktop {
+      font-size: 36px;
+      margin: 72px 0 48px;
     }
   }
 
@@ -143,6 +183,10 @@
         padding: 28px 16px;
         gap: 20px;
       }
+      @include m.desktop {
+        padding: 28px 20px;
+        gap: 24px;
+      }
 
       .specialist_item_card_header {
         @include m.flex(space-between);
@@ -160,6 +204,9 @@
         @media (max-width: v.$phone) {
           @include m.text-base(v.$gotham_light, 325, 17px, 140%, 6%);
         }
+        @include m.desktop {
+          font-size: 15px;
+        }
       }
 
       &_name {
@@ -169,6 +216,9 @@
 
         @media (max-width: v.$phone) {
           font-size: 24px;
+        }
+        @include m.desktop {
+          font-size: 20px;
         }
       }
 
@@ -188,6 +238,9 @@
 
         @media (max-width: v.$phone) {
           font-size: 17px;
+        }
+        @include m.desktop {
+          font-size: 15px;
         }
       }
     }
@@ -212,11 +265,16 @@
     padding: m.px-to-vw(36px) m.px-to-vw(24px);
     border: 1px solid v.$light_brown;
 
-    @media (max-width: v.$phone) {
+    @media (max-width: v.$tablet) {
       width: 350px;
       height: 464px;
-      padding: 28px 16px !important;
+      padding: 28px 20px !important;
       margin: 0 auto;
+    }
+    @include m.desktop {
+      width: 340px;
+      height: auto;
+      padding: 28px 20px;
     }
 
     &_header {
@@ -225,6 +283,18 @@
       align-items: center;
       justify-content: space-between;
       height: 100%;
+      gap: 20px;
+
+      @media (max-width: v.$tablet) {
+        width: 100%;
+        height: auto;
+        gap: 20px;
+
+        a {
+          width: 100%;
+          height: auto;
+        }
+      }
     }
 
     &_container {
@@ -238,8 +308,12 @@
       height: m.px-to-vw(370px);
 
       @media (max-width: v.$phone) {
-        width: 320px;
-        height: 320px;
+        width: 100%;
+        height: auto;
+      }
+      @include m.desktop {
+        width: 280px;
+        height: 280px;
       }
 
       img {
@@ -266,6 +340,9 @@
       @media (max-width: v.$phone) {
         @include m.text-base(v.$gotham_light, 400, 24px, 140%, 1.44px);
       }
+      @include m.desktop {
+        font-size: 20px;
+      }
     }
 
     &_job {
@@ -278,6 +355,9 @@
 
       @media (max-width: v.$phone) {
         @include m.text-base(v.$gotham_light, 300, 17px, 140%, 1.02px);
+      }
+      @include m.desktop {
+        font-size: 15px;
       }
     }
   }
@@ -298,6 +378,11 @@
         height: 40px;
         padding: 8px;
       }
+      @include m.desktop {
+        width: 50px;
+        height: 50px;
+        padding: 12px;
+      }
     }
 
     &.close {
@@ -309,6 +394,11 @@
         width: 42px;
         height: 42px;
         padding: 9px;
+      }
+      @include m.desktop {
+        width: 44px;
+        height: 44px;
+        padding: 10px;
       }
     }
   }
@@ -329,6 +419,10 @@
 
   @include m.tablet {
     max-width: 80%;
+  }
+  @include m.desktop {
+    font-size: 20px;
+    max-width: 360px;
   }
 
   span {
