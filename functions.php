@@ -90,6 +90,24 @@ function get_banner($breadcrumb = '', $image_url = '', $title = '')
     </section>';
 }
 
+function get_centered_banner($image_url = '', $title = '')
+{
+    if (empty($title)) {
+        $title = get_the_title();
+    }
+    if (empty($image_url)) {
+        $image_url = IMG . '/banner.png';
+    }
+
+    echo '<section class="banner centered">
+        <div class="banner__bg">
+            <img src="' . $image_url . '">
+        </div>
+        <div class="container">
+            <h1>' . $title . '</h1>
+        </div>
+    </section>';
+}
 
 function get_card_product($product_id)
 {

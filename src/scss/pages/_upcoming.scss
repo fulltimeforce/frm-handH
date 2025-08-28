@@ -42,6 +42,20 @@
         }
     }
 
+    &.centered {
+        @include m.flex(center);
+
+        .container {
+            position: relative;
+            z-index: 3;
+
+            h1 {
+                @include m.h1(v.$white);
+                text-align: center;
+            }
+        }
+    }
+
     .breadcrumb {
         opacity: 0.6;
 
@@ -51,7 +65,7 @@
         }
     }
 
-    .container {
+    &:not(.centered) .container {
         position: relative;
         z-index: 3;
 

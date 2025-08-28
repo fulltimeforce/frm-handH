@@ -100,7 +100,6 @@ get_banner('Homepage / Classic Auctions / Buying at auction', esc_url($bg_image)
       </div>
     </section>
 
-
     <section class="insurance">
       <div class="insurance_banners">
         <div class="insurance_banners-container">

@@ -178,7 +178,6 @@ get_banner('Homepage / Classic Auctions / Pavilion Gardens', esc_url($bg_image),
       </div>
     </section>
 
-      
     <section class="upcoming" id="upcoming-auctions">
       <?php get_template_part('inc/sections/upcoming'); ?>
     </section>
