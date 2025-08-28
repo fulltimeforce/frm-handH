@@ -583,11 +583,13 @@
 .modal {
     width: 100%;
     height: 100vh;
+    @include m.transition;
     position: fixed;
     inset: 0;
     z-index: 110;
-
+    
     &>* {
+        @include m.transition;
         position: absolute;
         width: 100%;
     }
@@ -677,6 +679,17 @@
 
         &-body {
             form {
+
+                @media (min-width: v.$tv){
+                    @include m.grid(2, m.px-to-vw(16px) m.px-to-vw(12px));
+                }
+                @include m.tv{
+                    @include m.grid(2, 10px 6px);
+                }
+
+                #account_display_name_description, .clear{
+                    display: none;
+                }
                 .form-row {
                     @include m.form-row;
 
@@ -707,6 +720,7 @@
 
         &-footer{
             @include m.flex(space-between);
+            grid-column: span 2;
         }
     }
 
