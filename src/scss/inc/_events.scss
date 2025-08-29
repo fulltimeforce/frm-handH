@@ -1,0 +1,111 @@
+@use "base/mixins" as m;
+@use "base/variables" as v;
+
+.events {
+    padding-block: m.px-to-vw(160px) 0;
+    overflow: hidden;
+    @include m.tv {
+        padding-block: 100px 0;
+    }
+    @include m.laptop {
+        padding-block: 80px 0;
+    }
+    &_slide {
+        @include m.splide_arrows;
+        @include m.tv {
+            padding-bottom: 40px;
+        }
+        .splide__arrows {
+            padding-top: m.px-to-vw(64px);
+            @include m.tv {
+                padding-top: 40px;
+            }
+        }
+        .splide__slide {
+            border: m.px-to-vw(1px) solid v.$light_brown;
+            @include m.tv {
+                border-width: 1px;
+            }
+        }
+        .splide__pagination {
+            bottom: - m.px-to-vw(40px);
+            gap: m.px-to-vw(12px);
+            @include m.tv {
+                bottom: 0px;
+                gap: 12px;
+            }
+            &__page.is-active {
+                width: m.px-to-vw(36px);
+                height: m.px-to-vw(12px);
+                background-color: v.$light_brown;
+                border-radius: m.px-to-vw(1000px);
+                transform: none;
+                @include m.tv {
+                    width: 36px;
+                    height: 12px;
+                }
+            }
+            &__page {
+                margin: 0;
+                background-color: #D3C7B6;
+                width: m.px-to-vw(12px);
+                height: m.px-to-vw(12px);
+                @include m.tv {
+                    width: 12px;
+                    height: 12px;
+                }
+            }
+        }
+        &-item {
+            position: relative;
+            margin: m.px-to-vw(16px);
+            padding-block: m.px-to-vw(96px) m.px-to-vw(72px);
+            text-align: center;
+            &::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.3);
+                z-index: 1;
+            }
+            @include m.laptop {
+                margin: 10px;
+                padding-block: 45px 35px;
+                padding-inline: 16px;
+            }
+        }
+        &-info {
+            position: relative;
+            z-index: 2;
+            div {
+                padding-block: m.px-to-vw(56px) 0;
+                @include m.link_actions;
+                @include m.laptop {
+                    padding-block: 28px 0;
+                }
+            }
+        }
+        &-subtitle, &-title {
+            color: v.$white;
+            font-weight: 700;
+            font-family: v.$gotham_m;
+        }
+        &-subtitle {
+            font-size: m.px-to-vw(29px);
+            font-family: v.$gotham_m;
+            letter-spacing: 0.87px;
+            &:first-child {
+                text-transform: uppercase;
+            }
+            @include m.laptop {
+                font-size: 20px;
+            }
+        }
+        &-title {
+            font-size: m.px-to-vw(64px);
+            @include m.laptop {
+                font-size: 40px;
+            }
+        }
+    }
+}

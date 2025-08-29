@@ -176,7 +176,7 @@ video {
   position: absolute;
   top: 0;
   right: 0;
-  transform: translateX(49%);
+  transform: translateX(66%);
   font-size: m.px-to-vw(136px);
   white-space: nowrap;
   transition: transform 4s ease-out;
@@ -199,7 +199,7 @@ video {
 }
 
 .title_watermark.in-view .watermark {
-  transform: translateX(26%);
+  transform: translateX(43%);
 }
 
 .hide-scrollbar {

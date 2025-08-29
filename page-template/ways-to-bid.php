@@ -5,7 +5,7 @@
 
 get_header();
 
-get_banner('Homepage / Classic Auctions / Ways to Bid', '', 'Ways to Bid');
+get_banner('Homepage / Classic Auctions / Ways to Bid', get_the_post_thumbnail_url(get_the_ID(), 'full'), 'Ways to Bid');
 
 ?>
 

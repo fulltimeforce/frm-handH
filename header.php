@@ -12,10 +12,10 @@
 <body <?php body_class(); ?>>
 
     <?php
-    $class = '';
-    if (!is_front_page()) {
-        $class = 'white_bg';
-    }
+    $class = 'white_bg';
+    // if (!is_front_page()) {
+    //     $class = 'white_bg';
+    // }
     ?>
 
     <header class="header <?php echo $class; ?>">

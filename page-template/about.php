@@ -185,7 +185,8 @@ $s_link = get_field('specialists_btn');
 ?>
 <section class="meet_our_specialist">
     <div class="meet_our_specialist-container">
-        <div class="meet_our_specialist-head">
+        <div class="meet_our_specialist-head title_watermark">
+            <div class="watermark"><p>Meet Our Specialists</p></div>
             <div class="breadlines">
                 <p>Classic Vehicle Experts</p>
             </div>

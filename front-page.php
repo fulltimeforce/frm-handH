@@ -360,13 +360,20 @@ $testimonials_items = get_field('testimonials_items');
                                     <span>Estimated at</span>
                                     £70,000 - £90,000
                                 </h4>
-                                <ul>
-                                    <li><b>Registration No:</b> 551 XWD</li>
-                                    <li><b>Chassis No:</b> A1210428501142</li>
-                                    <li><b>MOT:</b> July 2025</li>
-                                </ul>
+                                <div class="vehicle_card-toggle">
+                                    <ul>
+                                        <li><b>Registration No:</b> 551 XWD</li>
+                                        <li><b>Chassis No:</b> A1210428501142</li>
+                                        <li><b>MOT:</b> July 2025</li>
+                                    </ul>
+                                    <div class="vehicle_card-actions">
+                                        <a>View Details</a>
+                                        <a>Enquire Now</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
                     </div>
                 <?php endfor; ?>
             </div>
@@ -473,11 +480,12 @@ $testimonials_items = get_field('testimonials_items');
 </section>
 
 <?php get_template_part('inc/sections/celebrating'); ?>
+<?php get_template_part('inc/sections/events'); ?>
 
 <section class="featured_articles">
     <div class="container">
     <div class="featured_articles_head title_watermark">
-        <div class="watermark"><p>Featured Articles</p></div>
+        <div class="watermark"><p>Featured Artic</p></div>
         <div class="breadlines">
             <p>News and Insights</p>
         </div>

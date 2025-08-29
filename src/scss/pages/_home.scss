@@ -935,6 +935,9 @@
 
 .clients {
     .container_side {
+         @include m.tv {
+            width: 85%;
+        }
         @include m.desktop {
             width: 89%;
         }
@@ -1140,7 +1143,9 @@
         }
 
         @include m.tv {
-            max-width: 1340px;
+            padding-left: 15%;
+            padding-right: 8%;
+            width: 100%;
         }
 
         @include m.desktop {
@@ -1150,8 +1155,7 @@
         }
 
         @include m.laptop {
-            padding-left: 15px;
-            padding-right: 15px;
+            padding-left: 4%;
         }
 
         margin-inline: auto;
@@ -1206,10 +1210,14 @@
 
         @include m.tv {
             padding-inline: 16px 0;
+            flex-wrap: nowrap;
+            gap: 40px;
         }
 
         @include m.tablet {
             padding-inline: 0;
+            flex-direction: column;
+            gap: 20px;
         }
 
         .breadlines {
@@ -1541,7 +1549,7 @@
     }
 
     @include m.tv {
-        padding-block: 160px 120px;
+        padding-block: 80px 100px;
     }
 
     @include m.tablet {
