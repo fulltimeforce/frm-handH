@@ -114,7 +114,7 @@
     width: 100%;
 
     &-image {
-        @include m.mt40_for_actions(false);
+        // @include m.mt40_for_actions(false);
         @include m.banner_with_lines;
     }
 

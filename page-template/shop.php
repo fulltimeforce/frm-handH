@@ -30,6 +30,7 @@ $products = new WP_Query($args);
                     get_card_product(get_the_ID());
                 }
                 ?>
+                <?php wp_reset_postdata(); ?>
             </div>
         <?php else: ?>
             <div class="shop_page-empty">

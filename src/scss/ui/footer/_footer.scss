@@ -467,6 +467,7 @@
                         font-size: px-to-vw(17px) !important;
                         line-height: px-to-vw(23.8px) !important;
                         letter-spacing: px-to-vw(1.02px) !important;
+                        height: m.px-to-vw(52px) !important;
                     }
 
                     @include m.tv {

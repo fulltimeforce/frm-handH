@@ -18,6 +18,14 @@
 
     &_form {
         @include m.gform;
+
+        margin-inline: auto;
+        @media (min-width: v.$tv){
+            max-width: m.px-to-vw(1165px);
+        }
+        @include m.tv{
+            max-width: 880px;
+        }
     }
 }
 

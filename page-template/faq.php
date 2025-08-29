@@ -60,7 +60,7 @@ $link = get_field('link_faq');
                                         echo get_sub_field('answer');
                                     }
                                     ?>
-                                    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nisi velit molestiae adipisci, nam facilis laudantium quam, id possimus sequi doloribus eos provident quod vitae temporibus rem similique. Obcaecati, blanditiis repudiandae.</p>
+                                    <!-- <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nisi velit molestiae adipisci, nam facilis laudantium quam, id possimus sequi doloribus eos provident quod vitae temporibus rem similique. Obcaecati, blanditiis repudiandae.</p> -->
                                 </div>
                             </div>
                         </li>

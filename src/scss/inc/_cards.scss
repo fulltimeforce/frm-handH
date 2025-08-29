@@ -411,7 +411,7 @@
         pointer-events: none;
         @include m.transition(.4s);
         border-radius: 50%;
-        background: rgba($color: v.$black, $alpha: 0.6);
+        // background: rgba($color: v.$black, $alpha: 0.6);
         z-index: 2;
 
         @media (min-width: v.$tv) {

@@ -59,7 +59,7 @@
 
     &-grid {
         @extend %grid_products;
-        
+
         @media (min-width: v.$tv) {
             margin-top: m.px-to-vw(40px);
         }
@@ -164,7 +164,7 @@
         height: 470px;
     }
 
-    @include m.desktop{
+    @include m.desktop {
         height: 400px;
     }
 
@@ -236,5 +236,21 @@
         }
 
         @include m.link_actions;
+    }
+
+    &.selling-at-auction,
+    &.insurance {
+        .cta_links {
+            a {
+                @media (min-width: v.$tv) {
+                    width: m.px-to-vw(330px);
+                }
+
+                @include m.tv {
+                    width: 100%;
+                    max-width: 245px;
+                }
+            }
+        }
     }
 }

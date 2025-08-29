@@ -16,7 +16,7 @@ $args = [
 $related_products = new WP_Query($args);
 ?>
 
-<section class="sproduct_info <?php if (!$related_products->have_posts()){echo 'pb160px';} ?>">
+<section class="sproduct_info <?php if (!$related_products->have_posts()){echo 'pb160px';} wp_reset_postdata();wp_reset_query(); ?>">
     <div class="container">
         <?php wc_print_notices(); ?>
     </div>
@@ -90,14 +90,14 @@ $related_products = new WP_Query($args);
                     <?php get_card_product(get_the_ID()); ?>
                     <?php get_card_product(get_the_ID()); ?>
                     <?php get_card_product(get_the_ID()); ?>
-                <?php endwhile; ?>
+                <?php endwhile; wp_reset_postdata(); ?>
             </div>
         </div>
     </section>
 <?php endif; ?>
-<?php wp_reset_postdata(); ?>
+<?php wp_reset_query(); ?>
 
-<?php get_template_part('inc/sections/cta'); ?>
+<?php get_template_part('inc/sections/cta-single-product'); ?>
 
 <section class="upcoming pb160">
     <?php get_template_part('inc/sections/upcoming'); ?>
