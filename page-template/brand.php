@@ -12,69 +12,84 @@ get_centered_banner(esc_url($bg_image), esc_html($title));
 
 ?>
 
-<section class="discover">
-    <div class="container">
-        <div class="discover_head title_watermark">
-            <div class="watermark"><p>Vehicles For Sale</p></div>
-            <div class="breadlines">
-                <p>Explore listings</p>
-            </div>
-            <h2>Vehicles For Sale</h2>
+<section class="discover discover_brands">
+  <div class="container">
+    <div class="discover_head title_watermark">
+      <div class="watermark"><p>Vehicles For Sale</p></div>
+      <div class="breadlines"><p>Explore listings</p></div>
+      <h2>Vehicles For Sale</h2>
+
+      <div class="discover_tabs_container">
+        <div class="discover_tabs">
+          <button class="discover_tab active" data-target="auction">Auction</button>
+          <button class="discover_tab" data-target="private">Private Sales</button>
         </div>
-        <div class="discover_body">
-            <div class="vehicles_grid">
-                <?php for ($i = 0; $i < 3; $i++): ?>
-                    <div class="vehicle_card">
-                        <div class="vehicle_card-image">
-                            <div class="splide vehicle_card-thumbs" role="group">
-                                <div class="splide__arrows">
-                                    <button class="splide__arrow splide__arrow--prev">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
-                                            <path d="M0 7H12M12 7L6 1M12 7L6 13" stroke="black" />
-                                        </svg>
-                                    </button>
-                                    <button class="splide__arrow splide__arrow--next">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
-                                            <path d="M0 7H12M12 7L6 1M12 7L6 13" stroke="black" />
-                                        </svg>
-                                    </button>
-                                </div>
-                                <div class="splide__track">
-                                    <ul class="splide__list">
-                                        <li class="splide__slide">
-                                            <img src="<?php echo IMG; ?>/car.png">
-                                        </li>
-                                        <li class="splide__slide">
-                                            <img src="<?php echo IMG; ?>/car2.png">
-                                        </li>
-                                        <li class="splide__slide">
-                                            <img src="<?php echo IMG; ?>/car3.png">
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="vehicle_card-info">
-                            <div class="vehicle_card-content">
-                                <h3>1958 Mercedes Benz 190 SL</h3>
-                            </div>
-                            <div class="vehicle_card-price">
-                                <h4>
-                                    <span>Estimated at</span>
-                                    £70,000 - £90,000
-                                </h4>
-                                <ul>
-                                    <li><b>Registration No:</b> 551 XWD</li>
-                                    <li><b>Chassis No:</b> A1210428501142</li>
-                                    <li><b>MOT:</b> July 2025</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                <?php endfor; ?>
-            </div>
-        </div>
+        <div class="splide__arrows relative">
+            <button class="splide__arrow splide__arrow--prev">
+              <svg xmlns="http://www.w3.org/2000/svg" width="50" height="27" viewBox="0 0 50 26" fill="none">
+                <path d="M0 13H48M48 13L36 1M48 13L36 25" stroke="#8C6E47" stroke-width="2" />
+              </svg>
+            </button>
+            <button class="splide__arrow splide__arrow--next">
+              <svg xmlns="http://www.w3.org/2000/svg" width="50" height="27" viewBox="0 0 50 26" fill="none">
+                <path d="M0 13H48M48 13L36 1M48 13L36 25" stroke="#8C6E47" stroke-width="2" />
+              </svg>
+            </button>
+          </div>
+      </div>
     </div>
+
+    <div class="discover_body discover_tab-content active" id="auction">
+      <div id="splide-auction" class="splide">
+        <div class="splide__track">
+          <ul class="splide__list">
+            <?php for ($i = 0; $i < 5; $i++): ?>
+              <li class="splide__slide vehicle_card">
+                <div class="vehicle_card-image">
+                  <img src="<?php echo IMG; ?>/car.png" alt="Car">
+                </div>
+                <div class="vehicle_card-info">
+                  <h3>1971 Austin Mini 850</h3>
+                  <h4><span>Estimated at</span> £6,000 - £8,000</h4>
+                  <ul>
+                    <li><b>Registration No:</b> WUJ 67K</li>
+                    <li><b>Chassis No:</b> XAD15498561</li>
+                    <li><b>MOT:</b> Exempt</li>
+                  </ul>
+                </div>
+              </li>
+            <?php endfor; ?>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="discover_body discover_tab-content" id="private">
+      <div id="splide-private" class="splide">
+        <div class="splide__track">
+          <ul class="splide__list">
+            <?php for ($i = 0; $i < 5; $i++): ?>
+              <li class="splide__slide vehicle_card">
+                <div class="vehicle_card-image">
+                  <img src="<?php echo IMG; ?>/car2.png" alt="Car">
+                </div>
+                <div class="vehicle_card-info">
+                  <h3>1965 Mini Cooper MK1</h3>
+                  <h4>£55,000</h4>
+                  <ul>
+                    <li><b>Registration No:</b> GBP 77C</li>
+                    <li><b>Chassis No:</b> XAD15478716</li>
+                    <li><b>MOT:</b> Exempt</li>
+                  </ul>
+                </div>
+              </li>
+            <?php endfor; ?>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </section>
 
 <?php if( have_rows('models') ): ?>
@@ -256,6 +271,21 @@ get_centered_banner(esc_url($bg_image), esc_html($title));
 <?php get_footer(); ?>
 
 <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const tabs = document.querySelectorAll(".discover_tab");
+    const contents = document.querySelectorAll(".discover_tab-content");
+
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        tabs.forEach(t => t.classList.remove("active"));
+        contents.forEach(c => c.classList.remove("active"));
+
+        tab.classList.add("active");
+        document.getElementById(tab.dataset.target).classList.add("active");
+      });
+    });
+  });
+
   document.addEventListener("DOMContentLoaded", function () {
     const modelCards = document.querySelectorAll('.model-card');
     const modelContents = document.querySelectorAll('.model-content-item');

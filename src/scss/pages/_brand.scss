@@ -1,8 +1,118 @@
 @use "base/mixins" as m;
 @use "base/variables" as v;
 
+.discover_brands {
+  .discover_head {
+    @media (min-width: v.$tv) {
+      margin-bottom: m.px-to-vw(0px);
+    }
+
+    @include m.desktop {
+      margin-bottom: 0px;
+    }
+  }
+
+  .discover_tabs_container {
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    align-items: center;
+    @media (min-width: v.$tv) {
+      margin-top: m.px-to-vw(48px);
+    }
+
+    @include m.desktop {
+      margin-tpm: 48px;
+    }
+  }
+
+  .discover_tabs {
+    display: flex;
+    border: 1px solid v.$light_brown;
+    border-radius: 4px;
+    padding: 2px;
+
+    @media (min-width: v.$tv) {
+      margin-bottom: m.px-to-vw(24px);
+      height: m.px-to-vw(52px);
+    }
+
+    @include m.desktop {
+      margin-bottom: 20px;
+      height: 52px;
+    }
+  
+    .discover_tab {
+      border: none !important;
+      background: #fff;
+      cursor: pointer;
+      text-transform: uppercase;
+      padding: 0px 21px;
+      border-radius: 2px;
+
+      @media (min-width: v.$tv) {
+        font-size: m.px-to-vw(16px);
+      }
+
+      @include m.desktop {
+        font-size: 16px;
+      }
+  
+      &.active {
+        background: #8C6E47;
+        color: #fff;
+      }
+    }
+  }
+
+  .splide__arrows {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.875vw;
+    justify-content: flex-start;
+    margin-bottom: 1.25vw;
+    padding-left: 1.875vw;
+
+    @media (min-width: v.$tv) {
+      width: m.px-to-vw(120px);
+    }
+    @include m.desktop {
+      width: 120px;
+    }
+
+    .splide__arrow {
+      background: transparent;
+      border: none;
+      color: v.$light_brown;
+      transition: color 0.3s ease;
+
+      svg {
+        @media (min-width: v.$tv) {
+          width: m.px-to-vw(32px);
+        }
+        @include m.desktop {
+          width: 32px;
+        }
+      }
+
+      &:hover {
+        color: v.$light_brown_2;
+      }
+    }
+  }
+}
+
+.discover_tab-content {
+  display: none;
+
+  &.active {
+    display: block;
+  }
+}
+
 .model-slider {
-  padding: 40px 0;
+  padding: 0px 0 20px;
 
   &__title_container {
     display: flex;
@@ -527,7 +637,7 @@
 
     @media (min-width: v.$tv) {
       max-width: m.px-to-vw(702px);
-      max-height: m.px-to-vw(522px);
+      max-height: m.px-to-vw(550px);
       height: 100%;
     }
     @include m.desktop {
@@ -584,7 +694,7 @@
 
     @media (min-width: v.$tv) {
       max-width: m.px-to-vw(702px);
-      max-height: m.px-to-vw(522px);
+      max-height: m.px-to-vw(550px);
     }
     @include m.tv {
       max-width: 702px;
