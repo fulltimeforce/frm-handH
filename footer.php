@@ -88,7 +88,7 @@
         <div class="footer_credits">
             <p>© 2024 H&H Classic Auctions Ltd. All Rights Reserved.</p>
             <div>
-                <p><a href="">Terms and Conditions</a> | <a href="">Privacy Policy</a> | <a href="">Cookies Policy</a></p>
+                <p><a href="<?php echo esc_url(home_url('terms-conditions')); ?>">Terms and Conditions</a> | <a href="<?php echo esc_url(home_url('privacy-policy')); ?>">Privacy Policy</a> | <a href="<?php echo esc_url(home_url('cookies-policy')); ?>">Cookies Policy</a></p>
             </div>
         </div>
     </div>
