@@ -37,9 +37,9 @@
 
     @include m.content_center;
 
-    .actions{
-        a{
-            @include m.tv{
+    .actions {
+        a {
+            @include m.tv {
                 width: 264px;
             }
         }
@@ -108,13 +108,70 @@
     &-container {
         @include m.container_side;
     }
+
+    &-insurance {
+        .actions {
+            a {
+                @media (min-width: v.$tv) {
+                    width: m.px-to-vw(292px) !important;
+                }
+
+                @include m.tv {
+                    width: 100% !important;
+                    max-width: 216px !important;
+                }
+            }
+        }
+    }
+
+    .thinking {
+        width: 100%;
+        @media (min-width: v.$tv) {
+            padding-top: m.px-to-vw(96px);
+            margin-top: m.px-to-vw(96px);
+            border-top: m.px-to-vw(1px) solid v.$light_brown;
+        }
+        
+        @include m.tv {
+            padding-top: 68px;
+            margin-top: 68px;
+            border-top: 1px solid v.$light_brown;
+        }
+
+        @include m.desktop {
+            padding-top: 52px;
+            margin-top: 52px;
+        }
+
+        h3 {
+            @include m.fz60;
+            font-weight: 300;
+            text-align: center;
+
+            @media (min-width: v.$tv) {
+                margin-bottom: m.px-to-vw(40px);
+            }
+
+            @include m.tv {
+                margin-bottom: 28px;
+            }
+        }
+        .actions {
+            @include m.link_actions(false, 228px);
+            a{
+                background: transparent !important;
+                color: v.$light_brown !important;
+            }
+        }
+    }
+
 }
 
 .headquarter {
     width: 100%;
 
     &-image {
-        @include m.mt40_for_actions(false);
+        // @include m.mt40_for_actions(false);
         @include m.banner_with_lines;
     }
 

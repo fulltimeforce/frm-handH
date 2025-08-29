@@ -80,12 +80,23 @@ get_centered_banner(esc_url($bg_image), esc_html($title));
 <?php if( have_rows('models') ): ?>
   <section id="brandsCar" class="model-slider">
     <div class="container">
-      <div class="model-slider__title_container">
-        <h2 class="model-slider__title">Select Model</h2>
-        <div class="splide__arrows"></div>
-      </div>
 
       <div id="splide-models" class="splide">
+        <div class="model-slider__title_container">
+          <h2 class="model-slider__title">Select Model</h2>
+          <div class="splide__arrows relative">
+            <button class="splide__arrow splide__arrow--prev">
+              <svg xmlns="http://www.w3.org/2000/svg" width="50" height="27" viewBox="0 0 50 26" fill="none">
+                <path d="M0 13H48M48 13L36 1M48 13L36 25" stroke="#8C6E47" stroke-width="2" />
+              </svg>
+            </button>
+            <button class="splide__arrow splide__arrow--next">
+              <svg xmlns="http://www.w3.org/2000/svg" width="50" height="27" viewBox="0 0 50 26" fill="none">
+                <path d="M0 13H48M48 13L36 1M48 13L36 25" stroke="#8C6E47" stroke-width="2" />
+              </svg>
+            </button>
+          </div>
+        </div>
         <div class="splide__track">
           <ul class="splide__list">
             <?php $i=0; ?>
@@ -161,26 +172,31 @@ get_centered_banner(esc_url($bg_image), esc_html($title));
 
               <?php if($end_title || $end_desc): ?>
                 <div class="model-ending">
-                  <div class="model-ending__top">
-                    <?php if($end_title): ?>
-                      <h3 class="model-ending__title"><?php echo esc_html($end_title); ?></h3>
-                    <?php endif; ?>
-                    <?php if($end_subtext): ?>
-                      <p class="model-ending__subtext"><?php echo esc_html($end_subtext); ?></p>
-                    <?php endif; ?>
+                  <div class="model-ending-container">
+                    <div class="container">
+
+                      <div class="model-ending__top">
+                        <?php if($end_title): ?>
+                          <h3 class="model-ending__title"><?php echo esc_html($end_title); ?></h3>
+                        <?php endif; ?>
+                        <?php if($end_subtext): ?>
+                          <p class="model-ending__subtext"><?php echo esc_html($end_subtext); ?></p>
+                        <?php endif; ?>
+                      </div>
+    
+                      <hr>
+    
+                      <?php if($end_desc): ?>
+                        <p class="model-ending__desc"><?php echo esc_html($end_desc); ?></p>
+                      <?php endif; ?>
+    
+                      <?php if($end_btn_text && $end_btn_url): ?>
+                        <a href="<?php echo esc_url($end_btn_url); ?>" class="model-ending__btn">
+                          <?php echo esc_html($end_btn_text); ?>
+                        </a>
+                      <?php endif; ?>
+                    </div>
                   </div>
-
-                  <hr>
-
-                  <?php if($end_desc): ?>
-                    <p class="model-ending__desc"><?php echo esc_html($end_desc); ?></p>
-                  <?php endif; ?>
-
-                  <?php if($end_btn_text && $end_btn_url): ?>
-                    <a href="<?php echo esc_url($end_btn_url); ?>" class="model-ending__btn">
-                      <?php echo esc_html($end_btn_text); ?>
-                    </a>
-                  <?php endif; ?>
                 </div>
               <?php endif; ?>
           </div>
@@ -217,7 +233,7 @@ get_centered_banner(esc_url($bg_image), esc_html($title));
 </section>
 
 <section class="history-feature">
-  <div class="history-feature__grid">
+  <div class="container history-feature__grid">
     <div class="history-feature__image">
       <?php $image = get_field('section_image'); ?>
       <?php if($image): ?>

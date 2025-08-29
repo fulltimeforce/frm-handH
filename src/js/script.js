@@ -598,6 +598,18 @@ import "@splidejs/splide/css";
             document.body.style.height = "auto";
         });
     }
+    if(document.querySelector(".events")) {
+        new Splide('.events_slide', {
+            type   : 'slide',
+            perPage: 1,
+            perMove: 1,
+            gap    : '1.5rem',
+            interval: 4000,
+            pauseOnHover: true,
+            pagination: true,
+            arrows: true,
+        }).mount();
+    }
 
     })();
 

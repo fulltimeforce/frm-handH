@@ -3,10 +3,13 @@ $bg = get_field('background_image');
 $title = get_field('title_cta');
 $first_link = get_field('first_link');
 $second_link = get_field('second_link');
+
+// slug de la página actual
+$slug = get_post_field('post_name', get_post())
 ?>
 
 <?php if (!empty($title)): ?>
-    <section class="cta">
+    <section class="cta <?php echo esc_attr($slug); ?>">
         <?php if (!empty($bg)): ?>
             <div class="cta_bg">
                 <img src="<?php echo $bg['url']; ?>" alt="<?php echo $bg['alt']; ?>">

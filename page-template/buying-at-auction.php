@@ -14,7 +14,7 @@ get_banner('Homepage / Classic Auctions / Buying at auction', esc_url($bg_image)
 ?>
 
 <div class="buying_at_auction_page">
-  <div class="container">
+  <div class="buying_at_auction_page-container">
     <?php
     $title   = get_field('how_to_buy_title');
     $content = get_field('how_to_buy_content');
@@ -43,117 +43,111 @@ get_banner('Homepage / Classic Auctions / Buying at auction', esc_url($bg_image)
 
       </section>
     <?php endif; ?>
+  </div>
+</div>
 
-    <section class="auction-tabs">
-      <div class="auction-tabs-container">
-
-        <?php if (have_rows('auction_tabs')): ?>
-          <!-- Tabs Nav -->
-          <ul class="auction-tabs-nav">
-            <?php $i = 0;
-            while (have_rows('auction_tabs')): the_row(); ?>
-              <li class="<?php echo $i === 0 ? 'active' : ''; ?>" data-tab="tab-<?php echo $i; ?>">
-                <?php the_sub_field('tab_title'); ?>
-              </li>
-            <?php $i++;
-            endwhile; ?>
-          </ul>
-
-          <!-- Tabs Content -->
-          <div class="auction-tabs-content">
-            <?php
-            if (have_rows('auction_tabs')):
-              $i = 0;
-              while (have_rows('auction_tabs')): the_row();
-            ?>
-                <div class="tab-panel <?php echo $i === 0 ? 'active' : ''; ?>" id="tab-<?php echo $i; ?>">
-                  <div class="auction-grid">
-                    <div class="auction-image">
-                      <?php $img = get_sub_field('tab_image'); ?>
-                      <?php if ($img): ?>
-                        <img src="<?php echo esc_url($img['url']); ?>" alt="<?php echo esc_attr($img['alt']); ?>">
-                      <?php endif; ?>
-                    </div>
-                    <div class="auction-info hide-scrollbar">
-                      <h2><?php the_sub_field('tab_heading'); ?></h2>
-                      <div class="auction-text">
-                        <?php the_sub_field('tab_content'); ?>
-                      </div>
-
-                      <?php if (have_rows('tab_cards')): ?>
-                        <div class="auction-cards">
-                          <?php while (have_rows('tab_cards')): the_row(); ?>
-                            <div class="auction-card">
-                              <h3><?php the_sub_field('card_title'); ?></h3>
-                              <div class="auction-card-content">
-                                <?php the_sub_field('card_content'); ?>
-                              </div>
-                            </div>
-                          <?php endwhile; ?>
-                        </div>
-                      <?php endif; ?>
-                    </div>
-                  </div>
+<?php if (have_rows('auction_tabs')): ?>
+  <section class="bid_online buy_rows" data-state="1">
+    <div class="opportunities-buttons w-100">
+      <?php while (have_rows('auction_tabs')): the_row(); ?>
+        <button class="buy_button <?php echo get_row_index() == 1 ? 'active' : ''; ?>" data-id="<?php echo get_row_index(); ?>">
+          <?php echo get_sub_field('tab_title') ?>
+        </button>
+      <?php endwhile; ?>
+    </div>
+    <div class="w-100">
+      <?php while (have_rows('auction_tabs')): the_row(); ?>
+        <div class="bid_online-container">
+          <div class="bid_online-row">
+            <div class="bid_online-image">
+              <?php $img = get_sub_field('tab_image'); ?>
+              <?php if ($img): ?>
+                <img src="<?php echo esc_url($img['url']); ?>" alt="<?php echo esc_attr($img['alt']); ?>">
+              <?php endif; ?>
+            </div>
+            <div class="bid_online-content">
+              <div class="w-100">
+                <h3><?php echo get_sub_field('tab_heading'); ?></h3>
+                <div class="content">
+                  <?php echo get_sub_field('tab_content'); ?>
                 </div>
-            <?php $i++;
-              endwhile;
-            endif; ?>
-          </div>
-        <?php endif; ?>
-
-      </div>
-    </section>
-
-    <section class="insurance">
-      <div class="insurance_banners">
-        <div class="insurance_banners-container">
-          <div class="headquarter">
-            <div class="headquarter-image">
-              <div>
-                <img
-                  src="<?php echo get_field('small_banner_img')['url'] ?>"
-                  title="<?php echo get_field('small_banner_img')['title'] ?>"
-                  alt="<?php echo get_field('small_banner_img')['alt'] ?>"
-                  width="<?php echo get_field('small_banner_img')['width'] ?>"
-                  height="<?php echo get_field('small_banner_img')['height'] ?>"
-                  loading="lazy">
-                <h2><?php echo get_field('small_banner_title'); ?></h2>
+                <?php if (have_rows('tab_cards')): ?>
+                  <ul>
+                    <?php while (have_rows('tab_cards')): the_row(); ?>
+                      <li>
+                        <h4><?php the_sub_field('card_title'); ?></h4>
+                        <?php the_sub_field('card_content'); ?>
+                      </li>
+                    <?php endwhile; ?>
+                  </ul>
+                <?php endif; ?>
               </div>
             </div>
           </div>
+        </div>
+      <?php endwhile; ?>
+    </div>
+  </section>
+<?php endif; ?>
+
+<section class="contact_banners contact_banners-insurance">
+  <div class="contact_banners-container">
+    <div class="headquarter">
+      <div class="headquarter-image">
+        <div>
+          <img
+            src="<?php echo get_field('small_banner_img')['url'] ?>"
+            title="<?php echo get_field('small_banner_img')['title'] ?>"
+            alt="<?php echo get_field('small_banner_img')['alt'] ?>"
+            width="<?php echo get_field('small_banner_img')['width'] ?>"
+            height="<?php echo get_field('small_banner_img')['height'] ?>"
+            loading="lazy">
+          <h3><?php echo get_field('small_banner_title'); ?></h3>
         </div>
       </div>
       <?php
       $insurance_content = get_field('insurance_content');
       $insurance_link    = get_field('insurance_link');
-      $selling_title     = get_field('selling_title');
-      $selling_link      = get_field('selling_link');
       ?>
-      <div>
-        <p><?php echo wp_kses_post($insurance_content); ?></p>
+      <div class="headquarter-content">
+        <div class="description">
+          <p><?php echo wp_kses_post($insurance_content); ?></p>
+        </div>
         <?php if ($insurance_link): ?>
-          <div class="cta_links">
+          <div class="actions">
             <a href="<?php echo esc_url($insurance_link['url']); ?>"
               <?php if ($insurance_link['target']) echo 'target="' . esc_attr($insurance_link['target']) . '"'; ?>>
               <?php echo esc_html($insurance_link['title']); ?>
             </a>
           </div>
         <?php endif; ?>
-        <hr />
-        <?php if ($selling_title): ?>
-          <h3><?php echo esc_html($selling_title); ?></h3>
-        <?php endif; ?>
-        <?php if ($selling_link): ?>
-          <div class="cta_links">
-            <a href="<?php echo esc_url($selling_link['url']); ?>"
-              <?php if ($selling_link['target']) echo 'target="' . esc_attr($selling_link['target']) . '"'; ?>>
-              <?php echo esc_html($selling_link['title']); ?>
-            </a>
-          </div>
-        <?php endif; ?>
-    </section>
+      </div>
+    </div>
   </div>
-</div>
+
+  <?php
+  $selling_title     = get_field('selling_title');
+  $selling_link      = get_field('selling_link');
+  ?>
+
+  <div class="contact_banners-container">
+
+    <div class="thinking">
+      <?php if ($selling_title): ?>
+        <h3><?php echo esc_html($selling_title); ?></h3>
+      <?php endif; ?>
+      <?php if ($selling_link): ?>
+        <div class="actions">
+          <a href="<?php echo esc_url($selling_link['url']); ?>"
+            <?php if ($selling_link['target']) echo 'target="' . esc_attr($selling_link['target']) . '"'; ?>>
+            <?php echo esc_html($selling_link['title']); ?>
+          </a>
+        </div>
+      <?php endif; ?>
+    </div>
+
+  </div>
+</section>
 
 <?php get_template_part('inc/sections/cta'); ?>
 
@@ -161,25 +155,27 @@ get_banner('Homepage / Classic Auctions / Buying at auction', esc_url($bg_image)
   <?php get_template_part('inc/sections/upcoming'); ?>
 </section>
 
+<?php get_footer(); ?>
+
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const tabs = document.querySelectorAll(".auction-tabs-nav li");
-    const panels = document.querySelectorAll(".tab-panel");
+  document.addEventListener("DOMContentLoaded", () => {
+    const section = document.querySelector("section.buy_rows");
+    const buttons = document.querySelectorAll(".buy_button");
 
-    tabs.forEach(tab => {
-      tab.addEventListener("click", () => {
-        const target = tab.getAttribute("data-tab");
+    buttons.forEach(button => {
+      button.addEventListener("click", () => {
+        // Quitar 'active' de todos los botones
+        buttons.forEach(btn => btn.classList.remove("active"));
 
-        // remove active
-        tabs.forEach(t => t.classList.remove("active"));
-        panels.forEach(p => p.classList.remove("active"));
+        // Añadir 'active' al botón clicado
+        button.classList.add("active");
 
-        // add active
-        tab.classList.add("active");
-        document.getElementById(target).classList.add("active");
+        // Obtener data-id
+        const id = button.getAttribute("data-id");
+
+        // Asignarlo al data-state de section
+        section.setAttribute("data-state", id);
       });
     });
   });
 </script>
-
-<?php get_footer(); ?>

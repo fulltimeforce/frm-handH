@@ -53,7 +53,7 @@ $link2 = get_field('second_link_ci');
 
 <?php get_template_part('inc/sections/request-register'); ?>
 
-<section class="upcoming">
+<section class="upcoming pb160">
     <?php get_template_part('inc/sections/upcoming'); ?>
 </section>
 

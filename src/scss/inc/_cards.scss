@@ -359,6 +359,66 @@
             margin-bottom: 20px;
         }
     }
+    &-toggle {
+        position: relative;
+        overflow: hidden;
+        &:hover {
+            .vehicle_card-actions {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            ul {
+                opacity: 0;
+            }
+        }
+        ul {
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+            opacity: 1;
+        }
+    }
+    &-actions {
+        @include m.flex(flex-start, m.px-to-vw(12px));
+        background-color: #f5f2ee;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+        opacity: 0;
+        transform: translateY(100%);
+        transition: all 0.5s ease;
+        z-index: 2;
+        a {
+            display: inline-block;
+            color: v.$black;
+            font-size: m.px-to-vw(14px);
+            letter-spacing: 0.84px;
+            line-height: 140%;
+            font-family: v.$gotham_m;
+            font-weight: 350;
+            padding-inline: m.px-to-vw(20px);
+            padding-block: m.px-to-vw(17px);
+            @include m.tv {
+                font-size: 13px;
+                padding-inline: 20px;
+                padding-block: 17px;
+            }
+            &:first-child {
+                border: m.px-to-vw(1px) solid v.$black;
+                min-width: m.px-to-vw(137px);
+                @include m.tv {
+                    border-width: 1px;
+                    min-width: 137px;
+                }
+            }
+            &:last-child {
+                text-decoration: underline;
+            }
+        }
+    }
+
 }
 
 %span {
@@ -411,7 +471,7 @@
         pointer-events: none;
         @include m.transition(.4s);
         border-radius: 50%;
-        background: rgba($color: v.$black, $alpha: 0.6);
+        // background: rgba($color: v.$black, $alpha: 0.6);
         z-index: 2;
 
         @media (min-width: v.$tv) {

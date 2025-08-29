@@ -1,6 +1,6 @@
 <?php
 /*
-    Template name: upcoming-actions
+    Template name: upcoming-auctions
 */
 
 get_header();

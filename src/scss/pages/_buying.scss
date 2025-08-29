@@ -3,6 +3,7 @@
 
 %h2-cormorant {
   font-family: v.$cormorant;
+  font-weight: 300;
   font-size: 60px;
   line-height: 100%;
   letter-spacing: -1.8px;
@@ -37,20 +38,16 @@
 
 .buying_at_auction {
   &_page {
-    @media (min-width: v.$tv) {
-      padding-top: m.px-to-vw(160px);
+    &:not(.pb0){
+      @include m.pblock160(); 
     }
-    @include m.tv {
-      padding-top: 160px;
-    }
-    @include m.desktop {
-      padding-top: 120px;
-    }
-    @include m.tablet {
-      padding-top: 40px;
+    &.pb0{
+      @include m.pblock160(true);
     }
 
-    @include m.pblock160('bottom');
+    &-container{
+      @include m.container_side;
+    }
 
     .how-to-buy {
       width: 100%;
@@ -58,19 +55,19 @@
 
       @media (min-width: v.$tv) {
         max-width: m.px-to-vw(1165px);
-        margin-bottom: m.px-to-vw(87px);
+        // margin-bottom: m.px-to-vw(87px);
       }
       @include m.tv {
         max-width: 1165px;
-        margin-bottom: 87px;
+        // margin-bottom: 87px;
       }
       @include m.desktop {
         max-width: 1000px;
-        margin-bottom: 60px;
+        // margin-bottom: 60px;
       }
       @include m.tablet {
         max-width: 100%;
-        margin-bottom: 40px;
+        // margin-bottom: 40px;
         padding: 0 20px;
       }
 
@@ -111,7 +108,7 @@
           font-family: v.$gotham_m;
           font-size: 17px;
           line-height: 140%;
-          letter-spacing: 6%;
+          font-weight: 300;
 
           @include m.desktop {
             font-size: 15px;
@@ -122,6 +119,7 @@
         }
 
         a {
+          text-decoration: underline;
           color: v.$light_brown;
         }
       }
@@ -356,6 +354,29 @@
           margin: 48px 0 24px;
         }
       }
+    }
+  }
+}
+
+.buy_rows{
+  &[data-state="1"]{
+    .bid_online-container:not(:nth-child(1)){
+      display: none !important;
+    }
+  }
+  &[data-state="2"]{
+    .bid_online-container:not(:nth-child(2)){
+      display: none !important;
+    }
+  }
+  &[data-state="3"]{
+    .bid_online-container:not(:nth-child(3)){
+      display: none !important;
+    }
+  }
+  &[data-state="4"]{
+    .bid_online-container:not(:nth-child(4)){
+      display: none !important;
     }
   }
 }

@@ -35,7 +35,7 @@
                         <p class="footer_nav-head">Auctions</p>
                         <div class="footer_nav-list">
                             <a href="#">Auction Calendar</a>
-                            <a href="#">Auction Results</a>
+                            <a href="<?php echo esc_url(home_url('auction-results')) ?>">Auction Results</a>
                             <a href="#">Enter Your Classic</a>
                             <a href="#">H&H Welcome Pack</a>
                         </div>
@@ -43,15 +43,19 @@
                     <div class="footer_nav">
                         <p class="footer_nav-head">Private Sales</p>
                         <div class="footer_nav-list">
-                            <a href="#">Vehicles For Sale</a>
-                            <a href="#">Vehicles Wanted</a>
-                            <a href="#">Our Showroom</a>
+                            <a href="<?php echo esc_url(home_url('vehicles-for-sale')) ?>">Vehicles For Sale</a>
+                            <a href="<?php echo esc_url(home_url('vehicles-wanted')) ?>">Vehicles Wanted</a>
+                            <a href="<?php echo esc_url(home_url('our-showroom')) ?>">Our Showroom</a>
                         </div>
                     </div>
                     <div class="footer_nav">
                         <p class="footer_nav-head">Account & Bidding</p>
                         <div class="footer_nav-list">
-                            <a href="#">Register / Sign In</a>
+                            <?php if (!is_user_logged_in()) : ?>
+                                <a href="<?php echo esc_url(home_url('my-account')); ?>">Register / Sign In</a>
+                            <?php else: ?>
+                                <a href="<?php echo esc_url(home_url('my-account/edit-account')); ?>">Register / Sign In</a>
+                            <?php endif; ?>
                             <a href="#">Make a Payment</a>
                             <a href="#">Telephone Bid Form</a>
                         </div>
@@ -71,11 +75,11 @@
                         <div class="links">
                             <a href="#">News</a>
                             <p>|</p>
-                            <a href="#">About</a>
+                            <a href="<?php echo esc_url(home_url('about-us')); ?>">About</a>
                             <p>|</p>
-                            <a href="#">FAQs</a>
+                            <a href="<?php echo esc_url(home_url('frequently-asked-questions')); ?>">FAQs</a>
                             <p>|</p>
-                            <a href="#">Contact</a>
+                            <a href="<?php echo esc_url(home_url('contact')); ?>">Contact</a>
                         </div>
                     </div>
                 </div>
@@ -84,7 +88,7 @@
         <div class="footer_credits">
             <p>© 2024 H&H Classic Auctions Ltd. All Rights Reserved.</p>
             <div>
-                <p><a href="">Terms and Conditions</a> | <a href="">Privacy Policy</a> | <a href="">Cookies Policy</a></p>
+                <p><a href="<?php echo esc_url(home_url('terms-conditions')); ?>">Terms and Conditions</a> | <a href="<?php echo esc_url(home_url('privacy-policy')); ?>">Privacy Policy</a> | <a href="<?php echo esc_url(home_url('cookies-policy')); ?>">Cookies Policy</a></p>
             </div>
         </div>
     </div>
