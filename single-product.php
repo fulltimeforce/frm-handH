@@ -4,7 +4,7 @@ $current_product_id = get_the_ID();
 
 $product = wc_get_product($current_product_id);
 
-$args = [
+$argsProduct = [
     'post_type'      => 'product',
     'posts_per_page' => 3,
     'post_status'    => 'publish',
@@ -13,10 +13,10 @@ $args = [
     'post__not_in'   => [$current_product_id],
 ];
 
-$related_products = new WP_Query($args);
+$related_products = new WP_Query($argsProduct);
 ?>
 
-<section class="sproduct_info <?php if (!$related_products->have_posts()){echo 'pb160px';} wp_reset_postdata();wp_reset_query(); ?>">
+<section class="sproduct_info <?php if (!$related_products->have_posts()){echo 'pb160px';} ?>">
     <div class="container">
         <?php wc_print_notices(); ?>
     </div>
@@ -88,14 +88,11 @@ $related_products = new WP_Query($args);
             <div class="other_products-grid">
                 <?php while ($related_products->have_posts()) : $related_products->the_post(); ?>
                     <?php get_card_product(get_the_ID()); ?>
-                    <?php get_card_product(get_the_ID()); ?>
-                    <?php get_card_product(get_the_ID()); ?>
                 <?php endwhile; wp_reset_postdata(); ?>
             </div>
         </div>
     </section>
 <?php endif; ?>
-<?php wp_reset_query(); ?>
 
 <?php get_template_part('inc/sections/cta-single-product'); ?>
 

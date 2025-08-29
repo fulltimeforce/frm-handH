@@ -42,14 +42,14 @@ $link = get_field('link_careers');
 <?php if (have_rows('our_services')): ?>
     <div class="opportunities-buttons">
         <?php while (have_rows('our_services')): the_row(); ?>
-            <button class="<?php echo get_row_index() == 1 ? 'active' : ''; ?>">
+            <button class="scroll_opportunity <?php echo get_row_index() == 1 ? 'active' : ''; ?>" data-id="opportunity<?php echo get_row_index(); ?>">
                 <?php echo get_sub_field('button_in_top_service') ?>
             </button>
         <?php endwhile; ?>
     </div>
     <div class="w-100 opportunities-column">
         <?php while (have_rows('our_services')): the_row(); ?>
-            <section class="opportunities" data-state="0">
+            <section class="opportunities" data-state="0" id="opportunity<?php echo get_row_index(); ?>">
                 <div class="opportunities_container">
                     <div class="opportunities_row">
                         <div class="opportunities_information">
@@ -109,6 +109,37 @@ $link = get_field('link_careers');
 </section>
 
 <?php get_footer(); ?>
+
+<script>
+    let scroll_opportunity_buttons = document.querySelectorAll('.scroll_opportunity');
+    if (scroll_opportunity_buttons) {
+        scroll_opportunity_buttons.forEach(button => {
+            button.addEventListener('click', function() {
+                // quitar active a todos
+                document.querySelectorAll('.scroll_opportunity').forEach(b => b.classList.remove('active'));
+
+                // poner active al actual
+                this.classList.add('active');
+
+                // scroll al target con offset
+                const targetId = this.dataset.id;
+                const targetEl = document.getElementById(targetId);
+                if (targetEl) {
+                    // offset dinámico
+                    const offset = window.innerWidth < 1024 ? -120 : -200;
+
+                    const elementPosition = targetEl.getBoundingClientRect().top + window.scrollY;
+                    const offsetPosition = elementPosition + offset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    }
+</script>
 
 <script>
     $(".my-accordion").accordionjs({
