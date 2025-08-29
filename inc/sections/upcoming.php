@@ -1,4 +1,4 @@
-<div class="container_side">
+<div class="container_upcoming">
     <div class="upcoming_head title_watermark">
         <div class="watermark"><p>Upcoming Auctions</p></div>
         <div class="breadlines">

@@ -255,10 +255,6 @@
                 overflow-x: hidden;
                 overflow-y: auto;
             }
-
-            @include m.tablet {
-                display: none;
-            }
         }
     }
 
@@ -690,7 +686,7 @@
 
             .header_navigation {
                 &--list {
-                    right: -500px;
+                    right: 0;
                 }
             }
         }
