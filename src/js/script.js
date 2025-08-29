@@ -334,6 +334,11 @@ import "@splidejs/splide/css";
                 gap: '20px',
                 arrows: true,
                 pagination: false,
+                breakpoints: {
+                    1024: { perPage: 3 },
+                    768: { perPage: 2 },
+                    480: { perPage: 1 },
+                },
                 }).mount();
 
             new Splide("#splide-private", {
@@ -341,6 +346,11 @@ import "@splidejs/splide/css";
                 gap: '20px',
                 arrows: true,
                 pagination: false,
+                breakpoints: {
+                    1024: { perPage: 3 },
+                    768: { perPage: 2 },
+                    480: { perPage: 1 },
+                },
             }).mount();
 
             new Splide('#splide-models', {

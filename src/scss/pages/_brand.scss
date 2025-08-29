@@ -2,6 +2,11 @@
 @use "base/variables" as v;
 
 .discover_brands {
+  container {
+    @include m.desktop {
+      max-width: 100%;
+    }
+  }
   .discover_head {
     @media (min-width: v.$tv) {
       margin-bottom: m.px-to-vw(0px);
