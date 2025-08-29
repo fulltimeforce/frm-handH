@@ -67,7 +67,7 @@ get_banner('Homepage / About / Meet the team', esc_url($bg_image), 'Meet the tea
                                         <div class="specialist_item_header">
                                             <?php if (has_post_thumbnail()) : ?>
                                                 <a href="<?php the_permalink(); ?>" class="specialist_item_image">
-                                                    <?php the_post_thumbnail('medium'); ?>
+                                                    <?php the_post_thumbnail('medium_large'); ?>
                                                 </a>
                                             <?php endif; ?>
                                             <div class="specialist_item_container">
