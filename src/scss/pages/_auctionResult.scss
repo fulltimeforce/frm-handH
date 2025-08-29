@@ -7,11 +7,15 @@
             .container {
                 border-bottom: m.px-to-vw(1px) solid v.$light_brown;
                 padding-block: m.px-to-vw(160px) m.px-to-vw(60px);
+                max-width: m.px-to-vw(1428px);
+                margin-right: m.px-to-vw(180px);
                 @include m.tv {
-                    padding-block: 160px 60px;
+                    padding-block: 100px 60px;
+                    max-width: 1428px;
+                    margin-right: 180px;
                 }
-                @include m.laptop {
-                    padding-block: 80px 30px;
+                 @include m.laptop {
+                    padding-block: 80px 40px;
                 }
                 div {
                     border: m.px-to-vw(1px) solid v.$light_brown;
@@ -58,11 +62,11 @@
                 max-width: m.px-to-vw(1428px);
                 margin-right: m.px-to-vw(180px);
                 @include m.tv {
-                    padding-block: 60px 98px;
+                    padding-block: 60px 45px;
                     max-width: 1428px;
                     margin-right: 180px;
                 }
-                @include m.tablet {
+                @include m.laptop {
                     padding-block: 30px 45px;
                     margin-right: 0;
                 }
@@ -76,7 +80,7 @@
                     text-align: center;
                     @include m.tv {
                         max-width: 926px;
-                        font-size: 60px;
+                        font-size: 50px;
                     }
                     @include m.tablet {
                         font-size: 40px;
@@ -92,7 +96,7 @@
             line-height: 150%;
             @include m.tv {
                 max-width: 800px;
-                padding-block: 30px 60px;
+                padding-block: 30px 40px;
             }
             a {
                 color: v.$light_brown;
@@ -106,7 +110,7 @@
             font-family: v.$gotham_light;
             @include m.tv {
                 gap: 10px;
-                padding-block: 60px;
+                padding-block: 40px;
             }
             @include m.laptop {
                 grid-template-columns: 1fr 1fr;
@@ -195,12 +199,12 @@
                margin-bottom: m.px-to-vw(95px);
                @include m.tv {
                 gap: 30px;
-                margin-bottom: 95px;
+                margin-bottom: 60px;
                }
                @include m.laptop {
                 flex-direction: column;
                 align-items: baseline;
-                margin-bottom: 45px;
+                margin-bottom: 52px;
                }
             }
             &-img {
@@ -209,7 +213,7 @@
                 position: relative;
                 display: inline-block;
                 @include m.tv {
-                    max-width: 638px;
+                    max-width: 450px;
                 }
                 @include m.laptop {
                     max-width: calc(100% - 15px);
@@ -229,10 +233,13 @@
                     object-fit: cover;
                     height: m.px-to-vw(359px);
                     @include m.tv {
-                        height: 359px;
+                        height: 280px;
+                    }
+                    @include m.laptop {
+                        height: 400px;
                     }
                     @include m.tablet {
-                        height: 280px;
+                        height: 250px;
                     }
                 }
             }
@@ -242,11 +249,9 @@
                     font-size: m.px-to-vw(36px);
                     font-weight: 500;
                     @include m.tv {
-                        font-size: 36px;
+                        font-size: 26px;
                     }
-                    @include m.tablet {
-                        font-size: 30px;
-                    }
+                   
                 }
                 .permalink_border {
                     margin-block: m.px-to-vw(30px) 0;
@@ -268,7 +273,7 @@
                 @include m.tablet {
                     flex-direction: column;
                     align-items: baseline;
-                    gap: 20px;
+                    gap: 16px;
                     padding-block: 20px;
                 }
                 div {
@@ -305,13 +310,14 @@
                             opacity: 0.8;
                             line-height: 140%;
                         }
-                        .gold-text {
+                        p.gold-text {
                             color: v.$light_brown;
-                            font-size: m.px-to-vw(30px);
+                            font-size: m.px-to-vw(36px) !important;
+                            line-height: 115%;
                             font-family: v.$gotham_m;
                             opacity: 1;
                             @include m.tv {
-                                font-size: 30px;
+                                font-size: 24px !important;
                             }
                         }
                     }
@@ -338,9 +344,9 @@
             text-align: right;
             margin-bottom: m.px-to-vw(90px);
             @include m.tv {
-                margin-bottom: 90px;
+                margin-bottom: 50px;
             }
-            @include m.tablet {
+            @include m.laptop {
                 margin-bottom: 45px;
             }
             .next, .prev {
@@ -368,6 +374,27 @@
                     background-color: v.$light_brown;
                     color: #D3C7B6;
                 }
+            }
+        }
+        &-form {
+            padding-block: m.px-to-vw(80px) m.px-to-vw(160px);
+            @include m.tv {
+                padding-block: 45px 80px;
+            }
+             @include m.laptop {
+                padding-block: 5px 80px;
+            }
+            h2 {
+                @include m.fz60;
+                font-weight: 400;
+                padding-bottom: m.px-to-vw(96px);
+                @include m.tv {
+                    padding-bottom: 45px;
+                }
+            }
+            .advertise_form {
+                margin: auto;
+                width: 85%;
             }
         }
     }

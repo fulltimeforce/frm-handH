@@ -206,5 +206,12 @@ $description = get_field('auction_result_description');
             ?>
         </div>
     </div>
+    <div class="advertise_container auction_result-form">
+        <h2>Contact Sales Department</h2>
+        <div class="advertise_form">
+            <?php echo do_shortcode('[gravityform id="2" title="true" ajax="true"]'); ?>
+        </div>
+    </div>
 </section>
+
 <?php get_footer(); ?>
