@@ -87,7 +87,7 @@
                                             </svg>
                                             <p>Buy A Catalogue</p>
                                         </a>
-                                        <a href="<?php echo esc_url(home_url('')) ?>" class="submenu-link">
+                                        <a href="<?php echo esc_url(home_url('buying-at-auction')) ?>" class="submenu-link">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="37" height="36" viewBox="0 0 37 36" fill="none">
                                                 <path d="M21.668 10.5003L26.168 15.0003M14.768 15.9003L4.54697 26.1213C3.98432 26.6837 3.66814 27.4467 3.66797 28.2423V31.5003C3.66797 31.8981 3.826 32.2796 4.10731 32.5609C4.38861 32.8422 4.77014 33.0003 5.16797 33.0003H9.66797C10.0658 33.0003 10.4473 32.8422 10.7286 32.5609C11.0099 32.2796 11.168 31.8981 11.168 31.5003V30.0003C11.168 29.6024 11.326 29.2209 11.6073 28.9396C11.8886 28.6583 12.2701 28.5003 12.668 28.5003H14.168C14.5658 28.5003 14.9473 28.3422 15.2286 28.0609C15.5099 27.7796 15.668 27.3981 15.668 27.0003V25.5003C15.668 25.1024 15.826 24.7209 16.1073 24.4396C16.3886 24.1583 16.7701 24.0003 17.168 24.0003H17.426C18.2216 24.0001 18.9845 23.6839 19.547 23.1213L20.768 21.9003M19.268 4.05026C19.9614 3.40715 20.8722 3.0498 21.818 3.0498C22.7637 3.0498 23.6745 3.40715 24.368 4.05026L32.618 12.3003C33.2611 12.9937 33.6184 13.9045 33.6184 14.8503C33.6184 15.796 33.2611 16.7068 32.618 17.4003L27.068 22.9503C26.3745 23.5934 25.4637 23.9507 24.518 23.9507C23.5722 23.9507 22.6614 23.5934 21.968 22.9503L13.718 14.7003C13.0749 14.0068 12.7175 13.096 12.7175 12.1503C12.7175 11.2045 13.0749 10.2937 13.718 9.60026L19.268 4.05026Z" stroke="#8C6E47" stroke-width="1.13" stroke-linecap="round" stroke-linejoin="round" />
                                             </svg>
@@ -320,14 +320,14 @@
                                 </li>
                             <?php else: ?>
                                 <li>
-                                    <a href="<?php echo esc_url(home_url('my-account')); ?>" alt="Register / Sign In">Register / Sign In</a>
+                                    <a href="<?php echo esc_url(home_url('my-account/edit-account')); ?>" alt="Register / Sign In">Register / Sign In</a>
                                 </li>
                             <?php endif; ?>
                         </ul>
                     </div>
                 </div>
                 <div class="header_actions">
-                    <button type="button">
+                    <button type="button" class="toggle_search">
                         Search
                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
                             <path d="M8.38218 8.34672C6.62482 10.1041 3.77557 10.1041 2.01822 8.34672C0.260856 6.58936 0.260856 3.74012 2.01821 1.98276C3.77557 0.225402 6.62482 0.225403 8.38218 1.98276C10.1395 3.74012 10.1395 6.58936 8.38218 8.34672ZM8.38218 8.34672L11.5642 11.5287" stroke="white" />
@@ -350,3 +350,15 @@
     </header>
 
     <img src="<?php echo IMG; ?>/lines.svg" class="header_lines">
+
+    <div class="search_viewport">
+        <div class="search_viewport-bg"></div>
+        <button type="button" class="search_viewport-close toggle_search">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M5.63644 5.63504L18.3644 18.363M18.3637 5.63522L5.63582 18.3631" stroke="white" />
+            </svg>
+        </button>
+        <div class="search_viewport-box">
+            <?php get_search_form(); ?>
+        </div>
+    </div>

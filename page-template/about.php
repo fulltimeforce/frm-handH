@@ -86,9 +86,9 @@ get_banner('Homepage / About / About H&H Classics', get_the_post_thumbnail_url(g
 $title = get_field('title_timeline');
 ?>
 <style>
-.timeline .splide__list::before {
-    width: calc(100% * 2.65);
-}
+    .timeline .splide__list::before {
+        width: calc(100% * 2.65);
+    }
 </style>
 <section class="timeline">
     <div class="container">
@@ -209,7 +209,8 @@ $title = get_field('title_timeline');
                                         <img src="<?php echo IMG; ?>/slide2.png">
                                         <div class="content">
                                             <p>1929 Bentley 41/2 Litre <br>(ex Woolf Barnato) <br>Sold: 537,600
-                                                <br>(resold: £874,00 in 2018)</p>
+                                                <br>(resold: £874,00 in 2018)
+                                            </p>
                                         </div>
                                         <div class="timecard-time">
                                             <span>2011</span>
@@ -257,7 +258,8 @@ $title = get_field('title_timeline');
                                         <img src="<?php echo IMG; ?>/slide3.png">
                                         <div class="content">
                                             <p>1960 Ferrari 250 GT SWB <br>1967 Ferrari 275 GTB/4 <br>Sold combined:
-                                                <br>£9,758,320</p>
+                                                <br>£9,758,320
+                                            </p>
                                         </div>
                                         <div class="timecard-time">
                                             <span>2015</span>
@@ -333,94 +335,94 @@ $s_link = get_field('specialists_btn');
                 </div>
                 <div class="splide__track">
                     <ul class="splide__list">
-    <?php 
-    $args = array(
-        'post_type'      => 'team',
-        'posts_per_page' => -1, // todos, o cambia a 8 si quieres limitar
-        'orderby'        => 'menu_order',
-        'order'          => 'ASC'
-    );
-    $team_query = new WP_Query($args);
+                        <?php
+                        $args = array(
+                            'post_type'      => 'team',
+                            'posts_per_page' => -1, // todos, o cambia a 8 si quieres limitar
+                            'orderby'        => 'menu_order',
+                            'order'          => 'ASC'
+                        );
+                        $team_query = new WP_Query($args);
 
-    if ($team_query->have_posts()): 
-        while ($team_query->have_posts()): $team_query->the_post(); 
-            $job_position = get_field('job_position');
-            $team_email   = get_field('team_email');
-            $team_phone   = get_field('team_phone');
-            $content      = get_the_content();
-            $image        = get_the_post_thumbnail_url(get_the_ID(), 'medium'); // usa la imagen destacada
-    ?>
-        <li class="splide__slide">
-            <div class="specialist_card">
-                <div class="specialist_card-front">
-                    <div class="specialist_card-image">
-                        <?php if ($image): ?>
-                            <img src="<?php echo esc_url($image); ?>" alt="<?php the_title_attribute(); ?>">
-                        <?php else: ?>
-                            <img src="<?php echo IMG; ?>/member.png" alt="<?php the_title_attribute(); ?>">
-                        <?php endif; ?>
-                    </div>
-                    <div class="specialist_card-info specialist_card-toggle">
-                        <div>
-                            <p><?php the_title(); ?></p>
-                            <?php if ($job_position): ?>
-                                <span><?php echo esc_html($job_position); ?></span>
-                            <?php endif; ?>
-                        </div>
-                        <button type="button" class="card_toggle">
-                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path d="M0 8.99943L18 8.99943M8.99969 0L8.99969 18" stroke="#F5F2EE"
-                                    stroke-width="2" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                <div class="specialist_card-back">
-                    <div class="specialist_card-toggle">
-                        <div>
-                            <p><?php the_title(); ?></p>
-                            <?php if ($job_position): ?>
-                                <span><?php echo esc_html($job_position); ?></span>
-                            <?php endif; ?>
-                        </div>
-                        <button type="button" class="card_toggle minus">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="2"
-                                viewBox="0 0 18 2" fill="none">
-                                <path d="M0 1L18 0.999999" stroke="#F5F2EE" stroke-width="2" />
-                            </svg>
-                        </button>
-                    </div>
-                    <div class="specialist_card-content">
-                        <ul>
-                            <?php if ($team_email): ?>
-                                <li>Email: <a href="mailto:<?php echo antispambot($team_email); ?>"><?php echo antispambot($team_email); ?></a></li>
-                            <?php endif; ?>
-                            <?php if ($team_phone): ?>
-                                <li>Tel: <a href="tel:<?php echo preg_replace('/\D+/', '', $team_phone); ?>"><?php echo esc_html($team_phone); ?></a></li>
-                            <?php endif; ?>
-                        </ul>
-                        <?php if ($content): ?>
-                            <p>
-                                            As a qualified accounting technician, Colette joined H&H in 2012 and has
-                                            been involved in all aspects of the business and industry.
-                                            <br><br>
-                                            From a young age, her father has been taking her to car meets, race meetings
-                                            and shows. As an adrenaline junkie, she can still be found at the same shows
-                                            and race meetings but now with her own sons.
-                                        </p>
-                        <?php endif; ?>
-                    </div>
-                    <a href="<?php the_permalink(); ?>">Read More</a>
-                </div>
-            </div>
-        </li>
-    <?php 
-        endwhile; 
-        wp_reset_postdata();
-    endif; 
-    ?>
-</ul>
+                        if ($team_query->have_posts()):
+                            while ($team_query->have_posts()): $team_query->the_post();
+                                $job_position = get_field('job_position');
+                                $team_email   = get_field('team_email');
+                                $team_phone   = get_field('team_phone');
+                                $content      = get_the_content();
+                                $image        = get_the_post_thumbnail_url(get_the_ID(), 'medium'); // usa la imagen destacada
+                        ?>
+                                <li class="splide__slide">
+                                    <div class="specialist_card">
+                                        <div class="specialist_card-front">
+                                            <div class="specialist_card-image">
+                                                <?php if ($image): ?>
+                                                    <img src="<?php echo esc_url($image); ?>" alt="<?php the_title_attribute(); ?>">
+                                                <?php else: ?>
+                                                    <img src="<?php echo IMG; ?>/member.png" alt="<?php the_title_attribute(); ?>">
+                                                <?php endif; ?>
+                                            </div>
+                                            <div class="specialist_card-info specialist_card-toggle">
+                                                <div>
+                                                    <p><?php the_title(); ?></p>
+                                                    <?php if ($job_position): ?>
+                                                        <span><?php echo esc_html($job_position); ?></span>
+                                                    <?php endif; ?>
+                                                </div>
+                                                <button type="button" class="card_toggle">
+                                                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M0 8.99943L18 8.99943M8.99969 0L8.99969 18" stroke="#F5F2EE"
+                                                            stroke-width="2" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="specialist_card-back">
+                                            <div class="specialist_card-toggle">
+                                                <div>
+                                                    <p><?php the_title(); ?></p>
+                                                    <?php if ($job_position): ?>
+                                                        <span><?php echo esc_html($job_position); ?></span>
+                                                    <?php endif; ?>
+                                                </div>
+                                                <button type="button" class="card_toggle minus">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="2"
+                                                        viewBox="0 0 18 2" fill="none">
+                                                        <path d="M0 1L18 0.999999" stroke="#F5F2EE" stroke-width="2" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                            <div class="specialist_card-content">
+                                                <ul>
+                                                    <?php if ($team_email): ?>
+                                                        <li>Email: <a href="mailto:<?php echo antispambot($team_email); ?>"><?php echo antispambot($team_email); ?></a></li>
+                                                    <?php endif; ?>
+                                                    <?php if ($team_phone): ?>
+                                                        <li>Tel: <a href="tel:<?php echo preg_replace('/\D+/', '', $team_phone); ?>"><?php echo esc_html($team_phone); ?></a></li>
+                                                    <?php endif; ?>
+                                                </ul>
+                                                <?php if ($content): ?>
+                                                    <p>
+                                                        As a qualified accounting technician, Colette joined H&H in 2012 and has
+                                                        been involved in all aspects of the business and industry.
+                                                        <br><br>
+                                                        From a young age, her father has been taking her to car meets, race meetings
+                                                        and shows. As an adrenaline junkie, she can still be found at the same shows
+                                                        and race meetings but now with her own sons.
+                                                    </p>
+                                                <?php endif; ?>
+                                            </div>
+                                            <a href="<?php the_permalink(); ?>">Read More</a>
+                                        </div>
+                                    </div>
+                                </li>
+                        <?php
+                            endwhile;
+                            wp_reset_postdata();
+                        endif;
+                        ?>
+                    </ul>
 
                 </div>
             </div>
@@ -428,20 +430,20 @@ $s_link = get_field('specialists_btn');
     </div>
     <div class="meet_our_specialist-foot">
         <?php if (!empty($s_title)): ?>
-        <div class="meet_our_specialist-title">
-            <h2><?php echo $s_title; ?></h2>
-        </div>
+            <div class="meet_our_specialist-title">
+                <h2><?php echo $s_title; ?></h2>
+            </div>
         <?php endif; ?>
         <?php if (!empty($stext)): ?>
-        <div class="meet_our_specialist-content">
-            <?php echo $stext; ?>
-            <a href="<?php echo $s_link['url']; ?>" class="permalink_border">
-                <?php echo $s_link['title']; ?>
-                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
-                    <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
-                </svg>
-            </a>
-        </div>
+            <div class="meet_our_specialist-content">
+                <?php echo $stext; ?>
+                <a href="<?php echo $s_link['url']; ?>" class="permalink_border">
+                    <?php echo $s_link['title']; ?>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
+                        <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
+                    </svg>
+                </a>
+            </div>
         <?php endif; ?>
     </div>
 </section>
@@ -464,13 +466,13 @@ $imagesb = get_field('images_pv');
                             <p>Tailored for Every Client</p>
                         </div>
                         <?php if (!empty($titleb)): ?>
-                        <h2><?php echo $titleb; ?></h2>
+                            <h2><?php echo $titleb; ?></h2>
                         <?php endif; ?>
 
                         <?php if (!empty($descriptionb)): ?>
-                        <div class="tailored_info-content">
-                            <?php echo $descriptionb; ?>
-                        </div>
+                            <div class="tailored_info-content">
+                                <?php echo $descriptionb; ?>
+                            </div>
                         <?php endif; ?>
 
 
@@ -491,9 +493,9 @@ $imagesb = get_field('images_pv');
                     <div class="imagelider">
                         <?php if (have_rows('images_pv')): ?>
                             <?php while (have_rows('images_pv')): the_row(); ?>
-                                <?php 
-                                    $imagepv = get_sub_field('image_pv'); 
-                                    if ($imagepv): 
+                                <?php
+                                $imagepv = get_sub_field('image_pv');
+                                if ($imagepv):
                                 ?>
                                     <div class="slide">
                                         <img src="<?php echo esc_url($imagepv['url']); ?>" alt="<?php echo esc_attr($imagepv['alt']); ?>">

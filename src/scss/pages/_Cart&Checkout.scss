@@ -290,6 +290,18 @@
             @include m.tv {
                 padding-bottom: 36px !important;
             }
+
+            .shipping_data{
+                &>p{
+                    @include m.p;
+                    @media (min-width: v.$tv){
+                        margin-bottom: m.px-to-vw(10px);
+                    }
+                    @include m.tv{
+                        margin-bottom: 5px;
+                    }
+                }
+            }
         }
 
         &-footer {

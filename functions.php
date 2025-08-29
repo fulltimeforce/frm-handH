@@ -255,6 +255,10 @@ function editing_navigation_account($items)
     $items['appointments'] = __('Appointments', 'text-domain');
     $items['lot-alerts'] = __('Lot Alerts', 'text-domain');
     $items['sale-remimder'] = __('Sale Remimder', 'text-domain');
+    $items['identity-documents'] = __('Identity Documents', 'text-domain');
+    $items['current-bids'] = __('Current Bids', 'text-domain');
+    $items['past-bids'] = __('Past Bids', 'text-domain');
+    $items['live-bidding-registrations'] = __('Live Bidding Registrations', 'text-domain');
 
     // Eliminar un elemento existente del menú de 'Mi cuenta'
     unset($items['downloads']);
@@ -286,6 +290,24 @@ function editing_navigation_account($items)
     $items['appointments'] = '<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
         <path d="M31 11.25V9C31 8.20435 30.6839 7.44129 30.1213 6.87868C29.5587 6.31607 28.7956 6 28 6H7C6.20435 6 5.44129 6.31607 4.87868 6.87868C4.31607 7.44129 4 8.20435 4 9V30C4 30.7956 4.31607 31.5587 4.87868 32.1213C5.44129 32.6839 6.20435 33 7 33H12.25M23.5 3V9M11.5 3V9M4 15H11.5M25.75 26.25L23.5 24.45V21M32.5 24C32.5 28.9706 28.4706 33 23.5 33C18.5294 33 14.5 28.9706 14.5 24C14.5 19.0294 18.5294 15 23.5 15C28.4706 15 32.5 19.0294 32.5 24Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg> Appointments';
+    
+    $items['identity-documents'] = '<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
+        <path d="M24 14.5H27M24 20.5H27M9.255 22C9.56421 21.121 10.1387 20.3597 10.899 19.8211C11.6594 19.2826 12.5682 18.9933 13.5 18.9933C14.4318 18.9933 15.3406 19.2826 16.101 19.8211C16.8613 20.3597 17.4358 21.121 17.745 22M16.5 16C16.5 17.6569 15.1569 19 13.5 19C11.8431 19 10.5 17.6569 10.5 16C10.5 14.3431 11.8431 13 13.5 13C15.1569 13 16.5 14.3431 16.5 16ZM6 7H30C31.6569 7 33 8.34315 33 10V25C33 26.6569 31.6569 28 30 28H6C4.34315 28 3 26.6569 3 25V10C3 8.34315 4.34315 7 6 7Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg> Identity documents';
+    
+    $items['current-bids'] = '<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
+        <path d="M25.1554 23.3961L31.4311 17.1204L18.8796 4.56893L12.6039 10.8446L16.5262 14.767L21.233 19.4738L25.1554 23.3961Z" fill="black"/>
+        <path d="M8.6816 32.0252L21.233 19.4738L16.5262 14.767L3.97481 27.3184C3.35065 27.9426 3 28.7891 3 29.6718C3 30.5545 3.35065 31.401 3.97481 32.0252C4.59897 32.6494 5.44551 33 6.3282 33C7.2109 33 8.05744 32.6494 8.6816 32.0252Z" fill="black"/>
+        <path d="M21.233 19.4738L8.6816 32.0252C8.05744 32.6494 7.2109 33 6.3282 33C5.44551 33 4.59897 32.6494 3.97481 32.0252C3.35065 31.401 3 30.5545 3 29.6718C3 28.7891 3.35065 27.9426 3.97481 27.3184L16.5262 14.767M21.233 19.4738L16.5262 14.767M21.233 19.4738L25.1554 23.3961M16.5262 14.767L12.6039 10.8446M23.5864 24.965L33 15.5514M11.035 12.4136L20.4486 3M12.6039 10.8446L25.1554 23.3961M12.6039 10.8446L18.8796 4.56893L31.4311 17.1204L25.1554 23.3961" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg> Current bids';
+
+    $items['past-bids'] = '<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
+        <path d="M21.233 19.4738L8.6816 32.0252C8.05744 32.6494 7.2109 33 6.3282 33C5.44551 33 4.59897 32.6494 3.97481 32.0252C3.35065 31.401 3 30.5545 3 29.6718C3 28.7891 3.35065 27.9426 3.97481 27.3184L16.5262 14.767M23.5864 24.965L33 15.5514M11.035 12.4136L20.4486 3M12.6039 10.8446L25.1554 23.3961M31.4311 17.1204L18.8796 4.56893" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg> Past bids';
+    
+    $items['live-bidding-registrations'] = '<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
+        <path d="M24 6H27C27.7956 6 28.5587 6.31607 29.1213 6.87868C29.6839 7.44129 30 8.20435 30 9V30C30 30.7956 29.6839 31.5587 29.1213 32.1213C28.5587 32.6839 27.7956 33 27 33H9C8.20435 33 7.44129 32.6839 6.87868 32.1213C6.31607 31.5587 6 30.7956 6 30V9C6 8.20435 6.31607 7.44129 6.87868 6.87868C7.44129 6.31607 8.20435 6 9 6H12M13.5 21L16.5 24L22.5 18M13.5 3H22.5C23.3284 3 24 3.67157 24 4.5V7.5C24 8.32843 23.3284 9 22.5 9H13.5C12.6716 9 12 8.32843 12 7.5V4.5C12 3.67157 12.6716 3 13.5 3Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg> Live bidding registrations';
 
     return $items;
 }

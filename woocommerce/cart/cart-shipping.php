@@ -29,7 +29,7 @@ $calculator_text          = '';
 
 <div class="woocommerce-shipping-totals shipping">
 	<h4><?php echo wp_kses_post( $package_name ); ?></h4>
-	<div data-title="<?php echo esc_attr( $package_name ); ?>">
+	<div data-title="<?php echo esc_attr( $package_name ); ?>" class="shipping_data">
 		<?php if ( ! empty( $available_methods ) && is_array( $available_methods ) ) : ?>
 			<ul id="shipping_method" class="woocommerce-shipping-methods">
 				<?php foreach ( $available_methods as $method ) : ?>
@@ -62,9 +62,9 @@ $calculator_text          = '';
 			<?php
 		elseif ( ! $has_calculated_shipping || ! $formatted_destination ) :
 			if ( is_cart() && 'no' === get_option( 'woocommerce_enable_shipping_calc' ) ) {
-				echo wp_kses_post( apply_filters( 'woocommerce_shipping_not_enabled_on_cart_html', __( 'Shipping costs are calculated during checkout.', 'woocommerce' ) ) );
+				echo '<p>'.wp_kses_post( apply_filters( 'woocommerce_shipping_not_enabled_on_cart_html', __( 'Shipping costs are calculated during checkout.', 'woocommerce' ) ) ).'</p>';
 			} else {
-				echo wp_kses_post( apply_filters( 'woocommerce_shipping_may_be_available_html', __( 'Enter your address to view shipping options.', 'woocommerce' ) ) );
+				echo '<p>'.wp_kses_post( apply_filters( 'woocommerce_shipping_may_be_available_html', __( 'Enter your address to view shipping options.', 'woocommerce' ) ) ).'</p>';
 			}
 		elseif ( ! is_cart() ) :
 			echo wp_kses_post( apply_filters( 'woocommerce_no_shipping_available_html', __( 'There are no shipping options available. Please ensure that your address has been entered correctly, or contact us if you need any help.', 'woocommerce' ) ) );
