@@ -370,7 +370,7 @@ $testimonials_items = get_field('testimonials_items');
                     </div>
                 <?php endfor; ?>
             </div>
-            <a href="#" class="permalink" alt="View All Vehicles">
+            <a href="<?php echo esc_url(home_url('vehicles-for-sale')) ?>" class="permalink" alt="View All Vehicles">
                 View All Vehicles
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
                     <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
@@ -505,10 +505,12 @@ $testimonials_items = get_field('testimonials_items');
                 <article class="new <?php echo $size_class; ?>" data-nro="<?php echo $count; ?>">
                     <?php if ($size_class !== 'small' && has_post_thumbnail()) : ?>
                         <div class="new_image">
-                            <?php the_post_thumbnail('medium'); ?>
+                            <a href="<?php the_permalink(); ?>">
+                                <?php the_post_thumbnail('medium'); ?>
+                            </a>
                         </div>
                     <?php endif; ?>
-                    <div class="new_content">
+                    <a class="new_content" href="<?php the_permalink(); ?>">
                         <span><?php echo get_the_date('d/m/y'); ?></span>
                         <h3>
                             <?php
@@ -535,8 +537,8 @@ $testimonials_items = get_field('testimonials_items');
                             }
                         }
                         ?>
-                        <a href="<?php the_permalink(); ?>">Read More >></a>
-                    </div>
+                        <span href="<?php the_permalink(); ?>">Read More >></span>
+                    </a>
                 </article>
                 <?php
                 $count++;
@@ -581,7 +583,7 @@ $testimonials_items = get_field('testimonials_items');
     </div>
 </div>
 
-        <a href="#" class="permalink" alt="View All Vehicles">
+        <a href="<?php echo esc_url(home_url('news-and-insights')) ?>" class="permalink" alt="View All Articles">
             View All Articles
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
                 <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />

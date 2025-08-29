@@ -12,35 +12,40 @@ get_banner('Homepage / Classic Auctions / Get a Valuation', '', 'Get a Valuation
 <section class="valuation_info">
     <div class="valuation_info-container">
         <div class="valuation_info-title">
-            <h2>Sell my Classic Motorcar, Motorcycle or Vintage Scooter</h2>
+            <?php if (get_field('getvaluation_title')): ?>
+                <h2><?php echo get_field('getvaluation_title'); ?></h2>
+            <?php endif; ?>
         </div>
         <div class="valuation_info-row">
+            <?php if (get_field('getvaluation_column_1')): ?>
             <div class="valuation_info-col">
-                <p>Choose the easiest way that works for you:</p>
-                <h3>Contact our team</h3>
-                <ol>
-                    <li>Call our friendly team at <b>01925 210035</b></li>
-                    <li>Email us at <a href="mailto:sales@handh.co.uk">sales@handh.co.uk</a>, or</li>
-                    <li>Fill out the quick form below - we will get back to you promptly</li>
-                </ol>
+                <p><?php echo get_field('getvaluation_column_1'); ?></p>
+                <h3><?php echo get_field('getvaluation_subtitle_1'); ?></h3>
+                <?php if (get_field('getvaluation_text_1')): ?>
+                <?php echo get_field('getvaluation_text_1'); ?>
+                <?php endif; ?>
             </div>
+            <?php endif; ?>
+            <?php if (get_field('getvaluation_column_2')): ?>
             <div class="valuation_info-col">
-                <p>For after-hours enquiries, reach out to:</p>
-                <h3>James McWilliam</h3>
-                <ul>
-                    <li>Email: <a href="mailto:james.mcwilliam@handh.co.uk">james.mcwilliam@handh.co.uk</a></li>
-                    <li>Tel: <b>+44 (0)7943 584767</b></li>
-                </ul>
+                <p><?php echo get_field('getvaluation_column_2'); ?></p>
+                <h3><?php echo get_field('getvaluation_subtitle_2'); ?></h3>
+                <?php if (get_field('getvaluation_text_2')): ?>
+                <?php echo get_field('getvaluation_text_2'); ?>
+                <?php endif; ?>
             </div>
+            <?php endif; ?>
         </div>
     </div>
 </section>
 
 <section class="showcase">
     <div class="showcase-container">
+         <?php if (get_field('getvaluation_form_title')): ?>
         <div class="showcase-title">
-            <h2>Showcase your Classic in the most prestigious venues and reach a global audience. Get a valuation for your classic car, motorcycle, or vintage scooter: it's free.</h2>
+            <h2><?php echo get_field('getvaluation_form_title'); ?></h2>
         </div>
+         <?php endif; ?>
         <div class="showcase-form w-100">
             <?php echo do_shortcode('[gravityform id="4" title="true" ajax="true"]'); ?>
         </div>
@@ -50,6 +55,7 @@ get_banner('Homepage / Classic Auctions / Get a Valuation', '', 'Get a Valuation
         </div>
         <div class="showcase-dropdown">
             <ul id="my-accordion" class="accordionjs">
+                <?php if (get_field('getvaluation_terms_text')): ?>
                 <li>
                     <div>
                         <h3>Terms & Conditions</h3>
@@ -58,9 +64,11 @@ get_banner('Homepage / Classic Auctions / Get a Valuation', '', 'Get a Valuation
                         </svg>
                     </div>
                     <div class="description">
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam, eveniet libero vel cumque vero labore minima rerum iste culpa necessitatibus modi aspernatur ducimus obcaecati nulla! Omnis sint et eos facere.</p>
+                        <?php echo get_field('getvaluation_terms_text'); ?>
                     </div>
                 </li>
+                <?php endif; ?>
+                <?php if (get_field('getvaluation_form_text')): ?>
                 <li>
                     <div>
                         <h3>Download Forms</h3>
@@ -69,9 +77,10 @@ get_banner('Homepage / Classic Auctions / Get a Valuation', '', 'Get a Valuation
                         </svg>
                     </div>
                     <div class="description">
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam, eveniet libero vel cumque vero labore minima rerum iste culpa necessitatibus modi aspernatur ducimus obcaecati nulla! Omnis sint et eos facere.</p>
+                        <?php echo get_field('getvaluation_form_text'); ?>
                     </div>
                 </li>
+                <?php endif; ?>
             </ul>
         </div>
     </div>
