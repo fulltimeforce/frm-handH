@@ -1169,6 +1169,15 @@
         @include m.tablet {
             margin-top: 96px;
         }
+
+        .breadlines{
+            @media (min-width: v.$tv){
+                margin-bottom: m.px-to-vw(31px);
+            }
+            @include m.tv{
+                margin-bottom: 23px;
+            }
+        }
     }
 
     &_info,

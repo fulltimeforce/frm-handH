@@ -40,7 +40,7 @@ $link = get_field('link_careers');
 </section>
 
 <?php if (have_rows('our_services')): ?>
-    <div class="opportunities-buttons">
+    <div class="opportunities-buttons w-100">
         <?php while (have_rows('our_services')): the_row(); ?>
             <button class="scroll_opportunity <?php echo get_row_index() == 1 ? 'active' : ''; ?>" data-id="opportunity<?php echo get_row_index(); ?>">
                 <?php echo get_sub_field('button_in_top_service') ?>
