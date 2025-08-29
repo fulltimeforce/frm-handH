@@ -82,9 +82,19 @@
 
 .auction_list {
     @include m.pblock160;
-    // @include m.space-left;
     &-container{
         @include m.container_side;
+        @include m.tv {
+            padding-left: 15%;
+            padding-right: 8%;
+        }
+        @include m.desktop {
+            padding-left: 11%;
+            padding-right: 4%;
+        }
+         @include m.laptop {
+            padding-left: 4%;
+        }
     }
 }
 
@@ -98,7 +108,14 @@
         align-items: center;
     }
 
-    @include m.tv {}
+    @include m.tv {
+        display: grid;
+        grid-template-columns: m.px-to-vw(522px) 1fr 1fr;
+        grid-gap: 42px 16px;
+    }
+    @include m.laptop {
+        display: block;
+    }
 
     &:not(:last-child) {
         @media (min-width: v.$tv) {
@@ -116,6 +133,9 @@
 
     &>* {
         width: 100%;
+    }
+    &_thumb {
+       
     }
 
     .thumb {
@@ -182,7 +202,15 @@
                 grid-gap: m.px-to-vw(32px);
             }
 
-            @include m.tv {}
+            @include m.tv {
+                display: grid;
+                grid-template-columns: 150px 1fr 1fr;
+                grid-gap: 32px;
+            }
+            @include m.tablet {
+                grid-template-columns: 1fr;
+                grid-gap: 16px;
+            }
 
             p {
                 color: v.$white;
@@ -215,13 +243,20 @@
                         letter-spacing: m.px-to-vw(1.02px);
                     }
 
-                    @include m.tv {}
+                    @include m.tv {
+                        margin-top: 16px;
+                        font-size: 14.5px;
+                    }
                 }
             }
         }
     }
 
     &_actions {
+        @include m.laptop {
+            margin-bottom: 32px;
+        }
+
         ul {
             @media (min-width: v.$tv) {
                 @include m.flex(center, m.px-to-vw(12px));
@@ -245,13 +280,15 @@
                 border: m.px-to-vw(1px) solid v.$light_brown;
                 height: m.px-to-vw(51px);
                 font-size: m.px-to-vw(16px);
-
                 line-height: 1;
                 letter-spacing: m.px-to-vw(0.8px);
             }
 
             @include m.tv {
                 border: 1px solid v.$light_brown;
+                height: 40px;
+                font-size: 14.5px;
+                letter-spacing: 0.8px;
             }
         }
 
@@ -269,6 +306,9 @@
     }
 
     &_info {
+        @include m.laptop {
+            margin-block: 32px;
+        }
         &>* {
             &:not(:last-child) {
                 @media (min-width: v.$tv) {

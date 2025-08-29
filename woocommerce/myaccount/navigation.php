@@ -28,7 +28,7 @@ do_action('woocommerce_before_account_navigation');
 	<div class="w-100">
 		<h2>Welcome, Mr. John Doe!</h2>
 		<?php if (is_user_logged_in()) : ?>
-			<a href="<?php echo esc_url(wc_get_account_endpoint_url('customer-logout')); ?>">
+			<a href="<?php echo esc_url(wc_get_account_endpoint_url('customer-logout')); ?>" alt="Sign Out">
 				Sign Out
 			</a>
 		<?php endif; ?>

@@ -45,7 +45,16 @@
                 grid-gap: m.px-to-vw(20px);
             }
 
-            @include m.tv {}
+            @include m.tv {
+                display: grid;
+                grid-template-columns: 260px 1fr;
+                grid-gap: 14px;
+            }
+
+            @include m.laptop {
+                grid-template-columns: 100%;
+                grid-gap: 32px;
+            }
         }
     }
 }
@@ -347,6 +356,11 @@
         ul,
         ol {
             list-style: none;
+            @include m.flex(center);
+
+            @media (min-width: v.$laptop) {
+                flex-direction: column;
+            }
 
             @media (min-width: v.$tv) {
                 padding-top: m.px-to-vw(16px);
@@ -355,10 +369,24 @@
             @include m.tv {
                 padding-top: 10px;
             }
+
+            @include m.laptop {
+                padding-top: 0;
+            }
         }
 
         &-link {
-            width: 100%;
+            @media (min-width: v.$laptop) {
+                width: 100%;
+            }
+
+            @include m.laptop {
+                width: 50%;
+            }
+
+            @include m.tablet {
+                width: 100%;
+            }
 
             a {
                 width: 100%;
@@ -367,13 +395,25 @@
 
                 @media (min-width: v.$tv) {
                     letter-spacing: m.px-to-vw(0.8px);
-                    @include m.flex(flex-start, m.px-to-vw(16px));
+                    @include m.flex(flex-start, m.px-to-vw(15px));
+                    flex-wrap: nowrap;
                     padding: m.px-to-vw(20px) m.px-to-vw(21px);
                 }
 
                 @include m.tv {
                     @include m.flex(flex-start, 10px);
+                    flex-wrap: nowrap;
                     padding: 14px 15px;
+                }
+
+                svg {
+                    @media (min-width: v.$tv) {
+                        @include m.square(m.px-to-vw(36px));
+                    }
+
+                    @include m.tv {
+                        @include m.square(25px);
+                    }
                 }
             }
 
@@ -383,6 +423,46 @@
                     font-weight: 300;
                     background: v.$light_brown_2;
                 }
+            }
+
+            &--edit-account {
+                order: 1;
+            }
+
+            &--identity-documents {
+                order: 2;
+            }
+
+            &--current-bids {
+                order: 3;
+            }
+
+            &--past-bids {
+                order: 4;
+            }
+
+            &--wishlist {
+                order: 5;
+            }
+
+            &--live-bidding-registrations {
+                order: 6;
+            }
+
+            &--orders {
+                order: 7;
+            }
+
+            &--appointments {
+                order: 8;
+            }
+
+            &--lot-alerts {
+                order: 9;
+            }
+
+            &--sale-remimder {
+                order: 10;
             }
         }
     }
@@ -401,12 +481,53 @@
             border: 1px solid v.$light_brown;
         }
 
+        h3 {
+            @include m.fz31;
+        }
+
+        .no-one{
+            color: v.$black !important;
+            opacity: 0.6 !important;
+            font-family: v.$gotham_m !important;
+            font-weight: 300 !important;
+            @media (min-width: v.$tv) {
+                letter-spacing: px-to-vw(1.4px) !important;
+                font-size: m.px-to-vw(14px) !important;
+            }
+            
+            @include m.tv {
+                font-size: 11.6px !important;
+                letter-spacing: 0.3px !important;
+            }
+        }
+
+        .invoices {
+            @media (min-width: v.$tv) {
+                margin-top: m.px-to-vw(48px);
+            }
+
+            @include m.tv {
+                margin-top: 34px;
+            }
+
+            @include m.desktop {
+                margin-top: 26px;
+            }
+
+            table{
+                *{
+                    @include m.p;
+                }
+                .view{
+                    background: v.$light_brown !important;
+                    border-radius: 0 !important;
+                    color: v.$white !important;
+                }
+            }
+        }
+
         .profile {
             width: 100%;
-
-            h3 {
-                @include m.fz31;
-            }
 
             &_data {
                 @include m.mt48;
@@ -419,14 +540,19 @@
                     padding-left: 42px;
                 }
 
-                @include m.tablet {
-                    padding-left: 24px;
+                @include m.desktop {
+                    padding-left: 0;
                 }
 
                 &-row {
                     width: 100%;
                     @include m.flex(space-between);
                     align-items: flex-start;
+
+                    @include m.desktop {
+                        flex-direction: column;
+                        gap: 10px;
+                    }
 
                     &:not(:last-child) {
                         @media (min-width: v.$tv) {
@@ -456,6 +582,16 @@
 
                 @include m.tv {
                     grid-gap: 24px;
+                }
+
+                @include m.desktop {
+                    width: 100%;
+                    grid-gap: 12px;
+                }
+
+                @include m.tablet {
+                    grid-template-columns: 100%;
+                    grid-gap: 8px;
                 }
 
                 a {
@@ -557,6 +693,13 @@
             @include m.desktop {
                 padding-right: 0;
             }
+
+            @include m.tablet {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
+                justify-content: center;
+            }
         }
     }
 }
@@ -587,7 +730,7 @@
     position: fixed;
     inset: 0;
     z-index: 110;
-    
+
     &>* {
         @include m.transition;
         position: absolute;
@@ -606,16 +749,18 @@
         z-index: 112;
         background: v.$white;
         @extend %padding48;
-        @include m.centerX;
+        @include m.centerXY;
+        max-height: 94vh;
+        overflow-x: hidden;
+        overflow-y: auto;
 
         @media (min-width: v.$tv) {
-            top: m.px-to-vw(120px);
             max-width: m.px-to-vw(1165px);
             border: m.px-to-vw(1px) solid v.$light_brown;
         }
 
         @include m.tv {
-
+            max-width: 860px;
             border: 1px solid v.$light_brown;
         }
 
@@ -626,14 +771,19 @@
 
             @media (min-width: v.$tv) {
                 padding-bottom: m.px-to-vw(48px);
+                border-bottom: m.px-to-vw(1px) solid v.$light_brown;
+                margin-bottom: m.px-to-vw(48px);
             }
 
             @include m.tv {
                 padding-bottom: 36px;
+                border-bottom: 1px solid v.$light_brown;
+                margin-bottom: 36px;
             }
 
             @include m.desktop {
                 padding-bottom: 24px;
+                margin-bottom: 24px;
             }
 
             h4 {
@@ -656,69 +806,148 @@
                     @include m.fullWH;
                     object-fit: contain;
                     object-position: center;
+                    pointer-events: none;
                 }
             }
         }
 
-        &-body, &-footer{
+        &-footer {
             width: 100%;
+
             @media (min-width: v.$tv) {
                 border-top: m.px-to-vw(1px) solid v.$light_brown;
+                margin-top: m.px-to-vw(48px);
                 padding-top: m.px-to-vw(48px);
             }
-    
+
             @include m.tv {
                 border-top: 1px solid v.$light_brown;
+                margin-top: 36px;
                 padding-top: 36px;
             }
-    
+
             @include m.desktop {
+                margin-top: 24px;
                 padding-top: 24px;
+            }
+
+            [type="button"],
+            [type="submit"] {
+                @include m.flex(center);
+                text-transform: uppercase;
+                border-radius: 0 !important;
+                outline: none !important;
+                box-shadow: none !important;
+                font-family: v.$gotham_m !important;
+                font-weight: 300 !important;
+
+                @media (min-width: v.$tv) {
+                    padding: m.px-to-vw(20px) m.px-to-vw(21px) !important;
+                    font-size: m.px-to-vw(16px) !important;
+                    line-height: m.px-to-vw(18.4px) !important;
+                    letter-spacing: m.px-to-vw(0.8px) !important;
+                    border: m.px-to-vw(1px) solid v.$light_brown !important;
+                }
+
+                @include m.tv {
+                    padding: 14px 15px !important;
+                    font-size: 14.2px !important;
+                    border: 1px solid v.$light_brown !important;
+                }
+
+            }
+
+            [type="button"] {
+                background: transparent !important;
+                color: v.$light_brown !important;
+            }
+
+            [type="submit"] {
+                background: v.$light_brown !important;
+                color: v.$white !important;
             }
         }
 
         &-body {
-            form {
+            width: 100%;
 
-                @media (min-width: v.$tv){
+            .span-2 {
+                grid-column: span 2;
+            }
+
+            .woocommerce-address-fields__field-wrapper {
+                @media (min-width: v.$tv) {
                     @include m.grid(2, m.px-to-vw(16px) m.px-to-vw(12px));
                 }
-                @include m.tv{
+
+                @include m.tv {
+                    @include m.grid(2, 10px 6px);
+                }
+            }
+
+            form {
+                @media (min-width: v.$tv) {
+                    @include m.grid(2, m.px-to-vw(16px) m.px-to-vw(12px));
+                }
+
+                @include m.tv {
                     @include m.grid(2, 10px 6px);
                 }
 
-                #account_display_name_description, .clear{
+                #account_display_name_description,
+                .clear {
                     display: none;
                 }
+
                 .form-row {
                     @include m.form-row;
 
-                    label{
+                    label {
+                        position: relative;
                         color: v.$black;
                         opacity: 0.6;
                         text-align: left;
                         font-family: v.$gotham_m;
                         font-weight: 300;
+                        width: fit-content;
                         line-height: normal !important;
-                        @media (min-width: v.$tv){
+
+                        @media (min-width: v.$tv) {
                             letter-spacing: m.px-to-vw(1.4px);
                             font-size: m.px-to-vw(14px);
                             margin-bottom: m.px-to-vw(12px);
                         }
-                        @include m.tv{
+
+                        @include m.tv {
                             font-size: 11.6px;
                             margin-bottom: 7px;
                         }
                     }
+
+                    select,
                     input {
                         @extend %input;
+
+                        @media (min-width: v.$tv) {
+                            border: m.px-to-vw(1px) solid v.$light_brown !important;
+                        }
+
+                        @include m.tv {
+                            border: 1px solid v.$light_brown !important;
+                        }
                     }
+                }
+
+                #shipping_address_1_field,
+                #shipping_address_2_field {
+                    order: 10;
+                    @extend .span-2;
                 }
             }
 
         }
 
-        &-footer{
+        &-footer {
             @include m.flex(space-between);
             grid-column: span 2;
         }

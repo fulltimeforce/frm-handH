@@ -255,10 +255,6 @@
                 overflow-x: hidden;
                 overflow-y: auto;
             }
-
-            @include m.tablet {
-                display: none;
-            }
         }
     }
 
@@ -690,9 +686,197 @@
 
             .header_navigation {
                 &--list {
-                    right: -500px;
+                    right: 0;
                 }
             }
+        }
+    }
+
+}
+
+.search_viewport {
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    overflow: hidden;
+    inset: 0;
+    z-index: 200;
+    @include m.transition;
+
+    &>* {
+        position: absolute;
+    }
+
+    &-bg {
+        z-index: 201;
+        @include m.fullWH;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.40);
+        backdrop-filter: blur(20px);
+    }
+
+    &-close{
+        background: none;
+        border: none;
+        z-index: 202;
+        @media (min-width: v.$tv){
+            @include m.square(m.px-to-vw(24px));
+            top: m.px-to-vw(75px);
+            right: m.px-to-vw(75px);
+        }
+        @include m.tv{
+            @include m.square(18px);
+            top: 54px;
+            right: 54px;
+        }
+        @include m.laptop{
+            right: 3%;
+            top: 32px;
+        }
+
+
+        svg{
+            @include m.fullWH;
+            pointer-events: none;
+            object-fit: contain;
+            object-position: center;
+        }
+    }
+
+    &-box {
+        z-index: 203;
+        @include m.centerXY;
+        
+        @media (min-width: v.$tv) {
+            width: 100%;
+            max-width: m.px-to-vw(1090px);
+            border-bottom: m.px-to-vw(1px) solid white;
+            padding-bottom: m.px-to-vw(10px);
+        }
+
+        @include m.tv {
+            border-bottom: 1px solid white;
+            padding-bottom: 5px;
+            max-width: 808px;
+            width: 96%;
+        }
+    }
+
+    .search-form {
+        position: relative;
+        width: 100%;
+
+        @media (min-width: v.$tv) {
+            display: grid;
+            grid-template-columns: m.px-to-vw(36px) 1fr;
+            align-items: center;
+            grid-gap: m.px-to-vw(36px);
+        }
+
+        @include m.tv {
+            display: grid;
+            grid-template-columns: 24px 1fr;
+            align-items: center;
+            grid-gap: 24px;
+        }
+
+        &>svg {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1/1;
+            object-fit: contain;
+            object-position: center;
+            @media (min-width: v.$tv){
+                margin-bottom: m.px-to-vw(-14px);
+            }
+            @include m.tv{
+                margin-bottom: -10px;
+            }
+            @include m.laptop{
+                margin-bottom: -4px;
+            }
+        }
+
+        input {
+            background: none;
+            border: none;
+            color: v.$white !important;
+            font-family: v.$canela_text;
+            line-height: normal;
+
+            @media (min-width: v.$tv) {
+                letter-spacing: m.px-to-vw(4.2px);
+                font-size: m.px-to-vw(70px);
+            }
+
+            @include m.tv {
+                letter-spacing: 2.5px;
+                font-size: 50px;
+            }
+
+            @include m.desktop {
+                font-size: 38px;
+                letter-spacing: 2px;
+            }
+
+            @include m.laptop{
+                font-size: 28px;
+            }
+
+            @media (min-width: v.$tv) {
+                // height: m.px-to-vw(51px) !important;
+            }
+
+            @include m.tv {
+                // height: 39px !important;
+            }
+
+            &::placeholder {
+                color: v.$white !important;
+            }
+
+            &:-webkit-autofill{
+                background: none !important;
+            }
+        }
+
+        button {
+            position: absolute;
+            right: 0;
+            // @include m.centerY;
+            bottom: 0;
+            background: none;
+            border: none;
+
+            @media (min-width: v.$tv) {
+                width: m.px-to-vw(72px);
+                height: m.px-to-vw(51px);
+            }
+
+            @include m.tv {
+                width: 52px;
+                height: 38px;
+            }
+
+            @include m.laptop{
+                width: 36px;
+                height: 24px;
+            }
+
+            svg {
+                @include m.fullWH;
+                object-fit: contain;
+                object-position: center;
+            }
+        }
+    }
+
+    &:not(.active){
+        opacity: 0;
+        pointer-events: none;
+        user-select: none;
+        *{
+            pointer-events: none;
         }
     }
 

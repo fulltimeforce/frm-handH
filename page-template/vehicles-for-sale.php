@@ -1,28 +1,24 @@
 <?php
 /*
-    Template name: auction results
+    Template name: vehicles-for-sale
 */
 
 get_header();
 
-get_banner('Homepage / classic auctions / Auction Results', get_the_post_thumbnail_url(get_the_ID(), 'full'), 'Auction Results');
-//get fields
-$title = get_field('auction_result_title');
-$description = get_field('auction_result_description');
+get_banner('Homepage / Private Sales / Vehicles For Sale', '', 'Vehicles For Sale');
+
 ?>
 
-<section class="auction_result-tab">
-    <div class="container">
-        <div>
-            <a>PAST AUCTIONS</a>
-            <a class="active">Unsold Vehicles</a>
+<section class="auction_result-heading">
+    <div class="auction_result-container">
+        <h2>The vehicles listed below are available for Private Sale and can be viewed by appointment only.</h2>
+        <div class="content">
+            <p>To submit your vehicle for Private Sale or make an offer please contact our <a href="<?php echo esc_url(home_url('our-showroom')); ?>" alt="Private Sales Showroom">Private Sales Showroom</a></p>
         </div>
     </div>
 </section>
 <section class="auction_result-content">
-    <div class="container">
-        <h2><?php echo $title; ?></h2>
-        <div class="auction_result-text p18"><?php echo $description; ?></div>
+    <div class="auction_result-container">
         <form class="auction_result-filter" method="get" action="">
             <div class="auction_result-filter-search">
                 <input type="search" name="search_vehicle" placeholder="Search for..." value="<?php echo get_search_query(); ?>">
@@ -37,7 +33,7 @@ $description = get_field('auction_result_description');
                 </select>
             </div>
             <div class="auction_result-filter-select">
-                 <select name="orderby">
+                <select name="orderby">
                     <option value="">Sort by</option>
                     <option value="lot" <?php selected($_GET['orderby'] ?? '', 'lot'); ?>>Sort by lot number</option>
                     <option value="estimate" <?php selected($_GET['orderby'] ?? '', 'estimate'); ?>>Sort by Estimate</option>
@@ -51,26 +47,26 @@ $description = get_field('auction_result_description');
             <div class="auction_result-filter-year">
                 <select name="year_from">
                     <option value="">From</option>
-                    <?php for ($y=1920; $y<=date('Y'); $y++): ?>
+                    <?php for ($y = 1920; $y <= date('Y'); $y++): ?>
                         <option value="<?php echo $y; ?>" <?php selected($_GET['year_from'] ?? '', $y); ?>><?php echo $y; ?></option>
                     <?php endfor; ?>
                 </select>
                 <p>To</p>
                 <select name="year_to">
                     <option value="">To</option>
-                    <?php for ($y=1920; $y<=date('Y'); $y++): ?>
+                    <?php for ($y = 1920; $y <= date('Y'); $y++): ?>
                         <option value="<?php echo $y; ?>" <?php selected($_GET['year_to'] ?? '', $y); ?>><?php echo $y; ?></option>
                     <?php endfor; ?>
                 </select>
             </div>
             <div class="auction_result-filter-page">
                 <p>
-                    Showing 
+                    Showing
                     <select id="blog-perpage" class="blog_section-filter-page" name="posts_per_page" onchange="this.form.submit()">
                         <option value="6" <?php selected($_GET['posts_per_page'] ?? '', 6); ?>>6</option>
                         <option value="12" <?php selected($_GET['posts_per_page'] ?? '', 12); ?>>12</option>
                         <option value="24" <?php selected($_GET['posts_per_page'] ?? '', 24); ?>>24</option>
-                    </select> 
+                    </select>
                     Per Page
                 </p>
             </div>
@@ -140,8 +136,8 @@ $description = get_field('auction_result_description');
                     if (!$image) {
                         $image = IMG . '/car.png';
                     }
-                    ?>
-                    
+            ?>
+
                     <div class="auction_result-list-item">
                         <div class="auction_result-list-img">
                             <img class="w-100" src="<?php echo esc_url($image); ?>" alt="<?php the_title(); ?>">
@@ -180,7 +176,7 @@ $description = get_field('auction_result_description');
                             </a>
                         </div>
                     </div>
-                    <?php
+            <?php
                 endwhile;
                 wp_reset_postdata();
             else :
@@ -190,10 +186,10 @@ $description = get_field('auction_result_description');
             // Pagination
             $big = 999;
             echo '<div class="auction_result-pagination">';
-            echo paginate_links( array(
-                'base'      => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+            echo paginate_links(array(
+                'base'      => str_replace($big, '%#%', esc_url(get_pagenum_link($big))),
                 'format'    => '?paged=%#%',
-                'current'   => max( 1, get_query_var('paged') ),
+                'current'   => max(1, get_query_var('paged')),
                 'total'     => $query->max_num_pages,
                 'prev_text' => __('<svg xmlns="http://www.w3.org/2000/svg" width="19" height="14" viewBox="0 0 19 14" fill="none">
   <path d="M19 7L1.00049 7M1.00049 7L7.00049 13M1.00049 7L7.0005 0.999999" stroke="#8C6E47"/>
@@ -201,13 +197,13 @@ $description = get_field('auction_result_description');
                 'next_text' => __('<svg xmlns="http://www.w3.org/2000/svg" width="19" height="14" viewBox="0 0 19 14" fill="none">
   <path d="M-7.15494e-08 7L17.9995 7M17.9995 7L11.9995 1M17.9995 7L11.9995 13" stroke="#8C6E47"/>
 </svg>'),
-            ) );
+            ));
             echo '</div>';
             ?>
         </div>
     </div>
     <div class="advertise_container auction_result-form">
-        <h2>Contact Sales Department</h2>
+        <h2>Contact Our Private Sales Department</h2>
         <div class="advertise_form">
             <?php echo do_shortcode('[gravityform id="2" title="true" ajax="true"]'); ?>
         </div>

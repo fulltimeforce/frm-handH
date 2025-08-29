@@ -36,6 +36,10 @@
 
     &_container {
         @extend %cont;
+         @include m.tv {
+           max-width: 100%;
+        }
+
     }
 
     &_images {
@@ -260,8 +264,6 @@
 
             @include m.tv {
                 @include m.flex(flex-start, 20px);
-            }
-            @include m.tablet {
                 align-items: baseline;
             }
 
@@ -302,6 +304,13 @@
 
         @include m.tv {
             max-width: 1608px;
+            padding-left: 15%;
+        }
+        @include m.desktop {
+            padding-left: 11%;
+        }
+        @include m.laptop {
+            padding-left: 4%;
         }
 
         margin-left: auto;
@@ -329,10 +338,9 @@
 
     &-foot {
         @extend %cont;
-
+        display: grid;
         @media (min-width: v.$tv) {
             margin-top: m.px-to-vw(80px);
-            display: grid;
             grid-template-columns: m.px-to-vw(638px) 1fr;
             grid-gap: m.px-to-vw(103px);
         }
@@ -341,6 +349,14 @@
             margin-top: 80px;
             grid-template-columns: 638px 1fr;
             grid-gap: 103px;
+        }
+        @include m.desktop {
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 50px;
+        }
+        @include m.laptop {
+            grid-template-columns: 1fr;
+            grid-gap: 40px;
         }
 
         &>* {
@@ -368,11 +384,7 @@
                 width: m.px-to-vw(420px);
                 justify-content: space-between;
             }
-
             @include m.tv {
-                width: 420px;
-            }
-            @include m.tablet {
                 width: fit-content;
             }
         }
@@ -431,9 +443,8 @@
 
     &-toggle {
         width: 100%;
-
+        display: grid;
         @media (min-width: v.$tv) {
-            display: grid;
             grid-template-columns: 1fr m.px-to-vw(60px);
             grid-gap: m.px-to-vw(40px);
             align-items: center;
@@ -469,8 +480,8 @@
             border: none;
             @include m.transition(.5s);
             @include m.tv {
-                width: 60px;
-                height: 60px;
+                width: 50px;
+                height: 50px;
             }
             @include m.tablet {
                 width: 40px;
@@ -498,13 +509,14 @@
             }
 
             &.minus {
+                @include m.flex(center);
                 @media (min-width: v.$tv) {
                     @include m.square(m.px-to-vw(50px));
-                    @include m.flex(center);
                 }
 
                 @include m.tv {
                     @include m.square(50px);
+
                 }
             }
         }
@@ -559,7 +571,7 @@
 
         a,
         li,
-        p {
+        p, h3 {
             @include m.p;
         }
 
@@ -609,6 +621,7 @@
         }
 
         @include m.tv {
+            display: grid;
             grid-template-rows: 371px 371px;
         }
 
@@ -618,6 +631,9 @@
 
         &>* {
             width: 100%;
+            @include m.tv {
+                max-width: 360px;
+            }
 
             &:nth-child(odd) {
                 @media (min-width: v.$tv) {
@@ -702,6 +718,19 @@
         }
     }
 
+    .container_side {
+         @include m.tv {
+            width: 100%;
+            padding-left: 15%;
+        }
+        @include m.desktop {
+            padding-left: 11%;
+        }
+         @include m.laptop {
+            padding-left: 4%;
+        }
+    }
+
     &_body {
         @include m.mt48;
         @include m.splide_arrows;
@@ -734,7 +763,14 @@
                     height: m.px-to-vw(3px);
                 }
 
-                @include m.tv {}
+                @include m.tv {
+                    width: calc(100% * 3.85) !important;
+                    left: 179px;
+                    height: 3px;
+                }
+                @include m.tablet {
+                    width: calc(100% * 7.8) !important;
+                }
             }
         }
 
@@ -838,12 +874,26 @@
         margin-left: auto;
 
         @media (min-width: v.$tv) {
+            padding-top: m.px-to-vw(130px);
             max-width: m.px-to-vw(calc(1513px + 95px));
             padding-right: m.px-to-vw(95px);
         }
 
-        @include m.tv {}
+        @include m.tv {
+            padding-top: 100px;
+            padding-left: 15%;
+            padding-right: 8%;
+        }
+        @include m.desktop {
+             padding-top: 80px;
+            padding-left: 11%;
+            padding-right: 4%;
+        }
+        @include m.laptop {
+            padding-left: 4%;
+        }
         @include m.tablet {
+             padding-top: 40px;
             max-width: calc(100% - 30px);
             margin-inline: auto;
         }
@@ -853,7 +903,11 @@
         @include m.flex(space-between);
         align-items: flex-start;
         position: relative;
+        @include m.tv {
+            flex-wrap: nowrap;
+        }
         @include m.tablet {
+            flex-direction: column;
             gap: 40px;
         }
     }
@@ -868,7 +922,13 @@
             width: m.px-to-vw(638px);
         }
 
-        @include m.tv {}
+        @include m.tv {
+            width: 100%;
+            max-width: 500px;
+        }
+        @include m.tablet {
+            min-height: 100%;
+        }
 
         &-box {
             position: relative;
@@ -879,6 +939,9 @@
 
             @include m.tv {
                 padding-top: 24px;
+            }
+            @include m.tablet {
+                height: auto !important;
             }
             &-ss {
                 position: sticky;
@@ -932,11 +995,11 @@
         }
 
         @include m.tv {
+            width: 100%;
             padding-inline: 10px;
         }
 
         @include m.tablet {
-            width: 100%;
             padding-inline: 0;
         }
 
@@ -955,6 +1018,9 @@
             box-shadow: 0 0 0 1px v.$light_brown;
             @include m.tv {
                 height: 466px;
+            }
+            @include m.tablet {
+                top: 150px;
             }
         }
 
@@ -1031,6 +1097,19 @@
     .splide__slide {
         @include m.tablet {
             width: 100%;
+        }
+    }
+    .upcoming .container_side {
+        @include m.tv {
+            padding-left: 15%;
+            margin: 0;
+        }
+        @include m.desktop {
+            padding-left: 11%;
+            width: 100%;
+        }
+        @include m.laptop {
+            padding-left: 4%;
         }
     }
 }

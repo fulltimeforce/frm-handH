@@ -3,47 +3,126 @@
 
 .auction {
     &_result {
+        &-heading {
+            @media (min-width: v.$tv) {
+                padding-top: m.px-to-vw(160px);
+            }
+
+            @include m.tv {
+                padding-top: 116px;
+            }
+
+            @include m.desktop {
+                padding-top: 86px;
+            }
+
+            @include m.tablet {
+                padding-top: 58px;
+            }
+
+            @include m.mb96;
+
+            h2 {
+                @include m.fz60;
+                font-weight: 300;
+                text-align: center;
+
+                @media (min-width: v.$tv) {
+                    margin-bottom: m.px-to-vw(40px);
+                }
+
+                width: 100%;
+
+                @include m.tv {
+                    margin-bottom: 28px;
+                }
+
+                @media (min-width: v.$desktop){
+                    padding-inline: 5%;
+                }
+            }
+
+            .content{
+                margin-inline: auto;
+                width: 100%;
+                @media (min-width: v.$tv){
+                    max-width: m.px-to-vw(638px);
+                }
+                @include m.tv{
+                    max-width: 470px;
+                }
+            }
+            p {
+                text-align: center;
+                @include m.p;
+            }
+
+            a {
+                font-family: v.$gotham_m;
+                font-weight: 300;
+                text-decoration: underline;
+                color: v.$light_brown;
+            }
+        }
+
+        &-container {
+            @include m.container_side;
+        }
+
         &-tab {
             .container {
                 border-bottom: m.px-to-vw(1px) solid v.$light_brown;
                 padding-block: m.px-to-vw(160px) m.px-to-vw(60px);
+                max-width: m.px-to-vw(1428px);
+                margin-right: m.px-to-vw(180px);
+
                 @include m.tv {
-                    padding-block: 160px 60px;
+                    padding-block: 100px 60px;
+                    max-width: 1428px;
+                    margin-right: 180px;
                 }
+
                 @include m.laptop {
-                    padding-block: 80px 30px;
+                    padding-block: 80px 40px;
                 }
+
                 div {
                     border: m.px-to-vw(1px) solid v.$light_brown;
-                    padding:  m.px-to-vw(5px);
+                    padding: m.px-to-vw(5px);
                     max-width: m.px-to-vw(452px);
                     background-color: v.$white;
                     @include m.flex(center, m.px-to-vw(5px));
                     flex-wrap: nowrap;
+
                     @include m.tv {
                         max-width: 452px;
                         padding: 5px;
                         border: 1px solid v.$light_brown;
                     }
+
                     a {
                         width: 100%;
                         font-family: v.$gotham_light;
                         background-color: v.$beige;
-                        padding-block:  m.px-to-vw(16px);
+                        padding-block: m.px-to-vw(16px);
                         letter-spacing: 0.8px;
                         text-align: center;
+
                         @include m.tv {
                             padding-block: 16px;
                         }
+
                         &:hover {
                             background-color: rgba(140, 110, 71, 0.5);
                         }
+
                         &.active {
                             background-color: v.$light_brown;
                             font-family: v.$gotham_m;
                             font-weight: 500;
                             color: v.$white;
                             letter-spacing: 1.04px;
+
                             &:hover {
                                 background-color: v.$light_brown;
                             }
@@ -52,20 +131,24 @@
                 }
             }
         }
+
         &-content {
             .container {
                 padding-block: m.px-to-vw(60px) m.px-to-vw(98px);
                 max-width: m.px-to-vw(1428px);
                 margin-right: m.px-to-vw(180px);
+
                 @include m.tv {
-                    padding-block: 60px 98px;
+                    padding-block: 60px 45px;
                     max-width: 1428px;
                     margin-right: 180px;
                 }
-                @include m.tablet {
+
+                @include m.laptop {
                     padding-block: 30px 45px;
                     margin-right: 0;
                 }
+
                 h2 {
                     max-width: m.px-to-vw(926px);
                     font-family: v.$cormorant;
@@ -74,112 +157,131 @@
                     letter-spacing: -1.4px;
                     margin: auto;
                     text-align: center;
+
                     @include m.tv {
                         max-width: 926px;
-                        font-size: 60px;
+                        font-size: 50px;
                     }
+
                     @include m.tablet {
                         font-size: 40px;
                     }
                 }
             }
         }
+
         &-text {
             max-width: m.px-to-vw(800px);
             margin: auto;
             text-align: center;
             padding-block: m.px-to-vw(30px) m.px-to-vw(60px);
             line-height: 150%;
+
             @include m.tv {
                 max-width: 800px;
-                padding-block: 30px 60px;
+                padding-block: 30px 40px;
             }
+
             a {
                 color: v.$light_brown;
                 text-decoration: underline;
                 font-family: v.$gotham_m;
             }
         }
+
         &-filter {
             @include m.grid(3, m.px-to-vw(10px));
             padding-block: 0 m.px-to-vw(60px);
             font-family: v.$gotham_light;
+
             @include m.tv {
                 gap: 10px;
-                padding-block: 60px;
+                padding-block: 40px;
             }
+
             @include m.laptop {
                 grid-template-columns: 1fr 1fr;
                 padding-block: 30px 50px;
             }
+
             @include m.tablet {
                 gap: 16px;
                 grid-template-columns: 1fr;
                 padding-block: 30px;
             }
+
             &-search {
                 display: flex;
+
                 input {
                     @include m.p;
                     width: 100%;
                     background-color: v.$white;
                     border: m.px-to-vw(1px) solid v.$light_brown;
                     padding: m.px-to-vw(20px);
+
                     @include m.tv {
                         border-width: 1px;
                         padding: 20px;
                     }
                 }
+
                 button {
                     background-color: v.$light_brown;
                     border: m.px-to-vw(1px) solid v.$light_brown;
                     padding: m.px-to-vw(20px);
                     color: v.$beige;
-                     @include m.tv {
+
+                    @include m.tv {
                         border-width: 1px;
                         padding: 20px;
                     }
                 }
             }
+
             &-select {
                 select {
                     width: 100%;
-                    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9' fill='none'><path d='M13 1L7 7L1 1' stroke='%238C6E47' stroke-width='2' fill='none'/></svg>") 
-                    no-repeat right m.px-to-vw(20px) center;
+                    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9' fill='none'><path d='M13 1L7 7L1 1' stroke='%238C6E47' stroke-width='2' fill='none'/></svg>") no-repeat right m.px-to-vw(20px) center;
                     background-size: m.px-to-vw(14px) m.px-to-vw(20px);
+
                     @include m.tv {
-                        background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9' fill='none'><path d='M13 1L7 7L1 1' stroke='%238C6E47' stroke-width='2' fill='none'/></svg>") 
-                    no-repeat right 20px center;
+                        background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9' fill='none'><path d='M13 1L7 7L1 1' stroke='%238C6E47' stroke-width='2' fill='none'/></svg>") no-repeat right 20px center;
                         background-size: 14px 20px;
                     }
                 }
             }
+
             &-year {
                 @include m.flex(space-between);
+
                 select {
                     min-width: m.px-to-vw(118px);
-                    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9' fill='none'><path d='M13 1L7 7L1 1' stroke='%238C6E47' stroke-width='2' fill='none'/></svg>") 
-                    no-repeat right m.px-to-vw(20px) center;
+                    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9' fill='none'><path d='M13 1L7 7L1 1' stroke='%238C6E47' stroke-width='2' fill='none'/></svg>") no-repeat right m.px-to-vw(20px) center;
                     background-size: m.px-to-vw(14px) m.px-to-vw(20px);
+
                     @include m.tv {
                         min-width: 118px;
-                        background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9' fill='none'><path d='M13 1L7 7L1 1' stroke='%238C6E47' stroke-width='2' fill='none'/></svg>") 
-                    no-repeat right 20px center;
+                        background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9' fill='none'><path d='M13 1L7 7L1 1' stroke='%238C6E47' stroke-width='2' fill='none'/></svg>") no-repeat right 20px center;
                         background-size: 14px 20px;
                     }
                 }
             }
+
             &-page {
                 text-align: center;
                 margin: auto;
             }
-            &-select, &-year {
+
+            &-select,
+            &-year {
                 select {
                     @include m.p;
                     background-color: v.$white;
                     border: m.px-to-vw(1px) solid v.$light_brown;
                     padding: m.px-to-vw(20px);
                     appearance: none;
+
                     @include m.tv {
                         border-width: 1px;
                         padding: 20px;
@@ -187,33 +289,41 @@
                 }
             }
         }
+
         &-list {
             border-bottom: 1px solid v.$light_brown;
+
             &-item {
-               @include m.flex(flex-start, m.px-to-vw(30px));
-               flex-wrap: nowrap;
-               margin-bottom: m.px-to-vw(95px);
-               @include m.tv {
-                gap: 30px;
-                margin-bottom: 95px;
-               }
-               @include m.laptop {
-                flex-direction: column;
-                align-items: baseline;
-                margin-bottom: 45px;
-               }
+                @include m.flex(flex-start, m.px-to-vw(30px));
+                flex-wrap: nowrap;
+                margin-bottom: m.px-to-vw(95px);
+
+                @include m.tv {
+                    gap: 30px;
+                    margin-bottom: 60px;
+                }
+
+                @include m.laptop {
+                    flex-direction: column;
+                    align-items: baseline;
+                    margin-bottom: 52px;
+                }
             }
+
             &-img {
                 max-width: m.px-to-vw(638px);
                 width: 100%;
                 position: relative;
                 display: inline-block;
+
                 @include m.tv {
-                    max-width: 638px;
+                    max-width: 450px;
                 }
+
                 @include m.laptop {
                     max-width: calc(100% - 15px);
                 }
+
                 &::after {
                     content: "";
                     position: absolute;
@@ -228,125 +338,160 @@
                 img {
                     object-fit: cover;
                     height: m.px-to-vw(359px);
+
                     @include m.tv {
-                        height: 359px;
-                    }
-                    @include m.tablet {
                         height: 280px;
+                    }
+
+                    @include m.laptop {
+                        height: 400px;
+                    }
+
+                    @include m.tablet {
+                        height: 250px;
                     }
                 }
             }
+
             &-info {
                 h3 {
                     font-family: v.$goudy;
                     font-size: m.px-to-vw(36px);
                     font-weight: 500;
+
                     @include m.tv {
-                        font-size: 36px;
+                        font-size: 26px;
                     }
-                    @include m.tablet {
-                        font-size: 30px;
-                    }
+
                 }
+
                 .permalink_border {
                     margin-block: m.px-to-vw(30px) 0;
+
                     @include m.tv {
                         margin-block: 20px 0;
                     }
+
                     svg {
                         margin-bottom: -8px;
                     }
                 }
             }
+
             &-data {
                 @include m.flex(flex-start);
                 flex-wrap: nowrap;
                 padding-block: m.px-to-vw(30px);
+
                 @include m.tv {
                     padding-block: 30px;
                 }
+
                 @include m.tablet {
                     flex-direction: column;
                     align-items: baseline;
-                    gap: 20px;
+                    gap: 16px;
                     padding-block: 20px;
                 }
+
                 div {
-                    &:first-of-type{
+                    &:first-of-type {
                         border-right: 1px solid v.$light_brown;
                         padding-right: m.px-to-vw(20px);
+
                         @include m.tv {
                             padding-right: 20px;
                         }
+
                         @include m.tablet {
                             border-right: none;
                             padding-right: 0;
                         }
+
                         p {
                             @include m.p;
                             font-family: v.$gotham_m;
                             letter-spacing: 1.4px;
                             line-height: 140%;
+
                             span {
                                 font-family: v.$gotham_light;
                             }
                         }
                     }
+
                     &:last-of-type {
                         padding-left: m.px-to-vw(20px);
+
                         @include m.tv {
                             padding-left: 20px;
                         }
-                         @include m.tablet {
+
+                        @include m.tablet {
                             padding-left: 0;
                         }
+
                         p {
                             @include m.p;
                             opacity: 0.8;
                             line-height: 140%;
                         }
-                        .gold-text {
+
+                        p.gold-text {
                             color: v.$light_brown;
-                            font-size: m.px-to-vw(30px);
+                            font-size: m.px-to-vw(36px) !important;
+                            line-height: 115%;
                             font-family: v.$gotham_m;
                             opacity: 1;
+
                             @include m.tv {
-                                font-size: 30px;
+                                font-size: 24px !important;
                             }
                         }
                     }
                 }
             }
+
             &-description {
                 @include m.p;
                 max-width: m.px-to-vw(726px);
                 line-height: 140%;
                 letter-spacing: 1px;
+
                 @include m.tv {
                     max-width: 726px;
                 }
             }
         }
+
         &-message {
             text-align: center;
             margin: m.px-to-vw(60px) 0;
+
             @include m.tv {
                 margin: 60px 0;
             }
         }
+
         &-pagination {
             text-align: right;
             margin-bottom: m.px-to-vw(90px);
+
             @include m.tv {
-                margin-bottom: 90px;
+                margin-bottom: 50px;
             }
-            @include m.tablet {
+
+            @include m.laptop {
                 margin-bottom: 45px;
             }
-            .next, .prev {
+
+            .next,
+            .prev {
                 background-color: v.$white;
             }
-            span, a {
+
+            span,
+            a {
                 @include m.p;
                 display: inline-flex;
                 align-items: center;
@@ -358,16 +503,45 @@
                 border: m.px-to-vw(1px) solid v.$light_brown;
                 color: v.$light_brown;
                 letter-spacing: - m.px-to-vw(1.19px);
+
                 @include m.tv {
                     width: 36px;
                     height: 36px;
                     border-width: 1px;
                     letter-spacing: -1.19px;
                 }
+
                 &.current {
                     background-color: v.$light_brown;
                     color: #D3C7B6;
                 }
+            }
+        }
+
+        &-form {
+            padding-block: m.px-to-vw(80px) m.px-to-vw(160px);
+
+            @include m.tv {
+                padding-block: 45px 80px;
+            }
+
+            @include m.laptop {
+                padding-block: 5px 80px;
+            }
+
+            h2 {
+                @include m.fz60;
+                font-weight: 400;
+                padding-bottom: m.px-to-vw(96px);
+
+                @include m.tv {
+                    padding-bottom: 45px;
+                }
+            }
+
+            .advertise_form {
+                margin: auto;
+                width: 85%;
             }
         }
     }

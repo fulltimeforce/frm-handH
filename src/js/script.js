@@ -627,9 +627,23 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
+  const container = document.querySelector(".animated_text");
   const textElement = document.querySelector(".animated_text-item");
 
-  if (textElement) {
+  if (container && textElement) {
+    const observer = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateText(textElement);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    observer.observe(container);
+  }
+
+  function animateText(textElement) {
     const text = textElement.textContent.trim();
     textElement.textContent = "";
 
@@ -661,3 +675,4 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+

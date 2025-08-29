@@ -27,8 +27,12 @@
             max-width: 1560px;
         }
 
-        @include m.tablet {
-            padding-inline: 15px;
+        @include m.desktop {
+            padding-inline: 5%;
+        }
+
+        @include m.laptop{
+            padding-inline: 4%;
         }
     }
 
@@ -41,7 +45,7 @@
         }
 
         @include m.tv {
-            margin-bottom: 20px;
+            margin-bottom: 14px;
         }
 
         &::before,
@@ -58,7 +62,7 @@
 
             @include m.tv {
                 height: 1px;
-                width: calc(50% - 100px);
+                width: calc(50% - 80px);
             }
         }
 
@@ -86,8 +90,8 @@
         }
 
         @include m.tv {
-            max-width: 108px;
-            margin-bottom: 36px;
+            max-width: 80px;
+            margin-bottom: 25px;
         }
 
         @include m.tablet {}
@@ -106,9 +110,12 @@
             grid-gap: 20px;
         }
 
-        @include m.tablet {
-            padding: 0 15px;
-            grid-template-columns: 1fr;
+        @media (max-width: 860px) {
+            grid-template-columns: 100%;
+
+            &>div:last-child{
+                order: -1;
+            }
         }
     }
 
@@ -120,13 +127,22 @@
         }
 
         @include m.tv {
-            @include m.flex(center, 20px);
+            @include m.flex(center, 14px);
             align-items: flex-start;
-            margin-bottom: 56px;
+            margin-bottom: 40px;
+        }
+        @include m.laptop {
+            gap: 20px;
         }
 
         &>* {
-            flex: 1;
+            @media (min-width: v.$laptop) {
+                flex: 1;
+            }
+
+            @include m.laptop {
+                width: 100%;
+            }
         }
     }
 
@@ -141,11 +157,11 @@
             }
 
             @include m.tv {
-                margin-bottom: 30px;
+                margin-bottom: 22px;
             }
 
-            @include m.tablet {
-                padding-bottom: 10px;
+            @include m.laptop{
+                margin-bottom: 12px;
             }
 
             @include m.h3;
@@ -221,7 +237,7 @@
                     }
 
                     @include m.tv {
-                        margin-bottom: 6px;
+                        margin-bottom: 4px;
                     }
                 }
             }
@@ -243,8 +259,8 @@
             grid-gap: 60px;
         }
 
-        @include m.tablet {
-            grid-template-columns: 1fr;
+        @include m.desktop {
+            grid-template-columns: 100%;
         }
 
         &>* {
@@ -265,13 +281,13 @@
         @include m.tv {
             margin-top: 34px;
             border-top: 1px solid v.$light_brown;
-            padding-top: 16px;
+            padding-top: 20px;
         }
 
-        @include m.tablet {
-            text-align: center;
-            padding-inline: 15px;
-            padding-bottom: 20px
+        @include m.laptop{
+            justify-content: center;
+            flex-direction: column;
+            gap: 0.6rem;
         }
 
         p,
@@ -288,7 +304,11 @@
         }
 
         @include m.tv {
-            margin-top: 67px;
+            margin-top: 48px;
+        }
+
+        @include m.laptop{
+            margin-top: 32px;
         }
 
         b {
@@ -307,10 +327,12 @@
             object-fit: contain;
 
             @media (min-width: v.$tv) {
+                margin-top: m.px-to-vw(18px);
                 max-width: m.px-to-vw(265.79px);
             }
 
             @include m.tv {
+                margin-top: 13px;
                 max-width: 240px;
             }
 
@@ -335,9 +357,7 @@
             }
 
             @include m.tablet {
-                margin: auto;
                 max-width: 100px;
-                margin-top: 30px;
             }
 
         }
@@ -350,7 +370,7 @@
             }
 
             @include m.tv {
-                margin-block: 48px 25px;
+                margin-block: 35px 18px;
             }
 
             @include m.tablet {
@@ -384,9 +404,6 @@
     }
 
     &_suscription {
-        @include m.tablet {
-            margin-bottom: 40px;
-        }
 
         &-form {
 
@@ -414,9 +431,11 @@
                 position: relative;
 
                 .gform-footer {
-                    position: absolute;
+                    @media (min-width: v.$laptop){
+                        position: absolute;
+                        right: 0;
+                    }
                     margin: 0 !important;
-                    right: 0;
 
                     @media (min-width: v.$tv) {
                         top: m.px-to-vw(68px) !important;
@@ -424,21 +443,56 @@
                     }
 
                     @include m.tv {
-                        bottom: 68px !important;
+                        bottom: 36px !important;
                         width: 156px !important;
                     }
 
-                    @include m.tablet {
-                        position: relative;
-                        margin-top: 100px !important;
+                    @include m.laptop{
+                        bottom: auto !important;
+                        top: auto !important;
+                        margin-top: 12px !important;
+                    }
+
+                }
+
+                [type="submit"] {
+                    width: 100% !important;
+
+                    color: v.$light_brown !important;
+                    font-family: v.$gotham_light !important;
+                    font-weight: 300 !important;
+                    text-transform: uppercase !important;
+
+                    @media (min-width: v.$tv) {
+                        font-size: px-to-vw(17px) !important;
+                        line-height: px-to-vw(23.8px) !important;
+                        letter-spacing: px-to-vw(1.02px) !important;
+                    }
+
+                    @include m.tv {
+                        font-size: 14.5px !important;
+                        line-height: 1.3em !important;
+                        letter-spacing: 0.4px !important;
+                    }
+
+                    @media (min-width: v.$tv) {
+                        border: m.px-to-vw(1px) solid v.$light_brown !important;
+                    }
+
+                    @include m.tv {
+                        border: 1px solid v.$light_brown !important;
                     }
                 }
 
+                [type="submit"],
                 input {
                     border-radius: 0 !important;
                     box-shadow: none !important;
                     outline: none !important;
                     background: transparent !important;
+                }
+
+                input {
 
                     &:not([type="checkbox"]) {
                         @media (min-width: v.$tv) {
@@ -446,7 +500,7 @@
                         }
 
                         @include m.tv {
-                            height: 52px !important;
+                            height: 38px !important;
                         }
                     }
 
@@ -494,6 +548,10 @@
 
                         @include m.tv {
                             width: calc(100% - 168px) !important;
+                        }
+
+                        @include m.laptop{
+                            width: 100% !important;
                         }
                     }
 

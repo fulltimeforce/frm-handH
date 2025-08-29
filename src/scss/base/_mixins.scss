@@ -857,12 +857,14 @@
     }
 }
 
-@mixin h4($color: v.$black) {
+@mixin h4($color: v.$black, $ff: v.$goudysb, $uppercase: true) {
     color: $color;
-    font-family: v.$goudysb;
+    font-family: $ff;
     leading-trim: both;
     text-edge: cap;
-    text-transform: uppercase;
+    @if($uppercase){
+        text-transform: uppercase;
+    }
 
     @media (min-width: v.$tv) {
         font-size: px-to-vw(36px);
