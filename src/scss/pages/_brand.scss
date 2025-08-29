@@ -14,9 +14,17 @@
     color: #000;
     font-family: v.$cormorant;
     font-weight: 400;
-    font-size: 40px;
     line-height: 110%;
     letter-spacing: -1.2px;
+
+    @media (min-width: v.$tv) {
+      font-size: m.px-to-vw(40px);
+      margin-bottom: m.px-to-vw(32px);
+    }
+    @include m.desktop {
+      font-size: 35px;
+      margin-bottom: 20px;
+    }
   }
 
   .splide__slide {
@@ -24,21 +32,33 @@
       position: relative;
       overflow: hidden;
       border-radius: 4px;
-      cursor: pointer;
-      transition: border-color 0.3s ease;
 
       &__image {
         border-radius: 4px;
         overflow: hidden;
-        height: 134px !important;
+
+        @media (min-width: v.$tv) {
+          height: m.px-to-vw(134px);
+          
+        }
+        @include m.desktop {
+          height: 134px;
+        }
       }
 
       &__image img {
         width: 100%;
-        height: 180px;
         object-fit: cover;
-        filter: brightness(70%);
+        filter: brightness(50%);
         transition: transform 0.3s ease;
+
+        @media (min-width: v.$tv) {
+          height: m.px-to-vw(180px);
+          
+        }
+        @include m.desktop {
+          height: 180px;
+        }
       }
 
       &__overlay {
@@ -51,50 +71,78 @@
         border-radius: 4px;
         margin: 8px;
         border: 2px solid #fff;
+        cursor: pointer;
+        transition: border-color 0.3s ease;
+        &:hover {
+          border-color: v.$light_brown; 
+        }
+      }
+
+      &.is-active {
+        .model-card__overlay {
+          border-color: v.$light_brown; 
+        }
       }
 
       &__title {
         color: #FFF;
         font-family: v.$goudysb;
-        font-size: 20px;
         font-style: normal;
         font-weight: 600;
-        line-height: 115%; /* 23px */
+        line-height: 115%;
         text-transform: uppercase;
         text-align: center;
-      }
 
-      &:hover {
-        border-color: #c7a76c; // dorado como en tu diseño
-        .model-card__image img {
-          transform: scale(1.05);
+        @media (min-width: v.$tv) {
+          max-width: m.px-to-vw(210px);
+          font-size: m.px-to-vw(20px);
+        }
+        @include m.desktop {
+          max-width: 100%;
+          font-size: 20px;
         }
       }
     }
   }
 
   .splide__arrows {
-    margin-top: 15px;
+    align-items: center;
     display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+    flex-wrap: wrap;
+    gap: 1.875vw;
+    justify-content: flex-start;
+    margin-bottom: 1.25vw;
+    padding-left: 1.875vw;
+
+    @media (min-width: v.$tv) {
+      width: m.px-to-vw(120px);
+    }
+    @include m.desktop {
+      width: 120px;
+    }
 
     .splide__arrow {
       background: transparent;
       border: none;
-      font-size: 20px;
-      cursor: pointer;
-      color: #5c4a2d;
+      color: v.$light_brown;
       transition: color 0.3s ease;
 
+      svg {
+        @media (min-width: v.$tv) {
+          width: m.px-to-vw(32px);
+        }
+        @include m.desktop {
+          width: 32px;
+        }
+      }
+
       &:hover {
-        color: #c7a76c;
+        color: v.$light_brown_2;
       }
     }
   }
 }
 
-/* Contenedor general */
 .models-content {
   margin-top: 60px;
 
@@ -106,10 +154,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 80px 0px;
 
-      @media (max-width: v.$tablet) {
+      @media (min-width: v.$tv) {
+        max-width: m.px-to-vw(1440px);
+        padding: m.px-to-vw(80px) 0px;
+      }
+      @include m.desktop {
         flex-direction: column !important;
+        max-width: 100%;
+        padding: 40px 0px;
       }
 
       h2 {
@@ -124,27 +177,34 @@
           max-width: m.px-to-vw(588px);
           font-size: m.px-to-vw(60px);
         }
-        @include m.tv {
-          max-width: 588px;
-          font-size: 60px;
-        }
         @include m.desktop {
           font-size: 50px;
           max-width: 600px;
+          margin-bottom: 20px;
         }
         @include m.tablet {
           font-size: 30px;
         }
       }
 
-    p {
-      color: #000;
-      font-family: v.$gotham_light;
-      font-size: 17px;
-      font-style: normal;
-      line-height: 150%;
-      max-width: 603px;
-    }
+      p {
+        color: #000;
+        font-family: v.$gotham_light;
+        font-style: normal;
+        line-height: 150%;
+
+        @media (min-width: v.$tv) {
+          max-width: m.px-to-vw(603px);
+          font-size: m.px-to-vw(17px);
+        }
+        @include m.desktop {
+          font-size: 17px;
+          max-width: 603px;
+        }
+        @include m.tablet {
+          font-size: 17px;
+        }
+      }
     }
 
     &.active {
@@ -153,7 +213,6 @@
   }
 }
 
-/* Grid de las cards */
 .model-cards {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -205,8 +264,6 @@
         line-height: 150%;
       }
     }
-
-    /* Variante full-width */
     &.mini-card--full {
       grid-column: 1 / -1;
 
@@ -217,14 +274,12 @@
   }
 }
 
-/* Responsive */
 @media (max-width: 1024px) {
   .model-cards {
     grid-template-columns: 1fr;
   }
 }
 
-/* Animación suave al cambiar de tab */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -239,8 +294,24 @@
 .model-ending {
   margin-top: 50px;
   padding: m.px-to-vw(120px) m.px-to-vw(20px);
-  background: #D3C7B6;
-  border-top: 1px solid #ccc;
+  background: v.$light_brown_2;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+
+  .model-ending-container {
+    max-width: m.px-to-vw(1440px);
+    margin: 0 auto;
+  }
+
+  hr {
+    height: 1px;
+    border-bottom: none;
+    border-top: 1px solid v.$light_brown;
+  }
 
   &__top {
     display: flex;
@@ -248,7 +319,7 @@
     align-items: flex-start;
     margin-bottom: 20px;
 
-    @media (max-width: 768px) {
+    @include m.desktop {
       flex-direction: column;
       gap: 10px;
     }
@@ -257,32 +328,56 @@
   &__title {
     color: #000;
     font-family: v.$cormorant;
-    font-size: 60px;
     font-weight: 400;
-    font-style: normal;
     line-height: 110%;
     letter-spacing: -1.8px;
-    max-width: 554px !important;
+    
+    @media (min-width: v.$tv) {
+      max-width: m.px-to-vw(554px) !important;
+      font-size: m.px-to-vw(60px);
+    }
+    @include m.desktop {
+      max-width: 100%;
+      font-size: 50px;
+    }
+    @include m.tablet {
+      max-width: 100%;
+      font-size: 35px;
+    }
   }
 
   &__subtext {
     color: #000;
     font-family: v.$gotham_light;
-    font-size: 17px;
-    font-style: normal;
     line-height: 150%;
-    max-width: 603px;
     margin-bottom: 40px;
+
+    @media (min-width: v.$tv) {
+      max-width: m.px-to-vw(603px);
+      font-size: m.px-to-vw(17px);
+    }
+    @include m.desktop {
+      max-width: 100%;
+      font-size: 17px;
+    }
+    @include m.tablet {
+      font-size: 17px;
+    }
   }
 
   &__desc {
     color: rgba(0, 0, 0, 0.80);
     font-family: v.$gotham_light;
-    font-size: 27px;
-    font-style: normal;
     line-height: 120%;
     margin-top: 40px;
     margin-bottom: 56px;
+
+    @media (min-width: v.$tv) {
+      font-size: m.px-to-vw(27px);
+    }
+    @include m.desktop {
+      font-size: 22px;
+    }
   }
 
   &__btn {
@@ -324,19 +419,24 @@
       color: v.$light_brown;
       text-align: center;
       font-family: v.$cormorant;
-      font-size: m.px-to-vw(36px);
       font-style: normal;
       font-weight: 500;
       line-height: 110%;
       letter-spacing: -1.08px;
 
+      @media (min-width: v.$tv) {
+        font-size: m.px-to-vw(36px);
+      }
+      @include m.desktop {
+        font-size: 30px;
+      }
+      @include m.tablet {
+        font-size: 20px;
+      }
+
       &.active {
         background: v.$light_brown;
         color: v.$white;
-      }
-
-      &:not(:last-child) {
-        border-right: none;
       }
     }
   }
@@ -348,7 +448,6 @@
     padding: m.px-to-vw(48px);
     margin-top: m.px-to-vw(48px);
     min-height: m.px-to-vw(130px);
-
 
     &::before {
       content: "";
@@ -382,6 +481,16 @@
 
     .history-tab-content {
       display: none;
+      color: rgba(v.$black, 0.80);
+      font-style: normal;
+      line-height: 120%;
+
+      @media (min-width: v.$tv) {
+        font-size: m.px-to-vw(22px);
+      }
+      @include m.desktop {
+        font-size: 20px;
+      }
 
       &.active {
         display: block;
@@ -393,15 +502,22 @@
 
 .history-feature {
   margin: 60px auto;
-  max-width: 1440px;
+  @media (min-width: v.$tv) {
+    max-width: m.px-to-vw(1440px);
+  }
+  @include m.desktop {
+    max-width: 100%;
+  }
 
   &__grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
+    gap: m.px-to-vw(24px);
     align-items: center;
 
-    @media (max-width: 768px) {
+    @media (min-width: v.$tv) {
+      grid-template-columns: 1fr 1fr;
+    }
+    @include m.desktop {
       grid-template-columns: 1fr;
     }
   }
@@ -413,10 +529,6 @@
       max-width: m.px-to-vw(702px);
       max-height: m.px-to-vw(522px);
       height: 100%;
-    }
-    @include m.tv {
-      max-width: 702px;
-      max-height: 522px;
     }
     @include m.desktop {
       max-width: 100%;
@@ -436,7 +548,6 @@
       margin: m.px-to-vw(24px);
       color: #fff;
       font-family: v.$cormorant;
-      font-size: m.px-to-vw(60px);
       letter-spacing: -1.8px;
       line-height: 110%;
       font-weight: 400;
@@ -449,10 +560,10 @@
         font-size: 60px;
       }
       @include m.desktop {
-        font-size: 50px;
+        font-size: 30px;
       }
       @include m.tablet {
-        font-size: 30px;
+        font-size: 20px;
       }
     }
 
@@ -487,18 +598,36 @@
     p {
       color: rgba(v.$black, 0.80);
       font-family: v.$gotham_light;
-      font-size: 17px;
       font-style: normal;
       line-height: 120%;
-      margin-bottom: 24px;
+      margin-bottom: 12px;
+
+      @media (min-width: v.$tv) {
+        font-size: m.px-to-vw(17px);
+      }
+      @include m.tv {
+        font-size: 17px;
+      }
+      @include m.desktop {
+        font-size: 17px;
+      }
     }
 
     strong {
       color: rgba(v.$black, 0.80);
       font-family: v.$gotham_light;
-      font-size: 22px;
       font-style: normal;
       line-height: 120%;
+
+      @media (min-width: v.$tv) {
+        font-size: m.px-to-vw(22px);
+      }
+      @include m.tv {
+        font-size: 22px;
+      }
+      @include m.desktop {
+        font-size: 20px;
+      }
     }
 
     .history-feature__btn {
@@ -514,6 +643,16 @@
 
       &:hover {
         background: #6f5432;
+      }
+
+      @media (min-width: v.$tv) {
+        font-size: m.px-to-vw(16px);
+      }
+      @include m.tv {
+        font-size: 16px;
+      }
+      @include m.desktop {
+        font-size: 16px;
       }
     }
   }
