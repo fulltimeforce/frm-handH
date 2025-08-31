@@ -302,6 +302,11 @@
                     color: v.$white;
                 }
             }
+            &:not(:first-child) {
+                a {
+                    font-family: v.$gotham_light;
+                }
+            }
         }
     }
 

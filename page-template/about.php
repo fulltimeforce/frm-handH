@@ -18,13 +18,13 @@ $timeline_title = get_field('title_timeline');
 <section class="heritage">
     <div class="heritage_container">
         <div class="tabs">
-            <button type="button" class="active">Our Heritage</button>
-            <button type="button">Timeline</button>
-            <button type="button">Our Specialists</button>
-            <button type="button">Private Sales</button>
-            <button type="button">Upcoming Auctions</button>
+            <a href="#our-heritage" class="active">Our Heritage</a>
+            <a href="#timelines">Timeline</a>
+            <a href="#specialists">Our Specialists</a>
+            <a href="#private-sales">Private Sales</a>
+            <a href="#upcoming-auctions">Upcoming Auctions</a>
         </div>
-        <div class="heritage_information">
+        <div class="heritage_information" id="our-heritage">
             <div class="heritage_images">
                 <img class="heritage_images-main" src="<?php echo IMG; ?>/about/4.png">
                 <div class="heritage_images-slider">
@@ -87,10 +87,10 @@ $title = get_field('title_timeline');
 ?>
 <style>
     .timeline .splide__list::before {
-        width: calc(100% * 2.65);
+        width: calc(100% * 4.65);
     }
 </style>
-<section class="timeline">
+<section class="timeline" id="timelines">
     <div class="container">
         <?php if ($timeline_title) : ?>
             <div class="timeline_head">
@@ -183,7 +183,7 @@ $s_title = get_field('specialists_title');
 $stext =  get_field('specialists_text');
 $s_link = get_field('specialists_btn');
 ?>
-<section class="meet_our_specialist">
+<section class="meet_our_specialist" id="specialists">
     <div class="meet_our_specialist-container">
         <div class="meet_our_specialist-head title_watermark">
             <div class="watermark"><p>Meet Our Specialists</p></div>
@@ -338,7 +338,7 @@ $descriptionb = get_field('description_private_sales');
 $linkb = get_field('link_private_sales');
 $imagesb = get_field('images_pv');
 ?>
-<section class="tailored">
+<section class="tailored" id="private-sales">
     <div class="tailored_container">
         <div class="tailored-flex">
             <div class="tailored_info">
@@ -397,7 +397,7 @@ $auct_text = get_field('about_auction_text');
 $auct_btn1 = get_field('about_auction_btn1');
 $auct_btn2 = get_field('about_auction_btn2');
 ?>
-<section class="upcoming">
+<section class="upcoming" id="upcoming-auctions">
     <?php get_template_part('inc/sections/upcoming'); ?>
     <div class="upcoming_container">
         <div class="upcoming_info">

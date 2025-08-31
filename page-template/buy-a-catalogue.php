@@ -5,7 +5,7 @@
 
 get_header();
 
-get_banner('Homepage / Classic Auctions / Buy A Catalogue', '', 'Buy A Catalogue');
+get_banner('Homepage / Classic Auctions / Buy A Catalogue', get_the_post_thumbnail_url(get_the_ID(), 'full'), 'Buy A Catalogue');
 
 ?>
 

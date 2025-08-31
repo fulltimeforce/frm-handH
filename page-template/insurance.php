@@ -5,7 +5,7 @@
 
 get_header();
 
-get_banner('Homepage / Classic Auctions / Insurance', '', 'Insurance');
+get_banner('Homepage / Classic Auctions / Insurance', get_the_post_thumbnail_url(get_the_ID(), 'full'), 'Insurance');
 
 ?>
 
