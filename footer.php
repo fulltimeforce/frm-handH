@@ -57,7 +57,7 @@
                                 <a href="<?php echo esc_url(home_url('my-account/edit-account')); ?>">Register / Sign In</a>
                             <?php endif; ?>
                             <a href="#">Make a Payment</a>
-                            <a href="#">Telephone Bid Form</a>
+                            <a href="https://handh.blob.core.windows.net/main/HandH-Telephone-Bidding-Form-20230714.pdf" target="_blank">Telephone Bid Form</a>
                         </div>
                     </div>
                 </div>
