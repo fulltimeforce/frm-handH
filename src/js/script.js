@@ -196,6 +196,7 @@ import "@splidejs/splide/css";
             arrows: true,
             pagination: false,
             autoWidth: true,
+            autoHeight: true,
             gap: '1.094vw',
             breakpoints: {
                 1420: {

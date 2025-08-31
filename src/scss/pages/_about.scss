@@ -172,7 +172,7 @@
             flex-direction: column;
         }
 
-        button {
+        a {
             flex: 1;
             background: none;
             border: none;
@@ -180,6 +180,7 @@
             color: v.$black;
             text-transform: uppercase;
             font-family: v.$gotham_m;
+            text-align: center;
 
             @media (min-width: v.$tv) {
                 font-size: m.px-to-vw(13px);
@@ -395,6 +396,7 @@
 .specialist_card {
     position: relative;
     overflow: hidden;
+    height: 100%;
 
     @media (min-width: v.$tv) {
         width: m.px-to-vw(418px);

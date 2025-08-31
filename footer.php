@@ -34,10 +34,10 @@
                     <div class="footer_nav">
                         <p class="footer_nav-head">Auctions</p>
                         <div class="footer_nav-list">
-                            <a href="#">Auction Calendar</a>
+                            <a href="https://issuu.com/handhclassicsadmin/docs/h_h-2025-auction-calendar">Auction Calendar</a>
                             <a href="<?php echo esc_url(home_url('auction-results')) ?>">Auction Results</a>
-                            <a href="#">Enter Your Classic</a>
-                            <a href="#">H&H Welcome Pack</a>
+                            <a href="<?php echo esc_url(home_url('get-a-valuation')) ?>">Enter Your Classic</a>
+                            <a href="https://issuu.com/handhclassics/docs/handh-welcome-booklet-20231215?fr=sYjkxNTYzMTE1NDY" target="_blank">H&H Welcome Pack</a>
                         </div>
                     </div>
                     <div class="footer_nav">
@@ -57,7 +57,7 @@
                                 <a href="<?php echo esc_url(home_url('my-account/edit-account')); ?>">Register / Sign In</a>
                             <?php endif; ?>
                             <a href="#">Make a Payment</a>
-                            <a href="#">Telephone Bid Form</a>
+                            <a href="https://handh.blob.core.windows.net/main/HandH-Telephone-Bidding-Form-20230714.pdf">Telephone Bid Form</a>
                         </div>
                     </div>
                 </div>

@@ -12,10 +12,10 @@ get_banner('Homepage / Classic Auctions / Ways to Bid', get_the_post_thumbnail_u
 <section class="insurance insurance_v2">
     <div class="insurance_container">
         <div class="insurance-title">
-            <h2>How to Register to bid with H&H Classics</h2>
+            <h2><?php the_field('ways_title'); ?></h2>
         </div>
         <div class="insurance-txt">
-            <p>Registering to bid with H&H Classics is free and easy. Bidding is available in person, online, via telephone and by commission. Click on the dropdowns below to find instructions on how to register. If you have any questions at all, please contact a member of our team on <a href="mailto:info@HandH.co.uk">info@HandH.co.uk</a> or <a href="tel:+44(0)1925 210035">+44(0)1925 210035</a></p>
+            <?php the_field('ways_text'); ?>
         </div>
     </div>
 </section>
@@ -24,37 +24,39 @@ get_banner('Homepage / Classic Auctions / Ways to Bid', get_the_post_thumbnail_u
     <div class="bid_online-container">
         <div class="bid_online-row">
             <div class="bid_online-image">
-                <img src="<?php echo IMG; ?>/bid.png">
+                <?php if ($img = get_field('ways_image')): ?>
+                    <img src="<?= esc_url($img['url']); ?>" alt="<?= esc_attr($img['alt']); ?>">
+                <?php endif; ?>
             </div>
             <div class="bid_online-content">
-                <div class="w-100">
-                    <h3>Bid Online with H&H</h3>
-                    <div class="content">
-                        <p>If you wish to bid online in one of our Classic or Online Auctions you can easily set up an account by selecting ‘Register to Bid | Sign In’ at the top of this page and completing the steps. This can be done at your convenience prior to the auction commencing. Below you will find a breakdown of the steps which you will complete as part of the process.</p>
-                        <p>PLEASE NOTE: Bidding online attracts an additional fee of 1% + VAT</p>
-                    </div>
-                    <ul>
-                        <li>
-                            <h4>Step 1</h4>
-                            <p>Enter your name, email address and password to create an account.</p>
-                        </li>
-                        <li>
-                            <h4>Step 2</h4>
-                            <p>Enter your address, phone number and the ‘how you heard about us?’ drop down at the bottom. Anything marked with asterisk must be completed.</p>
-                        </li>
-                        <li>
-                            <h4>Step 3</h4>
-                            <p>Enter your credit/debit card details. Please note a deferred payment of 1p is held as a security verification which is cancelled immediately. No invoice payment will be taken from your card.</p>
-                        </li>
-                        <li>
-                            <h4>Step 4</h4>
-                            <p>Select how H&H can contact you - by post or email.</p>
-                        </li>
-                        <li>
-                            <h4>Step 5</h4>
-                            <p>Please check your inbox to verify your email address to complete registration.</p>
-                        </li>
-                    </ul>
+               <div class="w-100">
+                    <?php if ($title = get_field('ways_title_2')): ?>
+                        <h3><?= esc_html($title); ?></h3>
+                    <?php endif; ?>
+
+                    <?php if ($text = get_field('ways_text_2')): ?>
+                        <div class="content">
+                            <?= $text; ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (have_rows('ways_steps')): ?>
+                        <ul>
+                            <?php 
+                            $i = 1; 
+                            while (have_rows('ways_steps')): the_row(); 
+                                $step_text = get_sub_field('ways_step_text');
+                            ?>
+                                <li>
+                                    <h4>Step <?= $i; ?></h4>
+                                    <p><?= esc_html($step_text); ?></p>
+                                </li>
+                            <?php 
+                                $i++;
+                            endwhile; 
+                            ?>
+                        </ul>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -65,108 +67,71 @@ get_banner('Homepage / Classic Auctions / Ways to Bid', get_the_post_thumbnail_u
     <div class="other_methods-container">
         <div class="other_methods-image">
             <div>
-                <img src="<?php echo IMG; ?>/banner2.png">
+                <?php if ($img = get_field('ways_method_image')): ?>
+                    <img src="<?= esc_url($img['url']); ?>" alt="<?= esc_attr($img['alt']); ?>">
+                <?php endif; ?>
                 <h3>Other Methods to Bid</h3>
             </div>
         </div>
+
         <div class="other_methods-dropdown w-100">
-            <ul id="my-accordion" class="accordionjs">
-                <li>
-                    <div>
-                        <h3>
-                            Telephone Bidding
-                        </h3>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                            <path d="M0 8.99943L18 8.99943M8.99969 0L8.99969 18" stroke="#8C6E47" stroke-width="2" />
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="description">
-                            <p>For telephone bidding, please download, complete and return our Telephone Bidding Form to info@HandH.co.uk - click the button below to download the form. You will receive an email verification once this has been accepted. We will call you on the day, prior to your lot being offered and talk you through the process.</p>
-                            <a href="#">Download Telephone Bidding Form</a>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        <h3>
-                            Joining us in The Auction Hall
-                        </h3>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                            <path d="M0 8.99943L18 8.99943M8.99969 0L8.99969 18" stroke="#8C6E47" stroke-width="2" />
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="description">
-                            <p>If you wish to register to bid on arrival at one of our auctions, please follow the steps below.</p>
-                            <p>
-                                Step 1 - Let us know who you are<br>
-                                When attending one of our auction venues, please visit the bidders registration desk where one of our team can help register to bid. This is a quick and easy process.
-                            </p>
-                            <p>
-                                Step 2 - Verify your identity<br>
-                                Please provide photographic identification at our Classic Auction venues such as Drivers Licence or Passport.
-                            </p>
-                            <p>
-                                Step 3 - Complete your registration<br>
-                                You will be allocated a paddle number upon agreeing to our terms and conditions of sale.
-                            </p>
-                            <p>If you would like to save some time by completing your Register to Bid form ahead of time, you can download it by clicking the button below. Please note that this will need to be printed and brought with you to the auction.</p>
-                            <a href="#">Download Bidder Registration Form</a>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        <h3>
-                            Leaving a Commission Bid
-                        </h3>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                            <path d="M0 8.99943L18 8.99943M8.99969 0L8.99969 18" stroke="#8C6E47" stroke-width="2" />
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="description">
-                            <p>Commission bids can be submitted through your online account prior to the auction commencing. Once logged in, simply enter your maximum bid on your lot of choice, click ‘Place Bid’ and let the auctioneer do the rest.</p>
-                            <p>Alternatively you can fill in a Commission Bidding form, available to download by clicking the button below, and return it to <a href="mailto:info@HandH.co.uk">info@HandH.co.uk</a>.</p>
-                            <a href="#">Download Commission Bidding Form</a>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        <h3>
-                            Secondary Online Bidding Option, the-saleroom.com
-                        </h3>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                            <path d="M0 8.99943L18 8.99943M8.99969 0L8.99969 18" stroke="#8C6E47" stroke-width="2" />
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="description">
-                            <p>You can now bid online with our Partner, The Saleroom.</p>
-                            <p>Click on the link below to visit their website and register your details.</p>
-                            <p>PLEASE NOTE: Bidding online attracts an additional fee of 1% + VAT</p>
-                            <p>H&H @ The Showroom</p>
-                        </div>
-                    </div>
-                </li>
-            </ul>
+            <?php if (have_rows('ways_method_items')): ?>
+                <ul id="my-accordion" class="accordionjs">
+                    <?php while (have_rows('ways_method_items')): the_row(); 
+                        $item_title = get_sub_field('ways_method_item_title');
+                        $item_text  = get_sub_field('ways_method_item_text');
+                    ?>
+                        <li>
+                            <div>
+                                <?php if ($item_title): ?>
+                                    <h3><?= esc_html($item_title); ?></h3>
+                                <?php endif; ?>
+
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" 
+                                    viewBox="0 0 18 18" fill="none">
+                                    <path d="M0 8.99943L18 8.99943M8.99969 0L8.99969 18" 
+                                        stroke="#8C6E47" stroke-width="2" />
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="description">
+                                    <?= $item_text; ?>
+                                </div>
+                            </div>
+                        </li>
+                    <?php endwhile; ?>
+                </ul>
+            <?php endif; ?>
         </div>
     </div>
 </section>
 
 <section class="once">
     <div class="once-container">
-        <div class="once-title">
-            <h2>Once you have completed your registration you are ready to bid - good luck!</h2>
-        </div>
-        <div class="content">
-            <p>To consign your classic motorcar or motorcycle into an H&H auction please contact <a href="mailto:sales@HandH.co.uk">sales@HandH.co.uk</a>, call <a href="tel:01925 210035">01925 210035</a> or fill in the free valuation for sale request on this page <a href="https://www.handh.co.uk/consign/">https://www.handh.co.uk/consign/</a></p>
-        </div>
+        <?php if ($title = get_field('ways_completed_title')): ?>
+            <div class="once-title">
+                <h2><?= esc_html($title); ?></h2>
+            </div>
+        <?php endif; ?>
+
+        <?php if ($text = get_field('ways_completed_text')): ?>
+            <div class="content">
+                <?= $text; ?>
+            </div>
+        <?php endif; ?>
+
         <div class="actions">
-            <a href="#">About Buying at Auction</a>
-            <a href="#">About Selling at Auction</a>
+            <?php if ($btn1 = get_field('ways_completed_button_1')): ?>
+                <a href="<?= esc_url($btn1['url']); ?>" target="<?= esc_attr($btn1['target'] ?: '_self'); ?>">
+                    <?= esc_html($btn1['title']); ?>
+                </a>
+            <?php endif; ?>
+
+            <?php if ($btn2 = get_field('ways_completed_button_2')): ?>
+                <a href="<?= esc_url($btn2['url']); ?>" target="<?= esc_attr($btn2['target'] ?: '_self'); ?>">
+                    <?= esc_html($btn2['title']); ?>
+                </a>
+            <?php endif; ?>
         </div>
     </div>
 </section>

@@ -79,13 +79,13 @@ $link2 = get_field('second_link_ci');
                             <p><?php echo get_sub_field('description_ubi'); ?></p>
                         </div>
                         <div class="actions">
-                            <a href="#">Visit Google Maps</a>
+                            <a href="<?php echo get_sub_field('maps_ubi') ?>" target="_blank">Visit Google Maps</a>
                         </div>
                         <div class="data">
                             <h4>Contact Us</h4>
                             <ul>
                                 <li>Email: <a href="mailto:sales@handh.co.uk">sales@handh.co.uk</a></li>
-                                <li>Tel: <b>+44 (0)1925 210035</b></li>
+                                <li>Tel: <b><?php echo get_sub_field('phone_ubi') ?></b></li>
                             </ul>
                         </div>
                     </div>
