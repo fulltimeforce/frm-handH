@@ -1,6 +1,6 @@
 <ul class="social">
     <li>
-        <a href="#">
+        <a href="https://www.linkedin.com/company/hardestyhanover/" target="_blank">
             <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 38 38" fill="none">
                 <g clip-path="url(#clip0_2705_12897)">
                     <path d="M19 37.5C29.2173 37.5 37.5 29.2173 37.5 19C37.5 8.78273 29.2173 0.5 19 0.5C8.78273 0.5 0.5 8.78273 0.5 19C0.5 29.2173 8.78273 37.5 19 37.5Z" stroke="#8C6E47" />
@@ -15,7 +15,7 @@
         </a>
     </li>
     <li>
-        <a href="#">
+        <a href="https://www.facebook.com/HHClassicsLtd/" target="_blank">
             <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 38 38" fill="none">
                 <g clip-path="url(#clip0_2705_12904)">
                     <path d="M19 37.5C29.2173 37.5 37.5 29.2173 37.5 19C37.5 8.78273 29.2173 0.5 19 0.5C8.78273 0.5 0.5 8.78273 0.5 19C0.5 29.2173 8.78273 37.5 19 37.5Z" stroke="#8C6E47" />
@@ -30,7 +30,7 @@
         </a>
     </li>
     <li>
-        <a href="#">
+        <a href="https://www.instagram.com/handhclassics/" target="_blank">
             <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 38 38" fill="none">
                 <g clip-path="url(#clip0_2705_12911)">
                     <path d="M19 37.5C29.2173 37.5 37.5 29.2173 37.5 19C37.5 8.78273 29.2173 0.5 19 0.5C8.78273 0.5 0.5 8.78273 0.5 19C0.5 29.2173 8.78273 37.5 19 37.5Z" stroke="#8C6E47" />
@@ -47,7 +47,7 @@
         </a>
     </li>
     <li>
-        <a href="#">
+        <a href="https://twitter.com/handhclassics" target="_blank">
             <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 38 38" fill="none">
                 <g clip-path="url(#clip0_2705_12924)">
                     <path d="M19 37.5C29.2173 37.5 37.5 29.2173 37.5 19C37.5 8.78273 29.2173 0.5 19 0.5C8.78273 0.5 0.5 8.78273 0.5 19C0.5 29.2173 8.78273 37.5 19 37.5Z" stroke="#8C6E47" />
@@ -62,7 +62,7 @@
         </a>
     </li>
     <li>
-        <a href="#">
+        <a href="https://www.youtube.com/user/HandHAuctions" target="_blank">
             <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 38 38" fill="none">
                 <g clip-path="url(#clip0_2705_12931)">
                     <path d="M19 37.5C29.2173 37.5 37.5 29.2173 37.5 19C37.5 8.78273 29.2173 0.5 19 0.5C8.78273 0.5 0.5 8.78273 0.5 19C0.5 29.2173 8.78273 37.5 19 37.5Z" stroke="#8C6E47" />

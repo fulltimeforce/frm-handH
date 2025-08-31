@@ -289,7 +289,7 @@
 
 %mb31 {
     @media (min-width: v.$tv) {
-        margin-block: m.px-to-vw(31px) 0;
+        margin-block: m.px-to-vw(20px) 0;
     }
 
     @include m.tv {

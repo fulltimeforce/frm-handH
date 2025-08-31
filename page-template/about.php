@@ -387,6 +387,26 @@ $imagesb = get_field('images_pv');
                         <?php endif; ?>
                     </div>
                 </div>
+                <div class="imagelider-slide">
+                    <div class="splide" id="mobile-slide">
+                        <div class="splide__track">
+                            <ul class="splide__list">
+                                <?php if (have_rows('images_pv')): ?>
+                                    <?php while (have_rows('images_pv')): the_row(); ?>
+                                        <?php
+                                        $imagepv = get_sub_field('image_pv');
+                                        if ($imagepv):
+                                        ?>
+                                            <li class="splide__slide">
+                                                <img src="<?php echo esc_url($imagepv['url']); ?>" alt="<?php echo esc_attr($imagepv['alt']); ?>">
+                                            </li>
+                                        <?php endif; ?>
+                                    <?php endwhile; ?>
+                                <?php endif; ?>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
