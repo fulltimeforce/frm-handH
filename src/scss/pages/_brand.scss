@@ -28,7 +28,9 @@
     }
 
     @include m.desktop {
-      margin-tpm: 48px;
+      margin: 30px auto;
+      flex-direction: column;
+      gap: 20px;
     }
   }
 
@@ -90,10 +92,10 @@
     padding-left: 1.875vw;
 
     @media (min-width: v.$tv) {
-      width: m.px-to-vw(120px);
+      width: m.px-to-vw(132px);
     }
     @include m.desktop {
-      width: 120px;
+      width: 132px;
     }
 
     .splide__arrow {
@@ -101,6 +103,12 @@
       border: none;
       color: v.$light_brown;
       transition: color 0.3s ease;
+      @media (min-width: v.$tv) {
+        font-size: m.px-to-vw(20px);
+      }
+      @include m.desktop {
+        font-size: 20px;
+      }
 
       svg {
         @media (min-width: v.$tv) {
@@ -287,7 +295,7 @@
       @include m.desktop {
         flex-direction: column !important;
         max-width: 100%;
-        padding: 40px 0px;
+        padding: 20px 0px 40px;
       }
 
       h2 {
@@ -474,8 +482,6 @@
 }
 
 .model-ending {
-  margin-top: 50px;
-  padding: m.px-to-vw(120px) m.px-to-vw(20px);
   background: v.$light_brown_2;
   width: 100vw;
   position: relative;
@@ -483,6 +489,15 @@
   right: 50%;
   margin-left: -50vw;
   margin-right: -50vw;
+
+  @media (min-width: v.$tv) {
+    padding: m.px-to-vw(120px) m.px-to-vw(20px);
+    margin-top: m.px-to-vw(50px);
+  }
+  @include m.desktop {
+    padding: 60px 20px;
+    margin-top: 50px;
+  }
 
   .model-ending-container {
     max-width: m.px-to-vw(1440px);
@@ -541,7 +556,7 @@
     @include m.desktop {
       max-width: 100%;
       font-size: 17px;
-      margin-bottom: 40px;
+      margin-bottom: 0px;
     }
     @include m.tablet {
       font-size: 17px;
@@ -560,6 +575,8 @@
     }
     @include m.desktop {
       font-size: 22px;
+      margin-top: 40px;
+      margin-bottom: 56px;
     }
   }
 
@@ -567,7 +584,8 @@
     display: inline-block;
     background: v.$light_brown;
     color: #fff;
-    font-weight: 600;
+    font-family: v.$gotham_m;
+    font-weight: 500;
     text-decoration: none;
     text-transform: uppercase;
     transition: background 0.3s ease;
@@ -578,11 +596,11 @@
 
     @media (min-width: v.$tv) {
       font-size: m.px-to-vw(16px);
-      padding: m.px-to-vw(12px) m.px-to-vw(24px);
+      padding: m.px-to-vw(20px) m.px-to-vw(21px);
     }
     @include m.tv {
       font-size: 16px;
-      padding: 12px 24px;
+      padding: 20px 21px;
     }
   }
 }
