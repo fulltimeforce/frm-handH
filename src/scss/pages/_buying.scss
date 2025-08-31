@@ -4,11 +4,23 @@
 %h2-cormorant {
   font-family: v.$cormorant;
   font-weight: 300;
-  font-size: 60px;
   line-height: 100%;
   letter-spacing: -1.8px;
   color: v.$black;
   text-align: center;
+
+  @media (min-width: v.$tv) {
+    font-size: m.px-to-vw(60px);
+  }
+  @include m.tv {
+    font-size: 60px;
+  }
+  @include m.desktop {
+    font-size: 40px;
+  }
+  @include m.tablet {
+    font-size: 28px;
+  }
 }
 
 %h2-goudysb {
@@ -29,11 +41,23 @@
 
 %p-gotham-light {
   font-family: v.$gotham_light;
-  font-size: 17px;
   line-height: 140%;
   letter-spacing: 1.02px;
   color: rgba(v.$black, 0.90);
   text-align: center;
+
+  @media (min-width: v.$tv) {
+    font-size: m.px-to-vw(17px);
+  }
+  @include m.tv {
+    font-size: 17px;
+  }
+  @include m.desktop {
+    font-size: 15px;
+  }
+  @include m.tablet {
+    font-size: 14px;
+  }
 }
 
 .buying_at_auction {
@@ -79,28 +103,21 @@
         @include m.tv {
           margin-bottom: 40px;
         }
-        @include m.desktop {
-          font-size: 40px;
-        }
         @include m.tablet {
-          font-size: 28px;
           margin-bottom: 24px;
         }
       }
 
       p {
         @extend %p-gotham-light;
+
         @media (min-width: v.$tv) {
           margin-bottom: m.px-to-vw(64px);
         }
         @include m.tv {
           margin-bottom: 64px;
         }
-        @include m.desktop {
-          font-size: 15px;
-        }
         @include m.tablet {
-          font-size: 14px;
           margin-bottom: 32px;
         }
 
@@ -110,6 +127,12 @@
           line-height: 140%;
           font-weight: 300;
 
+          @media (min-width: v.$tv) {
+            font-size: m.px-to-vw(17px);
+          }
+          @include m.tv {
+            font-size: 17px;
+          }
           @include m.desktop {
             font-size: 15px;
           }
