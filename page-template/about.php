@@ -223,7 +223,7 @@ $s_link = get_field('specialists_btn');
                                 $team_email   = get_field('team_email');
                                 $team_phone   = get_field('team_phone');
                                 $content      = get_the_content();
-                                $image        = get_the_post_thumbnail_url(get_the_ID(), 'medium');
+                                $image        = get_the_post_thumbnail_url(get_the_ID(), 'medium_large');
                         ?>
                                 <li class="splide__slide">
                                     <div class="specialist_card">
