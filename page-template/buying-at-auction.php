@@ -131,7 +131,6 @@ get_banner('Homepage / Classic Auctions / Buying at auction', esc_url($bg_image)
   ?>
 
   <div class="contact_banners-container">
-
     <div class="thinking">
       <?php if ($selling_title): ?>
         <h3><?php echo esc_html($selling_title); ?></h3>
@@ -164,16 +163,9 @@ get_banner('Homepage / Classic Auctions / Buying at auction', esc_url($bg_image)
 
     buttons.forEach(button => {
       button.addEventListener("click", () => {
-        // Quitar 'active' de todos los botones
         buttons.forEach(btn => btn.classList.remove("active"));
-
-        // Añadir 'active' al botón clicado
         button.classList.add("active");
-
-        // Obtener data-id
         const id = button.getAttribute("data-id");
-
-        // Asignarlo al data-state de section
         section.setAttribute("data-state", id);
       });
     });
