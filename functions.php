@@ -24,7 +24,7 @@ function general_scripts()
     // JavaScript
     wp_enqueue_script('main-js', get_template_directory_uri() . '/public/js/main.min.js', [], '1.0.0', true);
 
-    if (is_page('our-services') || is_page('frequently-asked-questions') || is_page('faq') || is_page('careers') || is_page('insurance') || is_page('get-a-valuation') || is_page('ways-to-bid') || is_page('selling-at-auction') || is_singular('vehicles')) {
+    if (is_page('our-services') || is_page('frequently-asked-questions') || is_page('faq') || is_page('careers') || is_page('insurance') || is_page('get-a-valuation') || is_page('ways-to-bid') || is_page('selling-at-auction') || is_singular('vehicles') || is_singular('auction')) {
         wp_enqueue_style('accordioncss', CSS . '/accordion.css', [], '1.0.0', 'all');
         wp_enqueue_script('jquerycustom', JS . '/jquery.min.js', [], '1.0.0', true);
         wp_enqueue_script('accordionjs', JS . '/accordion.min.js', ['jquerycustom'], '1.0.0', true);
