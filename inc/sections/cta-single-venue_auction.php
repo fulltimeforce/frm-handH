@@ -1,6 +1,10 @@
 <section class="cta">
     <div class="cta_bg">
-        <img src="<?php echo IMG; ?>/single-venue-banner.webp" alt="Banner">
+        <?php if (!empty(get_field('banner_venue-auction'))): ?>
+            <img src="<?php echo get_field('banner_venue-auction'); ?>" alt="Banner">
+        <?php else: ?>
+            <img src="<?php echo IMG; ?>/single-venue-banner.webp" alt="Banner">
+        <?php endif; ?>
     </div>
     <div class="container">
         <div class="cta_content">

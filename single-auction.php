@@ -14,10 +14,10 @@ get_banner('Homepage / Classic Auctions / Pavilion Gardens', esc_url($bg_image),
 <div class="pavilion_page">
     <div class="container">
         <section id="pavilionGardens" class="custom-carousel">
-            <div id="pavilionSlider" class="splide">
-                <div class="splide__track">
-                    <ul class="splide__list">
-                        <?php if (have_rows('pavilion_slider')): ?>
+            <?php if (have_rows('pavilion_slider')): ?>
+                <div id="pavilionSlider" class="splide">
+                    <div class="splide__track">
+                        <ul class="splide__list">
                             <?php while (have_rows('pavilion_slider')): the_row();
                                 $image = get_sub_field('pavilion_slider_image');
                                 if ($image): ?>
@@ -34,23 +34,23 @@ get_banner('Homepage / Classic Auctions / Pavilion Gardens', esc_url($bg_image),
                                     </li>
                                 <?php endif; ?>
                             <?php endwhile; ?>
-                        <?php endif; ?>
-                    </ul>
-                </div>
+                        </ul>
+                    </div>
 
-                <div class="splide__arrows custom-arrows">
-                    <button class="splide__arrow splide__arrow--prev">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="26" viewBox="0 0 50 26" fill="none">
-                            <path d="M0 13H48M48 13L36 1M48 13L36 25" stroke="#8C6E47" stroke-width="2" />
-                        </svg>
-                    </button>
-                    <button class="splide__arrow splide__arrow--next">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="26" viewBox="0 0 50 26" fill="none">
-                            <path d="M0 13H48M48 13L36 1M48 13L36 25" stroke="#8C6E47" stroke-width="2" />
-                        </svg>
-                    </button>
+                    <div class="splide__arrows custom-arrows">
+                        <button class="splide__arrow splide__arrow--prev">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="26" viewBox="0 0 50 26" fill="none">
+                                <path d="M0 13H48M48 13L36 1M48 13L36 25" stroke="#8C6E47" stroke-width="2" />
+                            </svg>
+                        </button>
+                        <button class="splide__arrow splide__arrow--next">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="26" viewBox="0 0 50 26" fill="none">
+                                <path d="M0 13H48M48 13L36 1M48 13L36 25" stroke="#8C6E47" stroke-width="2" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
-            </div>
+            <?php endif; ?>
 
             <?php
             $slider_subtitle = get_field('slider_subtitle');

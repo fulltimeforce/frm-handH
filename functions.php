@@ -13,6 +13,7 @@ define('URL', get_stylesheet_directory_uri());
 define('IMG', URL . '/images');
 define('JS', URL . '/libraries/js');
 define('CSS', URL . '/libraries/css');
+define('NOT_APPEAR', false);
 
 // === Enqueue Styles and Scripts ===
 function general_scripts()
@@ -241,12 +242,16 @@ add_filter('gform_field_content_4', function ($content, $field, $value, $entry_i
 
 // -------------------------------------------------------------------------------------
 
-require_once get_template_directory() . '/inc/modules/cpt_auctions.php';
+require_once get_template_directory() . '/inc/modules/auctions/cpt.php';
+require_once get_template_directory() . '/inc/modules/auctions/import.php';
+
+require_once get_template_directory() . '/inc/modules/vehicles/cpt.php';
+require_once get_template_directory() . '/inc/modules/vehicles/import.php';
+
 require_once get_template_directory() . '/inc/modules/cpt_venues.php';
-require_once get_template_directory() . '/inc/modules/cpt_vehicles.php';
 require_once get_template_directory() . '/inc/modules/cpt_testimonials.php';
+
 require_once get_template_directory() . '/inc/hooks.php';
-require_once get_template_directory() . '/inc/modules/vehicle-import.php';
 
 // -------------------------------------------------------------------------------------
 
