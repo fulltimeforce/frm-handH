@@ -74,7 +74,7 @@ get_banner('Homepage / Private Sales / Vehicles For Sale', '', 'Vehicles For Sal
         <div class="auction_result-list">
             <?php
             $args = array(
-                'post_type'      => 'vehicles',
+                'post_type'      => 'auction',
                 'posts_per_page' => !empty($_GET['posts_per_page']) ? intval($_GET['posts_per_page']) : 6,
                 'post_status'    => 'publish',
                 's'              => isset($_GET['s']) ? sanitize_text_field($_GET['s']) : '',
@@ -124,12 +124,16 @@ get_banner('Homepage / Private Sales / Vehicles For Sale', '', 'Vehicles For Sal
             if ($query->have_posts()) :
                 while ($query->have_posts()) : $query->the_post();
 
+                    $vehicle_current_lot       = get_field('lot_number_latest');
+                    $registration_no           = get_field('receipt_number');
+
                     $vehicle_place             = get_field('vehicle_place');
-                    $vehicle_current_lot       = get_field('vehicle_current_lot');
-                    $registration_no           = get_field('registration_no');
                     $chassis_no                = get_field('chassis_no');
                     $vehicle_mot               = get_field('vehicle_mot');
-                    $vehicle_estimate          = get_field('vehicle_estimate');
+
+                    $estimate_high = get_field('estimate_high');
+                    $estimate_low = get_field('estimate_low');
+
                     $vehicle_short_description = get_field('vehicle_short_description');
 
                     $image = get_the_post_thumbnail_url(get_the_ID(), 'full');
@@ -157,9 +161,9 @@ get_banner('Homepage / Private Sales / Vehicles For Sale', '', 'Vehicles For Sal
                                     <?php endif; ?>
                                 </div>
                                 <div>
-                                    <?php if ($vehicle_estimate): ?>
+                                    <?php if ($estimate_high && $estimate_low): ?>
                                         <p>Estimated at</p>
-                                        <p class="gold-text"><?php echo esc_html($vehicle_estimate); ?></p>
+                                        <p class="gold-text"><?php echo '£' . $estimate_low . ' - £' . $estimate_high; ?></p>
                                     <?php endif; ?>
                                 </div>
                             </div>
