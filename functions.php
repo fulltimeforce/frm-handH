@@ -242,6 +242,7 @@ add_filter('gform_field_content_4', function ($content, $field, $value, $entry_i
 // -------------------------------------------------------------------------------------
 
 require_once get_template_directory() . '/inc/modules/cpt_auctions.php';
+require_once get_template_directory() . '/inc/modules/cpt_venues.php';
 require_once get_template_directory() . '/inc/modules/cpt_vehicles.php';
 require_once get_template_directory() . '/inc/modules/cpt_testimonials.php';
 require_once get_template_directory() . '/inc/hooks.php';

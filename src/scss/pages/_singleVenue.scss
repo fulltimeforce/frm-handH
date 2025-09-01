@@ -1,0 +1,293 @@
+@use "base/mixins" as m;
+@use "base/variables" as v;
+
+%container {
+    width: 100%;
+
+    @media (min-width: v.$tv) {
+        max-width: m.px-to-vw(calc(1296px + 246px));
+        padding-right: m.px-to-vw(246px);
+        margin-left: auto;
+    }
+
+    @include m.tv {
+        padding-left: 15%;
+        padding-right: 13%;
+    }
+
+    @include m.desktop {
+        padding-left: 11%;
+        padding-right: 4%;
+    }
+
+    @include m.laptop {
+        padding-left: 4%;
+    }
+}
+
+.single_venue_content {
+
+    @media (min-width: v.$tv) {
+        padding-top: m.px-to-vw(120px);
+    }
+
+    @include m.tv {
+        padding-top: 86px;
+    }
+
+    @include m.desktop {
+        padding-top: 56px;
+    }
+
+    @include m.tablet {
+        padding-top: 38px;
+    }
+
+    @include m.pblock160(true);
+
+    &-container {
+        @extend %container;
+    }
+
+    &-top {
+        width: 100%;
+
+        @media (min-width: v.$tv) {
+            display: grid;
+            grid-template-columns: m.px-to-vw(480px) 1fr;
+            grid-gap: m.px-to-vw(46px);
+        }
+
+        @include m.tv {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            grid-gap: 36px;
+        }
+
+        @include m.desktop {
+            grid-template-columns: 100%;
+        }
+    }
+
+    &-title {
+        h2 {
+            @include m.fz60;
+            font-weight: 300;
+            text-align: left;
+        }
+    }
+
+    &-content {
+        @media (min-width: v.$tv) {
+            padding-top: m.px-to-vw(16px);
+        }
+
+        @include m.tv {
+            padding-top: 10px;
+        }
+
+        .actions {
+            @include m.mt40_for_actions;
+            width: 100%;
+            @media (min-width: v.$tv){
+                max-width: m.px-to-vw(420px);
+            }
+            @include m.tv{
+                max-width: 300px;    
+            }
+
+            a {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        .content {
+            &>* {
+                &:not(:last-child) {
+                    @media (min-width: v.$tv) {
+                        margin-bottom: m.px-to-vw(20px);
+                    }
+
+                    @include m.tv {
+                        margin-bottom: 12px;
+                    }
+                }
+            }
+
+            li,
+            p,
+            span {
+                @include m.p;
+                opacity: 0.9;
+            }
+        }
+    }
+}
+
+.single_venue_info {
+    @include m.pblock160;
+
+    &-container {
+        width: 100%;
+        margin-inline: auto;
+
+        @media (min-width: v.$tv) {
+            max-width: m.px-to-vw(770px);
+        }
+
+        @include m.tv {
+            max-width: 567px;
+            width: 92%;
+        }
+    }
+
+    .consign {
+        @include m.mb96;
+
+        &-content {
+
+            li,
+            p {
+                @include m.p;
+                text-align: center;
+                opacity: 0.9;
+
+                &:not(:last-child) {
+                    @media (min-width: v.$tv) {
+                        margin-bottom: m.px-to-vw(24px);
+                    }
+
+                    @include m.tv {
+                        margin-bottom: 16px;
+                    }
+                }
+            }
+
+            a {
+                font-family: v.$gotham_m;
+                color: v.$light_brown;
+            }
+        }
+    }
+
+    .how_to_get {
+        &-col {
+            @include m.flex(center);
+            flex-direction: column;
+        }
+
+        &-row {
+            width: 100%;
+
+            &:not(:last-child) {
+                @include m.mb64;
+            }
+
+            h3 {
+                text-align: center;
+                color: v.$black;
+                font-family: v.$goudysb;
+                font-style: normal;
+                font-weight: 300;
+
+                @media (min-width: v.$tv) {
+                    line-height: m.px-to-vw(31.2px);
+                    font-size: m.px-to-vw(26px);
+                    margin-bottom: m.px-to-vw(32px);
+                }
+
+                @include m.tv {
+                    font-size: 20px;
+                    line-height: 1.2em;
+                    margin-bottom: 21px;
+                }
+
+                @include m.desktop {
+                    font-size: 18px;
+                }
+
+                @include m.tablet {
+                    margin-bottom: 12px;
+                }
+            }
+
+            .content {
+
+                li,
+                p {
+                    @include m.p;
+                    text-align: center;
+                    opacity: 0.9;
+
+                    &:not(:last-child) {
+                        @media (min-width: v.$tv) {
+                            margin-bottom: m.px-to-vw(24px);
+                        }
+
+                        @include m.tv {
+                            margin-bottom: 16px;
+                        }
+                    }
+                }
+
+                a {
+                    font-family: v.$gotham_m;
+                    color: v.$light_brown;
+                }
+            }
+        }
+    }
+
+    h2 {
+        @include m.h4();
+        @include m.mb64;
+        text-align: center;
+    }
+}
+
+.venue_map {
+    &-container {
+        @extend %container;
+
+        .map_parent {
+            position: relative;
+            height: auto;
+            width: 100%;
+
+            &::before {
+                position: absolute;
+                @include m.centerXY;
+                background: none;
+                @include m.fullWH;
+
+                content: '';
+                z-index: 2;
+                pointer-events: none;
+
+                @media (min-width: v.$tv) {
+                    width: calc(100% + m.px-to-vw(32px));
+                    height: calc(100% + m.px-to-vw(32px));
+                    border: m.px-to-vw(1px) solid v.$light_brown;
+                }
+
+                @include m.tv {
+                    border: 1px solid v.$light_brown;
+                    width: calc(100% + 24px);
+                    height: calc(100% + 24px);
+                }
+
+                @include m.desktop {
+                    width: calc(100% + 16px);
+                    height: calc(100% + 16px);
+                }
+            }
+        }
+
+        #map {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 185/89;
+        }
+    }
+}
