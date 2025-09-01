@@ -340,7 +340,7 @@ import "@splidejs/splide/css";
                     768: { perPage: 2 },
                     480: { perPage: 1 },
                 },
-                }).mount();
+            }).mount();
 
             new Splide("#splide-private", {
                 perPage: 3,
@@ -369,7 +369,7 @@ import "@splidejs/splide/css";
         });
     }
 
-    if(document.querySelector('.trustpilot_reviews')) {
+    if (document.querySelector('.trustpilot_reviews')) {
         const trustpilot = new Splide('.trustpilot_reviews', {
             type: 'loop',
             perPage: 1,
@@ -380,7 +380,7 @@ import "@splidejs/splide/css";
         });
 
         trustpilot.mount();
-        
+
         const prev = trustpilot.root.querySelector('.splide__arrow--prev');
         const next = trustpilot.root.querySelector('.splide__arrow--next');
 
@@ -468,15 +468,15 @@ import "@splidejs/splide/css";
             const p = phase - i;
 
             slides.forEach((s, k) => {
-            if (k < i) {
-                s.style.transform = "translateY(0%)";
-            } else if (k === i) {
-                s.style.transform = "translateY(0%)";
-            } else if (k === i + 1) {
-                s.style.transform = `translateY(${(1 - p) * 100}%)`;
-            } else {
-                s.style.transform = "translateY(100%)";
-            }
+                if (k < i) {
+                    s.style.transform = "translateY(0%)";
+                } else if (k === i) {
+                    s.style.transform = "translateY(0%)";
+                } else if (k === i + 1) {
+                    s.style.transform = `translateY(${(1 - p) * 100}%)`;
+                } else {
+                    s.style.transform = "translateY(100%)";
+                }
             });
         };
 
@@ -493,9 +493,9 @@ import "@splidejs/splide/css";
         window.addEventListener("resize", onResize);
     }
 
-    if(document.querySelector('#mobile-slide')) {
+    if (document.querySelector('#mobile-slide')) {
         new Splide('.imagelider-slide .splide', {
-            type   : 'fade',
+            type: 'fade',
             perPage: 1,
             autoplay: true,
             pagination: false,
@@ -504,8 +504,8 @@ import "@splidejs/splide/css";
         }).mount();
     }
 
-    if(document.querySelector('.listing_images-slider')) {
-        const listing = new Splide( '.listing_images-slider', {
+    if (document.querySelector('.listing_images-slider')) {
+        const listing = new Splide('.listing_images-slider', {
             type: 'loop',
             direction: 'ttb',
             height: '31.25vw',
@@ -542,9 +542,9 @@ import "@splidejs/splide/css";
             </svg>`;
         }
         const mainImage = document.querySelector('.listing_images-main img');
-        const counter   = document.getElementById('openFullView');
-        const slides    = document.querySelectorAll('.listing_images-slider .splide__slide img');
-        const total     = counter ? counter.dataset.total : slides.length;  
+        const counter = document.getElementById('openFullView');
+        const slides = document.querySelectorAll('.listing_images-slider .splide__slide img');
+        const total = counter ? counter.dataset.total : slides.length;
 
         if (counter) {
             counter.textContent = `1/${total}`;
@@ -566,12 +566,12 @@ import "@splidejs/splide/css";
 
     }
 
-    if(document.querySelector(".listing_grid")) {
+    if (document.querySelector(".listing_grid")) {
         const grid = document.querySelector(".listing_grid");
-        const openBtn  = document.getElementById("openGrid");
+        const openBtn = document.getElementById("openGrid");
         const closeBtn = document.querySelector(".listing_grid-close");
 
-         openBtn.addEventListener("click", () => {
+        openBtn.addEventListener("click", () => {
             grid.classList.add("active");
             document.body.style.overflow = "hidden";
             document.body.style.height = "100vh";
@@ -584,17 +584,17 @@ import "@splidejs/splide/css";
         });
     }
 
-    if(document.querySelector(".listing_fullview")) {
+    if (document.querySelector(".listing_fullview")) {
         const fullView = document.querySelector(".listing_fullview");
-        const openBtn  = document.getElementById("openFullView");
-        const openBtn2  = document.getElementById("openGridView");
+        const openBtn = document.getElementById("openFullView");
+        const openBtn2 = document.getElementById("openGridView");
         const closeBtn = document.querySelector(".listing_fullview-close");
 
-        const fullViewSlide = new Splide( '.listing_fullview-slide', {
-            type      : 'loop',
-            perPage   : 1,
-            perMove   : 1,
-            arrows    : true,
+        const fullViewSlide = new Splide('.listing_fullview-slide', {
+            type: 'loop',
+            perPage: 1,
+            perMove: 1,
+            arrows: true,
             pagination: false,
             heightRatio: 0.75,
         });
@@ -634,12 +634,13 @@ import "@splidejs/splide/css";
             document.body.style.height = "auto";
         });
     }
-    if(document.querySelector(".events")) {
+
+    if (document.querySelector(".events_slide")) {
         new Splide('.events_slide', {
-            type   : 'slide',
+            type: 'slide',
             perPage: 1,
             perMove: 1,
-            gap    : '1.5rem',
+            gap: '1.5rem',
             interval: 4000,
             pauseOnHover: true,
             pagination: true,
@@ -647,7 +648,7 @@ import "@splidejs/splide/css";
         }).mount();
     }
 
-    })();
+})();
 
 document.addEventListener("DOMContentLoaded", () => {
     const sections = document.querySelectorAll(".title_watermark");
@@ -664,8 +665,8 @@ document.addEventListener("DOMContentLoaded", () => {
         sections.forEach(section => observer.observe(section));
     }
 
-    if(document.getElementById('blog-perpage')) {
-        document.getElementById('blog-perpage').addEventListener('change', function() {
+    if (document.getElementById('blog-perpage')) {
+        document.getElementById('blog-perpage').addEventListener('change', function () {
             const url = new URL(window.location.href);
             url.searchParams.set('posts_per_page', this.value);
             window.location.href = url.toString();
@@ -675,52 +676,52 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-  const container = document.querySelector(".animated_text");
-  const textElement = document.querySelector(".animated_text-item");
+    const container = document.querySelector(".animated_text");
+    const textElement = document.querySelector(".animated_text-item");
 
-  if (container && textElement) {
-    const observer = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          animateText(textElement);
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.3 });
+    if (container && textElement) {
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateText(textElement);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 });
 
-    observer.observe(container);
-  }
+        observer.observe(container);
+    }
 
-  function animateText(textElement) {
-    const text = textElement.textContent.trim();
-    textElement.textContent = "";
+    function animateText(textElement) {
+        const text = textElement.textContent.trim();
+        textElement.textContent = "";
 
-    const words = text.split(" ");
-    words.forEach((word, wIndex) => {
-      const wordSpan = document.createElement("span");
-      wordSpan.classList.add("word");
+        const words = text.split(" ");
+        words.forEach((word, wIndex) => {
+            const wordSpan = document.createElement("span");
+            wordSpan.classList.add("word");
 
-      word.split("").forEach(char => {
-        const charSpan = document.createElement("span");
-        charSpan.textContent = char;
-        charSpan.classList.add("char");
-        wordSpan.appendChild(charSpan);
-      });
+            word.split("").forEach(char => {
+                const charSpan = document.createElement("span");
+                charSpan.textContent = char;
+                charSpan.classList.add("char");
+                wordSpan.appendChild(charSpan);
+            });
 
-      textElement.appendChild(wordSpan);
+            textElement.appendChild(wordSpan);
 
-      if (wIndex < words.length - 1) {
-        textElement.appendChild(document.createTextNode(" "));
-      }
-    });
+            if (wIndex < words.length - 1) {
+                textElement.appendChild(document.createTextNode(" "));
+            }
+        });
 
-    const spans = textElement.querySelectorAll(".char");
+        const spans = textElement.querySelectorAll(".char");
 
-    spans.forEach((span, i) => {
-      setTimeout(() => {
-        span.classList.add("visible");
-      }, i * 80);
-    });
-  }
+        spans.forEach((span, i) => {
+            setTimeout(() => {
+                span.classList.add("visible");
+            }, i * 80);
+        });
+    }
 });
 
