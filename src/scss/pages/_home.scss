@@ -399,10 +399,18 @@
                 padding: 21px;
                 gap: 10px;
             }
+
+            @include m.tablet {
+                margin: 0 auto;
+            }
         }
 
         &+.permalink_border {
             @extend %mt48;
+
+            @include m.desktop {
+                margin: 24px auto;
+            }
         }
     }
 
@@ -994,7 +1002,6 @@
 
     .container {
         @include m.tablet {
-            margin-inline: 16px;
             max-width: 382px;
         }
     }

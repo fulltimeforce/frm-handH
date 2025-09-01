@@ -267,6 +267,11 @@ get_centered_banner(esc_url($bg_image), esc_html($title));
   </div>
 </section>
 
+<?php get_template_part('inc/sections/cta'); ?>
+
+<section class="upcoming pb160" id="upcoming-auctions">
+  <?php get_template_part('inc/sections/upcoming'); ?>
+</section>
 
 <?php get_footer(); ?>
 

@@ -68,7 +68,7 @@ get_banner('Homepage / Classic Auctions / Auction Venues', '', 'H&H Auction Venu
                             <div class="content">
                                 <p>Victorian-era gardens in historic spa town center hosts classic car auctions in elegant Octagon Hall and outdoor marquees, perfect for showcasing vehicles.</p>
                             </div>
-                            <a href="#" alt="Venue Details">
+                            <a href="/pavilion-gardens/" alt="Venue Details">
                                 Venue Details
                                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
                                     <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
