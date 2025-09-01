@@ -198,42 +198,45 @@ $vehicle_video = '';
         $name   = get_field('vendor_full_name');
         $email  = get_field('vendor_email_address');
         $phone  = get_field('vendor_phone_primary');
+
+        if (!empty($name) && !empty($email)):
         ?>
-        <div class="listing_info-contact">
-            <div class="listing_info-contact-info">
+            <div class="listing_info-contact">
+                <div class="listing_info-contact-info">
 
-                <img src="<?php echo IMG; ?>/face2.png" alt="<?php echo esc_attr($name); ?>">
+                    <img src="<?php echo IMG; ?>/face2.png" alt="<?php echo esc_attr($name); ?>">
 
 
-                <div>
-                    <p class="listing_info-contact-subtitle">
-                        If you would like to enquire further, please contact:
-                    </p>
-                    <p class="listing_info-contact-title"><?php echo esc_html($name); ?></p>
-                    <p class="listing_info-contact-subtitle">- Director</p>
                     <div>
-                        <?php if ($email): ?>
-                            <p class="listing_info-contact-text">
-                                Email: <span><a href="mailto:<?php echo esc_attr($email); ?>"><?php echo esc_html($email); ?></a></span>
-                            </p>
-                        <?php endif; ?>
-                        <?php if ($phone): ?>
-                            <p class="listing_info-contact-text">
-                                Tel: <span><?php echo esc_html($phone); ?></span>
-                            </p>
-                        <?php endif; ?>
+                        <p class="listing_info-contact-subtitle">
+                            If you would like to enquire further, please contact:
+                        </p>
+                        <p class="listing_info-contact-title"><?php echo esc_html($name); ?></p>
+                        <p class="listing_info-contact-subtitle">- Director</p>
+                        <div>
+                            <?php if ($email): ?>
+                                <p class="listing_info-contact-text">
+                                    Email: <span><a href="mailto:<?php echo esc_attr($email); ?>"><?php echo esc_html($email); ?></a></span>
+                                </p>
+                            <?php endif; ?>
+                            <?php if ($phone): ?>
+                                <p class="listing_info-contact-text">
+                                    Tel: <span><?php echo esc_html($phone); ?></span>
+                                </p>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
+                <div class="listing_info-contact-btn w-100">
+                    <a href="#" class="listing_btn-white p14">
+                        View Bio
+                        <svg xmlns="http://www.w3.org/2000/svg" width="29" height="16" viewBox="0 0 29 16" fill="none">
+                            <path d="M2.5 8H26.5M26.5 8L21.122 2M26.5 8L21.122 14" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </a>
+                </div>
             </div>
-            <div class="listing_info-contact-btn w-100">
-                <a href="#" class="listing_btn-white p14">
-                    View Bio
-                    <svg xmlns="http://www.w3.org/2000/svg" width="29" height="16" viewBox="0 0 29 16" fill="none">
-                        <path d="M2.5 8H26.5M26.5 8L21.122 2M26.5 8L21.122 14" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                </a>
-            </div>
-        </div>
+        <?php endif; ?>
 
         <div class="listing_info-details">
 

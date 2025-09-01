@@ -29,7 +29,7 @@
                         'post_type'      => 'auction',
                         'posts_per_page' => 6,
                         'orderby'        => 'date',
-                        'order'          => 'DESC'
+                        'order'          => 'ASC'
                     );
                     $auctions = new WP_Query($argsAuction);
                     if ($auctions->have_posts()) :
