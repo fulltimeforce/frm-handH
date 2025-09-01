@@ -30,7 +30,7 @@ get_banner('Homepage / Classic Auctions / Insurance', get_the_post_thumbnail_url
 <section class="insurance_faq insurance_share">
     <div class="insurance_container">
         <div class="insurance_faq-list">
-            <ul id="my-accordion" class="accordionjs">
+            <ul id="my-accordion-i" class="accordionjs">
                 <li>
                     <div>
                         <h3>
@@ -135,9 +135,9 @@ get_banner('Homepage / Classic Auctions / Insurance', get_the_post_thumbnail_url
 <?php get_footer(); ?>
 
 <script>
-    $("#my-accordion").accordionjs({
+    $("#my-accordion-i").accordionjs({
         closeAble: true,
-        closeOther: true,
+        closeOther: false,
         slideSpeed: 150,
         activeIndex: 100,
     });

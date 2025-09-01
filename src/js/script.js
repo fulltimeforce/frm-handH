@@ -443,7 +443,7 @@ import "@splidejs/splide/css";
         const N = slides.length;
 
         const setWrapperHeight = () => {
-            const wrapperHeight = (SLIDE_H * N) + 250;
+            const wrapperHeight = SLIDE_H * (N + 1);
             wrapper.style.height = wrapperHeight + "px";
             const info = document.querySelector(".tailored_info-box");
             if (info) {
@@ -458,7 +458,7 @@ import "@splidejs/splide/css";
 
         const update = () => {
             const rect = wrapper.getBoundingClientRect();
-            const totalScrollable = wrapper.offsetHeight - SLIDE_H;
+            const totalScrollable = wrapper.offsetHeight - window.innerHeight;
             if (totalScrollable <= 0) return;
 
             const scrolledInside = Math.min(Math.max(-rect.top, 0), totalScrollable);
@@ -491,6 +491,17 @@ import "@splidejs/splide/css";
 
         window.addEventListener("scroll", update, { passive: true });
         window.addEventListener("resize", onResize);
+    }
+
+    if(document.querySelector('#mobile-slide')) {
+        new Splide('.imagelider-slide .splide', {
+            type   : 'fade',
+            perPage: 1,
+            autoplay: true,
+            pagination: false,
+            arrows: false,
+            autoHeight: true
+        }).mount();
     }
 
     if(document.querySelector('.listing_images-slider')) {
