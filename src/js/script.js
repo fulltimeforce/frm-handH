@@ -303,7 +303,7 @@ import "@splidejs/splide/css";
         chooseus.mount();
     }
 
-    if (document.querySelector('#pavilionGardens')) {
+    if (document.querySelector('#pavilionSlider')) {
         const pavilionSplide = new Splide('#pavilionSlider', {
             focus: 0,
             start: 0,
@@ -430,7 +430,6 @@ import "@splidejs/splide/css";
 
         heritage.mount();
     }
-
 
     // scrolled section - about
     if (document.querySelector('.imagelider')) {
@@ -724,4 +723,3 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
-

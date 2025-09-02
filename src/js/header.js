@@ -74,26 +74,28 @@
         const dropdown = document.querySelector(".submenu_dropdown");
         const buttons = dropdown.querySelectorAll(".submenu_dropdown-item button");
 
-        buttons.forEach(button => {
-            button.addEventListener("click", () => {
-                const currentState = dropdown.getAttribute("data-state");
-                const buttonId = button.getAttribute("data-id");
+        if (buttons) {
+            buttons.forEach(button => {
+                button.addEventListener("click", () => {
+                    const currentState = dropdown.getAttribute("data-state");
+                    const buttonId = button.getAttribute("data-id");
 
-                if (currentState === buttonId) {
-                    // Si ya estaba activo, lo reseteamos
-                    dropdown.setAttribute("data-state", "0");
-                } else {
-                    // Si es otro, lo activamos
-                    dropdown.setAttribute("data-state", buttonId);
-                }
+                    if (currentState === buttonId) {
+                        // Si ya estaba activo, lo reseteamos
+                        dropdown.setAttribute("data-state", "0");
+                    } else {
+                        // Si es otro, lo activamos
+                        dropdown.setAttribute("data-state", buttonId);
+                    }
+                });
             });
-        });
+        }
     });
 
     let header_toggle = document.querySelectorAll('.header_toggle');
-    if(header_toggle && header){
-        Array.from(header_toggle).forEach(header_toggle=>{
-            header_toggle.addEventListener('click', (e)=>{
+    if (header_toggle && header) {
+        Array.from(header_toggle).forEach(header_toggle => {
+            header_toggle.addEventListener('click', (e) => {
                 e.preventDefault();
                 header.classList.toggle('active');
             })
@@ -102,9 +104,9 @@
 
     let toggle_search = document.querySelectorAll('.toggle_search'),
         search_viewport = document.querySelector('.search_viewport');
-    if(toggle_search && search_viewport){
-        Array.from(toggle_search).forEach(toggle=>{
-            toggle.addEventListener('click', (e)=>{
+    if (toggle_search && search_viewport) {
+        Array.from(toggle_search).forEach(toggle => {
+            toggle.addEventListener('click', (e) => {
                 e.preventDefault();
                 search_viewport.classList.toggle('active');
             })
