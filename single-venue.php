@@ -65,7 +65,12 @@ get_banner('Homepage / Classic Auctions / Pavilion Gardens', esc_url($bg_image),
 
 <?php get_footer(); ?>
 
-<?php if (!empty(get_field('lat')) && !empty(get_field('lng'))): ?>
+<?php
+$lat = get_field('lat');
+$lng = get_field('lng');
+?>
+
+<?php if (!empty($lat) && !empty($lng)): ?>
     <script>
         (g => {
             var h, a, k, p = "The Google Maps JavaScript API",
@@ -99,8 +104,8 @@ get_banner('Homepage / Classic Auctions / Pavilion Gardens', esc_url($bg_image),
     <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
     <script>
         var locations = [{
-            lat: <?php echo get_field('lat'); ?>,
-            lng: <?php echo get_field('lng'); ?>
+            lat: <?php echo $lat; ?>,
+            lng: <?php echo $lng; ?>
         }];
 
         async function initMap() {
@@ -114,8 +119,8 @@ get_banner('Homepage / Classic Auctions / Pavilion Gardens', esc_url($bg_image),
             } = await google.maps.importLibrary("marker");
 
             const position = {
-                lat: <?php echo get_field('lat'); ?>,
-                lng: <?php echo get_field('lng'); ?>
+                lat: <?php echo $lat; ?>,
+                lng: <?php echo $lng; ?>
             };
 
             const map = new google.maps.Map(document.getElementById("map"), {

@@ -72,9 +72,10 @@
 
     document.addEventListener("DOMContentLoaded", () => {
         const dropdown = document.querySelector(".submenu_dropdown");
-        const buttons = dropdown.querySelectorAll(".submenu_dropdown-item button");
 
-        if (buttons) {
+        if (dropdown && buttons) {
+            const buttons = dropdown.querySelectorAll(".submenu_dropdown-item button");
+
             buttons.forEach(button => {
                 button.addEventListener("click", () => {
                     const currentState = dropdown.getAttribute("data-state");

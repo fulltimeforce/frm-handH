@@ -1,7 +1,30 @@
 <?php
+
 $auctions_title   = get_field('auctions_title');
 $auctions_content = get_field('auctions_content');
 $auctions_link    = get_field('auctions_link');
+
+$consign_content_1 = get_field('consign_content_1');
+$how_to_get_title = get_field('how_to_get_title');
+
+$lat = get_field('lat');
+$lng = get_field('lng');
+
+
+
+$venue_id = isset($args['venue_id']) ? (int) $args['venue_id'] : 0;
+
+if (is_singular('auction') && $venue_id) {
+    $auctions_title   = get_field('auctions_title', $venue_id);
+    $auctions_content = get_field('auctions_content', $venue_id);
+    $auctions_link    = get_field('auctions_link', $venue_id);
+
+    $consign_content_1 = get_field('consign_content_1', $venue_id);
+    $how_to_get_title = get_field('how_to_get_title', $venue_id);
+
+    $lat = get_field('lat', $venue_id);
+    $lng = get_field('lng', $venue_id);
+}
 ?>
 
 <?php if ($auctions_title || $auctions_content || $auctions_link): ?>
@@ -43,53 +66,63 @@ $auctions_link    = get_field('auctions_link');
     <div class="single_venue_info-container">
 
         <?php
-        $consign_content_1 = get_field('consign_content_1');
         if ($consign_content_1): ?>
             <div class="consign w-100">
                 <h2>Consign with H&H</h2>
-                <?php if ($consign_content_1): ?>
-                    <div class="consign-content">
-                        <?php echo wp_kses_post($consign_content_1); ?>
-                    </div>
-                <?php endif; ?>
+                <div class="consign-content">
+                    <?php echo wp_kses_post($consign_content_1); ?>
+                </div>
             </div>
         <?php endif; ?>
 
 
         <?php
-        $how_to_get_title = get_field('how_to_get_title');
-        if ($how_to_get_title || have_rows('how_to_get_items')): ?>
+        // ...
+        if ($how_to_get_title || ($venue_id ? have_rows('how_to_get_items', $venue_id) : have_rows('how_to_get_items'))): ?>
             <div class="how_to_get w-100">
                 <?php if ($how_to_get_title): ?>
                     <h2><?php echo esc_html($how_to_get_title); ?></h2>
                 <?php endif; ?>
 
-                <?php if (have_rows('how_to_get_items')): ?>
-                    <div class="how_to_get-col">
-                        <?php while (have_rows('how_to_get_items')): the_row();
-                            $subtitle   = get_sub_field('item_subtitle');
-                            $desc       = get_sub_field('item_description');
-                        ?>
-                            <div class="how_to_get-row">
-                                <?php if ($subtitle): ?>
-                                    <h3><?php echo esc_html($subtitle); ?></h3>
-                                <?php endif; ?>
-
-                                <?php if ($desc): ?>
-                                    <div class="content">
-                                        <p><?php echo wp_kses_post($desc); ?></p>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-                        <?php endwhile; ?>
-                    </div>
+                <?php if ($venue_id): ?>
+                    <?php if (have_rows('how_to_get_items', $venue_id)): ?>
+                        <div class="how_to_get-col">
+                            <?php while (have_rows('how_to_get_items', $venue_id)): the_row();
+                                $subtitle = get_sub_field('item_subtitle');
+                                $desc     = get_sub_field('item_description'); ?>
+                                <div class="how_to_get-row">
+                                    <?php if ($subtitle): ?><h3><?php echo esc_html($subtitle); ?></h3><?php endif; ?>
+                                    <?php if ($desc): ?><div class="content">
+                                            <p><?php echo wp_kses_post($desc); ?></p>
+                                        </div><?php endif; ?>
+                                </div>
+                            <?php endwhile; ?>
+                        </div>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <?php if (have_rows('how_to_get_items')): ?>
+                        <div class="how_to_get-col">
+                            <?php while (have_rows('how_to_get_items')): the_row();
+                                $subtitle = get_sub_field('item_subtitle');
+                                $desc     = get_sub_field('item_description'); ?>
+                                <div class="how_to_get-row">
+                                    <?php if ($subtitle): ?><h3><?php echo esc_html($subtitle); ?></h3><?php endif; ?>
+                                    <?php if ($desc): ?><div class="content">
+                                            <p><?php echo wp_kses_post($desc); ?></p>
+                                        </div><?php endif; ?>
+                                </div>
+                            <?php endwhile; ?>
+                        </div>
+                    <?php endif; ?>
                 <?php endif; ?>
             </div>
         <?php endif; ?>
+
+
     </div>
 </section>
 
-<?php if (!empty(get_field('lat')) && !empty(get_field('lng'))): ?>
+<?php if (!empty($lat) && !empty($lng)): ?>
     <section class="venue_map">
         <div class="venue_map-container">
             <div class="w-100 map_parent">

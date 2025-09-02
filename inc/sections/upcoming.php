@@ -1,13 +1,19 @@
 <?php
+$today = current_time('mysql');
+
 $argsAuction = array(
     'post_type'      => 'auction',
     'posts_per_page' => 6,
-    'orderby'        => 'date',
+    'orderby'        => 'meta_value',
     'order'          => 'ASC',
+    'meta_key'       => 'auction_date', // muy importante para ordenar por este campo
+    'meta_type'      => 'DATETIME',
     'meta_query'     => array(
         array(
-            'key'     => '_thumbnail_id',
-            'compare' => 'EXISTS'
+            'key'     => 'auction_date',
+            'value'   => $today,
+            'compare' => '>',
+            'type'    => 'DATETIME'
         )
     )
 );
@@ -16,6 +22,10 @@ $auctions = new WP_Query($argsAuction);
 ?>
 
 <?php if ($auctions->have_posts()): ?>
+    <?php
+    $count = 0;
+    $total = $auctions->post_count;
+    ?>
     <div class="container_upcoming">
         <div class="upcoming_head title_watermark">
             <div class="watermark">
@@ -42,31 +52,41 @@ $auctions = new WP_Query($argsAuction);
                 </div>
                 <div class="splide__track">
                     <ul class="splide__list">
-                        <?php
-                        $count = 0;
-                        $total = $auctions->post_count;
-                        while ($auctions->have_posts()) :
-
+                        <?php while ($auctions->have_posts()) : ?>
+                            <?php
                             $auctions->the_post();
-                            global $post;
 
-                            $lots_live        = get_field('lots_live');
-                            $auction_date     = get_field('auction_date');
-                            $auction_location = get_field('auction_location');
-                            $auction_icon     = get_field('auction_icon');
-                        ?>
+                            $auction_id = get_the_ID();
+                            $venue_id = get_field('template_venue', $auction_id);
+
+                            $auction_date = get_field('auction_date', $auction_id);
+                            $title = get_the_title($auction_id);
+                            $permalink = get_permalink($auction_id);
+                            $lots = get_field('lots', $auction_id);
+
+                            $ubication = get_field('slider_subtitle', $venue_id);
+
+                            $venue_name = get_the_title($venue_id);
+                            ?>
                             <li class="splide__slide">
                                 <div class="vehicle <?php echo $count === 0 ? 'active' : ''; ?>">
 
                                     <?php if ($auction_icon): ?>
-                                        <img src="<?php echo esc_url($auction_icon); ?>" alt="<?php the_title(); ?>" class="vehicle-logo">
+                                        <img src="<?php echo esc_url($auction_icon); ?>" alt="<?php echo $venue_name; ?>" class="vehicle-logo">
                                     <?php endif; ?>
 
                                     <div class="vehicle_bg">
                                         <?php
-                                        $thumb_id = get_post_thumbnail_id(get_the_ID());
-                                        if ($thumb_id) {
-                                            echo wp_get_attachment_image($thumb_id, 'large');
+                                        if ($venue_id) {
+                                            $thumb_id = get_post_thumbnail_id($venue_id);
+                                            if ($thumb_id) {
+                                                echo wp_get_attachment_image($thumb_id, 'large');
+                                            }
+                                        } else {
+                                            $thumb_id = get_post_thumbnail_id($auction_id);
+                                            if ($thumb_id) {
+                                                echo wp_get_attachment_image($thumb_id, 'large');
+                                            }
                                         }
                                         ?>
                                     </div>
@@ -85,25 +105,34 @@ $auctions = new WP_Query($argsAuction);
                                                         }
                                                         ?>
                                                     </span>
-                                                    <?php the_title(); ?>
+                                                    <?php echo $venue_name; ?>
                                                 </h2>
                                                 <ul>
                                                     <?php if ($auction_date): ?>
-                                                        <li>Date: <?php echo esc_html($auction_date); ?></li>
+                                                        <?php
+                                                        $timestamp = strtotime($auction_date);
+                                                        $formatted_date = date_i18n('jS M, Y - g:i a', $timestamp);
+                                                        ?>
+                                                        <li>Date: <?php echo $formatted_date; ?></li>
                                                     <?php endif; ?>
-                                                    <?php if ($auction_location): ?>
-                                                        <li>Location: <?php echo esc_html($auction_location); ?></li>
+
+                                                    <?php if ($ubication): ?>
+                                                        <li>Location: <?php echo $ubication; ?></li>
                                                     <?php endif; ?>
                                                 </ul>
                                                 <div class="flex">
-                                                    <a href="<?php the_permalink(); ?>">View Now</a>
-                                                    <a href="#">Venue Details</a>
+                                                    <a href="<?php the_permalink(); ?>">View Auction</a>
+                                                    <a style="display:none">Venue Details</a>
                                                     <a href="#">Send me a reminder</a>
                                                 </div>
-                                                <?php if ($lots_live): ?>
+                                                <?php if ($lots): ?>
                                                     <div class="lots_live">
-                                                        <span class="dot"></span>
-                                                        <p>Lots Live (<?php echo esc_html($lots_live); ?>)</p>
+                                                        <?php if (intval($lots) == 0): ?>
+                                                            <span class="dot"></span>
+                                                        <?php else: ?>
+                                                            <span class="dot" style="background-color:#08aa2b"></span>
+                                                        <?php endif; ?>
+                                                        <p>Lots Live (<?php echo $lots; ?>)</p>
                                                     </div>
                                                 <?php endif; ?>
                                             </div>
@@ -120,7 +149,7 @@ $auctions = new WP_Query($argsAuction);
                                             }
                                             ?>
                                         </span>
-                                        <h3><?php the_title(); ?></h3>
+                                        <h3><?php echo $venue_name; ?></h3>
                                     </div>
                                 </div>
 
@@ -131,13 +160,10 @@ $auctions = new WP_Query($argsAuction);
                                     </div>
                                 <?php endif; ?>
                             </li>
-                        <?php
-                            $count++;
-                        endwhile;
-                        wp_reset_postdata();
-                        ?>
+                            <?php $count++; ?>
+                        <?php endwhile;
+                        wp_reset_postdata(); ?>
                     </ul>
-
                 </div>
             </div>
         </div>

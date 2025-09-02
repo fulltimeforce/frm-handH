@@ -107,11 +107,14 @@ function hnh_au_handle_import($file)
     }
 
     // Columnas útiles por texto del encabezado
-    $name_col   = hnh_au_find_header(['Auction name', 'Name', 'Title'], $headers_raw);
+    $name_col = hnh_au_find_header(['Auction name', 'Name', 'Title'], $headers_raw);
 
     // Contadores
     $created = 0;
     $skipped_empty = 0;
+
+    // NEW: preparar índice de Venues una sola vez
+    $venue_index = hnh_au_prepare_venue_index(); // <-- NUEVO
 
     for ($i = 1; $i < count($rows); $i++) {
         $row = $rows[$i];
@@ -153,11 +156,22 @@ function hnh_au_handle_import($file)
             $hl = strtolower(trim((string)$header_label));
 
             // Fechas: cualquier encabezado que contenga 'date', 'until' o 'time'
-            if ($value !== '' && (strpos($hl, 'date') !== false || strpos($hl, 'until') !== false || strpos($hl, 'time') !== false)) {
-                $value = hnh_au_format_excel_datetime($value); // -> "dd/mm/YYYY HH:mm:ss" o valor original si no se pudo
+            if ($value !== '' && (
+                strpos($hl, 'date') !== false ||
+                strpos($hl, 'until') !== false ||
+                strpos($hl, 'time') !== false
+            )) {
+                // ⇨ Guardar SIEMPRE como "YYYY-MM-DD HH:MM:SS" (texto plano)
+                $value = hnh_au_to_mysql_datetime($value);
             }
 
             update_field($field_name, $value, $post_id);
+        }
+
+        // NEW: intentar asociar automáticamente el Venue al campo ACF `template_venue`
+        $guessed_venue_id = hnh_au_guess_venue_id($post_title, $venue_index);   // <-- NUEVO
+        if ($guessed_venue_id) {
+            update_field('template_venue', (int)$guessed_venue_id, $post_id);    // <-- NUEVO (Page Link guarda ID)
         }
 
         $created++;
@@ -187,11 +201,11 @@ function hnh_au_sanitize_field_name($label)
 }
 
 /**
- * Normaliza fecha/hora desde Excel (número o texto).
- * Devuelve texto **siempre** en "dd/mm/YYYY HH:mm:ss".
- * Si no se puede interpretar, devuelve el valor original (trim).
+ * Convierte fechas desde Excel (serial o texto) al formato MySQL:
+ *   "YYYY-MM-DD HH:MM:SS"
+ * Si no puede interpretarse, devuelve el valor original (trim).
  */
-function hnh_au_format_excel_datetime($value)
+function hnh_au_to_mysql_datetime($value)
 {
     if ($value === '' || $value === null) return '';
 
@@ -202,18 +216,18 @@ function hnh_au_format_excel_datetime($value)
         $n = (float)$s;
         // base Excel (Windows): 1899-12-30
         $base = new DateTime('1899-12-30 00:00:00', wp_timezone());
-        $days = (int)floor($n);
-        $seconds = (int)round(($n - $days) * 86400);
+        $days = (int) floor($n);
+        $seconds = (int) round(($n - $days) * 86400);
         $base->modify("+{$days} days");
         if ($seconds) $base->modify("+{$seconds} seconds");
-        return $base->format('d/m/Y H:i:s');
+        return $base->format('Y-m-d H:i:s');
     }
 
     // Normalizar separadores y espacios
     $s = preg_replace('/\s+/', ' ', $s);
     $s = str_replace(['.', '-'], ['/', '/'], $s);
 
-    // Formatos más comunes
+    // Formatos usuales
     $fmts = [
         'd/m/Y H:i:s',
         'd/m/Y H:i',
@@ -230,16 +244,112 @@ function hnh_au_format_excel_datetime($value)
     ];
     foreach ($fmts as $fmt) {
         $dt = DateTime::createFromFormat($fmt, $s, wp_timezone());
-        if ($dt instanceof DateTime) return $dt->format('d/m/Y H:i:s');
+        if ($dt instanceof DateTime) {
+            if (strpos($fmt, 'H:i') === false) {
+                $dt->setTime(0, 0, 0);
+            } elseif (strpos($fmt, 'H:i:s') === false) {
+                $dt->setTime((int)$dt->format('H'), (int)$dt->format('i'), 0);
+            }
+            return $dt->format('Y-m-d H:i:s');
+        }
     }
 
-    // Último intento strtotime
     $ts = strtotime($s);
-    if ($ts !== false) return date_i18n('d/m/Y H:i:s', $ts);
+    if ($ts !== false) return date('Y-m-d H:i:s', $ts);
 
-    // Si no se pudo, devolver tal cual
     return trim((string)$value);
 }
+
+/* ======== NEW: Venue matching helpers ======== */
+
+/**
+ * Carga y normaliza todos los Venues publicados una sola vez.
+ * @return array  [ [id, title, norm], ... ]
+ */
+function hnh_au_prepare_venue_index()
+{
+    $posts = get_posts([
+        'post_type'      => 'venue',
+        'post_status'    => 'publish',
+        'posts_per_page' => -1,
+        'fields'         => 'ids',
+    ]);
+
+    $index = [];
+    foreach ($posts as $pid) {
+        $t = get_the_title($pid);
+        $index[] = [
+            'id'    => (int)$pid,
+            'title' => $t,
+            'norm'  => hnh_au_norm($t),
+        ];
+    }
+    return $index;
+}
+
+/**
+ * Dado el título del Auction, intenta adivinar el Venue id.
+ * Usa coincidencia por substring y similar_text con umbral del 55%.
+ */
+function hnh_au_guess_venue_id(string $auction_title, array $venue_index): int
+{
+    if (!$auction_title || empty($venue_index)) return 0;
+
+    // parte izquierda antes de " | " como pista principal
+    $parts       = explode('|', $auction_title);
+    $left_hint   = trim($parts[0] ?? $auction_title);
+
+    $norm_full   = hnh_au_norm($auction_title);
+    $norm_left   = hnh_au_norm($left_hint);
+
+    $best_id = 0;
+    $best_score = 0;
+
+    foreach ($venue_index as $v) {
+        $vn = $v['norm'];
+
+        // match fuerte: el nombre del venue está contenido en el del auction
+        if ($vn && (strpos($norm_full, $vn) !== false || strpos($norm_left, $vn) !== false)) {
+            return (int)$v['id']; // substring = 100%
+        }
+
+        // similitud blanda
+        $p1 = 0;
+        $p2 = 0;
+        similar_text($vn, $norm_full, $p1);
+        similar_text($vn, $norm_left, $p2);
+        $score = max($p1, $p2);
+
+        if ($score > $best_score) {
+            $best_score = $score;
+            $best_id = (int)$v['id'];
+        }
+    }
+
+    // umbral de confianza
+    return ($best_score >= 55) ? $best_id : 0;
+}
+
+/**
+ * Normaliza cadenas para comparar: minúsculas, sin signos, quita palabras comunes.
+ */
+function hnh_au_norm(string $s): string
+{
+    // quitar "the " inicial solo para comparación
+    $s = preg_replace('~^\s*the\s+~i', '', $s);
+
+    $s = mb_strtolower($s, 'UTF-8');
+    // dejar solo letras y números como separadores simples
+    $s = preg_replace('~[^\p{L}\p{Nd}]+~u', ' ', $s);
+
+    // palabras comunes que no aportan al match
+    $stop = ['the', 'sale', 'auction', 'museum', 'hall'];
+    $tokens = array_values(array_filter(explode(' ', $s)));
+    $tokens = array_diff($tokens, $stop);
+
+    return trim(implode(' ', $tokens));
+}
+/* ======== /NEW ======== */
 
 // ================== LECTOR XLSX ==================
 function hnh_au_include_simplexlsx()
@@ -263,6 +373,7 @@ function hnh_au_include_simplexlsx()
         {
             return self::$error;
         }
+
         private function open($filename)
         {
             if (!class_exists('ZipArchive')) {
@@ -289,6 +400,7 @@ function hnh_au_include_simplexlsx()
                     } else $shared[] = '';
                 }
             }
+
             $sheetIndex = $zip->locateName('xl/worksheets/sheet1.xml');
             if ($sheetIndex === false) {
                 self::$error = 'sheet1.xml not found';
@@ -302,25 +414,24 @@ function hnh_au_include_simplexlsx()
                 foreach ($row->c as $c) {
                     $ref = isset($c['r']) ? (string)$c['r'] : '';
                     $colIndex = self::colIndexFromRef($ref);
-                    $t = (string)$c['t'];
-                    $v = (string)$c->v;
+                    $t  = (string)$c['t'];
+                    $v  = (string)$c->v;
                     $val = '';
                     if ($t === 's') {
                         $val = $shared[(int)$v] ?? '';
                     } elseif ($t === 'inlineStr' && isset($c->is->t)) {
                         $val = (string)$c->is->t;
                     } else {
-                        $val = $v;
-                    } // num/fecha/texto plano
+                        $val = $v; // número/fecha o texto plano
+                    }
                     $r[$colIndex] = $val;
                 }
+
                 if (!empty($r)) {
                     ksort($r);
                     $max = max(array_keys($r));
                     $rowVals = array_fill(0, $max + 1, '');
-                    foreach ($r as $idx => $val) {
-                        $rowVals[$idx] = $val;
-                    }
+                    foreach ($r as $idx => $val) $rowVals[$idx] = $val;
                     $rows[] = $rowVals;
                 } else {
                     $rows[] = [];
@@ -330,6 +441,7 @@ function hnh_au_include_simplexlsx()
             $zip->close();
             return true;
         }
+
         private static function colIndexFromRef($ref)
         {
             if (!preg_match('/^([A-Z]+)\d+$/i', $ref, $m)) return 0;

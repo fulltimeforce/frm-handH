@@ -7,7 +7,9 @@ $subtitle = get_field('pavilion_hero_subtitle');
 $text = get_field('pavilion_hero_text');
 $button = get_field('pavilion_hero_button');
 
-get_banner('Homepage / Classic Auctions / Pavilion Gardens', esc_url($bg_image), 'Pavillion Gardens');
+get_banner('Homepage / Classic Auctions / ' . get_the_title(), esc_url($bg_image));
+
+$venue_id = get_field('template_venue');
 
 ?>
 
@@ -61,11 +63,18 @@ get_banner('Homepage / Classic Auctions / Pavilion Gardens', esc_url($bg_image),
     </div>
 </div>
 
-<?php get_template_part('inc/parts/SingleVenueAuction'); ?>
+<?php get_template_part('inc/parts/SingleVenueAuction', null, [
+    'venue_id' => $venue_id
+]); ?>
 
 <?php get_footer(); ?>
 
-<?php if (!empty(get_field('lat')) && !empty(get_field('lng'))): ?>
+<?php
+$lat = $venue_id ? get_field('lat', $venue_id) : '';
+$lng = $venue_id ? get_field('lng', $venue_id) : '';
+?>
+
+<?php if (!empty($lat) && !empty($lng)): ?>
     <script>
         (g => {
             var h, a, k, p = "The Google Maps JavaScript API",
@@ -99,8 +108,8 @@ get_banner('Homepage / Classic Auctions / Pavilion Gardens', esc_url($bg_image),
     <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
     <script>
         var locations = [{
-            lat: <?php echo get_field('lat'); ?>,
-            lng: <?php echo get_field('lng'); ?>
+            lat: <?php echo $lat; ?>,
+            lng: <?php echo $lng; ?>
         }];
 
         async function initMap() {
@@ -114,8 +123,8 @@ get_banner('Homepage / Classic Auctions / Pavilion Gardens', esc_url($bg_image),
             } = await google.maps.importLibrary("marker");
 
             const position = {
-                lat: <?php echo get_field('lat'); ?>,
-                lng: <?php echo get_field('lng'); ?>
+                lat: <?php echo $lat; ?>,
+                lng: <?php echo $lng; ?>
             };
 
             const map = new google.maps.Map(document.getElementById("map"), {
