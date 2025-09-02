@@ -1,38 +1,48 @@
-<div class="container_upcoming">
-    <div class="upcoming_head title_watermark">
-        <div class="watermark">
-            <p>Upcoming Auctions</p>
-        </div>
-        <div class="breadlines">
-            <p>Explore</p>
-        </div>
-        <h2>Upcoming Auctions</h2>
-    </div>
-    <div class="upcoming_body">
-        <div class="splide" role="group" id="upcoming">
-            <div class="splide__arrows">
-                <button class="splide__arrow splide__arrow--prev">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="26" viewBox="0 0 50 26" fill="none">
-                        <path d="M0 13H48M48 13L36 1M48 13L36 25" stroke="#8C6E47" stroke-width="2" />
-                    </svg>
-                </button>
-                <button class="splide__arrow splide__arrow--next">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="26" viewBox="0 0 50 26" fill="none">
-                        <path d="M0 13H48M48 13L36 1M48 13L36 25" stroke="#8C6E47" stroke-width="2" />
-                    </svg>
-                </button>
+<?php
+$argsAuction = array(
+    'post_type'      => 'auction',
+    'posts_per_page' => 6,
+    'orderby'        => 'date',
+    'order'          => 'ASC',
+    'meta_query'     => array(
+        array(
+            'key'     => '_thumbnail_id',
+            'compare' => 'EXISTS'
+        )
+    )
+);
+
+$auctions = new WP_Query($argsAuction);
+?>
+
+<?php if ($auctions->have_posts()): ?>
+    <div class="container_upcoming">
+        <div class="upcoming_head title_watermark">
+            <div class="watermark">
+                <p>Upcoming Auctions</p>
             </div>
-            <div class="splide__track">
-                <ul class="splide__list">
-                    <?php
-                    $argsAuction = array(
-                        'post_type'      => 'auction',
-                        'posts_per_page' => 6,
-                        'orderby'        => 'date',
-                        'order'          => 'ASC'
-                    );
-                    $auctions = new WP_Query($argsAuction);
-                    if ($auctions->have_posts()) :
+            <div class="breadlines">
+                <p>Explore</p>
+            </div>
+            <h2>Upcoming Auctions</h2>
+        </div>
+        <div class="upcoming_body">
+            <div class="splide" role="group" id="upcoming">
+                <div class="splide__arrows">
+                    <button class="splide__arrow splide__arrow--prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="26" viewBox="0 0 50 26" fill="none">
+                            <path d="M0 13H48M48 13L36 1M48 13L36 25" stroke="#8C6E47" stroke-width="2" />
+                        </svg>
+                    </button>
+                    <button class="splide__arrow splide__arrow--next">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="26" viewBox="0 0 50 26" fill="none">
+                            <path d="M0 13H48M48 13L36 1M48 13L36 25" stroke="#8C6E47" stroke-width="2" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="splide__track">
+                    <ul class="splide__list">
+                        <?php
                         $count = 0;
                         $total = $auctions->post_count;
                         while ($auctions->have_posts()) :
@@ -44,7 +54,7 @@
                             $auction_date     = get_field('auction_date');
                             $auction_location = get_field('auction_location');
                             $auction_icon     = get_field('auction_icon');
-                    ?>
+                        ?>
                             <li class="splide__slide">
                                 <div class="vehicle <?php echo $count === 0 ? 'active' : ''; ?>">
 
@@ -121,15 +131,15 @@
                                     </div>
                                 <?php endif; ?>
                             </li>
-                    <?php
+                        <?php
                             $count++;
                         endwhile;
                         wp_reset_postdata();
-                    endif;
-                    ?>
-                </ul>
+                        ?>
+                    </ul>
 
+                </div>
             </div>
         </div>
     </div>
-</div>
+<?php endif; ?>

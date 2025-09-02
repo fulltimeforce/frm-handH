@@ -1,43 +1,46 @@
 <?php
-// ====== Ajustes ======
-const AU_IMPORT_POST_TYPE = 'auction';
-const AU_MENU_PARENT      = 'edit.php?post_type=auction';
+// ============ SETTINGS ============
+const HNH_AU_POST_TYPE   = 'auction';
+const HNH_AU_MENU_PARENT = 'edit.php?post_type=auction';
+// =================================
 
-// ====== Menú: Auctions → Import Auctions ======
+// Submenú: Auctions → Import Auctions
 add_action('admin_menu', function () {
     add_submenu_page(
-        AU_MENU_PARENT,
+        HNH_AU_MENU_PARENT,
         'Import Auctions',
         'Import Auctions',
         'manage_options',
         'import-auctions',
-        'au_import_render_page'
+        'hnh_au_import_render_page'
     );
 });
 
-function au_import_render_page()
+function hnh_au_import_render_page()
 { ?>
     <div class="wrap">
         <h1>Import Auctions</h1>
-        <p>Upload a <strong>.xlsx</strong> (from the CRM) or <strong>.csv</strong> (comma-separated). The first row must be the header.</p>
+        <p>Upload a <strong>.xlsx</strong> (from the CRM) or <strong>.csv</strong>. First row is the header.</p>
         <form method="post" enctype="multipart/form-data">
-            <?php wp_nonce_field('au_import_nonce', 'au_import_nonce_f'); ?>
+            <?php wp_nonce_field('hnh_au_import_nonce', 'hnh_au_import_nonce_f'); ?>
             <input type="file" name="au_file" accept=".xlsx,.csv" required />
             <p><button class="button button-primary">Import</button></p>
         </form>
         <?php
-        if (!empty($_FILES['au_file']) && isset($_POST['au_import_nonce_f']) && wp_verify_nonce($_POST['au_import_nonce_f'], 'au_import_nonce')) {
-            au_handle_import($_FILES['au_file']);
+        if (
+            !empty($_FILES['au_file']) && isset($_POST['hnh_au_import_nonce_f'])
+            && wp_verify_nonce($_POST['hnh_au_import_nonce_f'], 'hnh_au_import_nonce')
+        ) {
+            hnh_au_handle_import($_FILES['au_file']);
         }
         ?>
     </div>
 <?php }
 
-// ====== Importador ======
-function au_handle_import($file)
+// ================== IMPORT ==================
+function hnh_au_handle_import($file)
 {
-    if (!current_user_can('manage_options')) wp_die('No permission.');
-
+    if (!current_user_can('manage_options')) wp_die('No permission');
     if ($file['error'] !== UPLOAD_ERR_OK) {
         echo '<div class="notice notice-error"><p>Upload error.</p></div>';
         return;
@@ -52,23 +55,23 @@ function au_handle_import($file)
     $path = $uploaded['file'];
     $ext  = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
-    // Lee filas
+    // Leer filas
     $rows = [];
     if ($ext === 'xlsx') {
-        if (!class_exists('AU_SimpleXLSX')) au_include_simplexlsx();
-        $xlsx = AU_SimpleXLSX::parse($path);
+        if (!class_exists('HNH_SimpleXLSX_AU')) hnh_au_include_simplexlsx();
+        $xlsx = HNH_SimpleXLSX_AU::parse($path);
         if (!$xlsx) {
-            echo '<div class="notice notice-error"><p>Could not read XLSX: ' . esc_html(AU_SimpleXLSX::parseError()) . '</p></div>';
+            echo '<div class="notice notice-error"><p>Could not read XLSX: ' . esc_html(HNH_SimpleXLSX_AU::parseError()) . '</p></div>';
             return;
         }
         $rows = $xlsx->rows();
     } elseif ($ext === 'csv') {
-        if (($h = fopen($path, 'r')) !== false) {
-            while (($data = fgetcsv($h, 0, ',', '"', '\\')) !== false) $rows[] = $data;
-            fclose($h);
+        if (($handle = fopen($path, 'r')) !== false) {
+            while (($data = fgetcsv($handle, 0, ',', '"', '\\')) !== false) $rows[] = $data;
+            fclose($handle);
         }
     } else {
-        echo '<div class="notice notice-error"><p>Unsupported extension.</p></div>';
+        echo '<div class="notice notice-error"><p>Unsupported extension: ' . esc_html($ext) . '</p></div>';
         return;
     }
 
@@ -77,49 +80,43 @@ function au_handle_import($file)
         return;
     }
 
-    // Normaliza largo por encabezado
-    $headers   = $rows[0];
-    $headerLen = is_array($headers) ? count($headers) : 0;
-    while ($headerLen > 0 && trim((string)$headers[$headerLen - 1]) === '') {
-        array_pop($headers);
+    // Normalizar a largo del header
+    $headers_raw = $rows[0];
+    $headerLen = is_array($headers_raw) ? count($headers_raw) : 0;
+    while ($headerLen > 0 && trim((string)$headers_raw[$headerLen - 1]) === '') {
+        array_pop($headers_raw);
         $headerLen--;
     }
     if ($headerLen === 0) {
-        echo '<div class="notice notice-error"><p>Empty header.</p></div>';
+        echo '<div class="notice notice-error"><p>Empty header row.</p></div>';
         return;
     }
 
     foreach ($rows as $i => $r) {
         if (!is_array($r)) $r = [];
-        $cnt = count($r);
-        if ($cnt < $headerLen) $rows[$i] = array_pad($r, $headerLen, '');
-        elseif ($cnt > $headerLen) $rows[$i] = array_slice($r, 0, $headerLen);
+        $count = count($r);
+        if ($count < $headerLen) $rows[$i] = array_pad($r, $headerLen, '');
+        elseif ($count > $headerLen) $rows[$i] = array_slice($r, 0, $headerLen);
     }
 
-    // Mapa posicional → nombres ACF (slugificados)
+    // Mapeo posicional -> ACF field name (sanitizado)
     $map_by_index = [];
-    foreach ($headers as $colIdx => $label) {
-        $label = sanitize_text_field($label);
-        $name  = au_sanitize_field_name($label);
-        $map_by_index[$colIdx] = $name ?: null;
+    foreach ($headers_raw as $colIdx => $label) {
+        $label = (string)$label;
+        $map_by_index[$colIdx] = hnh_au_sanitize_field_name($label) ?: null;
     }
 
-    // Columna título
-    $title_col = au_find_header(['Auction name', 'Auction Name', 'Name', 'Title (main)', 'Title'], $headers);
+    // Columnas útiles por texto del encabezado
+    $name_col   = hnh_au_find_header(['Auction name', 'Name', 'Title'], $headers_raw);
 
-    // Columnas de fecha (para convertir)
-    $date_like_cols = [];
-    foreach ($headers as $colIdx => $label) {
-        if (stripos($label, 'date') !== false) $date_like_cols[] = $colIdx;
-    }
-
+    // Contadores
     $created = 0;
     $skipped_empty = 0;
 
     for ($i = 1; $i < count($rows); $i++) {
         $row = $rows[$i];
 
-        // Salta filas vacías
+        // Fila completamente vacía
         $nonEmpty = false;
         foreach ($row as $cell) {
             if ((string)$cell !== '') {
@@ -132,13 +129,12 @@ function au_handle_import($file)
             continue;
         }
 
-        // Título desde "Auction name"
-        $post_title = ($title_col !== -1) ? wp_strip_all_tags((string)$row[$title_col]) : '';
+        // Título = Auction name (si existe), si no, "Auction N"
+        $post_title = $name_col !== -1 ? wp_strip_all_tags((string)$row[$name_col]) : '';
         if ($post_title === '') $post_title = 'Auction ' . $i;
 
-        // Crea post
         $post_id = wp_insert_post([
-            'post_type'    => AU_IMPORT_POST_TYPE,
+            'post_type'    => HNH_AU_POST_TYPE,
             'post_status'  => 'publish',
             'post_title'   => $post_title,
             'post_content' => '',
@@ -148,15 +144,17 @@ function au_handle_import($file)
             continue;
         }
 
-        // Guarda cada columna como su campo ACF posicional
-        foreach ($headers as $colIdx => $header_label) {
+        // Guardar TODOS los campos ACF por posición
+        foreach ($headers_raw as $colIdx => $header_label) {
             $field_name = $map_by_index[$colIdx] ?? null;
             if (!$field_name) continue;
 
             $value = (string)$row[$colIdx];
+            $hl = strtolower(trim((string)$header_label));
 
-            if (in_array($colIdx, $date_like_cols, true)) {
-                $value = au_excel_serial_to_datetime($value, 'Y-m-d H:i');
+            // Fechas: cualquier encabezado que contenga 'date', 'until' o 'time'
+            if ($value !== '' && (strpos($hl, 'date') !== false || strpos($hl, 'until') !== false || strpos($hl, 'time') !== false)) {
+                $value = hnh_au_format_excel_datetime($value); // -> "dd/mm/YYYY HH:mm:ss" o valor original si no se pudo
             }
 
             update_field($field_name, $value, $post_id);
@@ -166,108 +164,88 @@ function au_handle_import($file)
     }
 
     echo '<div class="notice notice-success"><p>'
-        . 'Import completed. Created: <strong>' . (int)$created . '</strong> '
-        . '| Skipped (empty rows/errors): ' . (int)$skipped_empty
+        . 'Import completed. Created: <strong>' . intval($created) . '</strong> '
+        . '| Skipped (empty rows/errors): ' . intval($skipped_empty)
         . '</p></div>';
 }
 
-// ====== Utilidades ======
-function au_find_header(array $cands, array $headers)
+// ================== HELPERS ==================
+function hnh_au_find_header(array $candidates, array $headers)
 {
-    foreach ($cands as $c) {
+    foreach ($candidates as $c) {
         $i = array_search($c, $headers, true);
         if ($i !== false) return $i;
     }
     return -1;
 }
 
-function au_sanitize_field_name($label)
+function hnh_au_sanitize_field_name($label)
 {
-    $name = strtolower($label);
+    $name = strtolower((string)$label);
     $name = preg_replace('~[^a-z0-9]+~', '_', $name);
     return trim($name, '_');
 }
 
 /**
- * Conversor robusto de fecha/hora:
- * - dd/mm/YYYY HH:mm[:ss] (soporta dobles espacios)
- * - YYYY-mm-dd HH:mm[:ss]
- * - mm/dd/YYYY HH:mm[:ss]
- * - Serial Excel con . o , decimal (45919.5 / 45919,5)
- * - Serial Excel como "DÍAS HH:MM[:SS]" (p.e. "45919 00:05")
+ * Normaliza fecha/hora desde Excel (número o texto).
+ * Devuelve texto **siempre** en "dd/mm/YYYY HH:mm:ss".
+ * Si no se puede interpretar, devuelve el valor original (trim).
  */
-function au_excel_serial_to_datetime($value, $format = 'Y-m-d H:i')
+function hnh_au_format_excel_datetime($value)
 {
     if ($value === '' || $value === null) return '';
 
-    $tz = wp_timezone();
-    $s  = trim((string)$value);
-    if ($s === '') return '';
+    $s = trim((string)$value);
 
-    // Normaliza espacios múltiples
+    // ¿Numérico puro? (serial Excel)
+    if (preg_match('/^\d+(\.\d+)?$/', $s)) {
+        $n = (float)$s;
+        // base Excel (Windows): 1899-12-30
+        $base = new DateTime('1899-12-30 00:00:00', wp_timezone());
+        $days = (int)floor($n);
+        $seconds = (int)round(($n - $days) * 86400);
+        $base->modify("+{$days} days");
+        if ($seconds) $base->modify("+{$seconds} seconds");
+        return $base->format('d/m/Y H:i:s');
+    }
+
+    // Normalizar separadores y espacios
     $s = preg_replace('/\s+/', ' ', $s);
+    $s = str_replace(['.', '-'], ['/', '/'], $s);
 
-    // 1) Serial Excel "NNNNN[.fraction]" con punto o coma
-    if (preg_match('/^\d+(?:[.,]\d+)?$/', $s)) {
-        $f = (float) str_replace(',', '.', $s);
-        if ($f <= 0) return '';
-        $base = new DateTime('1899-12-30 00:00:00', $tz);
-        $days = (int) floor($f);
-        $frac = max(0, $f - $days);
-        $seconds = (int) round($frac * 86400);
-        $base->modify("+{$days} days");
-        if ($seconds) $base->modify("+{$seconds} seconds");
-        return $base->format($format);
-    }
-
-    // 2) Serial Excel "DÍAS HH:MM[:SS]" separado por espacio (p.e. "45919 00:05" / "45919 12:00:00")
-    if (preg_match('/^(\d+)\s+(\d{1,2}):(\d{2})(?::(\d{2}))?$/', $s, $m)) {
-        $days = (int) $m[1];
-        $h    = (int) $m[2];
-        $min  = (int) $m[3];
-        $sec  = isset($m[4]) ? (int)$m[4] : 0;
-        if ($days <= 0 && $h === 0 && $min === 0 && $sec === 0) return '';
-        $base = new DateTime('1899-12-30 00:00:00', $tz);
-        $base->modify("+{$days} days");
-        $seconds = $h * 3600 + $min * 60 + $sec;
-        if ($seconds) $base->modify("+{$seconds} seconds");
-        return $base->format($format);
-    }
-
-    // 3) Formatos explícitos comunes (incluye segundos)
-    $formats = [
+    // Formatos más comunes
+    $fmts = [
         'd/m/Y H:i:s',
         'd/m/Y H:i',
         'd/m/Y',
+        'd/m/y H:i:s',
+        'd/m/y H:i',
+        'd/m/y',
+        'Y/m/d H:i:s',
+        'Y/m/d H:i',
+        'Y/m/d',
         'Y-m-d H:i:s',
+        'Y-m-d H:i',
         'Y-m-d',
-        'm/d/Y H:i:s',
-        'm/d/Y H:i',
-        'm/d/Y',
     ];
-    foreach ($formats as $f) {
-        $dt = DateTime::createFromFormat($f, $s, $tz);
-        if ($dt instanceof DateTime) {
-            // Asegura que no haya falsos positivos con warnings
-            $errs = DateTime::getLastErrors();
-            if ($errs['warning_count'] === 0 && $errs['error_count'] === 0) {
-                return $dt->format($format);
-            }
-        }
+    foreach ($fmts as $fmt) {
+        $dt = DateTime::createFromFormat($fmt, $s, wp_timezone());
+        if ($dt instanceof DateTime) return $dt->format('d/m/Y H:i:s');
     }
 
-    // 4) Último recurso: strtotime (puede depender de locale/servidor)
+    // Último intento strtotime
     $ts = strtotime($s);
-    if ($ts !== false) return wp_date($format, $ts, $tz);
+    if ($ts !== false) return date_i18n('d/m/Y H:i:s', $ts);
 
-    return '';
+    // Si no se pudo, devolver tal cual
+    return trim((string)$value);
 }
 
-// ====== Lector XLSX que preserva vacíos intermedios ======
-function au_include_simplexlsx()
+// ================== LECTOR XLSX ==================
+function hnh_au_include_simplexlsx()
 {
-    if (class_exists('AU_SimpleXLSX')) return;
-    class AU_SimpleXLSX
+    if (class_exists('HNH_SimpleXLSX_AU')) return;
+    class HNH_SimpleXLSX_AU
     {
         private $rows = [];
         private static $error = '';
@@ -293,7 +271,7 @@ function au_include_simplexlsx()
             }
             $zip = new ZipArchive();
             if ($zip->open($filename) !== true) {
-                self::$error = 'Cannot open zip';
+                self::$error = 'Could not open ZIP';
                 return false;
             }
 
@@ -323,7 +301,7 @@ function au_include_simplexlsx()
                 $r = [];
                 foreach ($row->c as $c) {
                     $ref = isset($c['r']) ? (string)$c['r'] : '';
-                    $col = $this->colIndexFromRef($ref);
+                    $colIndex = self::colIndexFromRef($ref);
                     $t = (string)$c['t'];
                     $v = (string)$c->v;
                     $val = '';
@@ -333,14 +311,16 @@ function au_include_simplexlsx()
                         $val = (string)$c->is->t;
                     } else {
                         $val = $v;
-                    }
-                    $r[$col] = $val;
+                    } // num/fecha/texto plano
+                    $r[$colIndex] = $val;
                 }
                 if (!empty($r)) {
                     ksort($r);
                     $max = max(array_keys($r));
                     $rowVals = array_fill(0, $max + 1, '');
-                    foreach ($r as $i => $val) $rowVals[$i] = $val;
+                    foreach ($r as $idx => $val) {
+                        $rowVals[$idx] = $val;
+                    }
                     $rows[] = $rowVals;
                 } else {
                     $rows[] = [];
@@ -350,7 +330,7 @@ function au_include_simplexlsx()
             $zip->close();
             return true;
         }
-        private function colIndexFromRef($ref)
+        private static function colIndexFromRef($ref)
         {
             if (!preg_match('/^([A-Z]+)\d+$/i', $ref, $m)) return 0;
             $letters = strtoupper($m[1]);

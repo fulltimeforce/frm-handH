@@ -89,13 +89,15 @@ $auctions_link    = get_field('auctions_link');
     </div>
 </section>
 
-<section class="venue_map">
-    <div class="venue_map-container">
-        <div class="w-100 map_parent">
-            <div id="map"></div>
+<?php if (!empty(get_field('lat')) && !empty(get_field('lng'))): ?>
+    <section class="venue_map">
+        <div class="venue_map-container">
+            <div class="w-100 map_parent">
+                <div id="map"></div>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
+<?php endif; ?>
 
 <section class="upcoming pb160">
     <?php get_template_part('inc/sections/upcoming'); ?>

@@ -338,6 +338,10 @@
 .upcoming {
     overflow: hidden;
 
+    &:empty{
+        display: none !important;
+    }
+
     &.pb160 {
         @include m.pblock160;
     }
