@@ -37,21 +37,24 @@
                     margin-bottom: 28px;
                 }
 
-                @media (min-width: v.$desktop){
+                @media (min-width: v.$desktop) {
                     padding-inline: 5%;
                 }
             }
 
-            .content{
+            .content {
                 margin-inline: auto;
                 width: 100%;
-                @media (min-width: v.$tv){
+
+                @media (min-width: v.$tv) {
                     max-width: m.px-to-vw(638px);
                 }
-                @include m.tv{
+
+                @include m.tv {
                     max-width: 470px;
                 }
             }
+
             p {
                 text-align: center;
                 @include m.p;
@@ -104,9 +107,10 @@
                         width: 100%;
                         font-family: v.$gotham_light;
                         background-color: v.$beige;
+                        color: v.$black;
                         padding-block: m.px-to-vw(16px);
-                        letter-spacing: 0.8px;
                         text-align: center;
+                        @include m.p;
 
                         @include m.tv {
                             padding-block: 16px;
@@ -149,7 +153,7 @@
                     margin-right: 0;
                 }
 
-                h2 {
+                /*h2 {
                     max-width: m.px-to-vw(926px);
                     font-family: v.$cormorant;
                     font-weight: 400;
@@ -166,7 +170,7 @@
                     @include m.tablet {
                         font-size: 40px;
                     }
-                }
+                }*/
             }
         }
 
@@ -190,24 +194,25 @@
         }
 
         &-filter {
+            @include m.mb64;
             @include m.grid(3, m.px-to-vw(10px));
-            padding-block: 0 m.px-to-vw(60px);
+            // padding-block: 0 m.px-to-vw(60px);
             font-family: v.$gotham_light;
 
             @include m.tv {
                 gap: 10px;
-                padding-block: 40px;
+                // padding-block: 40px;
             }
 
             @include m.laptop {
                 grid-template-columns: 1fr 1fr;
-                padding-block: 30px 50px;
+                // padding-block: 30px 50px;
             }
 
             @include m.tablet {
                 gap: 16px;
                 grid-template-columns: 1fr;
-                padding-block: 30px;
+                // padding-block: 30px;
             }
 
             &-search {
@@ -474,15 +479,20 @@
         }
 
         &-pagination {
-            text-align: right;
-            margin-bottom: m.px-to-vw(90px);
+            margin-bottom: 0;
 
-            @include m.tv {
-                margin-bottom: 50px;
+            @media (min-width: v.$tv) {
+                margin-top: m.px-to-vw(64px);
+                @include m.flex(flex-end, m.px-to-vw(12px));
             }
 
-            @include m.laptop {
-                margin-bottom: 45px;
+            @include m.tv {
+                margin-top: 42px;
+                @include m.flex(flex-end, 7px);
+            }
+
+            @include m.tablet {
+                margin-top: 24px;
             }
 
             .next,
@@ -492,23 +502,20 @@
 
             span,
             a {
-                @include m.p;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                width: m.px-to-vw(36px);
-                height: m.px-to-vw(36px);
+                @include m.p(v.$light_brown, v.$gotham_m);
                 border-radius: 50%;
-                font-family: v.$gotham;
-                border: m.px-to-vw(1px) solid v.$light_brown;
-                color: v.$light_brown;
-                letter-spacing: - m.px-to-vw(1.19px);
+
+                @media (min-width: v.$tv) {
+                    @include m.square(m.px-to-vw(36px));
+                    @include m.flex(center);
+                    border: m.px-to-vw(1px) solid v.$light_brown;
+                    letter-spacing: m.px-to-vw(-1.19px) !important;
+                }
 
                 @include m.tv {
-                    width: 36px;
-                    height: 36px;
-                    border-width: 1px;
-                    letter-spacing: -1.19px;
+                    @include m.square(28px);
+                    @include m.flex(center);
+                    border: 1px solid v.$light_brown;
                 }
 
                 &.current {
@@ -516,17 +523,39 @@
                     color: #D3C7B6;
                 }
             }
+
+            &.with_border {
+                @media (min-width: v.$tv) {
+                    border-bottom: m.px-to-vw(1px) solid v.$light_brown;
+                    padding-bottom: m.px-to-vw(96px);
+                }
+                
+                @include m.tv {
+                    border-bottom: 1px solid v.$light_brown;
+                    padding-bottom: 68px;
+                }
+
+                @include m.desktop {
+                    padding-bottom: 52px;
+                }
+            }
         }
 
         &-form {
-            padding-block: m.px-to-vw(80px) m.px-to-vw(160px);
-
-            @include m.tv {
-                padding-block: 45px 80px;
+            @media (min-width: v.$tv) {
+                padding-top: m.px-to-vw(160px);
             }
 
-            @include m.laptop {
-                padding-block: 5px 80px;
+            @include m.tv {
+                padding-top: 116px;
+            }
+
+            @include m.desktop {
+                padding-top: 86px;
+            }
+
+            @include m.tablet {
+                padding-top: 58px;
             }
 
             h2 {
@@ -543,6 +572,92 @@
                 margin: auto;
                 width: 85%;
             }
+        }
+    }
+}
+
+.auction_vehicles {
+    @include m.pblock160(true);
+
+    &-container {
+        @include m.container_side;
+    }
+
+    &-head {
+        width: 100%;
+
+        @media (min-width: v.$tv) {
+            padding-block: m.px-to-vw(64px) m.px-to-vw(72px);
+        }
+
+        @include m.tv {
+            padding-block: 42px 50px;
+        }
+
+        @include m.tablet {
+            padding-block: 24px 32px;
+        }
+
+        h2 {
+            @include m.fz60;
+            font-weight: 300;
+
+            @media (min-width: v.$tv) {
+                max-width: m.px-to-vw(926px);
+            }
+
+            @include m.tv {
+                max-width: 685px;
+            }
+        }
+
+        h2,
+        .content {
+            width: 100%;
+            margin-inline: auto;
+        }
+
+        .content {
+            @include m.mt40_for_actions(false);
+
+            @media (min-width: v.$tv) {
+                max-width: m.px-to-vw(834px);
+            }
+
+            @include m.tv {
+                max-width: 616px;
+            }
+
+            li,
+            p {
+                @include m.p;
+                text-align: center;
+                opacity: 0.9;
+
+                &:not(:last-child) {
+                    @media (min-width: v.$tv) {
+                        margin-bottom: m.px-to-vw(24px);
+                    }
+
+                    @include m.tv {
+                        margin-bottom: 16px;
+                    }
+                }
+            }
+
+            a {
+                font-family: v.$gotham_m;
+                color: v.$light_brown;
+                text-decoration: underline;
+            }
+        }
+    }
+}
+
+.past_auctions{
+    .thumb{
+        img{
+            filter: grayscale(1);
         }
     }
 }
