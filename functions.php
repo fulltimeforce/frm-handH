@@ -442,3 +442,125 @@ function hnh_render_auction_card($auction_id, $venue_id = 0)
     </div>
 <?php
 }
+
+
+/**
+ * Convierte HTML a texto plano y lo recorta en el último límite de palabra.
+ * @param string $html       Texto/HTML completo.
+ * @param int    $max_chars  Cantidad aprox. de caracteres para ~4 líneas (ajusta si quieres).
+ * @return string
+ */
+function hnh_snippet_from_html($html, $max_chars = 260)
+{
+    $text = (string) $html;
+    // Normaliza <br> a espacios, quita etiquetas y colapsa espacios
+    $text = preg_replace('~<br\s*/?>~i', ' ', $text);
+    $text = wp_strip_all_tags($text);
+    $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5);
+    $text = trim(preg_replace('/\s+/u', ' ', $text));
+
+    if ($text === '') return '';
+
+    if (mb_strlen($text, 'UTF-8') <= $max_chars) {
+        return $text;
+    }
+
+    $snippet = mb_substr($text, 0, $max_chars, 'UTF-8');
+    // Corta hasta antes de la última palabra incompleta
+    $snippet = preg_replace('/\s+\S*$/u', '', $snippet);
+    return rtrim($snippet, " \t\n\r\0\x0B") . '…';
+}
+
+/**
+ * Renderiza la card de un Vehicle.
+ *
+ * @param int   $vehicle_id  ID del post (post_type: vehicles).
+ * @param array $args        Opcionales: ['thumb_size' => 'large', 'fallback_img' => '']
+ */
+function hnh_render_vehicle_card($vehicle_id, $args = [])
+{
+    $vehicle_id = (int) $vehicle_id;
+    if (! $vehicle_id) return;
+
+    $thumb_size   = $args['thumb_size']   ?? 'large';
+    $fallback_img = $args['fallback_img'] ?? (defined('IMG') ? IMG . '/car2.png' : '');
+
+    // Datos
+    $title     = get_the_title($vehicle_id);
+    $permalink = get_permalink($vehicle_id);
+
+    $registration_no = get_field('registration_no', $vehicle_id);
+    $chassis_no      = get_field('chassis_no', $vehicle_id);
+    $vehicle_mot     = get_field('mot', $vehicle_id);
+
+    $estimate_low    = get_field('estimate_low', $vehicle_id);
+    $estimate_high   = get_field('estimate_high', $vehicle_id);
+
+    $full_description          = get_field('description', $vehicle_id);
+    $vehicle_short_description = hnh_snippet_from_html($full_description, 260);
+
+    $image = get_the_post_thumbnail_url($vehicle_id, $thumb_size);
+    if (! $image && $fallback_img) {
+        $image = $fallback_img;
+    }
+
+?>
+    <div class="auction_result-list-item">
+        <div class="auction_result-list-img">
+            <img class="w-100" src="<?php echo esc_url($image); ?>" alt="<?php echo esc_attr($title); ?>">
+        </div>
+        <div class="auction_result-list-info">
+            <h3><?php echo esc_html($title); ?></h3>
+
+            <div class="auction_result-list-data">
+                <?php if ($registration_no || $chassis_no || $vehicle_mot) : ?>
+                    <div>
+                        <?php if ($registration_no) : ?>
+                            <p>Registration No: <span><?php echo esc_html($registration_no); ?></span></p>
+                        <?php endif; ?>
+
+                        <?php if ($chassis_no) : ?>
+                            <p>Chassis No: <span><?php echo esc_html($chassis_no); ?></span></p>
+                        <?php endif; ?>
+
+                        <?php if ($vehicle_mot) : ?>
+                            <p>MOT: <span><?php echo esc_html($vehicle_mot); ?></span></p>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($estimate_low && $estimate_high) : ?>
+                    <div>
+                        <p>Estimated at</p>
+                        <p class="gold-text">
+                            <?php
+                            $low  = (float) preg_replace('/[^\d.\-]/', '', (string) $estimate_low);
+                            $high = (float) preg_replace('/[^\d.\-]/', '', (string) $estimate_high);
+
+                            printf(
+                                '£%s - £%s',
+                                esc_html(number_format_i18n($low, 0)),
+                                esc_html(number_format_i18n($high, 0))
+                            );
+                            ?>
+                        </p>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <?php if ($vehicle_short_description) : ?>
+                <p class="auction_result-list-description">
+                    <?php echo esc_html($vehicle_short_description); ?>
+                </p>
+            <?php endif; ?>
+
+            <a alt="Enquire Now" href="<?php echo esc_url($permalink); ?>" class="permalink_border">
+                Enquire Now
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
+                    <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
+                </svg>
+            </a>
+        </div>
+    </div>
+<?php
+}

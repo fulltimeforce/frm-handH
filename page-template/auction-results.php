@@ -12,10 +12,52 @@ $today = current_time('mysql');
 /* paginación */
 $paged = max(1, get_query_var('paged') ? (int) get_query_var('paged') : (int) get_query_var('page'));
 
-/* per page desde el selector (fallback a 6) */
-$ppp = isset($_GET['posts_per_page']) ? max(1, (int) $_GET['posts_per_page']) : 6;
+/* GET params */
+$currentYear = (int) date('Y');
+$ppp         = isset($_GET['posts_per_page']) ? max(1, (int) $_GET['posts_per_page']) : 6;
 
-$argsAuction = array(
+$sale_type   = isset($_GET['sale_type']) ? sanitize_text_field($_GET['sale_type']) : 'all';
+$year_param   = isset($_GET['auction_year']) ? sanitize_text_field($_GET['auction_year']) : (string) $currentYear;
+
+/* Opcional: lista blanca de sale_types tal como en ACF (value : label) */
+$allowed_sale_types = ['all', 'motorcars', 'motorcycles', 'automobilia', 'bicycles', 'liveonline'];
+if (!in_array($sale_type, $allowed_sale_types, true)) {
+    $sale_type = 'all';
+}
+
+/* meta query (fechas pasadas + filtro por año + sale_type por ACF) */
+$meta_query = [
+    'relation' => 'AND',
+    [
+        'key'     => 'auction_date',
+        'value'   => $today,
+        'compare' => '<',
+        'type'    => 'DATETIME',
+    ],
+];
+
+if ($year_param && $year_param !== 'all' && ctype_digit($year_param)) {
+    $y = (int) $year_param;
+    $start_of_year = sprintf('%04d-01-01 00:00:00', $y);
+    $end_of_year   = sprintf('%04d-12-31 23:59:59', $y);
+
+    $meta_query[] = [
+        'key'     => 'auction_date',
+        'value'   => [$start_of_year, $end_of_year],
+        'compare' => 'BETWEEN',
+        'type'    => 'DATETIME',
+    ];
+}
+
+if ($sale_type && $sale_type !== 'all') {
+    $meta_query[] = [
+        'key'     => 'sale_type',   // ACF field name
+        'value'   => $sale_type,    // e.g., 'motorcars'
+        'compare' => '=',
+    ];
+}
+
+$argsAuction = [
     'post_type'      => 'auction',
     'posts_per_page' => $ppp,
     'paged'          => $paged,
@@ -23,15 +65,8 @@ $argsAuction = array(
     'order'          => 'ASC',
     'meta_key'       => 'auction_date',
     'meta_type'      => 'DATETIME',
-    'meta_query'     => array(
-        array(
-            'key'     => 'auction_date',
-            'value'   => $today,
-            'compare' => '<',
-            'type'    => 'DATETIME'
-        )
-    )
-);
+    'meta_query'     => $meta_query,
+];
 
 $past_auctions = new WP_Query($argsAuction);
 ?>
@@ -47,40 +82,42 @@ $past_auctions = new WP_Query($argsAuction);
 
 <section class="auction_vehicles">
     <div class="auction_vehicles-container">
+
         <form class="auction_result-filter" method="get" action="">
             <div class="auction_result-filter-select">
-                <select name="type">
-                    <option value="allsaletypes">All Sale Types</option>
-                    <option value="motorcars">Motor Cars</option>
-                    <option value="motorcycles">Motorcycles</option>
+                <select name="sale_type" onchange="this.form.submit()">
+                    <option value="all" <?php selected(($_GET['sale_type'] ?? 'all'), 'all'); ?>>All Sale Types</option>
+                    <option value="motorcars" <?php selected(($_GET['sale_type'] ?? ''), 'motorcars'); ?>>Motor Cars</option>
+                    <option value="motorcycles" <?php selected(($_GET['sale_type'] ?? ''), 'motorcycles'); ?>>Motorcycles</option>
                 </select>
             </div>
+
             <div class="auction_result-filter-select">
-                <select name="year">
-                    <option value="">All Years</option>
-                    <option value="2025">2025</option>
-                    <option value="2024">2024</option>
-                    <option value="2023">2023</option>
-                    <option value="2022">2022</option>
-                    <option value="2021">2021</option>
-                    <option value="2020">2020</option>
-                    <option value="2019">2019</option>
-                    <option value="2018">2018</option>
-                    <option value="2018">2018</option>
+                <select name="auction_year" onchange="this.form.submit()">
+                    <?php
+                    $selectedYear = $_GET['auction_year'] ?? (string) $currentYear;
+                    for ($i = $currentYear; $i >= 2008; $i--): ?>
+                        <option value="<?php echo $i; ?>" <?php selected($selectedYear, (string)$i); ?>>
+                            <?php echo $i; ?>
+                        </option>
+                    <?php endfor; ?>
+                    <option value="all" <?php selected($selectedYear, 'all'); ?>>All Years</option>
                 </select>
             </div>
+
             <div class="auction_result-filter-page">
                 <p>
                     Showing
                     <select id="blog-perpage" class="blog_section-filter-page" name="posts_per_page">
-                        <option value="6" <?php selected($_GET['posts_per_page'] ?? '', 6); ?>>6</option>
-                        <option value="12" <?php selected($_GET['posts_per_page'] ?? '', 12); ?>>12</option>
-                        <option value="24" <?php selected($_GET['posts_per_page'] ?? '', 24); ?>>24</option>
+                        <option value="6" <?php selected((int)($_GET['posts_per_page'] ?? $ppp), 6); ?>>6</option>
+                        <option value="12" <?php selected((int)($_GET['posts_per_page'] ?? $ppp), 12); ?>>12</option>
+                        <option value="24" <?php selected((int)($_GET['posts_per_page'] ?? $ppp), 24); ?>>24</option>
                     </select>
                     Per Page
                 </p>
             </div>
         </form>
+
         <?php if ($past_auctions->have_posts()): ?>
             <div class="auction_result-list past_auctions">
 
@@ -98,22 +135,27 @@ $past_auctions = new WP_Query($argsAuction);
             </div>
 
             <?php
-            $pagination = paginate_links(array(
+            $pagination = paginate_links([
                 'total'     => (int) $past_auctions->max_num_pages,
                 'current'   => $paged,
                 'mid_size'  => 2,
                 'prev_text' => '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="14" viewBox="0 0 19 14" fill="none"><path d="M19 7L1.00049 7M1.00049 7L7.00049 13M1.00049 7L7.0005 0.999999" stroke="#8C6E47"/></svg>',
                 'next_text' => '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="14" viewBox="0 0 19 14" fill="none"><path d="M-7.15494e-08 7L17.9995 7M17.9995 7L11.9995 1M17.9995 7L11.9995 13" stroke="#8C6E47"/></svg>',
-                // preserva parámetros del filtro en la URL
-                'add_args'  => array_filter(array(
+                'add_args'  => array_filter([
+                    'sale_type'      => $sale_type,
+                    'auction_year'   => $year_param,
                     'posts_per_page' => $ppp,
-                )),
-            ));
+                ]),
+            ]);
 
             if ($pagination) {
                 echo '<div class="auction_result-pagination">' . $pagination . '</div>';
             }
             ?>
+        <?php else: ?>
+            <div class="no-one">
+                <p>No results found</p>
+            </div>
         <?php endif; ?>
     </div>
 </section>

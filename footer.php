@@ -51,10 +51,13 @@
                     <div class="footer_nav">
                         <p class="footer_nav-head">Account & Bidding</p>
                         <div class="footer_nav-list">
-                            <?php if (!is_user_logged_in()) : ?>
-                                <a href="<?php echo esc_url(home_url('my-account')); ?>">Register / Sign In</a>
-                            <?php else: ?>
-                                <a href="<?php echo esc_url(home_url('my-account/edit-account')); ?>">Register / Sign In</a>
+                            <a href="https://www.handh.co.uk/account/register/" alt="Register / Sign In">Register / Sign In</a>
+                            <?php if (NOT_APPEAR): ?>
+                                <?php if (!is_user_logged_in()) : ?>
+                                    <a href="<?php echo esc_url(home_url('my-account')); ?>">Register / Sign In</a>
+                                <?php else: ?>
+                                    <a href="<?php echo esc_url(home_url('my-account/edit-account')); ?>">Register / Sign In</a>
+                                <?php endif; ?>
                             <?php endif; ?>
                             <a href="#">Make a Payment</a>
                             <a target="_blank" href="https://handh.blob.core.windows.net/main/HandH-Telephone-Bidding-Form-20230714.pdf">Telephone Bid Form</a>

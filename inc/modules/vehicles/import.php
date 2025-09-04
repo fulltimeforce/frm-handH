@@ -20,7 +20,7 @@ add_action('admin_menu', function () {
 
 function vehicles_import_render_page()
 {
-    ?>
+?>
     <div class="wrap">
         <h1>Import Vehicles</h1>
         <p>Upload a <strong>.xlsx</strong> (from the CRM) or <strong>.csv</strong> (comma-separated). The first row must be the header.</p>
@@ -35,7 +35,7 @@ function vehicles_import_render_page()
         }
         ?>
     </div>
-    <?php
+<?php
 }
 
 // === Import Handler ===
@@ -120,23 +120,31 @@ function vehicles_handle_import($file)
         $map_by_index[$colIdx] = $name ?: null;
     }
 
-    // Useful columns (by header text)
-    $title_col      = vehicles_find_header(['Title (main)', 'Title', 'Name'], $headers_raw);
+    // ---------------------------------------------
+    // Headers importantes (Title SOLO desde "Title (main)")
+    // ---------------------------------------------
+    $title_col      = vehicles_find_header(['Title (main)'], $headers_raw);
+    if ($title_col === -1) {
+        echo '<div class="notice notice-error"><p>Required header <strong>Title (main)</strong> not found. Import aborted.</p></div>';
+        return;
+    }
+
     $content_col    = vehicles_find_header(['Description', 'Desc'], $headers_raw);
     $image_url_col  = vehicles_find_header(['Image URL (main image)', 'Image URL', 'Main image URL'], $headers_raw);
     $stock_col      = vehicles_find_header(['Stock number', 'Stock Number'], $headers_raw);
 
     // Category columns
-    $category1_col  = vehicles_find_header(['Category 1','Category1'], $headers_raw);
-    $category2_col  = vehicles_find_header(['Category 2','Category2'], $headers_raw);
+    $category1_col  = vehicles_find_header(['Category 1', 'Category1'], $headers_raw);
+    $category2_col  = vehicles_find_header(['Category 2', 'Category2'], $headers_raw);
 
     // Brand column (Artist/Maker/Brand)
-    $brand_col      = vehicles_find_header(['Artist/Maker/Brand','Artist','Maker','Brand'], $headers_raw);
+    $brand_col      = vehicles_find_header(['Artist/Maker/Brand', 'Artist', 'Maker', 'Brand'], $headers_raw);
 
     $created = 0;
     $skipped_empty = 0;
     $skipped_existing = 0;
     $skipped_no_stock = 0;
+    $skipped_no_title = 0; // nuevo
 
     $seen_stocks_in_file = [];
 
@@ -149,38 +157,70 @@ function vehicles_handle_import($file)
 
         // Empty row?
         $nonEmpty = false;
-        foreach ($row as $cell) { if ((string)$cell !== '') { $nonEmpty = true; break; } }
-        if (!$nonEmpty) { $skipped_empty++; continue; }
+        foreach ($row as $cell) {
+            if ((string)$cell !== '') {
+                $nonEmpty = true;
+                break;
+            }
+        }
+        if (!$nonEmpty) {
+            $skipped_empty++;
+            continue;
+        }
 
-        // Stock number (used as unique)
+        // --- Título obligatorio desde "Title (main)"
+        $title_value = wp_strip_all_tags(trim((string)$row[$title_col]));
+        if ($title_value === '') { // si está vacío, omitir fila
+            $skipped_no_title++;
+            continue;
+        }
+
+        // Stock number (usado como unique)
         $stock_value = '';
         if ($stock_col !== -1) {
             $stock_value = strtoupper(trim((string)$row[$stock_col]));
             $stock_value = preg_replace('/\s+/', '', $stock_value);
         }
-        if ($stock_value === '') { $skipped_no_stock++; continue; }
+        if ($stock_value === '') {
+            $skipped_no_stock++;
+            continue;
+        }
 
-        if (isset($seen_stocks_in_file[$stock_value])) { $skipped_existing++; continue; }
+        if (isset($seen_stocks_in_file[$stock_value])) {
+            $skipped_existing++;
+            continue;
+        }
         $seen_stocks_in_file[$stock_value] = true;
 
-        if (vehicles_published_exists_by_stock_number($stock_value)) { $skipped_existing++; continue; }
+        if (vehicles_published_exists_by_stock_number($stock_value)) {
+            $skipped_existing++;
+            continue;
+        }
 
-        // Title / Content (pretty format)
-        $post_title   = $title_col !== -1 ? wp_strip_all_tags((string)$row[$title_col]) : '';
-        if ($post_title === '') $post_title = 'Vehicle ' . $i;
-
+        // Contenido (pretty)
         $raw_desc     = $content_col !== -1 ? (string)$row[$content_col] : '';
         $post_content = vehicles_format_description($raw_desc);
 
+        // Crear post (título SIN fallback)
         $post_id = wp_insert_post([
             'post_type'    => HNH_IMPORT_POST_TYPE,
             'post_status'  => 'publish',
-            'post_title'   => $post_title,
+            'post_title'   => $title_value, // solo Title (main)
             'post_content' => $post_content,
         ], true);
-        if (is_wp_error($post_id)) { $skipped_empty++; continue; }
+        if (is_wp_error($post_id)) {
+            $skipped_empty++;
+            continue;
+        }
 
-        // Save ACF fields positionally (exact columns)
+        /** ===== NUEVO: extraer y guardar ACF desde Description ===== */
+        $desc_triplet = vehicles_extract_from_description($raw_desc);
+        update_field('registration_no', $desc_triplet['registration_no'], $post_id);
+        update_field('chassis_no',      $desc_triplet['chassis_no'],      $post_id);
+        update_field('mot',             $desc_triplet['mot'],             $post_id);
+        /** =========================================================== */
+
+        // Guardar ACF fields posicionalmente (todas las columnas normalizadas)
         foreach ($headers_raw as $colIdx => $header_label) {
             $field_name = $map_by_index[$colIdx] ?? null;
             if (!$field_name) continue;
@@ -206,7 +246,7 @@ function vehicles_handle_import($file)
         if (taxonomy_exists(HNH_TAX_CATEGORY)) {
             $raw1 = ($category1_col !== -1) ? trim((string)$row[$category1_col]) : '';
             $raw2 = ($category2_col !== -1) ? trim((string)$row[$category2_col]) : '';
-            foreach ([$raw1,$raw2] as $raw) {
+            foreach ([$raw1, $raw2] as $raw) {
                 if ($raw === '') continue;
                 $camel = vehicles_to_camelcase($raw);
                 $tid   = vehicles_get_or_create_term($camel, HNH_TAX_CATEGORY, $category_cache);
@@ -252,7 +292,8 @@ function vehicles_handle_import($file)
         . 'Created: <strong>' . intval($created) . '</strong> '
         . '| Skipped (existing by published stock number): ' . intval($skipped_existing) . ' '
         . '| Skipped (empty rows/errors): ' . intval($skipped_empty) . ' '
-        . '| Skipped (no stock number): ' . intval($skipped_no_stock)
+        . '| Skipped (no stock number): ' . intval($skipped_no_stock) . ' '
+        . '| Skipped (no title): ' . intval($skipped_no_title)
         . '</p></div>';
 }
 
@@ -398,27 +439,47 @@ function vehicles_include_simplexlsx()
             if (!$sx->open($filename)) return false;
             return $sx;
         }
-        public function rows() { return $this->rows; }
-        public static function parseError() { return self::$error; }
+        public function rows()
+        {
+            return $this->rows;
+        }
+        public static function parseError()
+        {
+            return self::$error;
+        }
 
         private function open($filename)
         {
-            if (!class_exists('ZipArchive')) { self::$error = 'ZipArchive not available in PHP'; return false; }
+            if (!class_exists('ZipArchive')) {
+                self::$error = 'ZipArchive not available in PHP';
+                return false;
+            }
             $zip = new ZipArchive();
-            if ($zip->open($filename) !== true) { self::$error = 'Could not open ZIP archive'; return false; }
+            if ($zip->open($filename) !== true) {
+                self::$error = 'Could not open ZIP archive';
+                return false;
+            }
 
             $shared = [];
             if (($idx = $zip->locateName('xl/sharedStrings.xml')) !== false) {
                 $xml = simplexml_load_string($zip->getFromIndex($idx));
                 foreach ($xml->si as $si) {
                     if (isset($si->t)) $shared[] = (string)$si->t;
-                    elseif (isset($si->r)) { $buf=''; foreach ($si->r as $r) { $buf .= (string)$r->t; } $shared[] = $buf; }
-                    else $shared[] = '';
+                    elseif (isset($si->r)) {
+                        $buf = '';
+                        foreach ($si->r as $r) {
+                            $buf .= (string)$r->t;
+                        }
+                        $shared[] = $buf;
+                    } else $shared[] = '';
                 }
             }
 
             $sheetIndex = $zip->locateName('xl/worksheets/sheet1.xml');
-            if ($sheetIndex === false) { self::$error = 'sheet1.xml not found'; return false; }
+            if ($sheetIndex === false) {
+                self::$error = 'sheet1.xml not found';
+                return false;
+            }
             $xml = simplexml_load_string($zip->getFromIndex($sheetIndex));
 
             $rows = [];
@@ -429,7 +490,7 @@ function vehicles_include_simplexlsx()
                     $colIndex = self::colIndexFromRef($ref);
                     $t  = (string)$c['t'];
                     $v  = (string)$c->v;
-                    $val = ($t === 's') ? ($shared[(int)$v] ?? '') : (($t==='inlineStr' && isset($c->is->t)) ? (string)$c->is->t : $v);
+                    $val = ($t === 's') ? ($shared[(int)$v] ?? '') : (($t === 'inlineStr' && isset($c->is->t)) ? (string)$c->is->t : $v);
                     $r[$colIndex] = $val;
                 }
                 if (!empty($r)) {
@@ -452,7 +513,9 @@ function vehicles_include_simplexlsx()
             if (!preg_match('/^([A-Z]+)\d+$/i', $ref, $m)) return 0;
             $letters = strtoupper($m[1]);
             $n = 0;
-            for ($i = 0; $i < strlen($letters); $i++) { $n = $n * 26 + (ord($letters[$i]) - 64); }
+            for ($i = 0; $i < strlen($letters); $i++) {
+                $n = $n * 26 + (ord($letters[$i]) - 64);
+            }
             return $n - 1;
         }
     }
@@ -467,7 +530,7 @@ function vehicles_format_description($raw)
     if ($s === '') return '';
     $s = str_replace(["\r\n", "\r"], "\n", $s);
 
-    $labels = ['Registration No','Frame No','Chassis No','Engine No','MOT','VIN','Mileage','Color','Colour'];
+    $labels = ['Registration No', 'Frame No', 'Chassis No', 'Engine No', 'MOT', 'VIN', 'Mileage', 'Color', 'Colour'];
     foreach ($labels as $label) {
         $pattern = '~(?<=^|\n|\A)(' . preg_quote($label, '~') . '):\s*~i';
         $s = preg_replace($pattern, '<strong>$1:</strong> ', $s);
@@ -500,4 +563,44 @@ function vehicles_format_description($raw)
         $html .= '<p>' . nl2br(esc_html($para)) . '</p>';
     }
     return $html;
+}
+
+/**
+ * Extrae Registration No / Chassis No / MOT desde el HTML/texto de la descripción.
+ * Soporta etiquetas <strong>, <br>, variaciones "No." / "Number", espacios, etc.
+ * Devuelve ['registration_no' => '...', 'chassis_no' => '...', 'mot' => '...'] si los encuentra (vacíos si no).
+ */
+function vehicles_extract_from_description($html)
+{
+    // Normaliza: <br> -> saltos de línea, elimina etiquetas, decodifica entidades
+    $text = (string) $html;
+    $text = preg_replace('~<br\s*/?>~i', "\n", $text);
+    $text = wp_strip_all_tags($text);
+    $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5);
+    $text = trim(preg_replace("/[ \t\x{00A0}]+/u", ' ', $text)); // colapsa espacios (incluye NBSP)
+
+    $out = [
+        'registration_no' => '',
+        'chassis_no'      => '',
+        'mot'             => '',
+    ];
+
+    // Captura hasta fin de línea
+    $patterns = [
+        'registration_no' => '~\bRegistration\s*(?:No\.?|Number)?\s*:\s*([^\r\n]+)~i',
+        'chassis_no'      => '~\bChassis\s*(?:No\.?|Number)?\s*:\s*([^\r\n]+)~i',
+        'mot'             => '~\bMOT\s*:\s*([^\r\n]+)~i',
+    ];
+
+    foreach ($patterns as $key => $regex) {
+        if (preg_match($regex, $text, $m)) {
+            // Limpia el valor capturado (hasta antes de otro posible label)
+            $val = trim($m[1]);
+            // Por seguridad, corta si aparecen otros labels en la misma línea
+            $val = preg_split('~\s*(?:Registration\s*(?:No\.?|Number)?|Chassis\s*(?:No\.?|Number)?|MOT)\s*:~i', $val, 2)[0];
+            $out[$key] = trim($val, " \t\n\r\0\x0B\xC2\xA0");
+        }
+    }
+
+    return $out;
 }

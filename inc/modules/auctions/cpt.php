@@ -70,3 +70,28 @@ function register_auction_categories_taxonomy()
     register_taxonomy('auction_category', array('auction'), $args);
 }
 add_action('init', 'register_auction_categories_taxonomy');
+
+
+
+
+// Agregar nueva columna "Sale Number"
+add_filter('manage_auction_posts_columns', function ($columns) {
+    $columns['sale_number'] = __('Sale Number', 'textdomain');
+    return $columns;
+});
+
+// Rellenar la columna con get_field('sale_number')
+add_action('manage_auction_posts_custom_column', function ($column, $post_id) {
+    if ($column === 'sale_number') {
+        $sale_number = get_field('sale_number', $post_id);
+        echo $sale_number ? esc_html($sale_number) : '—';
+    }
+}, 10, 2);
+
+// (Opcional) Ajustar el ancho de la columna en el admin
+add_action('admin_head', function () {
+    $screen = get_current_screen();
+    if ($screen && $screen->post_type === 'auction' && $screen->base === 'edit') {
+        echo '<style>.fixed .column-sale_number{width:120px;}</style>';
+    }
+});

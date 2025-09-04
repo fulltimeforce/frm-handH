@@ -69,7 +69,7 @@
                                             </svg>
                                             <p>Ways to Bid</p>
                                         </a>
-                                        <a href="<?php echo esc_url(home_url('my-account')); ?>" class="submenu-link" alt="Register An Account">
+                                        <a href="https://www.handh.co.uk/account/register/" class="submenu-link" alt="Register An Account">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="37" height="36" viewBox="0 0 37 36" fill="none">
                                                 <path d="M12.668 6H9.66797C8.87232 6 8.10926 6.31607 7.54665 6.87868C6.98404 7.44129 6.66797 8.20435 6.66797 9V30C6.66797 30.7956 6.98404 31.5587 7.54665 32.1213C8.10926 32.6839 8.87232 33 9.66797 33H27.668C28.4636 33 29.2267 32.6839 29.7893 32.1213C30.3519 31.5587 30.668 30.7956 30.668 30V29.25M24.668 6H27.668C28.1941 6.00054 28.7108 6.13941 29.1662 6.40269C29.6217 6.66597 29.9999 7.04439 30.263 7.5M12.668 27H14.168M14.168 3H23.168C23.9964 3 24.668 3.67157 24.668 4.5V7.5C24.668 8.32843 23.9964 9 23.168 9H14.168C13.3395 9 12.668 8.32843 12.668 7.5V4.5C12.668 3.67157 13.3395 3 14.168 3ZM32.735 18.939C33.3325 18.3415 33.6682 17.531 33.6682 16.686C33.6682 15.841 33.3325 15.0305 32.735 14.433C32.1374 13.8355 31.327 13.4998 30.482 13.4998C29.6369 13.4998 28.8265 13.8355 28.229 14.433L22.214 20.451C21.8573 20.8074 21.5963 21.248 21.455 21.732L20.1995 26.037C20.1618 26.1661 20.1596 26.3029 20.1929 26.4331C20.2263 26.5634 20.2941 26.6823 20.3891 26.7773C20.4842 26.8724 20.6031 26.9402 20.7333 26.9735C20.8636 27.0069 21.0004 27.0046 21.1295 26.967L25.4345 25.7115C25.9185 25.5702 26.359 25.3091 26.7155 24.9525L32.735 18.939Z" stroke="#8C6E47" stroke-width="1.125" stroke-linecap="round" stroke-linejoin="round" />
                                             </svg>
@@ -295,34 +295,42 @@
                             <li>
                                 <a href="<?php echo esc_url(home_url('contact')); ?>" alt="Contact">Contact</a>
                             </li>
-                            <?php if (!is_user_logged_in()) : ?>
-                                <li>
-                                    <button type="button" alt="Register / Sign In">
-                                        Register / Sign In
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="8" height="4" viewBox="0 0 8 4" fill="none">
-                                            <path d="M4 4L0 0H8L4 4Z" fill="white" />
-                                        </svg>
-                                    </button>
-                                    <div class="submenu">
-                                        <div class="submenu_content">
-                                            <a href="<?php echo esc_url(home_url('my-account')) ?>?register" class="submenu-link big" alt="Register An Account">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
-                                                    <path d="M3 31.5C2.99987 29.1905 3.6662 26.93 4.91902 24.9898C6.17183 23.0496 7.95791 21.5122 10.0629 20.562C12.1679 19.6118 14.5024 19.2893 16.7861 19.633C19.0699 19.9768 21.206 20.9723 22.938 22.5M28.5 24V33M33 28.5H24M22.5 12C22.5 16.1421 19.1421 19.5 15 19.5C10.8579 19.5 7.5 16.1421 7.5 12C7.5 7.85786 10.8579 4.5 15 4.5C19.1421 4.5 22.5 7.85786 22.5 12Z" stroke="#8C6E47" stroke-width="1.125" stroke-linecap="round" stroke-linejoin="round" />
-                                                </svg>
-                                                <p>Register An Account</p>
-                                            </a>
-                                            <a href="<?php echo esc_url(home_url('my-account')) ?>" class="submenu-link big" alt="Sign into your Accout">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
-                                                    <path d="M22.5 4.5H28.5C29.2956 4.5 30.0587 4.81607 30.6213 5.37868C31.1839 5.94129 31.5 6.70435 31.5 7.5V28.5C31.5 29.2956 31.1839 30.0587 30.6213 30.6213C30.0587 31.1839 29.2956 31.5 28.5 31.5H22.5M15 25.5L22.5 18M22.5 18L15 10.5M22.5 18H4.5" stroke="#8C6E47" stroke-width="1.125" stroke-linecap="round" stroke-linejoin="round" />
-                                                </svg>
-                                                <p>Sign into your Accout</p>
-                                            </a>
+                            <?php if (NOT_APPEAR): ?>
+                                <?php if (!is_user_logged_in()) : ?>
+                                    <li>
+                                        <button type="button" alt="Register / Sign In">
+                                            Register / Sign In
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="8" height="4" viewBox="0 0 8 4" fill="none">
+                                                <path d="M4 4L0 0H8L4 4Z" fill="white" />
+                                            </svg>
+                                        </button>
+                                        <div class="submenu">
+                                            <div class="submenu_content">
+                                                <a href="<?php echo esc_url(home_url('my-account')) ?>?register" class="submenu-link big" alt="Register An Account">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
+                                                        <path d="M3 31.5C2.99987 29.1905 3.6662 26.93 4.91902 24.9898C6.17183 23.0496 7.95791 21.5122 10.0629 20.562C12.1679 19.6118 14.5024 19.2893 16.7861 19.633C19.0699 19.9768 21.206 20.9723 22.938 22.5M28.5 24V33M33 28.5H24M22.5 12C22.5 16.1421 19.1421 19.5 15 19.5C10.8579 19.5 7.5 16.1421 7.5 12C7.5 7.85786 10.8579 4.5 15 4.5C19.1421 4.5 22.5 7.85786 22.5 12Z" stroke="#8C6E47" stroke-width="1.125" stroke-linecap="round" stroke-linejoin="round" />
+                                                    </svg>
+                                                    <p>Register An Account</p>
+                                                </a>
+                                                <a href="<?php echo esc_url(home_url('my-account')) ?>" class="submenu-link big" alt="Sign into your Accout">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
+                                                        <path d="M22.5 4.5H28.5C29.2956 4.5 30.0587 4.81607 30.6213 5.37868C31.1839 5.94129 31.5 6.70435 31.5 7.5V28.5C31.5 29.2956 31.1839 30.0587 30.6213 30.6213C30.0587 31.1839 29.2956 31.5 28.5 31.5H22.5M15 25.5L22.5 18M22.5 18L15 10.5M22.5 18H4.5" stroke="#8C6E47" stroke-width="1.125" stroke-linecap="round" stroke-linejoin="round" />
+                                                    </svg>
+                                                    <p>Sign into your Accout</p>
+                                                </a>
+                                            </div>
                                         </div>
-                                    </div>
-                                </li>
+                                    </li>
+                                <?php else: ?>
+                                    <li>
+                                        <a href="<?php echo esc_url(home_url('my-account/edit-account')); ?>" alt="Register / Sign In">Register / Sign In</a>
+                                    </li>
+                                <?php endif; ?>
                             <?php else: ?>
                                 <li>
-                                    <a href="<?php echo esc_url(home_url('my-account/edit-account')); ?>" alt="Register / Sign In">Register / Sign In</a>
+                                    <a href="https://www.handh.co.uk/account/register/" alt="Register / Sign In">
+                                        Register / Sign In
+                                    </a>
                                 </li>
                             <?php endif; ?>
                         </ul>

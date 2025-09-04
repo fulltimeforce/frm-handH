@@ -400,7 +400,8 @@
             }
             &-lot {
                 .auction-bid {
-                    width: 100%;
+                    // width: 100%;
+                    width: fit-content;
                     padding: m.px-to-vw(5px);
                     margin-top: m.px-to-vw(16px);
                     background-color: #e7e7e7;
