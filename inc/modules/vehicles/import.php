@@ -301,25 +301,76 @@ function vehicles_handle_import($file)
 function vehicles_excel_serial_to_datetime($value, $format = 'Y-m-d H:i')
 {
     if ($value === '' || $value === null) return '';
+
+    // Normaliza espacios
     $s = trim((string)$value);
+    $s = preg_replace('~\s+~', ' ', $s);
 
-    $dt = DateTime::createFromFormat('d/m/Y H:i', $s, wp_timezone());
-    if ($dt instanceof DateTime) return $dt->format($format);
-    $dt = DateTime::createFromFormat('d/m/Y', $s, wp_timezone());
-    if ($dt instanceof DateTime) return $dt->format($format);
+    // 1) Captura explícita dd/mm/yyyy con hora opcional (HH:mm o HH:mm:ss)
+    //    Soporta separadores / - .
+    if (preg_match('~(?<!\d)(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?~', $s, $m)) {
+        $d = (int)$m[1];
+        $mo = (int)$m[2];
+        $y = (int)$m[3];
+        if ($y < 100) {
+            $y += ($y >= 70 ? 1900 : 2000);
+        }
+        $H = isset($m[4]) ? (int)$m[4] : 0;
+        $i = isset($m[5]) ? (int)$m[5] : 0;
+        $sec = isset($m[6]) ? (int)$m[6] : 0;
 
-    $ts = strtotime($s);
-    if ($ts !== false) return date($format, $ts);
-
-    if (is_numeric($value)) {
-        $base = new DateTime('1899-12-30 00:00:00', wp_timezone());
-        $days = (int) floor($value);
-        $frac = max(0, (float)$value - $days);
-        $seconds = (int) round($frac * 86400);
-        $base->modify('+' . $days . ' days');
-        if ($seconds) $base->modify('+' . $seconds . ' seconds');
-        return $base->format($format);
+        try {
+            $tz = wp_timezone();
+            $dt = new DateTime(sprintf('%04d-%02d-%02d %02d:%02d:%02d', $y, $mo, $d, $H, $i, $sec), $tz);
+            return $dt->format($format);
+        } catch (Exception $e) {
+            // cae al siguiente método
+        }
     }
+
+    // 2) Si viene como serial Excel (número de días desde 1899-12-30).
+    //    Evitamos tratar enteros enormes (cadenas "limpiadas" de dígitos) como serial de Excel.
+    if (is_numeric($s)) {
+        $num = (float)$s;
+        // seriales reales suelen estar < 100000 (año ~ 2189). Ajusta si necesitas.
+        if ($num > 0 && $num < 100000) {
+            try {
+                $tz = wp_timezone();
+                $base = new DateTime('1899-12-30 00:00:00', $tz); // corrige bug 1900 de Excel
+                $days = (int) floor($num);
+                $frac = max(0, $num - $days);
+                $seconds = (int) round($frac * 86400);
+                $base->modify('+' . $days . ' days');
+                if ($seconds) $base->modify('+' . $seconds . ' seconds');
+                return $base->format($format);
+            } catch (Exception $e) {
+                // cae al siguiente método
+            }
+        }
+    }
+
+    // 3) Último intento: strtotime (menos fiable para dd/mm/yyyy).
+    //    Intentamos forzar formato europeo primero.
+    //    a) dd-mm-yyyy[ hh:mm[:ss]]
+    if (preg_match('~^(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{2,4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?$~', $s, $m)) {
+        $d = (int)$m[1];
+        $mo = (int)$m[2];
+        $y = (int)$m[3];
+        if ($y < 100) {
+            $y += ($y >= 70 ? 1900 : 2000);
+        }
+        $H = isset($m[4]) ? (int)$m[4] : 0;
+        $i = isset($m[5]) ? (int)$m[5] : 0;
+        $sec = isset($m[6]) ? (int)$m[6] : 0;
+        try {
+            $tz = wp_timezone();
+            $dt = new DateTime(sprintf('%04d-%02d-%02d %02d:%02d:%02d', $y, $mo, $d, $H, $i, $sec), $tz);
+            return $dt->format($format);
+        } catch (Exception $e) { /* ignore */
+        }
+    }
+
+    // 4) Si nada funcionó, no forzamos un valor inválido
     return '';
 }
 

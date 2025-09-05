@@ -26,7 +26,7 @@
                     <p>Registering to bid is quick, easy & and safe using our secure online bidding platform.</p>
                 </div>
             </div>
-            <a class="permalink" href="<?php echo esc_url(home_url('my-account')) ?>">Register <br>Now</a>
+            <a class="permalink" href="https://www.handh.co.uk/account/register/">Register <br>Now</a>
         </div>
         <div class="col">
             <div class="col_head">

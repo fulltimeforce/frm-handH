@@ -210,30 +210,59 @@ function hnh_render_vehicle_card($vehicle_id, $args = [])
 ?>
     <div class="vehicle_card">
         <div class="vehicle_card-image">
-            <div class="splide vehicle_card-thumbs" role="group" aria-label="<?php echo esc_attr($title ?: 'Vehicle'); ?>">
-                <div class="splide__arrows">
-                    <button class="splide__arrow splide__arrow--prev" type="button" aria-label="<?php esc_attr_e('Previous'); ?>">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
-                            <path d="M0 7H12M12 7L6 1M12 7L6 13" stroke="black" />
-                        </svg>
-                    </button>
-                    <button class="splide__arrow splide__arrow--next" type="button" aria-label="<?php esc_attr_e('Next'); ?>">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
-                            <path d="M0 7H12M12 7L6 1M12 7L6 13" stroke="black" />
-                        </svg>
-                    </button>
+            <?php
+            // ¿La galería tiene más de 1 imagen?
+            $has_gallery_multi = (is_array($gallery) && count($gallery) > 1);
+            ?>
+
+            <?php if ($has_gallery_multi): ?>
+                <div class="splide vehicle_card-thumbs" role="group" aria-label="<?php echo esc_attr($title ?: 'Vehicle'); ?>">
+                    <div class="splide__arrows">
+                        <button class="splide__arrow splide__arrow--prev" type="button" aria-label="<?php esc_attr_e('Previous'); ?>">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
+                                <path d="M0 7H12M12 7L6 1M12 7L6 13" stroke="black" />
+                            </svg>
+                        </button>
+                        <button class="splide__arrow splide__arrow--next" type="button" aria-label="<?php esc_attr_e('Next'); ?>">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
+                                <path d="M0 7H12M12 7L6 1M12 7L6 13" stroke="black" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="splide__track">
+                        <ul class="splide__list">
+                            <?php foreach ($slides as $s): ?>
+                                <li class="splide__slide">
+                                    <img src="<?php echo esc_url($s['url']); ?>"
+                                        alt="<?php echo esc_attr($s['alt'] ?: ($title ?: 'Vehicle Image')); ?>">
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
                 </div>
-                <div class="splide__track">
-                    <ul class="splide__list">
-                        <?php foreach ($slides as $s): ?>
-                            <li class="splide__slide">
-                                <img src="<?php echo esc_url($s['url']); ?>"
-                                    alt="<?php echo esc_attr($s['alt'] ?: ($title ?: 'Vehicle Image')); ?>">
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            </div>
+            <?php else: ?>
+                <?php
+                // Mostrar thumbnail (y si no existe, usar primer slide o el fallback).
+                $single_url = '';
+                $single_alt = $title ?: 'Vehicle Image';
+
+                if (has_post_thumbnail($vehicle_id)) {
+                    $thumb_id  = get_post_thumbnail_id($vehicle_id);
+                    $single_url = wp_get_attachment_image_url($thumb_id, $thumb_size);
+                    $single_alt = get_post_meta($thumb_id, '_wp_attachment_image_alt', true) ?: $single_alt;
+                } elseif (!empty($slides)) {
+                    $single_url = $slides[0]['url'] ?? '';
+                    $single_alt = $slides[0]['alt'] ?: $single_alt;
+                } elseif (!empty($fallback_img)) {
+                    $single_url = $fallback_img;
+                }
+                ?>
+
+                <?php if ($single_url): ?>
+                    <img class="vehicle_card-single" src="<?php echo esc_url($single_url); ?>"
+                        alt="<?php echo esc_attr($single_alt); ?>">
+                <?php endif; ?>
+            <?php endif; ?>
         </div>
 
         <div class="vehicle_card-info">
