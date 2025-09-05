@@ -76,7 +76,7 @@ if (is_singular('auction') && $venue_id) {
     $opt = $defaults;
 
     // ===== Paginación y per page =====
-    $paged = max(1, get_query_var('paged') ? (int)get_query_var('paged') : (int)get_query_var('page'));
+    $paged = isset($_GET['vp']) ? max(1, (int) $_GET['vp']) : 1;
     $ppp   = isset($_GET['posts_per_page']) ? max(1, (int)$_GET['posts_per_page']) : 6;
 
     // ===== GET params (sin years ni lots) =====
@@ -159,91 +159,108 @@ if (is_singular('auction') && $venue_id) {
     $vehicles = new WP_Query($argsVehicle);
     ?>
 
-    <section class="auction_vehicles" style="padding:0 !important">
-        <div class="auction_vehicles-container">
-            <form class="auction_result-filter" method="get" action="" style="margin:0 !important">
-                <input type="hidden" name="lots" value="<?php echo esc_attr($lots); ?>">
-                <input type="hidden" name="order_by" value="<?php echo esc_attr($order_by); ?>">
+    <style>
+        .refine_vehicles[data-state="1"] .refine_vehicles-spacing{background:rgba(255,255,255,0);padding: 0;border-color:rgba(255,255,255,0);}
+    </style>
 
-                <div class="auction_result-filter-search">
-                    <input type="search" name="search_vehicle" placeholder="Search for..." value="<?php echo esc_attr($q); ?>">
-                    <button type="submit">Go</button>
-                </div>
+    <section class="refine_vehicles" data-state="2">
 
-                <div class="auction_result-filter-select">
-                    <select name="search_mode">
-                        <option value=""><?php esc_html_e('Search all words any order'); ?></option>
-                    </select>
-                </div>
+        <section class="auction_vehicles" style="padding:0 !important">
+            <div class="auction_vehicles-container">
+                <form class="auction_result-filter filter_in_single_auction" method="get" action="" style="margin:0 !important">
+                    <input type="hidden" name="order_by" value="<?php echo esc_attr($order_by); ?>">
 
-                <div class="auction_result-filter-select">
-                    <select name="order_by">
-                        <option value=""><?php esc_html_e('Sort by'); ?></option>
-                        <option value="lot" <?php selected($_GET['order_by'] ?? '', 'lot'); ?>><?php esc_html_e('Sort by lot number'); ?></option>
-                    </select>
-                </div>
+                    <div class="auction_result-filter-search">
+                        <input type="search" name="search_vehicle" placeholder="Search for..." value="<?php echo esc_attr($q); ?>">
+                        <button type="submit">Go</button>
+                    </div>
 
-                <div class="auction_result-filter-select">
-                    <select name="vehicle_categories" onchange="this.form.submit()">
-                        <option value=""><?php esc_html_e('Main Categories'); ?></option>
+                    <div class="auction_result-filter-select">
+                        <select name="search_mode">
+                            <option value=""><?php esc_html_e('Search all words any order'); ?></option>
+                        </select>
+                    </div>
+
+                    <div class="auction_result-filter-select">
+                        <select name="order_by">
+                            <option value=""><?php esc_html_e('Sort by'); ?></option>
+                            <option value="lot" <?php selected($_GET['order_by'] ?? '', 'lot'); ?>><?php esc_html_e('Sort by lot number'); ?></option>
+                        </select>
+                    </div>
+
+                    <div class="auction_result-filter-select">
+                        <select name="vehicle_categories" onchange="this.form.submit()">
+                            <option value=""><?php esc_html_e('Main Categories'); ?></option>
+                            <?php
+                            $cats = get_terms([
+                                'taxonomy'   => 'vehicle_category',
+                                'hide_empty' => true,
+                                'parent'     => 0,
+                                'orderby'    => 'name',
+                                'order'      => 'ASC',
+                            ]);
+                            if (!is_wp_error($cats) && $cats):
+                                foreach ($cats as $t): ?>
+                                    <option value="<?php echo esc_attr($t->slug); ?>" <?php selected($cat_slug, $t->slug); ?>>
+                                        <?php echo esc_html($t->name); ?>
+                                    </option>
+                            <?php endforeach;
+                            endif; ?>
+                        </select>
+                    </div>
+
+                    <div class="auction_result-filter-select">
                         <?php
-                        $cats = get_terms([
-                            'taxonomy'   => 'vehicle_category',
+                        $brands = get_terms([
+                            'taxonomy'   => 'vehicle_brand',
                             'hide_empty' => true,
-                            'parent'     => 0,
                             'orderby'    => 'name',
                             'order'      => 'ASC',
                         ]);
-                        if (!is_wp_error($cats) && $cats):
-                            foreach ($cats as $t): ?>
-                                <option value="<?php echo esc_attr($t->slug); ?>" <?php selected($cat_slug, $t->slug); ?>>
-                                    <?php echo esc_html($t->name); ?>
-                                </option>
-                        <?php endforeach;
-                        endif; ?>
-                    </select>
-                </div>
-
-                <div class="auction_result-filter-select">
-                    <?php
-                    $brands = get_terms([
-                        'taxonomy'   => 'vehicle_brand',
-                        'hide_empty' => true,
-                        'orderby'    => 'name',
-                        'order'      => 'ASC',
-                    ]);
-                    ?>
-                    <select name="vehicle_brand" onchange="this.form.submit()">
-                        <option value=""><?php esc_html_e('Artist/Maker/Brand'); ?></option>
-                        <?php if (!is_wp_error($brands) && $brands): ?>
-                            <?php foreach ($brands as $term): ?>
-                                <option value="<?php echo esc_attr($term->slug); ?>" <?php selected($brand_slug, $term->slug); ?>>
-                                    <?php echo esc_html($term->name); ?>
-                                </option>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </select>
-                </div>
-
-                <div class="auction_result-filter-page">
-                    <p>
-                        <?php esc_html_e('Showing'); ?>
-                        <select id="blog-perpage" class="blog_section-filter-page" name="posts_per_page" onchange="this.form.submit()">
-                            <option value="6" <?php selected((int)$ppp, 6);  ?>>6</option>
-                            <option value="12" <?php selected((int)$ppp, 12); ?>>12</option>
-                            <option value="24" <?php selected((int)$ppp, 24); ?>>24</option>
+                        ?>
+                        <select name="vehicle_brand" onchange="this.form.submit()">
+                            <option value=""><?php esc_html_e('Artist/Maker/Brand'); ?></option>
+                            <?php if (!is_wp_error($brands) && $brands): ?>
+                                <?php foreach ($brands as $term): ?>
+                                    <option value="<?php echo esc_attr($term->slug); ?>" <?php selected($brand_slug, $term->slug); ?>>
+                                        <?php echo esc_html($term->name); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </select>
-                        <?php esc_html_e('Per Page'); ?>
-                    </p>
-                </div>
+                    </div>
 
-            </form>
-        </div>
-    </section>
+                    <div class="auction_result-filter-page relative">
+                        <p>
+                            <?php esc_html_e('Showing'); ?>
+                            <select id="blog-perpage" class="blog_section-filter-page" name="posts_per_page" onchange="this.form.submit()">
+                                <option value="6" <?php selected((int)$ppp, 6);  ?>>6</option>
+                                <option value="12" <?php selected((int)$ppp, 12); ?>>12</option>
+                                <option value="24" <?php selected((int)$ppp, 24); ?>>24</option>
+                            </select>
+                            <?php esc_html_e('Per Page'); ?>
+                        </p>
 
-    <section class="refine_vehicles">
+                        <div class="filter-view">
+                            <button type="button" class="change_view" data-view="1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="15" viewBox="0 0 22 15" fill="none">
+                                    <path d="M1 7.66667H1.01111M1 14.3333H1.01111M1 1H1.01111M6.55556 7.66667H21M6.55556 14.3333H21M6.55556 1H21" stroke="#8C6E47" stroke-width="1.11111" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            </button>
+                            <button type="button" class="change_view" data-view="2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none">
+                                    <path d="M11 1V21M1 11H21M3.22222 1H18.7778C20.0051 1 21 1.99492 21 3.22222V18.7778C21 20.0051 20.0051 21 18.7778 21H3.22222C1.99492 21 1 20.0051 1 18.7778V3.22222C1 1.99492 1.99492 1 3.22222 1Z" stroke="#8C6E47" stroke-width="1.11111" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </section>
+
         <div class="refine_vehicles-container">
-            <div class="refine_vehicles-module" data-state="2">
+            <div class="refine_vehicles-module">
                 <div class="refine_vehicles-spacing">
                     <?php if ($vehicles->have_posts()): ?>
                         <!-- GRID -->
@@ -264,21 +281,23 @@ if (is_singular('auction') && $venue_id) {
 
                         <?php
                         // === Paginación ===
+                        $total_pages = max(1, (int) $vehicles->max_num_pages);
+
                         $pagination = paginate_links([
-                            'total'     => (int) $vehicles->max_num_pages,
+                            'total'     => $total_pages,
                             'current'   => $paged,
+                            'end_size'  => 1,
                             'mid_size'  => 2,
                             'prev_text' => '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="14" viewBox="0 0 19 14" fill="none"><path d="M19 7L1.00049 7M1.00049 7L7.00049 13M1.00049 7L7.0005 0.999999" stroke="#8C6E47"/></svg>',
                             'next_text' => '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="14" viewBox="0 0 19 14" fill="none"><path d="M-7.15494e-08 7L17.9995 7M17.9995 7L11.9995 1M17.9995 7L11.9995 13" stroke="#8C6E47"/></svg>',
+                            'base'      => esc_url_raw(add_query_arg('vp', '%#%')), // ?vp=2
+                            'format'    => '',                                          // (con add_query_arg no hace falta)
                             'add_args'  => array_filter([
-                                'lots'              => $lots,
-                                'search_vehicle'    => $q,
-                                'vehicle_brand'     => $brand_slug,
+                                'search_vehicle'     => $q,
+                                'vehicle_brand'      => $brand_slug,
                                 'vehicle_categories' => $cat_slug,
-                                'order_by'          => $_GET['order_by'] ?? '',
-                                'year_from'         => $year_from_param,
-                                'year_to'           => $year_to_param,
-                                'posts_per_page'    => $ppp,
+                                'order_by'           => $_GET['order_by'] ?? '',
+                                'posts_per_page'     => $ppp,
                             ], static fn($v) => $v !== '' && $v !== null),
                         ]);
 

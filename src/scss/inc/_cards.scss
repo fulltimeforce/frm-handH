@@ -377,11 +377,15 @@
         &:is(:hover){
             .vehicle_card{
                 &-price{
-                    opacity: 0;
+                    @media (min-width: v.$tablet){
+                        opacity: 0;
+                    }
                 }
                 &-actions{
-                    transform: translateY(0);
-                    opacity: 1;
+                    @media (min-width: v.$tablet){
+                        transform: translateY(0);
+                        opacity: 1;
+                    }
                 }
             }
         }
@@ -420,15 +424,18 @@
         width: 100%;
         @include m.flex(flex-start, m.px-to-vw(12px));
         background-color: #f5f2ee;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
         text-align: center;
-        opacity: 0;
-        transform: translateY(100%);
         @include m.transition;
         z-index: 2;
+        
+        @media (min-width: v.$tablet){
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            opacity: 0;
+            transform: translateY(100%);
+        }
 
 
         @media (min-width: v.$tv) {
@@ -441,6 +448,11 @@
         
         @include m.desktop{
             padding: 0 10px 10px;
+        }
+
+        @include m.tablet{
+            padding: 0;
+            margin-top: 16px;
         }
 
 

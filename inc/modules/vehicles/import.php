@@ -4,9 +4,12 @@ const HNH_IMPORT_POST_TYPE   = 'vehicles';
 const HNH_TAX_CATEGORY       = 'vehicle_category';
 const HNH_TAX_BRAND          = 'vehicle_brand';
 const HNH_MENU_PARENT        = 'edit.php?post_type=vehicles'; // Colgar el import del menú "Vehicles"
+
+// CPT que guarda a los miembros del equipo (para el Post Object "member_to_contact")
+const HNH_TEAM_POST_TYPE     = 'team';
 // ======================================================================
 
-// === Admin Page: Vehicles → Import Vehicles (strict mapping + published-only stock check + brand↔category link)
+// === Admin Page: Vehicles → Import Vehicles
 add_action('admin_menu', function () {
     add_submenu_page(
         HNH_MENU_PARENT,
@@ -93,6 +96,7 @@ function vehicles_handle_import($file)
     $headers_raw = $rows[0];
     $headerLen   = is_array($headers_raw) ? count($headers_raw) : 0;
 
+    // recorta celdas vacías al final del header
     while ($headerLen > 0 && trim((string)$headers_raw[$headerLen - 1]) === '') {
         array_pop($headers_raw);
         $headerLen--;
@@ -102,6 +106,7 @@ function vehicles_handle_import($file)
         return;
     }
 
+    // normaliza cada fila a la longitud exacta del header
     foreach ($rows as $i => $r) {
         if (!is_array($r)) $r = [];
         $count = count($r);
@@ -140,11 +145,20 @@ function vehicles_handle_import($file)
     // Brand column (Artist/Maker/Brand)
     $brand_col      = vehicles_find_header(['Artist/Maker/Brand', 'Artist', 'Maker', 'Brand'], $headers_raw);
 
+    // Contact/Rep o Assigned to → ACF Post Object "member_to_contact" (CPT team)
+    $contact_col    = vehicles_find_header([
+        'Contact/Rep or Assigned to',
+        'Contact/Rep',
+        'Assigned to',
+        'Assigned To',
+        'Member to Contact'
+    ], $headers_raw);
+
     $created = 0;
     $skipped_empty = 0;
     $skipped_existing = 0;
     $skipped_no_stock = 0;
-    $skipped_no_title = 0; // nuevo
+    $skipped_no_title = 0;
 
     $seen_stocks_in_file = [];
 
@@ -170,12 +184,12 @@ function vehicles_handle_import($file)
 
         // --- Título obligatorio desde "Title (main)"
         $title_value = wp_strip_all_tags(trim((string)$row[$title_col]));
-        if ($title_value === '') { // si está vacío, omitir fila
+        if ($title_value === '') {
             $skipped_no_title++;
             continue;
         }
 
-        // Stock number (usado como unique)
+        // Stock number (unique)
         $stock_value = '';
         if ($stock_col !== -1) {
             $stock_value = strtoupper(trim((string)$row[$stock_col]));
@@ -213,17 +227,20 @@ function vehicles_handle_import($file)
             continue;
         }
 
-        /** ===== NUEVO: extraer y guardar ACF desde Description ===== */
+        /** ===== Extraer y guardar ACF desde Description ===== */
         $desc_triplet = vehicles_extract_from_description($raw_desc);
         update_field('registration_no', $desc_triplet['registration_no'], $post_id);
         update_field('chassis_no',      $desc_triplet['chassis_no'],      $post_id);
         update_field('mot',             $desc_triplet['mot'],             $post_id);
-        /** =========================================================== */
+        /** =================================================== */
 
         // Guardar ACF fields posicionalmente (todas las columnas normalizadas)
         foreach ($headers_raw as $colIdx => $header_label) {
             $field_name = $map_by_index[$colIdx] ?? null;
             if (!$field_name) continue;
+
+            // Evita escribir el Post Object "member_to_contact" con texto crudo.
+            if ($field_name === 'member_to_contact') continue;
 
             $value = (string)$row[$colIdx];
             $lower = strtolower((string)$header_label);
@@ -234,6 +251,17 @@ function vehicles_handle_import($file)
             update_field($field_name, $value, $post_id);
         }
         update_field('stock_number', $stock_value, $post_id);
+
+        // === Member to Contact (Post Object -> Team) ===
+        static $team_cache = []; // cache por nombre normalizado
+        $contact_raw = ($contact_col !== -1) ? trim((string)$row[$contact_col]) : '';
+        if ($contact_raw !== '') {
+            $team_id = vehicles_get_team_id_by_display($contact_raw, $team_cache);
+            if ($team_id) {
+                // ACF acepta IDk
+                // update_field('member_to_contact', $team_id, $post_id);
+            }
+        }
 
         // Featured image from URL
         if ($image_url_col !== -1) {
@@ -297,7 +325,13 @@ function vehicles_handle_import($file)
         . '</p></div>';
 }
 
-// === Excel serial -> formatted string ===
+/**
+ * Excel/Texto → string fecha normalizada (por defecto 'Y-m-d H:i').
+ * - Detecta explícitamente dd/mm/yyyy [+ hh:mm[:ss]]
+ * - Soporta / - .
+ * - Convierte serial Excel válido (días desde 1899-12-30).
+ * - Fallback europeo controlado.
+ */
 function vehicles_excel_serial_to_datetime($value, $format = 'Y-m-d H:i')
 {
     if ($value === '' || $value === null) return '';
@@ -306,61 +340,50 @@ function vehicles_excel_serial_to_datetime($value, $format = 'Y-m-d H:i')
     $s = trim((string)$value);
     $s = preg_replace('~\s+~', ' ', $s);
 
-    // 1) Captura explícita dd/mm/yyyy con hora opcional (HH:mm o HH:mm:ss)
-    //    Soporta separadores / - .
+    // 1) dd/mm/yyyy (o dd-mm-yyyy / dd.mm.yyyy) con hora opcional HH:mm[:ss]
     if (preg_match('~(?<!\d)(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?~', $s, $m)) {
-        $d = (int)$m[1];
+        $d  = (int)$m[1];
         $mo = (int)$m[2];
-        $y = (int)$m[3];
-        if ($y < 100) {
-            $y += ($y >= 70 ? 1900 : 2000);
-        }
-        $H = isset($m[4]) ? (int)$m[4] : 0;
-        $i = isset($m[5]) ? (int)$m[5] : 0;
+        $y  = (int)$m[3];
+        if ($y < 100) $y += ($y >= 70 ? 1900 : 2000);
+        $H  = isset($m[4]) ? (int)$m[4] : 0;
+        $i  = isset($m[5]) ? (int)$m[5] : 0;
         $sec = isset($m[6]) ? (int)$m[6] : 0;
 
         try {
             $tz = wp_timezone();
             $dt = new DateTime(sprintf('%04d-%02d-%02d %02d:%02d:%02d', $y, $mo, $d, $H, $i, $sec), $tz);
             return $dt->format($format);
-        } catch (Exception $e) {
-            // cae al siguiente método
+        } catch (Exception $e) { /* sigue */
         }
     }
 
-    // 2) Si viene como serial Excel (número de días desde 1899-12-30).
-    //    Evitamos tratar enteros enormes (cadenas "limpiadas" de dígitos) como serial de Excel.
+    // 2) Serial Excel (número de días desde 1899-12-30). Limita rango razonable.
     if (is_numeric($s)) {
         $num = (float)$s;
-        // seriales reales suelen estar < 100000 (año ~ 2189). Ajusta si necesitas.
         if ($num > 0 && $num < 100000) {
             try {
-                $tz = wp_timezone();
-                $base = new DateTime('1899-12-30 00:00:00', $tz); // corrige bug 1900 de Excel
+                $tz   = wp_timezone();
+                $base = new DateTime('1899-12-30 00:00:00', $tz); // corrige bug 1900
                 $days = (int) floor($num);
                 $frac = max(0, $num - $days);
                 $seconds = (int) round($frac * 86400);
                 $base->modify('+' . $days . ' days');
                 if ($seconds) $base->modify('+' . $seconds . ' seconds');
                 return $base->format($format);
-            } catch (Exception $e) {
-                // cae al siguiente método
+            } catch (Exception $e) { /* sigue */
             }
         }
     }
 
-    // 3) Último intento: strtotime (menos fiable para dd/mm/yyyy).
-    //    Intentamos forzar formato europeo primero.
-    //    a) dd-mm-yyyy[ hh:mm[:ss]]
+    // 3) Fallback europeo controlado (dd-mm-yyyy[ hh:mm[:ss]])
     if (preg_match('~^(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{2,4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?$~', $s, $m)) {
-        $d = (int)$m[1];
+        $d  = (int)$m[1];
         $mo = (int)$m[2];
-        $y = (int)$m[3];
-        if ($y < 100) {
-            $y += ($y >= 70 ? 1900 : 2000);
-        }
-        $H = isset($m[4]) ? (int)$m[4] : 0;
-        $i = isset($m[5]) ? (int)$m[5] : 0;
+        $y  = (int)$m[3];
+        if ($y < 100) $y += ($y >= 70 ? 1900 : 2000);
+        $H  = isset($m[4]) ? (int)$m[4] : 0;
+        $i  = isset($m[5]) ? (int)$m[5] : 0;
         $sec = isset($m[6]) ? (int)$m[6] : 0;
         try {
             $tz = wp_timezone();
@@ -370,7 +393,7 @@ function vehicles_excel_serial_to_datetime($value, $format = 'Y-m-d H:i')
         }
     }
 
-    // 4) Si nada funcionó, no forzamos un valor inválido
+    // 4) Nada funcionó
     return '';
 }
 
@@ -409,7 +432,7 @@ function vehicles_sanitize_field_name($label)
     return trim($name, '_');
 }
 
-// CamelCase
+// CamelCase para términos
 function vehicles_to_camelcase($value)
 {
     $v = trim((string)$value);
@@ -618,8 +641,6 @@ function vehicles_format_description($raw)
 
 /**
  * Extrae Registration No / Chassis No / MOT desde el HTML/texto de la descripción.
- * Soporta etiquetas <strong>, <br>, variaciones "No." / "Number", espacios, etc.
- * Devuelve ['registration_no' => '...', 'chassis_no' => '...', 'mot' => '...'] si los encuentra (vacíos si no).
  */
 function vehicles_extract_from_description($html)
 {
@@ -645,13 +666,87 @@ function vehicles_extract_from_description($html)
 
     foreach ($patterns as $key => $regex) {
         if (preg_match($regex, $text, $m)) {
-            // Limpia el valor capturado (hasta antes de otro posible label)
             $val = trim($m[1]);
-            // Por seguridad, corta si aparecen otros labels en la misma línea
             $val = preg_split('~\s*(?:Registration\s*(?:No\.?|Number)?|Chassis\s*(?:No\.?|Number)?|MOT)\s*:~i', $val, 2)[0];
             $out[$key] = trim($val, " \t\n\r\0\x0B\xC2\xA0");
         }
     }
 
     return $out;
+}
+
+/**
+ * Devuelve el ID del post (CPT team) que mejor coincide con el nombre dado.
+ * Intenta: título exacto, slug exacto, búsqueda. Usa caché simple por nombre normalizado.
+ */
+function vehicles_get_team_id_by_display($raw, array &$cache = [])
+{
+    $name = vehicles_normalize_person_name($raw);
+    if ($name === '') return 0;
+
+    if (isset($cache[$name])) return (int)$cache[$name];
+
+    // 1) título exacto (case-insensitive)
+    $post = get_page_by_title($name, OBJECT, HNH_TEAM_POST_TYPE);
+    if ($post && $post->post_status === 'publish') {
+        return $cache[$name] = (int)$post->ID;
+    }
+
+    // 2) slug exacto
+    $slug = sanitize_title($name);
+    $q = new WP_Query([
+        'post_type'      => HNH_TEAM_POST_TYPE,
+        'name'           => $slug,
+        'post_status'    => 'publish',
+        'fields'         => 'ids',
+        'posts_per_page' => 1,
+        'no_found_rows'  => true,
+    ]);
+    if (!empty($q->posts)) {
+        return $cache[$name] = (int)$q->posts[0];
+    }
+
+    // 3) búsqueda
+    $q = new WP_Query([
+        'post_type'      => HNH_TEAM_POST_TYPE,
+        's'              => $name,
+        'post_status'    => 'publish',
+        'fields'         => 'ids',
+        'posts_per_page' => 1,
+        'no_found_rows'  => true,
+    ]);
+    if (!empty($q->posts)) {
+        return $cache[$name] = (int)$q->posts[0];
+    }
+
+    return $cache[$name] = 0;
+}
+
+/**
+ * Normaliza nombres humanos:
+ * - toma el primer nombre si vienen varios (/, &, and, coma, etc.)
+ * - elimina paréntesis
+ * - convierte "APELLIDO, Nombre" a "Nombre Apellido"
+ * - colapsa espacios y aplica Title Case
+ */
+function vehicles_normalize_person_name($raw)
+{
+    $s = trim((string)$raw);
+    if ($s === '') return '';
+
+    // primer contacto si viene "Nombre A / Nombre B"
+    $s = preg_split('~[\/,&|;]|\\band\\b~i', $s, 2)[0];
+
+    // quita paréntesis
+    $s = preg_replace('~\([^)]*\)~', '', $s);
+
+    // "APELLIDO, Nombre" → "Nombre Apellido"
+    if (preg_match('~^\s*([^,]+),\s*(.+)$~', $s, $m)) {
+        $s = trim($m[2] . ' ' . $m[1]);
+    }
+
+    $s = preg_replace('~\s+~', ' ', $s);
+    $s = mb_convert_case($s, MB_CASE_TITLE, 'UTF-8');
+
+    return trim($s);
 }

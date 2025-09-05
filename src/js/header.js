@@ -109,6 +109,7 @@
         Array.from(toggle_search).forEach(toggle => {
             toggle.addEventListener('click', (e) => {
                 e.preventDefault();
+                search_viewport.querySelector('input').focus();
                 search_viewport.classList.toggle('active');
             })
         })

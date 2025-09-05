@@ -4,6 +4,7 @@ get_header();
 
 $current_lot = get_field('lot_number_latest');
 $auction = get_field('auction_latest');
+$auction_number = get_field('auction_number_latest');
 $estimate_high = get_field('estimate_high');
 $estimate_low = get_field('estimate_low');
 $short_text = get_field('title_sub');
@@ -139,7 +140,7 @@ if ($gallery && is_array($gallery)): ?>
                 $first = $imgs[0];
             ?>
                 <div class="listing_images-main">
-                    <img class="wh-100" src="<?php echo esc_url($first['url']); ?>" alt="<?php echo esc_attr($first['alt'] ?: 'vehicle'); ?>">
+                    <img class="wh-100 thumbnail-post" src="<?php echo esc_url($first['url']); ?>" alt="<?php echo esc_attr($first['alt'] ?: 'vehicle'); ?>">
                     <div id="openFullView" class="listing_images-counter p18" data-total="<?php echo $total; ?>">1/<?php echo $total; ?></div>
                     <div id="openGrid" class="listing_images-grid">
                         <img src="<?php echo IMG; ?>/grid-icon.svg" alt="icon">
@@ -191,88 +192,174 @@ if ($gallery && is_array($gallery)): ?>
         <?php endif; ?>
         <div class="listing_divider"></div>
         <div class="listing_info-bid">
-            <div>
-                <?php if (NOT_APPEAR): ?>
-                    <p class="p17">Buyer's Premium applies (subject to a minimum charge and VAT)
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <path d="M12.0007 15.6713V12.0007M12.0007 8.3301H12.0099M21.1772 12.0007C21.1772 17.0687 17.0687 21.1772 12.0007 21.1772C6.93266 21.1772 2.82422 17.0687 2.82422 12.0007C2.82422 6.93266 6.93266 2.82422 12.0007 2.82422C17.0687 2.82422 21.1772 6.93266 21.1772 12.0007Z" stroke="black" stroke-opacity="0.8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </p>
-                <?php endif; ?>
-                <div class="listing_info-bid-lot">
-                    <div class="auction-bid">
-                        <div class="auction-bid-value">
-                            <?php if (NOT_APPEAR): ?>
-                                <span class="input-group-addon">£</span>
-                                <div class="input-group input-group-narrow">
-                                    <input type="number" class="form-control bid-value no-spin" placeholder="Bid" data-lot-id="62057" value="">
+
+            <?php
+            $status = get_field('status');
+
+            $upcoming_auctions_ids = [];
+            $date_meta_key = 'auction_date';
+            $now_mysql     = current_time('mysql');
+
+            $future_auctions = get_posts([
+                'post_type'           => 'auction',
+                'post_status'         => 'publish',
+                'fields'              => 'ids',
+                'no_found_rows'       => true,
+                'ignore_sticky_posts' => true,
+
+                'meta_query' => [[
+                    'key'     => $date_meta_key,
+                    'value'   => $now_mysql,
+                    'compare' => '>=',
+                    'type'    => 'CHAR',
+                ]],
+
+                // Ordena por la fecha más próxima primero
+                'meta_key'  => $date_meta_key,
+                'orderby'   => 'meta_value',
+                'order'     => 'ASC',
+            ]);
+
+            foreach ($future_auctions as $auction_id) {
+                // Lee el sale_number (puedes usar get_field si prefieres)
+                $sale_number = get_post_meta($auction_id, 'sale_number', true);
+                if ($sale_number !== '' && is_numeric($sale_number)) {
+                    $upcoming_auctions_ids[] = (int) $sale_number;
+                }
+            }
+
+            // Limpieza: únicos y reindexados
+            $upcoming_auctions_ids = array_values(array_unique($upcoming_auctions_ids));
+            ?>
+            <?php if ($status && strtolower($status) == 'allocated' && in_array(intval($auction_number), $upcoming_auctions_ids)): ?>
+                <?php $placebid = get_field('lot_link'); ?>
+                <?php if ($placebid): ?>
+                    <div>
+                        <div class="listing_info-bid-lot">
+                            <div class="auction-bid">
+                                <div class="auction-bid-value">
+                                    <a href="<?php echo $placebid; ?>" target="_blank" class="btn-bid w-100" data-lot-id="62057" data-auctionid="552" data-session="622" data-lotnumber="1" data-hastelbid="False" data-istimed="0" data-reload="0" data-vatable="False" data-ga-cat="bidding" data-ga-act="submit" data-ga-lbl="/bid" data-ba-cat="" data-ba-lbl="" data-ba-cur="">Place Bid</a>
                                 </div>
-                                <div class="input-group-narrow">
-                                    <select class="form-control bid-boost bid-boost-info pull-left">
-                                        <option value="">No boost</option>
-                                        <option value="1">+1 </option>
-                                        <option value="2">+2 </option>
-                                        <option value="3">+3 </option>
-                                    </select>
-                                </div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <path d="M12.0007 15.6713V12.0007M12.0007 8.3301H12.0099M21.1772 12.0007C21.1772 17.0687 17.0687 21.1772 12.0007 21.1772C6.93266 21.1772 2.82422 17.0687 2.82422 12.0007C2.82422 6.93266 6.93266 2.82422 12.0007 2.82422C17.0687 2.82422 21.1772 6.93266 21.1772 12.0007Z" stroke="black" stroke-opacity="0.8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                            <?php endif; ?>
-                            <a href="#" class="btn-bid w-100" data-lot-id="62057" data-auctionid="552" data-session="622" data-lotnumber="1" data-hastelbid="False" data-istimed="0" data-reload="0" data-vatable="False" data-ga-cat="bidding" data-ga-act="submit" data-ga-lbl="/bid" data-ba-cat="" data-ba-lbl="" data-ba-cur="">Place Bid</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <?php if ($estimate_low && $estimate_high): ?>
+                <?php endif; ?>
+            <?php endif; ?>
+
+            <?php
+            $estimate_html = '';
+            if ($estimate_low && $estimate_high) {
+                $low  = (float) preg_replace('/[^\d.\-]/', '', (string) $estimate_low);
+                $high = (float) preg_replace('/[^\d.\-]/', '', (string) $estimate_high);
+                $estimate_html = '£' . esc_html(number_format_i18n($low, 0)) . ' - £' . esc_html(number_format_i18n($high, 0));
+            }
+            if ($estimate_html):
+            ?>
                 <div>
                     <p class="p17">Estimate</p>
-                    <p class="gold-text"><?php echo '£' . $estimate_low . ' - £' . $estimate_high; ?></p>
+                    <p class="gold-text"><?php echo $estimate_html; ?></p>
                 </div>
             <?php endif; ?>
         </div>
+
         <?php
-        $name   = get_field('vendor_full_name');
-        $email  = get_field('vendor_email_address');
-        $phone  = get_field('vendor_phone_primary');
+        // 1) Toma el nombre desde los ACF de texto
+        $member_name = trim((string)(get_field('contact_rep') ?: get_field('assigned_to') ?: ''));
 
-        if (!empty($name) && !empty($email)):
-        ?>
-            <div class="listing_info-contact">
-                <div class="listing_info-contact-info">
+        if ($member_name !== ''):
 
-                    <img src="<?php echo IMG; ?>/face2.png" alt="<?php echo esc_attr($name); ?>">
+            // 2) Helper para localizar el CPT 'team' por nombre
+            if (!function_exists('hnh_find_team_by_name')) {
+                function hnh_find_team_by_name($name)
+                {
+                    $name = trim((string)$name);
+                    if ($name === '') return null;
 
+                    // a) Coincidencia exacta por título
+                    $p = get_page_by_title($name, OBJECT, 'team');
+                    if ($p instanceof WP_Post && $p->post_status === 'publish') return $p;
 
-                    <div>
-                        <p class="listing_info-contact-subtitle">
-                            If you would like to enquire further, please contact:
-                        </p>
-                        <p class="listing_info-contact-title"><?php echo esc_html($name); ?></p>
-                        <p class="listing_info-contact-subtitle">- Director</p>
-                        <div>
-                            <?php if ($email): ?>
-                                <p class="listing_info-contact-text">
-                                    Email: <span><a href="mailto:<?php echo esc_attr($email); ?>"><?php echo esc_html($email); ?></a></span>
+                    // b) Por slug (por si el título exacto no coincide pero el slug sí)
+                    $slug = sanitize_title($name);
+                    $p = get_page_by_path($slug, OBJECT, 'team');
+                    if ($p instanceof WP_Post && $p->post_status === 'publish') return $p;
+
+                    // c) Búsqueda de respaldo
+                    $q = new WP_Query([
+                        'post_type'           => 'team',
+                        'post_status'         => 'publish',
+                        'posts_per_page'      => 1,
+                        'no_found_rows'       => true,
+                        'ignore_sticky_posts' => true,
+                        's'                   => $name,
+                        'orderby'             => 'title',
+                        'order'               => 'ASC',
+                        'fields'              => 'ids',
+                    ]);
+                    if (!empty($q->posts)) return get_post($q->posts[0]);
+
+                    return null;
+                }
+            }
+
+            // 3) Busca el miembro y pinta sus datos
+            $team_post = hnh_find_team_by_name($member_name);
+
+            if ($team_post) :
+                $member_id = (int) $team_post->ID;
+
+                $name     = get_the_title($member_id);
+                $email    = (string) get_field('team_email', $member_id);
+                $phone    = (string) (get_field('team_phone', $member_id) ?: get_field('phone', $member_id));
+                $position = (string) get_field('job_position', $member_id);
+
+                // Imagen destacada con fallback
+                $img_url  = get_the_post_thumbnail_url($member_id, 'medium');
+                if (!$img_url && defined('IMG')) $img_url = IMG . '/face2.png';
+
+                if ($name && ($email || $phone)) : ?>
+                    <div class="listing_info-contact">
+                        <div class="listing_info-contact-info">
+                            <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($name); ?>">
+                            <div>
+                                <p class="listing_info-contact-subtitle">
+                                    If you would like to enquire further, please contact:
                                 </p>
-                            <?php endif; ?>
-                            <?php if ($phone): ?>
-                                <p class="listing_info-contact-text">
-                                    Tel: <span><?php echo esc_html($phone); ?></span>
-                                </p>
-                            <?php endif; ?>
+                                <p class="listing_info-contact-title"><?php echo esc_html($name); ?></p>
+                                <?php if ($position): ?>
+                                    <p class="listing_info-contact-subtitle">- <?php echo esc_html($position); ?></p>
+                                <?php endif; ?>
+                                <div>
+                                    <?php if ($email): ?>
+                                        <p class="listing_info-contact-text">
+                                            Email: <span><a href="mailto:<?php echo esc_attr($email); ?>"><?php echo esc_html($email); ?></a></span>
+                                        </p>
+                                    <?php endif; ?>
+                                    <?php if ($phone): ?>
+                                        <p class="listing_info-contact-text">
+                                            Tel: <span><?php echo esc_html($phone); ?></span>
+                                        </p>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="listing_info-contact-btn w-100">
+                            <a href="<?php echo esc_url(get_permalink($member_id)); ?>" class="listing_btn-white p14">
+                                View Bio
+                                <svg xmlns="http://www.w3.org/2000/svg" width="29" height="16" viewBox="0 0 29 16" fill="none">
+                                    <path d="M2.5 8H26.5M26.5 8L21.122 2M26.5 8L21.122 14" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </a>
                         </div>
                     </div>
-                </div>
-                <div class="listing_info-contact-btn w-100">
-                    <a href="#" class="listing_btn-white p14">
-                        View Bio
-                        <svg xmlns="http://www.w3.org/2000/svg" width="29" height="16" viewBox="0 0 29 16" fill="none">
-                            <path d="M2.5 8H26.5M26.5 8L21.122 2M26.5 8L21.122 14" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
+                <?php else: ?>
+                    <div class="empty-listing_info-contact"></div>
+                <?php endif; ?>
+            <?php else: ?>
+                <div class="empty-listing_info-contact"></div>
+            <?php endif; ?>
+        <?php else: ?>
+            <div class="empty-listing_info-contact"></div>
         <?php endif; ?>
 
         <div class="listing_info-details">

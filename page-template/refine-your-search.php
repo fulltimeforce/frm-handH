@@ -24,7 +24,6 @@ $ppp   = isset($_GET['posts_per_page']) ? max(1, (int)$_GET['posts_per_page']) :
 
 // ===== GET params =====
 $q               = isset($_GET['search_vehicle'])     ? sanitize_text_field($_GET['search_vehicle'])     : '';
-$vehicle_status  = isset($_GET['vehicle_status'])     ? sanitize_text_field($_GET['vehicle_status'])     : 'available';
 $year_from_param = isset($_GET['year_from'])          ? sanitize_text_field($_GET['year_from'])          : '';
 $year_to_param   = isset($_GET['year_to'])            ? sanitize_text_field($_GET['year_to'])            : '';
 $brand_slug      = isset($_GET['vehicle_brand'])      ? sanitize_text_field($_GET['vehicle_brand'])      : '';
@@ -41,16 +40,6 @@ $now_minute = date_i18n('Y-m-d H:i', current_time('timestamp'));
 
 // ===== Meta query =====
 $meta_query = ['relation' => 'AND'];
-
-// Status (ACF: status)
-if ($vehicle_status !== '') {
-    $status_regex = '^[[:space:]]*' . preg_quote(strtolower($vehicle_status), '~') . '[[:space:]]*$';
-    $meta_query[] = [
-        'key'     => 'status',
-        'value'   => $status_regex,
-        'compare' => 'REGEXP',
-    ];
-}
 
 // Filtro CURRENT/PAST por fecha del meta $auction_date_meta (comparación lexicográfica segura)
 if ($lots === 'current') {
@@ -259,10 +248,10 @@ $maxYear = (int)date('Y');
     </div>
 </section>
 
-<section class="refine_vehicles">
+<section class="refine_vehicles" data-state="2">
     <div class="refine_vehicles-container">
 
-        <div class="refine_vehicles-module" data-state="2">
+        <div class="refine_vehicles-module">
             <div class="refine_modules">
                 <div class="refine_buttons">
                     <button type="button" class="<?php echo $lots === 'current' ? 'active' : ''; ?>" data-lots="current">Current lots</button>
@@ -329,7 +318,6 @@ $maxYear = (int)date('Y');
                             'vehicle_brand'     => $brand_slug,
                             'vehicle_categories' => $cat_slug,
                             'order_by'          => $_GET['order_by'] ?? '',
-                            'vehicle_status'    => $vehicle_status,
                             'year_from'         => $year_from_param,
                             'year_to'           => $year_to_param,
                             'posts_per_page'    => $ppp,
@@ -359,7 +347,7 @@ $maxYear = (int)date('Y');
 <script>
     // Toggle grid/list (ya lo tenías)
     let change_view = document.querySelectorAll('.change_view'),
-        vehicles_module = document.querySelector('.refine_vehicles-module');
+        vehicles_module = document.querySelector('.refine_vehicles');
 
     if (change_view && vehicles_module) {
         Array.from(change_view).forEach(view => {

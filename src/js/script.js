@@ -238,43 +238,52 @@ import "@splidejs/splide/css";
     }
 
     if (document.querySelector('#upcoming')) {
-        let splide = new Splide('#upcoming', {
+        const splide = new Splide('#upcoming', {
             focus: 0,
             start: 0,
             arrows: true,
             pagination: false,
             autoWidth: true,
             gap: '1.042vw',
-            padding: {
-                right: '9.375vw'
-            },
+            padding: { right: '9.375vw' },
             breakpoints: {
-                1420: {
-                    gap: '16px',
-                },
-
-                768: {
-                    perPage: 1
-                }
+                1420: { gap: '16px' },
+                768: { perPage: 1 }
             }
-        })
+        });
 
-        splide.on("move", function () {
-            let index = splide.index,
-                slides = splide.Components.Elements.slides,
-                el = slides[index];
+        // Mueve el slide clickeado a activo (si no lo está).
+        function bindSlideClickToGo() {
+            const slides = splide.Components.Elements.slides;
+            slides.forEach((slide, idx) => {
+                slide.style.cursor = 'pointer';
+                slide.addEventListener('click', (e) => {
+                    // No interferir con clicks en enlaces dentro del slide
+                    if (e.target.closest('a')) return;
+
+                    if (!slide.classList.contains('is-active')) {
+                        splide.go(idx); // ir al índice del slide clickeado
+                    }
+                }, { passive: true });
+            });
+        }
+
+        splide.on('mounted', bindSlideClickToGo);
+        splide.on('updated', bindSlideClickToGo);
+
+        // Tu lógica para marcar .vehicle.active cuando cambia el slide
+        splide.on('move', function () {
+            const index = splide.index;
+            const slides = splide.Components.Elements.slides;
+            const el = slides[index];
 
             Array.from(slides).forEach(slide => {
-                let vehicle = slide.querySelector('.vehicle');
-                if (vehicle && vehicle.classList.contains('active')) {
-                    vehicle.classList.remove('active')
-                }
-            })
+                const vehicle = slide.querySelector('.vehicle');
+                if (vehicle) vehicle.classList.remove('active');
+            });
 
-            let v = el.querySelector('.vehicle')
-            if (v && !v.classList.contains('active')) {
-                v.classList.add('active');
-            }
+            const v = el.querySelector('.vehicle');
+            if (v) v.classList.add('active');
         });
 
         splide.mount();
@@ -585,7 +594,10 @@ import "@splidejs/splide/css";
 
     if (document.querySelector(".listing_fullview")) {
         const fullView = document.querySelector(".listing_fullview");
-        const openBtn = document.getElementById("openFullView");
+        
+        // const openBtn = document.getElementById("openFullView");
+        const openBtn = document.querySelector(".thumbnail-post");
+
         const openBtn2 = document.getElementById("openGridView");
         const closeBtn = document.querySelector(".listing_fullview-close");
 

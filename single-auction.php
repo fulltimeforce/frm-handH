@@ -18,11 +18,11 @@ $venue_id = get_field('template_venue');
 <div class="pavilion_page">
     <div class="container">
         <section id="pavilionGardens" class="custom-carousel">
-            <?php if (have_rows('pavilion_slider')): ?>
+            <?php if (have_rows('pavilion_slider', $venue_id)): ?>
                 <div id="pavilionSlider" class="splide">
                     <div class="splide__track">
                         <ul class="splide__list">
-                            <?php while (have_rows('pavilion_slider')): the_row();
+                            <?php while (have_rows('pavilion_slider', $venue_id)): the_row();
                                 $image = get_sub_field('pavilion_slider_image');
                                 if ($image): ?>
                                     <li class="splide__slide">
@@ -57,7 +57,7 @@ $venue_id = get_field('template_venue');
             <?php endif; ?>
 
             <?php
-            $slider_subtitle = get_field('slider_subtitle');
+            $slider_subtitle = get_field('slider_subtitle', $venue_id);
             if ($slider_subtitle): ?>
                 <h2><?php echo esc_html($slider_subtitle); ?></h2>
             <?php endif; ?>
@@ -187,3 +187,18 @@ $lng = $venue_id ? get_field('lng', $venue_id) : '';
         window.onload = initMap;
     </script>
 <?php endif; ?>
+
+<script>
+    let change_view = document.querySelectorAll('.change_view'),
+        vehicles_module = document.querySelector('.refine_vehicles');
+
+    if (change_view && vehicles_module) {
+        Array.from(change_view).forEach(view => {
+            view.addEventListener('click', (e) => {
+                e.preventDefault();
+                let id = e.currentTarget.getAttribute('data-view');
+                vehicles_module.setAttribute('data-state', id);
+            });
+        });
+    }
+</script>

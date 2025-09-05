@@ -117,8 +117,6 @@ $auctions = new WP_Query($argsAuction);
                                                 </ul>
                                                 <div class="flex">
                                                     <a href="<?php the_permalink(); ?>">View Auction</a>
-                                                    <a style="display:none">Venue Details</a>
-                                                    <a href="#">Send me a reminder</a>
                                                 </div>
                                                 <?php if ($lots): ?>
                                                     <div class="lots_live">

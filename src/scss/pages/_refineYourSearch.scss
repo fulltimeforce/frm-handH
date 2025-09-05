@@ -25,6 +25,42 @@
     }
 }
 
+%button_views {
+    .filter-view {
+        @media (min-width: v.$tv) {
+            @include m.flex(flex-end, m.px-to-vw(6px));
+        }
+
+        @include m.tv {
+            @include m.flex(flex-end, 3px);
+        }
+
+        button {
+            background: none;
+            border: none;
+            border-radius: 0;
+
+            @media (min-width: v.$tv) {
+                padding: m.px-to-vw(6px);
+                @include m.square(m.px-to-vw(32px));
+            }
+
+            @include m.tv {
+                padding: 3px;
+                @include m.square(28px);
+            }
+
+            svg {
+                @include m.fullWH;
+                pointer-events: none;
+                user-select: none;
+                object-fit: contain;
+                object-position: center;
+            }
+        }
+    }
+}
+
 .refine_vehicles {
     @media (min-width: v.$tv) {
         padding-top: m.px-to-vw(64px);
@@ -44,6 +80,10 @@
         @include m.container_side;
     }
 
+    &>.auction_vehicles {
+        @include m.mb64;
+    }
+
     .vehicle_card {
         h3 {
             @include m.lines(2);
@@ -51,6 +91,7 @@
     }
 
     &-spacing {
+        // @include m.transition;
         width: 100%;
         background: v.$white;
 
@@ -201,63 +242,65 @@
 
     &-module {
         width: 100%;
+    }
 
-        &[data-state="1"] {
-            .refine_cards:nth-child(1) {
-                display: none;
-            }
-
-            .filter-view {
-                button:nth-child(1) {
-                    background: v.$white;
-                }
-            }
+    &[data-state="1"] {
+        .refine_cards:nth-child(1) {
+            display: none;
         }
 
-        &[data-state="2"] {
-            .refine_cards:nth-child(2) {
-                display: none;
-            }
-
-            .filter-view {
-                button:nth-child(2) {
-                    background: v.$white;
-                }
+        .filter-view {
+            button:nth-child(1) {
+                background: v.$white;
             }
         }
     }
 
-    .filter-view {
+    &[data-state="2"] {
+        .refine_cards:nth-child(2) {
+            display: none;
+        }
+
+        .filter-view {
+            button:nth-child(2) {
+                background: v.$white;
+            }
+        }
+    }
+
+    @extend %button_views;
+}
+
+.filter_in_single_auction {
+    .auction_result-filter-page {
+        width: 100%;
+
         @media (min-width: v.$tv) {
-            @include m.flex(flex-end, m.px-to-vw(6px));
+            @include m.flex(flex-end, m.px-to-vw(61px));
         }
 
         @include m.tv {
-            @include m.flex(flex-end, 3px);
+            @include m.flex(flex-end, 38px);
         }
 
-        button {
-            background: none;
-            border: none;
-            border-radius: 0;
+        @include m.tablet {
+            @include m.flex(flex-end, 26px);
+        }
 
-            @media (min-width: v.$tv) {
-                padding: m.px-to-vw(6px);
-                @include m.square(m.px-to-vw(32px));
-            }
+        @include m.phone{
+            flex-direction: column;
+            gap: 16px;
+            align-items: flex-end;
+        }
 
-            @include m.tv {
-                padding: 3px;
-                @include m.square(28px);
-            }
-
-            svg {
-                @include m.fullWH;
-                pointer-events: none;
-                user-select: none;
-                object-fit: contain;
-                object-position: center;
-            }
+        select, p{
+            font-family: v.$gotham_m;
+            font-weight: 300;
+        }
+        p {
+            color: rgba($color: v.$black, $alpha: 0.6);
         }
     }
+
+    @extend %button_views;
 }

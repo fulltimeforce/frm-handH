@@ -205,7 +205,7 @@ function hnh_render_vehicle_card($vehicle_id, $args = [])
     }
 
     // Enquire
-    $enquire_href = $args['enquire_href'] ?? $permalink;
+    $enquire_href = get_field('lot_link') ?? $permalink;
 
 ?>
     <div class="vehicle_card">
@@ -268,7 +268,9 @@ function hnh_render_vehicle_card($vehicle_id, $args = [])
         <div class="vehicle_card-info">
             <div class="w-100">
                 <div class="vehicle_card-content">
-                    <h3><?php echo esc_html($title); ?></h3>
+                    <a href="<?php echo esc_url($permalink); ?>" alt="<?php echo esc_html($title); ?>">
+                        <h3><?php echo esc_html($title); ?></h3>
+                    </a>
                 </div>
                 <?php if ($estimate_html): ?>
                     <h4>
@@ -294,8 +296,12 @@ function hnh_render_vehicle_card($vehicle_id, $args = [])
                 <?php endif; ?>
             </div>
             <div class="vehicle_card-actions">
-                <a class="btn-view" href="<?php echo esc_url($permalink); ?>"><?php esc_html_e('View Details'); ?></a>
-                <a class="btn-enquire" href="<?php echo esc_url($enquire_href); ?>"><?php esc_html_e('Enquire Now'); ?></a>
+                <a class="btn-view" href="<?php echo esc_url($permalink); ?>">
+                    <?php esc_html_e('View Details'); ?>
+                </a>
+                <a class="btn-enquire" href="<?php echo esc_url($enquire_href); ?>" target="_blank">
+                    <?php esc_html_e('Enquire Now'); ?>
+                </a>
             </div>
         </div>
     </div>
