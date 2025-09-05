@@ -68,10 +68,9 @@ if (is_singular('auction') && $venue_id) {
 
     <?php
     // ===== Opciones seguras =====
-    $auction_number = get_field('sale_number', $auction_id);
+    $auction_number = trim((string) get_field('sale_number', $auction_id));
 
     $defaults = [
-        'min_year'  => 1920,
         'post_type' => 'vehicles',
     ];
     $opt = $defaults;
@@ -82,7 +81,6 @@ if (is_singular('auction') && $venue_id) {
 
     // ===== GET params (sin years ni lots) =====
     $q               = isset($_GET['search_vehicle'])     ? sanitize_text_field($_GET['search_vehicle'])     : '';
-    $vehicle_status  = isset($_GET['vehicle_status'])     ? sanitize_text_field($_GET['vehicle_status'])     : 'available';
     $brand_slug      = isset($_GET['vehicle_brand'])      ? sanitize_text_field($_GET['vehicle_brand'])      : '';
     $cat_slug        = isset($_GET['vehicle_categories']) ? sanitize_text_field($_GET['vehicle_categories']) : '';
     $order_by        = isset($_GET['order_by'])           ? sanitize_text_field($_GET['order_by'])           : '';
@@ -93,22 +91,13 @@ if (is_singular('auction') && $venue_id) {
     // ===== Meta query =====
     $meta_query = ['relation' => 'AND'];
 
-    // Status
-    if ($vehicle_status !== '') {
-        $status_regex = '^[[:space:]]*' . preg_quote(strtolower($vehicle_status), '~') . '[[:space:]]*$';
-        $meta_query[] = [
-            'key'     => 'status',
-            'value'   => $status_regex,
-            'compare' => 'REGEXP',
-        ];
-    }
-
     // SOLO vehículos de esta subasta (número exacto)
-    if (!empty($auction_number)) {
+    if ($auction_number !== '') {
         $meta_query[] = [
             'key'     => 'auction_number_latest',
             'value'   => $auction_number,
             'compare' => '=',
+            'type'    => 'CHAR',
         ];
     }
 
@@ -287,7 +276,6 @@ if (is_singular('auction') && $venue_id) {
                                 'vehicle_brand'     => $brand_slug,
                                 'vehicle_categories' => $cat_slug,
                                 'order_by'          => $_GET['order_by'] ?? '',
-                                'vehicle_status'    => $vehicle_status,
                                 'year_from'         => $year_from_param,
                                 'year_to'           => $year_to_param,
                                 'posts_per_page'    => $ppp,
