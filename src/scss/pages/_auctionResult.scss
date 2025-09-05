@@ -337,10 +337,12 @@
                     width: 100%;
                     height: 100%;
                     border: 1px solid v.$light_brown;
-                    z-index: -1;
+                    z-index: 1;
                 }
 
                 img {
+                    position: relative;
+                    z-index: 2;
                     object-fit: cover;
                     height: m.px-to-vw(359px);
 
@@ -444,16 +446,17 @@
 
                         p.gold-text {
                             @media (min-width: v.$tv) {
-                                margin-top: m.px-to-vw(10px);
+                                margin-top: m.px-to-vw(3px);
                             }
 
                             @include m.tv {
-                                margin-top: 5px;
+                                margin-top: 1.5px;
                             }
 
                             color: v.$light_brown;
                             font-size: m.px-to-vw(36px) !important;
-                            line-height: 115%;
+                            // line-height: 115%;
+                            line-height: 1em !important;
                             font-family: v.$gotham_m;
                             opacity: 1;
 

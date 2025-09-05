@@ -723,3 +723,25 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    let buttonsDiscover = document.querySelectorAll('.discover .scroll_opportunity')
+    if (buttonsDiscover) {
+        buttonsDiscover.forEach((btn) => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const id = btn.getAttribute('data-id');
+                const section = btn.closest('section.discover');
+                if (!section || !id) return;
+
+                // Setea data-state en el section
+                section.setAttribute('data-state', id);
+
+                // Toggle de la clase "active" entre botones hermanos
+                section.querySelectorAll('.scroll_opportunity').forEach(b => {
+                    b.classList.toggle('active', b === btn);
+                });
+            });
+        });
+    }
+});

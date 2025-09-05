@@ -11,13 +11,13 @@
             padding-block: 130px 20px;
         }
         .container {
-            @include m.flex(flex-start, m.px-to-vw(158px));
+            @include m.flex(space-between, m.px-to-vw(158px));
             align-items: flex-end;
             max-width: m.px-to-vw(1428px);
             margin-right: m.px-to-vw(180px);
             flex-wrap: nowrap;
             @include m.tv {
-                @include m.flex(flex-start,75px);
+                @include m.flex(space-between,75px);
                 max-width: 1428px;
                 margin-right: 180px;
                 flex-wrap: nowrap;
@@ -976,5 +976,11 @@
                 }
             }
         }
+    }
+}
+
+.thumbnail_big{
+    &-container{
+        @include m.container_side;
     }
 }

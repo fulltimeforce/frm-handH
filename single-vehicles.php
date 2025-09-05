@@ -1,7 +1,4 @@
 <?php
-/*
-    Template name: listing
-*/
 
 get_header();
 
@@ -112,14 +109,13 @@ $vehicle_video = '';
     </div>
 </section>
 
-<section class="listing_images">
-    <div class="container">
-        <?php
-        $gallery = get_field('gallery_vehicle');
+<?php
+$gallery = get_field('gallery_vehicle');
+if ($gallery && is_array($gallery)): ?>
 
-        if ($gallery && is_array($gallery)) {
-
-            // Normalizar a [ ['url'=>..., 'alt'=>...], ... ]
+    <section class="listing_images">
+        <div class="container">
+            <?php
             $imgs = [];
             foreach ($gallery as $item) {
                 $url = $alt = '';
@@ -141,7 +137,7 @@ $vehicle_video = '';
             $total = count($imgs);
             if ($total):
                 $first = $imgs[0];
-        ?>
+            ?>
                 <div class="listing_images-main">
                     <img class="wh-100" src="<?php echo esc_url($first['url']); ?>" alt="<?php echo esc_attr($first['alt'] ?: 'vehicle'); ?>">
                     <div id="openFullView" class="listing_images-counter p18" data-total="<?php echo $total; ?>">1/<?php echo $total; ?></div>
@@ -161,11 +157,31 @@ $vehicle_video = '';
                         </ul>
                     </div>
                 </div>
-        <?php
-            endif;
-        } ?>
-    </div>
-</section>
+            <?php endif; ?>
+        </div>
+    </section>
+
+<?php else: ?>
+
+    <section class="thumbnail_big">
+        <div class="thumbnail_big-container">
+            <?php if (has_post_thumbnail($post_id)):
+                $thumb_id  = get_post_thumbnail_id($post_id);
+                $thumb_url = wp_get_attachment_image_url($thumb_id, 'full');
+                $thumb_alt = get_post_meta($thumb_id, '_wp_attachment_image_alt', true);
+                if ($thumb_alt === '') {
+                    $thumb_alt = get_the_title($post_id);
+                }
+            ?>
+                <div class="w-100">
+                    <img class="w-100" src="<?php echo esc_url($thumb_url); ?>" alt="<?php echo esc_attr($thumb_alt); ?>">
+                </div>
+            <?php endif; ?>
+        </div>
+    </section>
+
+<?php endif; ?>
+
 
 <section class="listing_info">
     <div class="container">
@@ -176,11 +192,13 @@ $vehicle_video = '';
         <div class="listing_divider"></div>
         <div class="listing_info-bid">
             <div>
-                <p class="p17">Buyer's Premium applies (subject to a minimum charge and VAT)
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <path d="M12.0007 15.6713V12.0007M12.0007 8.3301H12.0099M21.1772 12.0007C21.1772 17.0687 17.0687 21.1772 12.0007 21.1772C6.93266 21.1772 2.82422 17.0687 2.82422 12.0007C2.82422 6.93266 6.93266 2.82422 12.0007 2.82422C17.0687 2.82422 21.1772 6.93266 21.1772 12.0007Z" stroke="black" stroke-opacity="0.8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                </p>
+                <?php if (NOT_APPEAR): ?>
+                    <p class="p17">Buyer's Premium applies (subject to a minimum charge and VAT)
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M12.0007 15.6713V12.0007M12.0007 8.3301H12.0099M21.1772 12.0007C21.1772 17.0687 17.0687 21.1772 12.0007 21.1772C6.93266 21.1772 2.82422 17.0687 2.82422 12.0007C2.82422 6.93266 6.93266 2.82422 12.0007 2.82422C17.0687 2.82422 21.1772 6.93266 21.1772 12.0007Z" stroke="black" stroke-opacity="0.8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </p>
+                <?php endif; ?>
                 <div class="listing_info-bid-lot">
                     <div class="auction-bid">
                         <div class="auction-bid-value">

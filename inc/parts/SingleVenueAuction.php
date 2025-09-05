@@ -11,8 +11,8 @@ $lat = get_field('lat');
 $lng = get_field('lng');
 
 
-
 $venue_id = isset($args['venue_id']) ? (int) $args['venue_id'] : 0;
+$auction_id = isset($args['auction_id']) ? (int) $args['auction_id'] : 0;
 
 if (is_singular('auction') && $venue_id) {
     $auctions_title   = get_field('auctions_title', $venue_id);
@@ -59,6 +59,263 @@ if (is_singular('auction') && $venue_id) {
         </div>
     </section>
 <?php endif; ?>
+
+<!-- ------------------------------------------------------------------------------------------------------ -->
+<!-- ------------------------------------------------------------------------------------------------------ -->
+<!-- ------------------------------------------------------------------------------------------------------ -->
+
+<?php if (is_singular('auction')): ?>
+
+    <?php
+    // ===== Opciones seguras =====
+    $auction_number = get_field('sale_number', $auction_id);
+
+    $defaults = [
+        'min_year'  => 1920,
+        'post_type' => 'vehicles',
+    ];
+    $opt = $defaults;
+
+    // ===== Paginación y per page =====
+    $paged = max(1, get_query_var('paged') ? (int)get_query_var('paged') : (int)get_query_var('page'));
+    $ppp   = isset($_GET['posts_per_page']) ? max(1, (int)$_GET['posts_per_page']) : 6;
+
+    // ===== GET params (sin years ni lots) =====
+    $q               = isset($_GET['search_vehicle'])     ? sanitize_text_field($_GET['search_vehicle'])     : '';
+    $vehicle_status  = isset($_GET['vehicle_status'])     ? sanitize_text_field($_GET['vehicle_status'])     : 'available';
+    $brand_slug      = isset($_GET['vehicle_brand'])      ? sanitize_text_field($_GET['vehicle_brand'])      : '';
+    $cat_slug        = isset($_GET['vehicle_categories']) ? sanitize_text_field($_GET['vehicle_categories']) : '';
+    $order_by        = isset($_GET['order_by'])           ? sanitize_text_field($_GET['order_by'])           : '';
+
+    // Meta keys
+    $auction_date_meta = 'auction_date_latest';
+
+    // ===== Meta query =====
+    $meta_query = ['relation' => 'AND'];
+
+    // Status
+    if ($vehicle_status !== '') {
+        $status_regex = '^[[:space:]]*' . preg_quote(strtolower($vehicle_status), '~') . '[[:space:]]*$';
+        $meta_query[] = [
+            'key'     => 'status',
+            'value'   => $status_regex,
+            'compare' => 'REGEXP',
+        ];
+    }
+
+    // SOLO vehículos de esta subasta (número exacto)
+    if (!empty($auction_number)) {
+        $meta_query[] = [
+            'key'     => 'auction_number_latest',
+            'value'   => $auction_number,
+            'compare' => '=',
+        ];
+    }
+
+    // Solo con thumbnail
+    $meta_query[] = [
+        'key'     => '_thumbnail_id',
+        'compare' => 'EXISTS',
+    ];
+
+    // ===== Tax query =====
+    $tax_query = [];
+    if ($brand_slug !== '') {
+        $tax_query[] = [
+            'taxonomy' => 'vehicle_brand',
+            'field'    => 'slug',
+            'terms'    => [$brand_slug],
+        ];
+    }
+    if ($cat_slug !== '') {
+        $tax_query[] = [
+            'taxonomy' => 'vehicle_category',
+            'field'    => 'slug',
+            'terms'    => [$cat_slug],
+        ];
+    }
+
+    // ===== Query =====
+    // Por defecto ordena por fecha de subasta (texto YYYY-mm-dd HH:ii) DESC
+    $argsVehicle = [
+        'post_type'      => $opt['post_type'],
+        'posts_per_page' => $ppp,
+        'paged'          => $paged,
+        'meta_query'     => $meta_query,
+        'meta_key'       => $auction_date_meta,
+        'orderby'        => 'meta_value',
+        'order'          => 'DESC',
+        'meta_type'      => 'CHAR',
+    ];
+
+    if ($q !== '') {
+        $argsVehicle['s'] = $q;
+    }
+    if (!empty($tax_query)) {
+        $argsVehicle['tax_query'] = $tax_query;
+    }
+
+    // Ordenar por número de lote si se pide
+    if ($order_by === 'lot') {
+        $argsVehicle['meta_query'][] = [
+            'key'     => 'lot_number_latest',
+            'compare' => 'EXISTS',
+        ];
+        $argsVehicle['meta_key'] = 'lot_number_latest';
+        $argsVehicle['orderby']  = 'meta_value_num';
+        $argsVehicle['order']    = 'ASC'; // o 'DESC'
+        unset($argsVehicle['meta_type']);
+    }
+
+    $vehicles = new WP_Query($argsVehicle);
+    ?>
+
+    <section class="auction_vehicles" style="padding:0 !important">
+        <div class="auction_vehicles-container">
+            <form class="auction_result-filter" method="get" action="" style="margin:0 !important">
+                <input type="hidden" name="lots" value="<?php echo esc_attr($lots); ?>">
+                <input type="hidden" name="order_by" value="<?php echo esc_attr($order_by); ?>">
+
+                <div class="auction_result-filter-search">
+                    <input type="search" name="search_vehicle" placeholder="Search for..." value="<?php echo esc_attr($q); ?>">
+                    <button type="submit">Go</button>
+                </div>
+
+                <div class="auction_result-filter-select">
+                    <select name="search_mode">
+                        <option value=""><?php esc_html_e('Search all words any order'); ?></option>
+                    </select>
+                </div>
+
+                <div class="auction_result-filter-select">
+                    <select name="order_by">
+                        <option value=""><?php esc_html_e('Sort by'); ?></option>
+                        <option value="lot" <?php selected($_GET['order_by'] ?? '', 'lot'); ?>><?php esc_html_e('Sort by lot number'); ?></option>
+                    </select>
+                </div>
+
+                <div class="auction_result-filter-select">
+                    <select name="vehicle_categories" onchange="this.form.submit()">
+                        <option value=""><?php esc_html_e('Main Categories'); ?></option>
+                        <?php
+                        $cats = get_terms([
+                            'taxonomy'   => 'vehicle_category',
+                            'hide_empty' => true,
+                            'parent'     => 0,
+                            'orderby'    => 'name',
+                            'order'      => 'ASC',
+                        ]);
+                        if (!is_wp_error($cats) && $cats):
+                            foreach ($cats as $t): ?>
+                                <option value="<?php echo esc_attr($t->slug); ?>" <?php selected($cat_slug, $t->slug); ?>>
+                                    <?php echo esc_html($t->name); ?>
+                                </option>
+                        <?php endforeach;
+                        endif; ?>
+                    </select>
+                </div>
+
+                <div class="auction_result-filter-select">
+                    <?php
+                    $brands = get_terms([
+                        'taxonomy'   => 'vehicle_brand',
+                        'hide_empty' => true,
+                        'orderby'    => 'name',
+                        'order'      => 'ASC',
+                    ]);
+                    ?>
+                    <select name="vehicle_brand" onchange="this.form.submit()">
+                        <option value=""><?php esc_html_e('Artist/Maker/Brand'); ?></option>
+                        <?php if (!is_wp_error($brands) && $brands): ?>
+                            <?php foreach ($brands as $term): ?>
+                                <option value="<?php echo esc_attr($term->slug); ?>" <?php selected($brand_slug, $term->slug); ?>>
+                                    <?php echo esc_html($term->name); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </select>
+                </div>
+
+                <div class="auction_result-filter-page">
+                    <p>
+                        <?php esc_html_e('Showing'); ?>
+                        <select id="blog-perpage" class="blog_section-filter-page" name="posts_per_page" onchange="this.form.submit()">
+                            <option value="6" <?php selected((int)$ppp, 6);  ?>>6</option>
+                            <option value="12" <?php selected((int)$ppp, 12); ?>>12</option>
+                            <option value="24" <?php selected((int)$ppp, 24); ?>>24</option>
+                        </select>
+                        <?php esc_html_e('Per Page'); ?>
+                    </p>
+                </div>
+
+            </form>
+        </div>
+    </section>
+
+    <section class="refine_vehicles">
+        <div class="refine_vehicles-container">
+            <div class="refine_vehicles-module" data-state="2">
+                <div class="refine_vehicles-spacing">
+                    <?php if ($vehicles->have_posts()): ?>
+                        <!-- GRID -->
+                        <div class="refine_cards refine_grid">
+                            <?php while ($vehicles->have_posts()) : $vehicles->the_post(); ?>
+                                <?php hnh_render_vehicle_card(get_the_ID()); ?>
+                            <?php endwhile; ?>
+                        </div>
+
+                        <?php $vehicles->rewind_posts(); ?>
+
+                        <!-- LIST -->
+                        <div class="refine_cards refine_list">
+                            <?php while ($vehicles->have_posts()) : $vehicles->the_post(); ?>
+                                <?php hnh_render_vehicle_item(get_the_ID()); ?>
+                            <?php endwhile; ?>
+                        </div>
+
+                        <?php
+                        // === Paginación ===
+                        $pagination = paginate_links([
+                            'total'     => (int) $vehicles->max_num_pages,
+                            'current'   => $paged,
+                            'mid_size'  => 2,
+                            'prev_text' => '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="14" viewBox="0 0 19 14" fill="none"><path d="M19 7L1.00049 7M1.00049 7L7.00049 13M1.00049 7L7.0005 0.999999" stroke="#8C6E47"/></svg>',
+                            'next_text' => '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="14" viewBox="0 0 19 14" fill="none"><path d="M-7.15494e-08 7L17.9995 7M17.9995 7L11.9995 1M17.9995 7L11.9995 13" stroke="#8C6E47"/></svg>',
+                            'add_args'  => array_filter([
+                                'lots'              => $lots,
+                                'search_vehicle'    => $q,
+                                'vehicle_brand'     => $brand_slug,
+                                'vehicle_categories' => $cat_slug,
+                                'order_by'          => $_GET['order_by'] ?? '',
+                                'vehicle_status'    => $vehicle_status,
+                                'year_from'         => $year_from_param,
+                                'year_to'           => $year_to_param,
+                                'posts_per_page'    => $ppp,
+                            ], static fn($v) => $v !== '' && $v !== null),
+                        ]);
+
+                        if ($pagination) {
+                            echo '<div class="auction_result-pagination">' . $pagination . '</div>';
+                        }
+
+                        wp_reset_postdata();
+                        ?>
+
+                    <?php else: ?>
+                        <div class="no-one">
+                            <p><?php esc_html_e('No results found'); ?></p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<?php endif; ?>
+
+<!-- ------------------------------------------------------------------------------------------------------ -->
+<!-- ------------------------------------------------------------------------------------------------------ -->
+<!-- ------------------------------------------------------------------------------------------------------ -->
 
 <?php get_template_part('inc/sections/cta-single-venue_auction'); ?>
 

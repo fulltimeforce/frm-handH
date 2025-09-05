@@ -179,137 +179,166 @@ $testimonials_items = get_field('testimonials_items');
     </div>
 </section>
 
-<section class="our_successes">
-    <div class="container">
-        <div class="our_successes-head">
-            <?php if ($successes_subtitle): ?>
-                <div class="breadlines">
-                    <p><?php echo $successes_subtitle; ?></p>
-                </div>
-            <?php endif; ?>
-            <?php if ($successes_title): ?>
-                <h2><?php echo $successes_title; ?></h2>
-            <?php endif; ?>
-            <?php if ($successes_text): ?>
-                <p><?php echo $successes_text; ?></p>
-            <?php endif; ?>
-        </div>
-    </div>
-    <div class="our_successes-body">
-        <div class="w-100">
-            <div class="splide" role="group" id="text1">
-                <div class="splide__track">
-                    <ul class="splide__list">
-                        <?php for ($i = 0; $i < 5; $i++): ?>
-                            <li class="splide__slide">
-                                <h3>2024 Motorcar Highlights</h3>
-                            </li>
-                            <li class="splide__slide">
-                                <h3>•</h3>
-                            </li>
-                        <?php endfor; ?>
-                    </ul>
-                </div>
+<?php if (have_rows('slider_top') || have_rows('slider_bottom')): ?>
+    <section class="our_successes">
+        <div class="container">
+            <div class="our_successes-head">
+                <?php if ($successes_subtitle): ?>
+                    <div class="breadlines">
+                        <p><?php echo $successes_subtitle; ?></p>
+                    </div>
+                <?php endif; ?>
+                <?php if ($successes_title): ?>
+                    <h2><?php echo $successes_title; ?></h2>
+                <?php endif; ?>
+                <?php if ($successes_text): ?>
+                    <p><?php echo $successes_text; ?></p>
+                <?php endif; ?>
             </div>
-            <div class="splide" role="group" id="cars1">
-                <div class="splide__track">
-                    <ul class="splide__list">
-                        <?php for ($i = 0; $i < 5; $i++): ?>
-                            <li class="splide__slide">
-                                <div class="car_card">
-                                    <div class="car_card-flex">
-                                        <div class="car_card-image">
-                                            <div class="car_card-thumb">
-                                                <img src="<?php echo IMG; ?>/car.png">
+        </div>
+        <div class="our_successes-body">
+            <?php if (have_rows('slider_top')): ?>
+                <div class="w-100">
+                    <div class="splide" role="group" id="text1">
+                        <div class="splide__track">
+                            <ul class="splide__list">
+                                <?php for ($i = 0; $i < 5; $i++): ?>
+                                    <li class="splide__slide">
+                                        <h3>2024 Motorcar Highlights</h3>
+                                    </li>
+                                    <li class="splide__slide">
+                                        <h3>•</h3>
+                                    </li>
+                                <?php endfor; ?>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="splide" role="group" id="cars1">
+                        <div class="splide__track">
+                            <ul class="splide__list">
+                                <?php while (have_rows('slider_top')): the_row(); ?>
+                                    <li class="splide__slide">
+                                        <div class="car_card">
+                                            <div class="car_card-flex">
+                                                <div class="car_card-image">
+                                                    <div class="car_card-thumb">
+                                                        <img src="<?php echo get_sub_field('image_vehicle_1')['url'] ?>"
+                                                            alt="<?php echo get_sub_field('image_vehicle_1')['alt'] ?>"
+                                                            width="<?php echo get_sub_field('image_vehicle_1')['width'] ?>"
+                                                            height="<?php echo get_sub_field('image_vehicle_1')['height'] ?>"
+                                                            loading="lazy">
 
-                                                <div class="permalink">
-                                                    <a href="#">View</a>
+                                                        <?php if (!empty(get_sub_field('link_vehicle'))): ?>
+                                                            <div class="permalink">
+                                                                <a href="<?php echo get_sub_field('link_vehicle'); ?>">View</a>
+                                                            </div>
+                                                        <?php endif; ?>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="42" height="30" viewBox="0 0 42 30" fill="none">
+                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M42.2512 0C24.5511 4.20263 9.49137 15.2238 0 30.1354H42.2512V0Z" fill="#D3C7B6" />
+                                                        </svg>
+                                                    </div>
                                                 </div>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="42" height="30" viewBox="0 0 42 30" fill="none">
-                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M42.2512 0C24.5511 4.20263 9.49137 15.2238 0 30.1354H42.2512V0Z" fill="#D3C7B6" />
-                                                </svg>
-                                            </div>
-                                        </div>
-                                        <div class="car_card-info">
-                                            <div class="car_card-content">
-                                                <p>19th Jun, 2024</p>
-                                                <h3>1904 Bayard Type AC2K Twin-Cylinder 9/11hp Rear Entrance Tonneau</h3>
-                                            </div>
-                                            <div class="car_card-price">
-                                                <h4>
-                                                    <span>Sold for</span>
-                                                    £128,250
-                                                </h4>
-                                                <p>(including buyers premium)</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        <?php endfor; ?>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="w-100">
-            <div class="splide" role="group" id="text2">
-                <div class="splide__track">
-                    <ul class="splide__list">
-                        <?php for ($i = 0; $i < 5; $i++): ?>
-                            <li class="splide__slide">
-                                <h3>2024 Motorcar Highlights</h3>
-                            </li>
-                            <li class="splide__slide">
-                                <h3>•</h3>
-                            </li>
-                        <?php endfor; ?>
-                    </ul>
-                </div>
-            </div>
-            <div class="splide" role="group" id="cars2">
-                <div class="splide__track">
-                    <ul class="splide__list">
-                        <?php for ($i = 0; $i < 5; $i++): ?>
-                            <li class="splide__slide">
-                                <div class="car_card">
-                                    <div class="car_card-flex">
-                                        <div class="car_card-image">
-                                            <div class="car_card-thumb">
-                                                <img src="<?php echo IMG; ?>/car.png">
-
-                                                <div class="permalink">
-                                                    <a href="#">View</a>
+                                                <div class="car_card-info">
+                                                    <div class="car_card-content">
+                                                        <?php
+                                                        $raw = get_sub_field('date_vehicle');
+                                                        if ($raw) {
+                                                            echo '<p>' . esc_html(date_i18n('jS M, Y', strtotime($raw))) . '</p>';
+                                                        }
+                                                        ?>
+                                                        <h3><?php echo get_sub_field('vehicle_name'); ?></h3>
+                                                    </div>
+                                                    <div class="car_card-price">
+                                                        <h4>
+                                                            <span>Sold for</span>
+                                                            £<?php echo get_sub_field('sold_for'); ?>
+                                                        </h4>
+                                                        <p>(including buyers premium)</p>
+                                                    </div>
                                                 </div>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="42" height="30" viewBox="0 0 42 30" fill="none">
-                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M42.2512 0C24.5511 4.20263 9.49137 15.2238 0 30.1354H42.2512V0Z" fill="#D3C7B6" />
-                                                </svg>
                                             </div>
                                         </div>
-                                        <div class="car_card-info">
-                                            <div class="car_card-content">
-                                                <p>19th Jun, 2024</p>
-                                                <h3>1904 Bayard Type AC2K Twin-Cylinder 9/11hp Rear Entrance Tonneau</h3>
-                                            </div>
-                                            <div class="car_card-price">
-                                                <h4>
-                                                    <span>Sold for</span>
-                                                    £128,250
-                                                </h4>
-                                                <p>(including buyers premium)</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        <?php endfor; ?>
-                    </ul>
+                                    </li>
+                                <?php endwhile; ?>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</section>
+            <?php endif; ?>
 
-<section class="discover">
+            <?php if (have_rows('slider_bottom')): ?>
+                <div class="w-100">
+                    <div class="splide" role="group" id="text2">
+                        <div class="splide__track">
+                            <ul class="splide__list">
+                                <?php for ($i = 0; $i < 5; $i++): ?>
+                                    <li class="splide__slide">
+                                        <h3>2024 Motorcar Highlights</h3>
+                                    </li>
+                                    <li class="splide__slide">
+                                        <h3>•</h3>
+                                    </li>
+                                <?php endfor; ?>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="splide" role="group" id="cars2">
+                        <div class="splide__track">
+                            <ul class="splide__list">
+                                <?php while (have_rows('slider_bottom')): the_row(); ?>
+                                    <li class="splide__slide">
+                                        <div class="car_card">
+                                            <div class="car_card-flex">
+                                                <div class="car_card-image">
+                                                    <div class="car_card-thumb">
+                                                        <img src="<?php echo get_sub_field('image_vehicle')['url'] ?>"
+                                                            alt="<?php echo get_sub_field('image_vehicle')['alt'] ?>"
+                                                            width="<?php echo get_sub_field('image_vehicle')['width'] ?>"
+                                                            height="<?php echo get_sub_field('image_vehicle')['height'] ?>"
+                                                            loading="lazy">
+
+                                                        <?php if (!empty(get_sub_field('link_vehicle'))): ?>
+                                                            <div class="permalink">
+                                                                <a href="<?php echo get_sub_field('link_vehicle'); ?>">View</a>
+                                                            </div>
+                                                        <?php endif; ?>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="42" height="30" viewBox="0 0 42 30" fill="none">
+                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M42.2512 0C24.5511 4.20263 9.49137 15.2238 0 30.1354H42.2512V0Z" fill="#D3C7B6" />
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                                <div class="car_card-info">
+                                                    <div class="car_card-content">
+                                                        <?php
+                                                        $raw = get_sub_field('date_vehicle');
+                                                        if ($raw) {
+                                                            echo '<p>' . esc_html(date_i18n('jS M, Y', strtotime($raw))) . '</p>';
+                                                        }
+                                                        ?>
+                                                        <h3><?php echo get_sub_field('vehicle_name'); ?></h3>
+                                                    </div>
+                                                    <div class="car_card-price">
+                                                        <h4>
+                                                            <span>Sold for</span>
+                                                            £<?php echo get_sub_field('sold_for'); ?>
+                                                        </h4>
+                                                        <p>(including buyers premium)</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                <?php endwhile; ?>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+    </section>
+<?php endif; ?>
+
+<section class="discover" data-state="1">
     <div class="container">
         <div class="discover_head title_watermark">
             <div class="watermark">
@@ -320,66 +349,120 @@ $testimonials_items = get_field('testimonials_items');
             </div>
             <h2>Vehicles For Sale</h2>
         </div>
-        <div class="discover_body">
-            <div class="vehicles_grid">
-                <?php for ($i = 0; $i < 5; $i++): ?>
-                    <div class="vehicle_card">
-                        <div class="vehicle_card-image">
-                            <div class="splide vehicle_card-thumbs" role="group">
-                                <div class="splide__arrows">
-                                    <button class="splide__arrow splide__arrow--prev">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
-                                            <path d="M0 7H12M12 7L6 1M12 7L6 13" stroke="black" />
-                                        </svg>
-                                    </button>
-                                    <button class="splide__arrow splide__arrow--next">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
-                                            <path d="M0 7H12M12 7L6 1M12 7L6 13" stroke="black" />
-                                        </svg>
-                                    </button>
-                                </div>
-                                <div class="splide__track">
-                                    <ul class="splide__list">
-                                        <li class="splide__slide">
-                                            <img src="<?php echo IMG; ?>/car.png">
-                                        </li>
-                                        <li class="splide__slide">
-                                            <img src="<?php echo IMG; ?>/car2.png">
-                                        </li>
-                                        <li class="splide__slide">
-                                            <img src="<?php echo IMG; ?>/car3.png">
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="vehicle_card-info">
-                            <div class="vehicle_card-content">
-                                <h3>1958 Mercedes Benz 190 SL</h3>
-                            </div>
-                            <div class="vehicle_card-price">
-                                <h4>
-                                    <span>Estimated at</span>
-                                    £70,000 - £90,000
-                                </h4>
-                                <div class="vehicle_card-toggle">
-                                    <ul>
-                                        <li><b>Registration No:</b> 551 XWD</li>
-                                        <li><b>Chassis No:</b> A1210428501142</li>
-                                        <li><b>MOT:</b> July 2025</li>
-                                    </ul>
-                                    <div class="vehicle_card-actions">
-                                        <a>View Details</a>
-                                        <a>Enquire Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
-                    </div>
-                <?php endfor; ?>
+        <div class="opportunities-buttons w-100" style="max-width: 100%;padding: 0;">
+            <button class="scroll_opportunity active" data-id="1">Classic Motorcars</button>
+            <button class="scroll_opportunity" data-id="2">Classic Motorcycles</button>
+            <button class="scroll_opportunity" data-id="3">Vintage Scooters</button>
+        </div>
+
+        <div class="discover_body">
+            <?php
+            // Query 1: vehicle_category = 27
+            $args_1 = [
+                'post_type'           => 'vehicles',
+                'posts_per_page'      => 6,
+                'post_status'         => 'publish',
+                'no_found_rows'       => true,
+                'ignore_sticky_posts' => true,
+                'tax_query'           => [
+                    [
+                        'taxonomy' => 'vehicle_category',
+                        'field'    => 'term_id',
+                        'terms'    => [27],
+                    ],
+                ],
+                'meta_query'          => [
+                    [
+                        'key'     => '_thumbnail_id',
+                        'compare' => 'EXISTS',
+                    ],
+                ],
+                'orderby'             => 'date',
+                'order'               => 'DESC',
+            ];
+            $q1 = new WP_Query($args_1);
+            ?>
+            <div class="vehicles_grid" id="vehicle_type_1">
+                <?php if ($q1->have_posts()): ?>
+                    <?php while ($q1->have_posts()): $q1->the_post(); ?>
+                        <?php hnh_render_vehicle_card(get_the_ID()); ?>
+                    <?php endwhile;
+                    wp_reset_postdata(); ?>
+                <?php endif; ?>
             </div>
-            <a href="<?php echo esc_url(home_url('vehicles-for-sale')) ?>" class="permalink" alt="View All Vehicles">
+
+            <?php
+            // Query 2: vehicle_category = 22
+            $args_2 = [
+                'post_type'           => 'vehicles',
+                'posts_per_page'      => 6,
+                'post_status'         => 'publish',
+                'no_found_rows'       => true,
+                'ignore_sticky_posts' => true,
+                'tax_query'           => [
+                    [
+                        'taxonomy' => 'vehicle_category',
+                        'field'    => 'term_id',
+                        'terms'    => [22],
+                    ],
+                ],
+                'meta_query'          => [
+                    [
+                        'key'     => '_thumbnail_id',
+                        'compare' => 'EXISTS',
+                    ],
+                ],
+                'orderby'             => 'date',
+                'order'               => 'DESC',
+            ];
+            $q2 = new WP_Query($args_2);
+            ?>
+            <div class="vehicles_grid" id="vehicle_type_2">
+                <?php if ($q2->have_posts()): ?>
+                    <?php while ($q2->have_posts()): $q2->the_post(); ?>
+                        <?php hnh_render_vehicle_card(get_the_ID()); ?>
+                    <?php endwhile;
+                    wp_reset_postdata(); ?>
+                <?php endif; ?>
+            </div>
+
+            <?php
+            // Query 3: vehicle_category = 36
+            $args_3 = [
+                'post_type'           => 'vehicles',
+                'posts_per_page'      => 6,
+                'post_status'         => 'publish',
+                'no_found_rows'       => true,
+                'ignore_sticky_posts' => true,
+                'tax_query'           => [
+                    [
+                        'taxonomy' => 'vehicle_category',
+                        'field'    => 'term_id',
+                        'terms'    => [36],
+                    ],
+                ],
+                'meta_query'          => [
+                    [
+                        'key'     => '_thumbnail_id',
+                        'compare' => 'EXISTS',
+                    ],
+                ],
+                'orderby'             => 'date',
+                'order'               => 'DESC',
+            ];
+            $q3 = new WP_Query($args_3);
+            ?>
+            <div class="vehicles_grid" id="vehicle_type_3">
+                <?php if ($q3->have_posts()): ?>
+                    <?php while ($q3->have_posts()): $q3->the_post(); ?>
+                        <?php hnh_render_vehicle_card(get_the_ID()); ?>
+                    <?php endwhile;
+                    wp_reset_postdata(); ?>
+                <?php endif; ?>
+            </div>
+
+            <a href="<?php echo esc_url(home_url('vehicles-for-sale')); ?>" class="permalink" alt="View All Vehicles">
                 View All Vehicles
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
                     <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />

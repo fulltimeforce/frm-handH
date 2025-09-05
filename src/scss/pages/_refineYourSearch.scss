@@ -1,0 +1,263 @@
+@use "base/mixins" as m;
+@use "base/variables" as v;
+
+.auction_vehicles.without_spacing {
+    @media (min-width: v.$tv) {
+        padding-top: m.px-to-vw(112px);
+    }
+
+    @include m.tv {
+        padding-top: 86px;
+    }
+
+    @include m.desktop {
+        padding-top: 58px;
+    }
+
+    @include m.tablet {
+        padding-top: 40px;
+    }
+
+    padding-bottom: 0 !important;
+
+    form {
+        margin: 0 auto !important;
+    }
+}
+
+.refine_vehicles {
+    @media (min-width: v.$tv) {
+        padding-top: m.px-to-vw(64px);
+    }
+
+    @include m.tv {
+        padding-top: 42px;
+    }
+
+    @include m.tablet {
+        padding-top: 24px;
+    }
+
+    @include m.pblock160(true);
+
+    &-container {
+        @include m.container_side;
+    }
+
+    .vehicle_card {
+        h3 {
+            @include m.lines(2);
+        }
+    }
+
+    &-spacing {
+        width: 100%;
+        background: v.$white;
+
+        @media (min-width: v.$tv) {
+            padding: m.px-to-vw(66px);
+            border: m.px-to-vw(1px) solid v.$light_brown;
+        }
+
+        @include m.tv {
+            padding: 44px;
+            border: 1px solid v.$light_brown;
+        }
+
+        @include m.tablet {
+            padding: 26px;
+        }
+    }
+
+    .refine {
+        &_cards {
+            width: 100%;
+        }
+
+        &_buttons {
+            @media (min-width: v.$tv) {
+                @include m.flex(flex-start, m.px-to-vw(6px));
+            }
+
+            @include m.tv {
+                @include m.flex(flex-start, 3px);
+            }
+
+            button {
+                background: transparent;
+                @include m.p;
+                position: relative;
+
+                @media (min-width: v.$tv) {
+                    padding: m.px-to-vw(20px) m.px-to-vw(21px);
+                    border: m.px-to-vw(1px) solid v.$light_brown;
+                    border-bottom: none;
+                }
+
+                @include m.tv {
+                    border: 1px solid v.$light_brown;
+                    border-bottom: none;
+                    padding: 14px 15px;
+                }
+
+                &::before {
+                    position: absolute;
+                    content: '';
+                    bottom: 0;
+                    @include m.centerX;
+
+                    @media (min-width: v.$tv) {
+                        height: m.px-to-vw(1px);
+                        width: calc(100% - m.px-to-vw(1px));
+                    }
+
+                    @include m.tv {
+                        height: 1px;
+                        width: calc(100% - 1px);
+                    }
+
+                    background: v.$white;
+                }
+
+                &.active {
+                    background: v.$white;
+                }
+            }
+        }
+
+        &_modules {
+            width: 100%;
+            position: relative;
+            @include m.flex(space-between);
+            z-index: 4;
+
+            @media (min-width: v.$tv) {
+                margin-bottom: m.px-to-vw(-1px);
+            }
+
+            @include m.tv {
+                margin-bottom: -1px;
+            }
+
+            @include m.laptop {
+                flex-direction: column-reverse;
+                align-items: flex-start;
+                gap: 16px;
+            }
+        }
+
+        &_views {
+            @include m.laptop {
+                margin-left: auto;
+            }
+
+            form {
+                @media (min-width: v.$tv) {
+                    @include m.flex(flex-end, m.px-to-vw(61px));
+                }
+
+                @include m.tv {
+                    @include m.flex(flex-end, 38px);
+                }
+
+                @include m.tablet {
+                    @include m.flex(flex-end, 26px);
+                }
+
+                p {
+                    @include m.p;
+                    color: rgba($color: v.$black, $alpha: 0.6);
+                }
+
+                p,
+                select {
+                    font-family: v.$gotham_m;
+                }
+            }
+        }
+
+        &_grid {
+            @media (min-width: v.$tv) {
+                @include m.grid(3, m.px-to-vw(32px) m.px-to-vw(21px));
+            }
+
+            @include m.tv {
+                @include m.grid(3, 22px 15px);
+            }
+
+            @include m.desktop {
+                @include m.grid(2, 22px 15px);
+            }
+
+            @include m.tablet {
+                grid-template-columns: 100%;
+            }
+
+            .vehicle_card {
+                width: 100%;
+            }
+        }
+    }
+
+    &-module {
+        width: 100%;
+
+        &[data-state="1"] {
+            .refine_cards:nth-child(1) {
+                display: none;
+            }
+
+            .filter-view {
+                button:nth-child(1) {
+                    background: v.$white;
+                }
+            }
+        }
+
+        &[data-state="2"] {
+            .refine_cards:nth-child(2) {
+                display: none;
+            }
+
+            .filter-view {
+                button:nth-child(2) {
+                    background: v.$white;
+                }
+            }
+        }
+    }
+
+    .filter-view {
+        @media (min-width: v.$tv) {
+            @include m.flex(flex-end, m.px-to-vw(6px));
+        }
+
+        @include m.tv {
+            @include m.flex(flex-end, 3px);
+        }
+
+        button {
+            background: none;
+            border: none;
+            border-radius: 0;
+
+            @media (min-width: v.$tv) {
+                padding: m.px-to-vw(6px);
+                @include m.square(m.px-to-vw(32px));
+            }
+
+            @include m.tv {
+                padding: 3px;
+                @include m.square(28px);
+            }
+
+            svg {
+                @include m.fullWH;
+                pointer-events: none;
+                user-select: none;
+                object-fit: contain;
+                object-position: center;
+            }
+        }
+    }
+}

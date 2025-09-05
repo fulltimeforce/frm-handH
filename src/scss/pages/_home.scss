@@ -338,7 +338,7 @@
 .upcoming {
     overflow: hidden;
 
-    &:empty{
+    &:empty {
         display: none !important;
     }
 
@@ -947,9 +947,10 @@
 
 .clients {
     .container_side {
-         @include m.tv {
+        @include m.tv {
             width: 85%;
         }
+
         @include m.desktop {
             width: 89%;
         }
@@ -1006,7 +1007,25 @@
 
     .container {
         @include m.tablet {
-            max-width: 382px;
+            // max-width: 382px;
+        }
+    }
+
+    &[data-state="1"] {
+        .vehicles_grid:not(:nth-child(1)) {
+            display: none;
+        }
+    }
+
+    &[data-state="2"] {
+        .vehicles_grid:not(:nth-child(2)) {
+            display: none;
+        }
+    }
+
+    &[data-state="3"] {
+        .vehicles_grid:not(:nth-child(3)) {
+            display: none;
         }
     }
 }
@@ -1185,11 +1204,12 @@
             margin-top: 96px;
         }
 
-        .breadlines{
-            @media (min-width: v.$tv){
+        .breadlines {
+            @media (min-width: v.$tv) {
                 margin-bottom: m.px-to-vw(31px);
             }
-            @include m.tv{
+
+            @include m.tv {
                 margin-bottom: 23px;
             }
         }

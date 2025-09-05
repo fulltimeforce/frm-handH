@@ -95,16 +95,11 @@ $auctions = new WP_Query($argsAuction);
                                         <div class="w-100 vehicle_content">
                                             <div class="vehicle-info">
                                                 <h2>
-                                                    <span>
-                                                        <?php
-                                                        $terms = get_the_terms(get_the_ID(), 'auction_category');
-                                                        if ($terms && !is_wp_error($terms)) {
-                                                            echo esc_html($terms[0]->name);
-                                                        } else {
-                                                            echo 'Uncategorized';
-                                                        }
-                                                        ?>
-                                                    </span>
+                                                    <?php if (!empty(get_field('sale_type'))): ?>
+                                                        <span>
+                                                            Classic <?php echo get_field('sale_type'); ?>
+                                                        </span>
+                                                    <?php endif; ?>
                                                     <?php echo $venue_name; ?>
                                                 </h2>
                                                 <ul>
@@ -139,16 +134,11 @@ $auctions = new WP_Query($argsAuction);
                                         </div>
                                     </div>
                                     <div class="vehicle_title">
-                                        <span>
-                                            <?php
-                                            $terms = get_the_terms(get_the_ID(), 'auction_category');
-                                            if ($terms && !is_wp_error($terms)) {
-                                                echo esc_html($terms[0]->name);
-                                            } else {
-                                                echo 'Uncategorized';
-                                            }
-                                            ?>
-                                        </span>
+                                        <?php if (!empty(get_field('sale_type'))): ?>
+                                            <span>
+                                                Classic <?php echo get_field('sale_type'); ?>
+                                            </span>
+                                        <?php endif; ?>
                                         <h3><?php echo $venue_name; ?></h3>
                                     </div>
                                 </div>

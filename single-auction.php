@@ -2,6 +2,8 @@
 
 get_header();
 
+$auction_id = get_the_ID();
+
 $bg_image = get_field('banner_venue-auction');
 $subtitle = get_field('pavilion_hero_subtitle');
 $text = get_field('pavilion_hero_text');
@@ -64,7 +66,8 @@ $venue_id = get_field('template_venue');
 </div>
 
 <?php get_template_part('inc/parts/SingleVenueAuction', null, [
-    'venue_id' => $venue_id
+    'venue_id' => $venue_id,
+    'auction_id' => $auction_id
 ]); ?>
 
 <?php get_footer(); ?>
