@@ -321,3 +321,9 @@ function editing_navigation_account($items)
     return $items;
 }
 add_filter('woocommerce_account_menu_items', 'editing_navigation_account');
+
+function hnh_remove_editor_from_vehicle()
+{
+    remove_post_type_support('vehicle', 'editor');
+}
+add_action('init', 'hnh_remove_editor_from_vehicle');

@@ -21,7 +21,21 @@ $vehicle_video = '';
                         <path d="M2.60156 8H2.60756M2.60156 14H2.60756M2.60156 2H2.60756M5.60156 8H13.4016M5.60156 14H13.4016M5.60156 2H13.4016" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                     Return to Auction List</a>
-                <p class="p20"><?php echo get_the_date('jS M, Y g:i'); ?></p>
+                <p class="p20">
+                    <?php
+                    $date_raw = get_field('auction_date_latest'); // "2025-12-18 18:56"
+
+                    if ($date_raw) {
+                        $dt = DateTime::createFromFormat('Y-m-d H:i', $date_raw);
+                        if ($dt) {
+                            echo $dt->format('jS M, Y g:i');
+                            // Resultado: "18th Dec, 2025 6:56"
+                        } else {
+                            echo esc_html($date_raw); // fallback
+                        }
+                    }
+                    ?>
+                </p>
             </div>
             <?php if ($auction): ?>
                 <p class="listing_head-title"><?php echo $auction; ?></p>
@@ -113,7 +127,6 @@ $vehicle_video = '';
 <?php
 $gallery = get_field('gallery_vehicle');
 if ($gallery && is_array($gallery)): ?>
-
     <section class="listing_images">
         <div class="container">
             <?php
@@ -139,6 +152,13 @@ if ($gallery && is_array($gallery)): ?>
             if ($total):
                 $first = $imgs[0];
             ?>
+
+                <div style="display: none">
+                    <?php foreach ($imgs as $n => $img): ?>
+                        <input type="hidden" class="hidden_image_<?php echo intval($n) + 1; ?>" value="<?php echo esc_url($img['url']); ?>">
+                    <?php endforeach; ?>
+                </div>
+
                 <div class="listing_images-main">
                     <img class="wh-100 thumbnail-post" src="<?php echo esc_url($first['url']); ?>" alt="<?php echo esc_attr($first['alt'] ?: 'vehicle'); ?>">
                     <div id="openFullView" class="listing_images-counter p18" data-total="<?php echo $total; ?>">1/<?php echo $total; ?></div>
@@ -161,9 +181,7 @@ if ($gallery && is_array($gallery)): ?>
             <?php endif; ?>
         </div>
     </section>
-
 <?php else: ?>
-
     <section class="thumbnail_big">
         <div class="thumbnail_big-container">
             <?php if (has_post_thumbnail($post_id)):
@@ -180,9 +198,7 @@ if ($gallery && is_array($gallery)): ?>
             <?php endif; ?>
         </div>
     </section>
-
 <?php endif; ?>
-
 
 <section class="listing_info">
     <div class="container">
@@ -264,7 +280,7 @@ if ($gallery && is_array($gallery)): ?>
 
         <?php
         // 1) Toma el nombre desde los ACF de texto
-        $member_name = trim((string)(get_field('contact_rep') ?: get_field('assigned_to') ?: ''));
+        $member_name = trim((string)(get_field('assigned_to') ?: get_field('contact_rep') ?: ''));
 
         if ($member_name !== ''):
 
@@ -433,6 +449,8 @@ if ($gallery && is_array($gallery)): ?>
                     <?php echo $vehicle_notes; ?>
                 </div>
             </div>
+        <?php else: ?>
+            <div class="empty-listing_info-contact"></div>
         <?php endif; ?>
 
     </div>

@@ -160,7 +160,11 @@ if (is_singular('auction') && $venue_id) {
     ?>
 
     <style>
-        .refine_vehicles[data-state="1"] .refine_vehicles-spacing{background:rgba(255,255,255,0);padding: 0;border-color:rgba(255,255,255,0);}
+        .refine_vehicles[data-state="1"] .refine_vehicles-spacing {
+            background: rgba(255, 255, 255, 0);
+            padding: 0;
+            border-color: rgba(255, 255, 255, 0);
+        }
     </style>
 
     <section class="refine_vehicles" data-state="2">
@@ -175,11 +179,13 @@ if (is_singular('auction') && $venue_id) {
                         <button type="submit">Go</button>
                     </div>
 
-                    <div class="auction_result-filter-select">
-                        <select name="search_mode">
-                            <option value=""><?php esc_html_e('Search all words any order'); ?></option>
-                        </select>
-                    </div>
+                    <?php if (NOT_APPEAR): ?>
+                        <div class="auction_result-filter-select">
+                            <select name="search_mode">
+                                <option value=""><?php esc_html_e('Search all words any order'); ?></option>
+                            </select>
+                        </div>
+                    <?php endif; ?>
 
                     <div class="auction_result-filter-select">
                         <select name="order_by">

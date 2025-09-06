@@ -198,16 +198,16 @@ function hnh_render_auction_card($auction_id, $venue_id = 0)
 
                 <?php
                 $viewing_raw  = get_field('auction_date', $auction_id);          // "2025-08-20 00:00:00"
-                $sale_raw     = get_field('web_consign_end_date', $auction_id);  // "2025-08-21 12:00:00"
+                $sale_raw     = get_field('viewing_dates', $auction_id);
 
                 $viewing_txt  = hnh_format_mysql_datetime_friendly($viewing_raw, true); // true => 00:00 => Noon
-                $sale_txt     = hnh_format_mysql_datetime_friendly($sale_raw, true);
+                // $sale_txt     = hnh_format_mysql_datetime_friendly($sale_raw, true);
                 ?>
 
-                <?php if ($sale_txt) : ?>
+                <?php if ($sale_raw) : ?>
                     <div class="w-100">
                         <p>Viewing:</p>
-                        <p><?php echo esc_html($sale_txt); ?></p>
+                        <p><?php echo $sale_raw; ?></p>
                     </div>
                 <?php endif; ?>
 

@@ -6,9 +6,11 @@
     @media (min-width: v.$tv) {
       padding-top: m.px-to-vw(160px);
     }
+
     @include m.tv {
       padding-top: 160px;
     }
+
     @include m.tablet {
       padding-top: 40px;
     }
@@ -32,10 +34,12 @@
           margin-top: m.px-to-vw(48px);
           font-size: m.px-to-vw(24px);
         }
+
         @include m.tv {
           margin-top: 48px;
           font-size: 24px;
         }
+
         @include m.tablet {
           margin-top: 20px;
           font-size: 20px;
@@ -49,14 +53,17 @@
           width: m.px-to-vw(1328px);
           height: m.px-to-vw(668px);
         }
+
         @include m.tv {
           width: 1328px;
           height: 668px;
         }
+
         @include m.desktop {
           width: 1100px;
           height: auto;
         }
+
         @include m.tablet {
           width: 100%;
           height: auto;
@@ -69,12 +76,15 @@
         .slide-image-container {
           width: 100%;
           height: 100%;
+
           @media (min-width: v.$tv) {
             padding: m.px-to-vw(16px) !important;
           }
+
           @include m.tv {
             padding: 16px !important;
           }
+
           border: 1px solid v.$light_brown;
 
           img {
@@ -111,12 +121,15 @@
       @media (min-width: v.$tv) {
         margin-top: m.px-to-vw(48px);
       }
+
       @include m.tv {
         margin-top: 48px;
       }
+
       @include m.desktop {
         margin-top: 40px;
       }
+
       @include m.tablet {
         margin-top: 30px;
       }
@@ -134,12 +147,15 @@
       @media (min-width: v.$tv) {
         margin-bottom: m.px-to-vw(120px);
       }
+
       @include m.tv {
         margin-bottom: 120px;
       }
+
       @include m.desktop {
         margin-bottom: 80px;
       }
+
       @include m.tablet {
         margin-bottom: 40px;
       }
@@ -152,14 +168,17 @@
           max-width: m.px-to-vw(1296px);
           gap: m.px-to-vw(46px);
         }
+
         @include m.tv {
           max-width: 1296px;
           gap: 46px;
         }
+
         @include m.desktop {
           max-width: 1100px;
           gap: 32px;
         }
+
         @include m.tablet {
           max-width: 100%;
           flex-direction: column;
@@ -176,14 +195,17 @@
             font-size: m.px-to-vw(60px);
             max-width: m.px-to-vw(480px);
           }
+
           @include m.tv {
             font-size: 60px;
             max-width: 480px;
           }
+
           @include m.desktop {
             font-size: 40px;
             max-width: 400px;
           }
+
           @include m.tablet {
             font-size: 32px;
             max-width: 100%;
@@ -196,12 +218,15 @@
           @media (min-width: v.$tv) {
             max-width: m.px-to-vw(770px);
           }
+
           @include m.tv {
             max-width: 770px;
           }
+
           @include m.desktop {
             max-width: 600px;
           }
+
           @include m.tablet {
             max-width: 100%;
           }
@@ -216,19 +241,123 @@
               font-size: m.px-to-vw(17px);
               letter-spacing: 6%;
             }
+
             @include m.tv {
               font-size: 17px;
               letter-spacing: 6%;
             }
+
             @include m.desktop {
               font-size: 15px;
             }
+
             @include m.tablet {
               font-size: 16px;
               letter-spacing: normal;
             }
           }
         }
+      }
+    }
+  }
+}
+
+.auction_dates {
+  @media (min-width: v.$tv) {
+    margin-top: m.px-to-vw(48px);
+  }
+
+  @include m.tv {
+    margin-top: 34px;
+  }
+
+  @include m.desktop {
+    margin-top: 26px;
+  }
+
+  &-item {
+    width: 100%;
+
+    @media (min-width: v.$tv) {
+      padding-bottom: m.px-to-vw(48px);
+      @include m.flex(center, m.px-to-vw(24px));
+      flex-direction: column;
+      border-bottom: m.px-to-vw(1px) solid v.$light_brown;
+    }
+
+    @include m.tv {
+      padding-bottom: 34px;
+      @include m.flex(center, 17px);
+      flex-direction: column;
+      border-bottom: 1px solid v.$light_brown;
+    }
+
+    @include m.desktop {
+      padding-bottom: 26px;
+      gap: 13px;
+    }
+
+    &:not(:first-child) {
+      @media (min-width: v.$tv) {
+        padding-top: m.px-to-vw(48px);
+      }
+
+      @include m.tv {
+        padding-top: 34px;
+      }
+
+      @include m.desktop {
+        padding-top: 26px;
+      }
+    }
+  }
+
+  &-head {
+    width: 100%;
+
+    p {
+      @include m.h3(v.$black, v.$gotham_m, false);
+      font-weight: 300;
+      text-align: center;
+      opacity: 0.8;
+    }
+  }
+
+  &-lots,
+  &-body {
+    span {
+      background: #08AA2B;
+      border-radius: 50%;
+
+      @media (min-width: v.$tv) {
+        @include m.square(m.px-to-vw(12px));
+        margin-right: m.px-to-vw(7px);
+        display: inline-block;
+      }
+
+      @include m.tv {
+        @include m.square(7px);
+        margin-right: 4px;
+        display: inline-block;
+      }
+    }
+
+    p {
+      font-family: v.$gotham_m;
+      font-weight: 300;
+      color: v.$black;
+      opacity: 0.8;
+
+      @media (min-width: v.$tv) {
+        line-height: m.px-to-vw(29.4px);
+        font-size: m.px-to-vw(21px);
+        letter-spacing: m.px-to-vw(1.26px);
+      }
+
+      @include m.tv {
+        font-size: 15px;
+        line-height: 1.2em;
+        letter-spacing: 0.4px;
       }
     }
   }

@@ -557,15 +557,80 @@ import "@splidejs/splide/css";
         if (counter) {
             counter.textContent = `1/${total}`;
         }
-        const firstActive = document.querySelector('.listing_images-slider .splide__slide.is-active img');
-        if (firstActive && mainImage) {
-            mainImage.src = firstActive.src;
+
+        // ------------------------------------------------------------------------------------
+
+        const fullView = document.querySelector(".listing_fullview");
+
+        const openBtn = document.querySelector(".thumbnail-post");
+        const openBtn2 = document.getElementById("openGridView");
+        const closeBtn = document.querySelector(".listing_fullview-close");
+
+        const fullViewSlide = new Splide('.listing_fullview-slide', {
+            type: 'slider',
+            perPage: 1,
+            perMove: 1,
+            arrows: true,
+            pagination: false,
+            heightRatio: 0.75,
+            rewind: true,
+        });
+        fullViewSlide.mount();
+
+        const prev2 = fullViewSlide.root.querySelector('.splide__arrow--prev');
+        const next2 = fullViewSlide.root.querySelector('.splide__arrow--next');
+
+        if (prev2) {
+            prev2.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="26" viewBox="0 0 15 26" fill="none">
+                    <path d="M1 1L13 13L1 25" stroke="#8C6E47" stroke-width="2"/>
+                </svg>`;
         }
 
+        if (next2) {
+            next2.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="26" viewBox="0 0 15 26" fill="none">
+                    <path d="M1 1L13 13L1 25" stroke="#8C6E47" stroke-width="2"/>
+                </svg>`;
+        }
+
+        if (openBtn) {
+            openBtn.addEventListener("click", () => {
+                fullView.classList.add("active");
+                document.body.style.overflow = "hidden";
+                document.body.style.height = "100vh";
+            });
+        }
+
+        if (openBtn2) {
+            openBtn2.addEventListener("click", () => {
+                fullView.classList.remove("active");
+                document.querySelector(".listing_grid").classList.add("active");
+                document.body.style.overflow = "hidden";
+                document.body.style.height = "100vh";
+            });
+        }
+
+        if (closeBtn) {
+            closeBtn.addEventListener("click", () => {
+                fullView.classList.remove("active");
+                document.body.style.overflow = "";
+                document.body.style.height = "auto";
+            });
+        }
+
+
+        // ------------------------------------------------------------------------------------
+
         listing.on('move', function (newIndex) {
-            const activeSlide = document.querySelector('.listing_images-slider .splide__slide.is-active img');
+            let activeSlide;
+
+            if (newIndex == 0) {
+                activeSlide = document.querySelector(`.hidden_image_${total}`);
+            } else {
+                activeSlide = document.querySelector(`.hidden_image_${newIndex}`);
+            }
+
             if (activeSlide && mainImage) {
-                mainImage.src = activeSlide.src;
+                mainImage.src = activeSlide.value;
             }
             if (counter) {
                 counter.textContent = `${newIndex + 1}/${total}`;
@@ -587,60 +652,6 @@ import "@splidejs/splide/css";
 
         closeBtn.addEventListener("click", () => {
             grid.classList.remove("active");
-            document.body.style.overflow = "";
-            document.body.style.height = "auto";
-        });
-    }
-
-    if (document.querySelector(".listing_fullview")) {
-        const fullView = document.querySelector(".listing_fullview");
-        
-        // const openBtn = document.getElementById("openFullView");
-        const openBtn = document.querySelector(".thumbnail-post");
-
-        const openBtn2 = document.getElementById("openGridView");
-        const closeBtn = document.querySelector(".listing_fullview-close");
-
-        const fullViewSlide = new Splide('.listing_fullview-slide', {
-            type: 'loop',
-            perPage: 1,
-            perMove: 1,
-            arrows: true,
-            pagination: false,
-            heightRatio: 0.75,
-        });
-        fullViewSlide.mount();
-
-        const prev = fullViewSlide.root.querySelector('.splide__arrow--prev');
-        const next = fullViewSlide.root.querySelector('.splide__arrow--next');
-
-        if (prev) {
-            prev.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="26" viewBox="0 0 15 26" fill="none">
-            <path d="M1 1L13 13L1 25" stroke="#8C6E47" stroke-width="2"/>
-            </svg>`;
-        }
-
-        if (next) {
-            next.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="26" viewBox="0 0 15 26" fill="none">
-            <path d="M1 1L13 13L1 25" stroke="#8C6E47" stroke-width="2"/>
-            </svg>`;
-        }
-
-        openBtn.addEventListener("click", () => {
-            fullView.classList.add("active");
-            document.body.style.overflow = "hidden";
-            document.body.style.height = "100vh";
-        });
-
-        openBtn2.addEventListener("click", () => {
-            fullView.classList.remove("active");
-            document.querySelector(".listing_grid").classList.add("active");
-            document.body.style.overflow = "hidden";
-            document.body.style.height = "100vh";
-        });
-
-        closeBtn.addEventListener("click", () => {
-            fullView.classList.remove("active");
             document.body.style.overflow = "";
             document.body.style.height = "auto";
         });

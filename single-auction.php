@@ -19,9 +19,9 @@ $venue_id = get_field('template_venue');
     <div class="container">
         <section id="pavilionGardens" class="custom-carousel">
             <?php if (have_rows('pavilion_slider', $venue_id)): ?>
-                <div id="pavilionSlider" class="splide">
-                    <div class="splide__track">
-                        <ul class="splide__list">
+                <div id="pavilionSlider" class="splide w-100">
+                    <div class="splide__track w-100">
+                        <ul class="splide__list w-100">
                             <?php while (have_rows('pavilion_slider', $venue_id)): the_row();
                                 $image = get_sub_field('pavilion_slider_image');
                                 if ($image): ?>
@@ -61,6 +61,51 @@ $venue_id = get_field('template_venue');
             if ($slider_subtitle): ?>
                 <h2><?php echo esc_html($slider_subtitle); ?></h2>
             <?php endif; ?>
+
+            <div class="auction_dates w-100">
+                <div class="auction_dates-item">
+                    <?php if (!empty(get_field('auction_date'))): ?>
+                        <div class="auction_dates-head">
+                            <p>
+                                <?php
+                                $date_raw = get_field('auction_date'); // "2025-09-10 12:00:00"
+
+                                if ($date_raw) {
+                                    $dt = DateTime::createFromFormat('Y-m-d H:i:s', $date_raw);
+                                    if ($dt) {
+                                        echo 'Date: ' . $dt->format('jS M, Y - g:i a');
+                                        // Ejemplo: "Date: 10th Sep, 2025 - 12:00 pm"
+                                    } else {
+                                        echo esc_html($date_raw); // fallback
+                                    }
+                                }
+                                ?>
+                            </p>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (get_field('lots')): ?>
+                        <div class="auction_dates-lots">
+                            <p>
+                                <?php if (intval(get_field('lots')) > 1): ?>
+                                    <span></span>
+                                <?php endif; ?>
+                                Lots live (<?php echo get_field('lots'); ?>)
+                            </p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+                <?php if (!empty(get_field('viewing_dates'))): ?>
+                    <div class="auction_dates-item">
+                        <div class="auction_dates-head">
+                            <p>Viewing times:</p>
+                        </div>
+                        <div class="auction_dates-body">
+                            <p><?php echo get_field('viewing_dates'); ?></p>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            </div>
         </section>
     </div>
 </div>
