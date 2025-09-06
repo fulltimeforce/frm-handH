@@ -22,9 +22,11 @@
             grid-gap: 12px;
             align-items: center;
         }
+
         @include m.tablet {
             max-width: 100%;
         }
+
         &>* {
             width: 100%;
         }
@@ -202,7 +204,7 @@
     background: v.$beige;
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.20);
 
-    @include m.desktop{
+    @include m.desktop {
         border: 1px solid v.$light_brown;
     }
 
@@ -210,9 +212,10 @@
         width: 100%;
     }
 
-    &-price{
+    &-price {
         @include m.transition;
     }
+
     &-image {
         overflow: hidden;
         aspect-ratio: 16/9;
@@ -311,12 +314,12 @@
             border-top: none;
         }
 
-        @include m.desktop{
+        @include m.desktop {
             padding: 10px;
             border: none;
         }
 
-        &>*{
+        &>* {
             width: 100%;
         }
 
@@ -373,22 +376,6 @@
                 font-weight: 500;
             }
         }
-
-        &:is(:hover){
-            .vehicle_card{
-                &-price{
-                    @media (min-width: v.$tablet){
-                        opacity: 0;
-                    }
-                }
-                &-actions{
-                    @media (min-width: v.$tablet){
-                        transform: translateY(0);
-                        opacity: 1;
-                    }
-                }
-            }
-        }
     }
 
     &-content,
@@ -401,18 +388,22 @@
             margin-bottom: 20px;
         }
     }
+
     &-toggle {
         position: relative;
         overflow: hidden;
+
         &:hover {
             .vehicle_card-actions {
                 opacity: 1;
                 transform: translateY(0);
             }
+
             ul {
                 opacity: 0;
             }
         }
+
         ul {
             position: relative;
             z-index: 1;
@@ -420,6 +411,7 @@
             opacity: 1;
         }
     }
+
     &-actions {
         width: 100%;
         @include m.flex(flex-start, m.px-to-vw(12px));
@@ -427,8 +419,8 @@
         text-align: center;
         @include m.transition;
         z-index: 2;
-        
-        @media (min-width: v.$tablet){
+
+        @media (min-width: v.$tablet) {
             position: absolute;
             bottom: 0;
             left: 0;
@@ -445,12 +437,12 @@
         @include m.tv {
             padding: 0 16px 16px;
         }
-        
-        @include m.desktop{
+
+        @include m.desktop {
             padding: 0 10px 10px;
         }
 
-        @include m.tablet{
+        @include m.tablet {
             padding: 0;
             margin-top: 16px;
         }
@@ -466,21 +458,42 @@
             font-weight: 350;
             padding-inline: m.px-to-vw(20px);
             padding-block: m.px-to-vw(17px);
+
             @include m.tv {
                 font-size: 12.6px;
                 padding-inline: 20px;
                 padding-block: 17px;
             }
+
             &:first-child {
                 border: m.px-to-vw(1px) solid v.$black;
                 min-width: m.px-to-vw(137px);
+
                 @include m.tv {
                     border-width: 1px;
                     // min-width: 137px;
                 }
             }
+
             &:last-child {
                 text-decoration: underline;
+            }
+        }
+    }
+
+    &:is(:hover, :focus) {
+        .vehicle_card {
+            &-price {
+                @media (min-width: v.$tablet) {
+                    opacity: 0;
+                }
+            }
+
+            &-actions {
+                @media (min-width: v.$tablet) {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
             }
         }
     }
@@ -520,6 +533,7 @@
     @media (min-width: v.$tv) {
         width: m.px-to-vw(506px);
     }
+
     @include m.tv {
         width: 506px;
     }
@@ -551,7 +565,7 @@
         }
     }
 
-    &_title{
+    &_title {
         width: 100%;
         position: absolute;
         pointer-events: all;
@@ -560,54 +574,64 @@
         bottom: 0;
         left: 0;
         z-index: 1;
-        @media (min-width: v.$tv){
+
+        @media (min-width: v.$tv) {
             padding-left: m.px-to-vw(62px);
         }
-         @include m.tv{
+
+        @include m.tv {
             padding-left: 62px;
         }
-        @include m.tablet{
+
+        @include m.tablet {
             padding-left: 38px;
         }
 
-        &::before{
+        &::before {
             position: absolute;
             content: '';
             background: v.$black;
             @include m.centerY;
-            @media (min-width: v.$tv){
+
+            @media (min-width: v.$tv) {
                 width: m.px-to-vw(30px);
                 height: m.px-to-vw(1px);
                 left: m.px-to-vw(12px);
             }
-            @include m.tv{
+
+            @include m.tv {
                 width: 30px;
                 height: 1px;
                 left: 12px;
             }
-            @include m.tablet{
+
+            @include m.tablet {
                 width: 24px;
                 height: 1px;
                 left: 7px;
             }
         }
 
-        &>*{
+        &>* {
             color: v.$black;
             @include m.lines(1);
         }
-        span{
+
+        span {
             @extend %span;
             font-family: v.$gotham_m;
             font-weight: 400;
         }
-        h3{
+
+        h3 {
             @include m.h3;
             @include m.lines(1);
-            @media (min-width: v.$tv){
+
+            @media (min-width: v.$tv) {
                 margin-top: m.px-to-vw(12px);
             }
-            @include m.tv{
+
+            @include m.tv {
                 margin-top: 7px;
             }
         }
@@ -661,6 +685,7 @@
             bottom: 89px;
             padding: 36px;
         }
+
         @include m.tablet {
             padding: 20px;
         }
@@ -816,13 +841,15 @@
 
         @extend %height_vehicle_card;
 
-        &>*{
+        &>* {
             opacity: 0;
             @include m.transition(.5s);
-            @media (min-width: v.$tv){
+
+            @media (min-width: v.$tv) {
                 transform: translateX(m.px-to-vw(80px));
             }
-            @include m.tv{
+
+            @include m.tv {
                 transform: translateX(50px);
             }
         }
@@ -866,10 +893,11 @@
         @include m.tv {}
 
         .vehicle {
-            &_title{
+            &_title {
                 opacity: 0;
                 pointer-events: none;
             }
+
             &_bg {
                 &::before {
                     opacity: 0.6;
@@ -889,6 +917,7 @@
             }
 
             &-info {
+
                 h2,
                 ul,
                 .flex {
@@ -904,6 +933,7 @@
                     @include m.tv {
                         bottom: calc(100% + 24px);
                     }
+
                     .dot {
                         // background-color: #08AA2B;
                     }
@@ -911,9 +941,10 @@
             }
         }
 
-        &+.vehicle_final{
+        &+.vehicle_final {
             opacity: 1;
-            &>*{
+
+            &>* {
                 opacity: 1;
                 transform: none;
             }

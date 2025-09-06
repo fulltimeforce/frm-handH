@@ -52,14 +52,6 @@
                         <p class="footer_nav-head">Account & Bidding</p>
                         <div class="footer_nav-list">
                             <a href="https://www.handh.co.uk/account/register/" alt="Register / Sign In">Register / Sign In</a>
-                            <?php if (NOT_APPEAR): ?>
-                                <?php if (!is_user_logged_in()) : ?>
-                                    <a href="<?php echo esc_url(home_url('my-account')); ?>">Register / Sign In</a>
-                                <?php else: ?>
-                                    <a href="<?php echo esc_url(home_url('my-account/edit-account')); ?>">Register / Sign In</a>
-                                <?php endif; ?>
-                            <?php endif; ?>
-                            <a href="#">Make a Payment</a>
                             <a target="_blank" href="https://handh.blob.core.windows.net/main/HandH-Telephone-Bidding-Form-20230714.pdf">Telephone Bid Form</a>
                         </div>
                     </div>
@@ -89,7 +81,7 @@
             </div>
         </div>
         <div class="footer_credits">
-            <p>© 2024 H&H Classic Auctions Ltd. All Rights Reserved.</p>
+            <p>© <?php echo date('Y'); ?> H&H Classic Auctions Ltd. All Rights Reserved.</p>
             <div>
                 <p><a href="<?php echo esc_url(home_url('terms-conditions')); ?>">Terms and Conditions</a> | <a href="<?php echo esc_url(home_url('privacy-policy')); ?>">Privacy Policy</a> | <a href="<?php echo esc_url(home_url('cookies-policy')); ?>">Cookies Policy</a></p>
             </div>

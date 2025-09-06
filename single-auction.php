@@ -20,25 +20,19 @@ $venue_id = get_field('template_venue');
         <section id="pavilionGardens" class="custom-carousel">
             <?php if (have_rows('pavilion_slider', $venue_id)): ?>
                 <div id="pavilionSlider" class="splide w-100">
-                    <div class="splide__track w-100">
-                        <ul class="splide__list w-100">
-                            <?php while (have_rows('pavilion_slider', $venue_id)): the_row();
-                                $image = get_sub_field('pavilion_slider_image');
-                                if ($image): ?>
-                                    <li class="splide__slide">
-                                        <div class="slide-wrapper">
-                                            <div class="slide-image-container">
-                                                <img src="<?php echo esc_url($image['url']); ?>" alt="<?php echo esc_attr($image['alt']); ?>">
-                                            </div>
-                                            <!-- Progress bar -->
-                                            <div class="my-progress">
-                                                <div class="my-progress-bar"></div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                <?php endif; ?>
-                            <?php endwhile; ?>
-                        </ul>
+                    <div class="w-100 splide__border">
+                        <div class="splide__track w-100">
+                            <ul class="splide__list w-100">
+                                <?php while (have_rows('pavilion_slider', $venue_id)): the_row();
+                                    $image = get_sub_field('pavilion_slider_image');
+                                    if ($image): ?>
+                                        <li class="splide__slide w-100">
+                                            <img src="<?php echo esc_url($image['url']); ?>" alt="<?php echo esc_attr($image['alt']); ?>">
+                                        </li>
+                                    <?php endif; ?>
+                                <?php endwhile; ?>
+                            </ul>
+                        </div>
                     </div>
 
                     <div class="splide__arrows custom-arrows">

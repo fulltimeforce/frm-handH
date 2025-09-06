@@ -472,6 +472,14 @@
         height: 636px;
     }
 
+    @include m.tablet{
+        height: 333px;
+    }
+
+    @include m.phone{
+        height: 300px;
+    }
+
     &::before {
         position: absolute;
         z-index: 2;

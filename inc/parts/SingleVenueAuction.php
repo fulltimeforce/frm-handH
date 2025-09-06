@@ -83,7 +83,7 @@ if (is_singular('auction') && $venue_id) {
     $q               = isset($_GET['search_vehicle'])     ? sanitize_text_field($_GET['search_vehicle'])     : '';
     $brand_slug      = isset($_GET['vehicle_brand'])      ? sanitize_text_field($_GET['vehicle_brand'])      : '';
     $cat_slug        = isset($_GET['vehicle_categories']) ? sanitize_text_field($_GET['vehicle_categories']) : '';
-    $order_by        = isset($_GET['order_by'])           ? sanitize_text_field($_GET['order_by'])           : '';
+    $order_by        = isset($_GET['order_by']) ? sanitize_text_field($_GET['order_by']) : 'lot';
 
     // Meta keys
     $auction_date_meta = 'auction_date_latest';
@@ -144,19 +144,73 @@ if (is_singular('auction') && $venue_id) {
         $argsVehicle['tax_query'] = $tax_query;
     }
 
-    // Ordenar por número de lote si se pide
-    if ($order_by === 'lot') {
-        $argsVehicle['meta_query'][] = [
-            'key'     => 'lot_number_latest',
-            'compare' => 'EXISTS',
-        ];
-        $argsVehicle['meta_key'] = 'lot_number_latest';
-        $argsVehicle['orderby']  = 'meta_value_num';
-        $argsVehicle['order']    = 'ASC'; // o 'DESC'
-        unset($argsVehicle['meta_type']);
+    // ===== Orden dinámico según order_by =====
+    switch ($order_by) {
+        case 'lot':
+            // Solo con número de lote y orden numérico
+            $meta_query[] = [
+                'key'     => 'lot_number_latest',
+                'compare' => 'EXISTS',
+            ];
+            $argsVehicle['meta_query'] = $meta_query;
+
+            $argsVehicle['meta_key'] = 'lot_number_latest';
+            $argsVehicle['orderby']  = 'meta_value_num';
+            $argsVehicle['order']    = 'ASC'; // cambia a DESC si lo prefieres
+            unset($argsVehicle['meta_type']);
+            break;
+
+        case 'low-to-high':
+            // Precio estimado bajo (ASC) – numérico
+            $meta_query[] = [
+                'key'     => 'estimate_low',
+                'compare' => 'EXISTS',
+            ];
+            $argsVehicle['meta_query'] = $meta_query;
+
+            $argsVehicle['meta_key'] = 'estimate_low';
+            $argsVehicle['orderby']  = 'meta_value_num';
+            $argsVehicle['order']    = 'ASC';
+            unset($argsVehicle['meta_type']);
+            break;
+
+        case 'high-to-low':
+            // Precio estimado bajo (DESC) – numérico
+            $meta_query[] = [
+                'key'     => 'estimate_low',
+                'compare' => 'EXISTS',
+            ];
+            $argsVehicle['meta_query'] = $meta_query;
+
+            $argsVehicle['meta_key'] = 'estimate_low';
+            $argsVehicle['orderby']  = 'meta_value_num';
+            $argsVehicle['order']    = 'DESC';
+            unset($argsVehicle['meta_type']);
+            break;
+
+        case 'oldest':
+            // Fecha más antigua primero (string "Y-m-d H:i")
+            $argsVehicle['meta_key']  = $auction_date_meta;
+            $argsVehicle['orderby']   = 'meta_value';
+            $argsVehicle['order']     = 'ASC';
+            $argsVehicle['meta_type'] = 'CHAR';
+            break;
+
+        case 'newest':
+            // Fecha más reciente primero
+            $argsVehicle['meta_key']  = $auction_date_meta;
+            $argsVehicle['orderby']   = 'meta_value';
+            $argsVehicle['order']     = 'DESC';
+            $argsVehicle['meta_type'] = 'CHAR';
+            break;
+
+        default:
+            // Deja la orden base por fecha según CURRENT/PAST
+            break;
     }
 
     $vehicles = new WP_Query($argsVehicle);
+
     ?>
 
     <style>
@@ -188,9 +242,13 @@ if (is_singular('auction') && $venue_id) {
                     <?php endif; ?>
 
                     <div class="auction_result-filter-select">
-                        <select name="order_by">
+                        <select name="order_by" onchange="this.form.submit()">
                             <option value=""><?php esc_html_e('Sort by'); ?></option>
-                            <option value="lot" <?php selected($_GET['order_by'] ?? '', 'lot'); ?>><?php esc_html_e('Sort by lot number'); ?></option>
+                            <option value="lot" <?php selected($order_by, 'lot');          ?>><?php esc_html_e('Sort by lot number'); ?></option>
+                            <option value="low-to-high" <?php selected($order_by, 'low-to-high');  ?>><?php esc_html_e('Estimate/Price - Low to High'); ?></option>
+                            <option value="high-to-low" <?php selected($order_by, 'high-to-low');  ?>><?php esc_html_e('Estimate/Price - High to Low'); ?></option>
+                            <option value="oldest" <?php selected($order_by, 'oldest');       ?>><?php esc_html_e('Date - Oldest first'); ?></option>
+                            <option value="newest" <?php selected($order_by, 'newest');       ?>><?php esc_html_e('Date - Newest first'); ?></option>
                         </select>
                     </div>
 
@@ -235,6 +293,8 @@ if (is_singular('auction') && $venue_id) {
                             <?php endif; ?>
                         </select>
                     </div>
+
+                    <div></div>
 
                     <div class="auction_result-filter-page relative">
                         <p>

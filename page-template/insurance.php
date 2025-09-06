@@ -12,17 +12,29 @@ get_banner('Homepage / Classic Auctions / Insurance', get_the_post_thumbnail_url
 <section class="insurance insurance_v2 insurance_share">
     <div class="insurance_container">
         <div class="insurance-title">
-            <h2>Classic Car & Motorcycle Insurance</h2>
+            <h2><?php echo get_field('title_insurance'); ?></h2>
         </div>
         <div class="content">
-            <p>If you’re the proud owner of a classic car or motorcycle, or perhaps browsing our auction catalogues for a new automotive adventure, then you’ll need to think about insuring it.</p>
-            <p>At H&H we aim to make every aspect of buying a classic vehicle as straightforward as possible which is why we’re delighted to be able to introduce a new insurance quote and comparison service.</p>
-            <p>Simply input your car and personal details and let the comparison service do all the hard work. You'll be linked up with specialist classic vehicle insurers including Adrian Flux, Heritage Classic Car Insurance and Grove & Dean, and they’ll provide great quotes for you to choose from and buy online with just a few clicks or over the phone.</p>
+            <?php echo get_field('content_insurance'); ?>
         </div>
         <div class="actions">
-            <a href="#">Classic Car Quote (Pre-1998)</a>
-            <a href="#">Classic Car Quote (1998 Onward)</a>
-            <a href="#">Motorcycle Quote</a>
+            <?php if (!empty(get_field('first_link_a'))): ?>
+                <a href="<?php echo get_field('first_link_a')['url']; ?>" alt="<?php echo get_field('first_link_a')['title']; ?>" target="<?php echo get_field('first_link_a')['target']; ?>">
+                    <?php echo get_field('first_link_a')['title']; ?>
+                </a>
+            <?php endif; ?>
+
+            <?php if (!empty(get_field('second_link_a'))): ?>
+                <a href="<?php echo get_field('second_link_a')['url']; ?>" alt="<?php echo get_field('second_link_a')['title']; ?>" target="<?php echo get_field('second_link_a')['target']; ?>">
+                    <?php echo get_field('second_link_a')['title']; ?>
+                </a>
+            <?php endif; ?>
+
+            <?php if (!empty(get_field('third_link_a'))): ?>
+                <a href="<?php echo get_field('third_link_a')['url']; ?>" alt="<?php echo get_field('third_link_a')['title']; ?>" target="<?php echo get_field('third_link_a')['target']; ?>">
+                    <?php echo get_field('third_link_a')['title']; ?>
+                </a>
+            <?php endif; ?>
         </div>
     </div>
 </section>
@@ -91,36 +103,47 @@ get_banner('Homepage / Classic Auctions / Insurance', get_the_post_thumbnail_url
             <div class="insurance-title">
                 <h2>Compare prices from a wide range of <br>insurers including:</h2>
             </div>
-            <div class="insurance_slider">
-                <div class="splide splidev2" role="group" id="logos2">
-                    <div class="splide__track">
-                        <ul class="splide__list">
-                            <li class="splide__slide">
-                                <img src="<?php echo IMG; ?>/logos/1/logo1.png" class="logo1">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="<?php echo IMG; ?>/logos/1/logo2.png" class="logo2">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="<?php echo IMG; ?>/logos/1/logo3.png" class="logo3">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="<?php echo IMG; ?>/logos/1/logo4.png" class="logo4">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="<?php echo IMG; ?>/logos/1/logo5.png" class="logo5">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="<?php echo IMG; ?>/logos/1/logo6.png" class="logo6">
-                            </li>
-                        </ul>
+
+            <?php if (have_rows('brands')): ?>
+                <div class="insurance_slider">
+                    <div class="splide splidev2" role="group" id="logos2">
+                        <div class="splide__track">
+                            <ul class="splide__list">
+                                <?php while (have_rows('brands')): the_row(); ?>
+                                    <li class="splide__slide">
+                                        <img
+                                            src="<?php echo get_sub_field('logo_brand')['url'] ?>"
+                                            title="<?php echo get_sub_field('logo_brand')['title'] ?>"
+                                            alt="<?php echo get_sub_field('logo_brand')['alt'] ?>"
+                                            width="<?php echo get_sub_field('logo_brand')['width'] ?>"
+                                            height="<?php echo get_sub_field('logo_brand')['height'] ?>"
+                                            loading="lazy" class="logo<?php echo get_row_index(); ?>">
+                                    </li>
+                                <?php endwhile; ?>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
+            <?php endif; ?>
+
             <div class="actions">
-                <a href="#">Classic Car Quote (Pre-1998)</a>
-                <a href="#">Classic Car Quote (1998 Onward)</a>
-                <a href="#">Motorcycle Quote</a>
+                <?php if (!empty(get_field('first_link_b'))): ?>
+                    <a href="<?php echo get_field('first_link_b')['url']; ?>" alt="<?php echo get_field('first_link_b')['title']; ?>" target="<?php echo get_field('first_link_b')['target']; ?>">
+                        <?php echo get_field('first_link_b')['title']; ?>
+                    </a>
+                <?php endif; ?>
+
+                <?php if (!empty(get_field('second_link_b'))): ?>
+                    <a href="<?php echo get_field('second_link_b')['url']; ?>" alt="<?php echo get_field('second_link_b')['title']; ?>" target="<?php echo get_field('second_link_b')['target']; ?>">
+                        <?php echo get_field('second_link_b')['title']; ?>
+                    </a>
+                <?php endif; ?>
+
+                <?php if (!empty(get_field('third_link_b'))): ?>
+                    <a href="<?php echo get_field('third_link_b')['url']; ?>" alt="<?php echo get_field('third_link_b')['title']; ?>" target="<?php echo get_field('third_link_b')['target']; ?>">
+                        <?php echo get_field('third_link_b')['title']; ?>
+                    </a>
+                <?php endif; ?>
             </div>
         </div>
     </div>

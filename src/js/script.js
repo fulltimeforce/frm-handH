@@ -314,24 +314,12 @@ import "@splidejs/splide/css";
 
     if (document.querySelector('#pavilionSlider')) {
         const pavilionSplide = new Splide('#pavilionSlider', {
-            focus: 0,
-            start: 0,
-            type: 'loop',
+            type: 'slider',
             arrows: true,
             pagination: false,
             autoWidth: true,
-            gap: '1.042vw',
-            padding: {
-                right: '9.375vw'
-            },
-            breakpoints: {
-                1420: {
-                    gap: '16px'
-                },
-                768: {
-                    perPage: 1
-                }
-            },
+            perPage: 1,
+            perMove: 1,
         });
 
         pavilionSplide.mount();
@@ -635,6 +623,10 @@ import "@splidejs/splide/css";
             if (counter) {
                 counter.textContent = `${newIndex + 1}/${total}`;
             }
+        });
+
+        listing.on('moved', function (index) {
+            console.log(index)
         });
 
     }

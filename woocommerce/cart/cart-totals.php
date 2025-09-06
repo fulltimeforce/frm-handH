@@ -107,7 +107,7 @@ defined('ABSPATH') || exit;
 	
 			<div class="actions">
 				<?php do_action('woocommerce_proceed_to_checkout'); ?>
-				<a href="#">Continue Shopping</a>
+				<a href="<?php echo esc_url(home_url('shop')); ?>" alt="Continue Shopping">Continue Shopping</a>
 			</div>
 		</div>
 

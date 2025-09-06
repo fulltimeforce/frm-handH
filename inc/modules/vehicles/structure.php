@@ -334,10 +334,14 @@ if (!function_exists('hnh_render_buy_it_now_block')) {
 
         // GET params
         $q               = isset($_GET['search_vehicle']) ? sanitize_text_field($_GET['search_vehicle']) : '';
-        $vehicle_status  = isset($_GET['vehicle_status']) ? sanitize_text_field($_GET['vehicle_status']) : 'available';
+        $vehicle_status  = isset($_GET['vehicle_status']) ? sanitize_text_field($_GET['vehicle_status']) : 'allocated';
         $year_from_param = isset($_GET['year_from'])      ? sanitize_text_field($_GET['year_from'])      : '';
         $year_to_param   = isset($_GET['year_to'])        ? sanitize_text_field($_GET['year_to'])        : '';
         $brand_slug      = isset($_GET['vehicle_brand'])  ? sanitize_text_field($_GET['vehicle_brand'])  : '';
+        $order_by        = isset($_GET['order_by']) ? sanitize_text_field($_GET['order_by']) : 'lot';
+
+        // Campo meta de fecha/hora a comparar (ajusta si tu clave es otra)
+        $auction_date_meta = 'auction_date_latest';
 
         // Meta query builder
         $meta_query = ['relation' => 'AND'];
@@ -408,7 +412,7 @@ if (!function_exists('hnh_render_buy_it_now_block')) {
             'posts_per_page' => $ppp,
             'paged'          => $paged,
             'meta_query'     => $meta_query,
-            'meta_key'       => 'auction_date_latest',
+            'meta_key'       => $auction_date_meta,
             'orderby'        => 'meta_value',
             'order'          => 'DESC',
             'meta_type'      => 'DATETIME',
@@ -419,6 +423,71 @@ if (!function_exists('hnh_render_buy_it_now_block')) {
         }
         if (!empty($tax_query)) {
             $argsVehicle['tax_query'] = $tax_query;
+        }
+
+        // ===== Orden dinámico según order_by =====
+        switch ($order_by) {
+            case 'lot':
+                // Solo con número de lote y orden numérico
+                $meta_query[] = [
+                    'key'     => 'lot_number_latest',
+                    'compare' => 'EXISTS',
+                ];
+                $argsVehicle['meta_query'] = $meta_query;
+
+                $argsVehicle['meta_key'] = 'lot_number_latest';
+                $argsVehicle['orderby']  = 'meta_value_num';
+                $argsVehicle['order']    = 'ASC'; // cambia a DESC si lo prefieres
+                unset($argsVehicle['meta_type']);
+                break;
+
+            case 'low-to-high':
+                // Precio estimado bajo (ASC) – numérico
+                $meta_query[] = [
+                    'key'     => 'estimate_low',
+                    'compare' => 'EXISTS',
+                ];
+                $argsVehicle['meta_query'] = $meta_query;
+
+                $argsVehicle['meta_key'] = 'estimate_low';
+                $argsVehicle['orderby']  = 'meta_value_num';
+                $argsVehicle['order']    = 'ASC';
+                unset($argsVehicle['meta_type']);
+                break;
+
+            case 'high-to-low':
+                // Precio estimado bajo (DESC) – numérico
+                $meta_query[] = [
+                    'key'     => 'estimate_low',
+                    'compare' => 'EXISTS',
+                ];
+                $argsVehicle['meta_query'] = $meta_query;
+
+                $argsVehicle['meta_key'] = 'estimate_low';
+                $argsVehicle['orderby']  = 'meta_value_num';
+                $argsVehicle['order']    = 'DESC';
+                unset($argsVehicle['meta_type']);
+                break;
+
+            case 'oldest':
+                // Fecha más antigua primero (string "Y-m-d H:i")
+                $argsVehicle['meta_key']  = $auction_date_meta;
+                $argsVehicle['orderby']   = 'meta_value';
+                $argsVehicle['order']     = 'ASC';
+                $argsVehicle['meta_type'] = 'CHAR';
+                break;
+
+            case 'newest':
+                // Fecha más reciente primero
+                $argsVehicle['meta_key']  = $auction_date_meta;
+                $argsVehicle['orderby']   = 'meta_value';
+                $argsVehicle['order']     = 'DESC';
+                $argsVehicle['meta_type'] = 'CHAR';
+                break;
+
+            default:
+                // Deja la orden base por fecha según CURRENT/PAST
+                break;
         }
 
         $vehicles = new WP_Query($argsVehicle);
@@ -459,10 +528,13 @@ if (!function_exists('hnh_render_buy_it_now_block')) {
             </div>
 
             <div class="auction_result-filter-select">
-                <select name="order_by">
-                    <option value="">Sort by</option>
-                    <option value="lot" <?php selected($_GET['order_by'] ?? '', 'lot'); ?>>Sort by lot number</option>
-                    <option value="estimate" <?php selected($_GET['order_by'] ?? '', 'estimate'); ?>>Sort by Estimate</option>
+                <select name="order_by" onchange="this.form.submit()">
+                    <option value=""><?php esc_html_e('Sort by'); ?></option>
+                    <option value="lot" <?php selected($order_by, 'lot');          ?>><?php esc_html_e('Sort by lot number'); ?></option>
+                    <option value="low-to-high" <?php selected($order_by, 'low-to-high');  ?>><?php esc_html_e('Estimate/Price - Low to High'); ?></option>
+                    <option value="high-to-low" <?php selected($order_by, 'high-to-low');  ?>><?php esc_html_e('Estimate/Price - High to Low'); ?></option>
+                    <option value="oldest" <?php selected($order_by, 'oldest');       ?>><?php esc_html_e('Date - Oldest first'); ?></option>
+                    <option value="newest" <?php selected($order_by, 'newest');       ?>><?php esc_html_e('Date - Newest first'); ?></option>
                 </select>
             </div>
 
