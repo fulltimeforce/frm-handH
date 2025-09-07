@@ -62,7 +62,7 @@ $auctions = new WP_Query($argsAuction);
                             $auction_date = get_field('auction_date', $auction_id);
                             $title = get_the_title($auction_id);
                             $permalink = get_permalink($auction_id);
-                            $lots = get_field('lots', $auction_id);
+                            // $lots = get_field('lots', $auction_id);
 
                             $ubication = get_field('slider_subtitle', $venue_id);
 
@@ -118,16 +118,36 @@ $auctions = new WP_Query($argsAuction);
                                                 <div class="flex">
                                                     <a href="<?php the_permalink(); ?>">View Auction</a>
                                                 </div>
-                                                <?php if ($lots): ?>
-                                                    <div class="lots_live">
-                                                        <?php if (intval($lots) == 0): ?>
-                                                            <span class="dot"></span>
-                                                        <?php else: ?>
-                                                            <span class="dot" style="background-color:#08aa2b"></span>
-                                                        <?php endif; ?>
-                                                        <p>Lots Live (<?php echo $lots; ?>)</p>
-                                                    </div>
-                                                <?php endif; ?>
+                                                <?php
+                                                $auctionSaleNumber = get_field('sale_number', $auction_id);
+
+                                                $total_vehicles = 0;
+                                                if ($auctionSaleNumber !== '' && $auctionSaleNumber !== null) {
+                                                    $q = new WP_Query([
+                                                        'post_type'               => 'vehicles',
+                                                        'post_status'             => 'publish',
+                                                        'meta_query'              => [[
+                                                            'key'     => 'auction_number_latest',
+                                                            'value'   => (int) $auctionSaleNumber,
+                                                            'compare' => '=',
+                                                            'type'    => 'NUMERIC',
+                                                        ]],
+                                                        'fields'                   => 'ids',
+                                                        'posts_per_page'          => 1,
+                                                    ]);
+                                                    $total_vehicles = (int) $q->found_posts;
+                                                    wp_reset_postdata();
+                                                }
+                                                ?>
+                                                <div class="lots_live">
+                                                    <?php if (intval($total_vehicles) == 0): ?>
+                                                        <span class="dot"></span>
+                                                    <?php else: ?>
+                                                        <span class="dot" style="background-color:#08aa2b"></span>
+                                                    <?php endif; ?>
+                                                    <p>Lots Live (<?php echo $total_vehicles; ?>)</p>
+                                                </div>
+                                                
                                             </div>
                                         </div>
                                     </div>

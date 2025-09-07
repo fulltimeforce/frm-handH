@@ -233,3 +233,21 @@ video {
         font-weight: 600;
     }
 }
+
+.gform_confirmation_message{
+    color: v.$black !important;
+    font-family: v.$gotham_light !important;
+    font-weight: 300 !important;
+
+    @media (min-width: v.$tv) {
+        font-size: m.px-to-vw(17px) !important;
+        line-height: m.px-to-vw(23.8px) !important;
+        letter-spacing: m.px-to-vw(1.02px) !important;
+    }
+
+    @include m.tv {
+        font-size: 14.5px !important;
+        line-height: 1.3em !important;
+        letter-spacing: 0.4px !important;
+    }
+}

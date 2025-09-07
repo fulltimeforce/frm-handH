@@ -169,3 +169,19 @@ $past_auctions = new WP_Query($argsAuction);
         }
     });
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const sel = document.getElementById('blog-perpage');
+        if (!sel) return;
+
+        sel.addEventListener('change', function() {
+            const url = new URL(window.location.href);
+            url.searchParams.set('posts_per_page', this.value);
+            // limpiar paginación para volver a la página 1
+            url.searchParams.delete('paged');
+            url.searchParams.delete('page');
+            window.location.href = url.toString();
+        });
+    });
+</script>

@@ -93,10 +93,10 @@ if ($year_from && $year_to) {
 }
 
 // Solo con thumbnail
-$meta_query[] = [
+/*$meta_query[] = [
     'key'     => '_thumbnail_id',
     'compare' => 'EXISTS',
-];
+];*/
 
 // ===== Tax query =====
 $tax_query = [];
@@ -132,6 +132,7 @@ $argsVehicle = [
 
 if ($q !== '') {
     $argsVehicle['s'] = $q;
+    $argsVehicle['hnh_title_only'] = 1;
 }
 if (!empty($tax_query)) {
     $argsVehicle['tax_query'] = $tax_query;
@@ -202,7 +203,14 @@ switch ($order_by) {
         break;
 }
 
+// Antes de crear la query
+add_filter('posts_search', 'hnh_search_only_in_title', 10, 2);
+
 $vehicles = new WP_Query($argsVehicle);
+
+// Después de crearla (o inmediatamente tras usarla)
+remove_filter('posts_search', 'hnh_search_only_in_title', 10);
+
 
 // Years (para selects)
 $yf_sel  = $year_from_param;
@@ -441,4 +449,20 @@ $maxYear = (int)date('Y');
             });
         });
     }
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const sel = document.getElementById('blog-perpage');
+        if (!sel) return;
+
+        sel.addEventListener('change', function() {
+            const url = new URL(window.location.href);
+            url.searchParams.set('posts_per_page', this.value);
+            // limpiar paginación para volver a la página 1
+            url.searchParams.delete('paged');
+            url.searchParams.delete('page');
+            window.location.href = url.toString();
+        });
+    });
 </script>

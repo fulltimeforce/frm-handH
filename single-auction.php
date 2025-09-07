@@ -78,16 +78,36 @@ $venue_id = get_field('template_venue');
                         </div>
                     <?php endif; ?>
 
-                    <?php if (get_field('lots')): ?>
-                        <div class="auction_dates-lots">
-                            <p>
-                                <?php if (intval(get_field('lots')) > 1): ?>
-                                    <span></span>
-                                <?php endif; ?>
-                                Lots live (<?php echo get_field('lots'); ?>)
-                            </p>
-                        </div>
-                    <?php endif; ?>
+                    <?php
+                    $auctionSaleNumber = get_field('sale_number');
+
+                    $total_vehicles = 0;
+                    if ($auctionSaleNumber !== '' && $auctionSaleNumber !== null) {
+                        $q = new WP_Query([
+                            'post_type'               => 'vehicles',
+                            'post_status'             => 'publish',
+                            'meta_query'              => [[
+                                'key'     => 'auction_number_latest',
+                                'value'   => (int) $auctionSaleNumber,
+                                'compare' => '=',
+                                'type'    => 'NUMERIC',
+                            ]],
+                            'fields'                   => 'ids',
+                            'posts_per_page'          => 1,
+                        ]);
+                        $total_vehicles = (int) $q->found_posts;
+                        wp_reset_postdata();
+                    }
+                    ?>
+                    <div class="auction_dates-lots">
+                        <p>
+                            <?php if ($total_vehicles > 1): ?>
+                                <span></span>
+                            <?php endif; ?>
+                            Lots live (<?php echo $total_vehicles; ?>)
+                        </p>
+                    </div>
+
                 </div>
                 <?php if (!empty(get_field('viewing_dates'))): ?>
                     <div class="auction_dates-item">
@@ -240,4 +260,42 @@ $lng = $venue_id ? get_field('lng', $venue_id) : '';
             });
         });
     }
+</script>
+
+<?php if (!empty($_GET)) : ?>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const section = document.querySelector(".refine_vehicles");
+            if (section) {
+                let offset = -150;
+
+                if (window.innerWidth <= 1000) {
+                    offset = -100;
+                }
+
+                const y = section.getBoundingClientRect().top + window.pageYOffset + offset;
+                window.scrollTo({
+                    top: y,
+                    behavior: "smooth"
+                });
+            }
+        });
+    </script>
+<?php endif; ?>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const sel = document.querySelector('select[name="posts_per_page"]');
+        if (!sel) return;
+
+        sel.addEventListener('change', function() {
+            const url = new URL(window.location.href);
+            url.searchParams.set('posts_per_page', this.value);
+            // Borrar cualquier parámetro de paginación usado
+            url.searchParams.delete('vp');
+            url.searchParams.delete('paged');
+            url.searchParams.delete('page');
+            window.location.href = url.toString();
+        });
+    });
 </script>

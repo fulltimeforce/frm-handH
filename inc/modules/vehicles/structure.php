@@ -391,10 +391,10 @@ if (!function_exists('hnh_render_buy_it_now_block')) {
         }
 
         // Solo traer vehicles con thumbnail
-        $meta_query[] = [
+        /*$meta_query[] = [
             'key'     => '_thumbnail_id',
             'compare' => 'EXISTS',
-        ];
+        ];*/
 
         // Tax query (brands)
         $tax_query = [];

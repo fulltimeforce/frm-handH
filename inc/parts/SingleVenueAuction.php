@@ -102,10 +102,10 @@ if (is_singular('auction') && $venue_id) {
     }
 
     // Solo con thumbnail
-    $meta_query[] = [
+    /*$meta_query[] = [
         'key'     => '_thumbnail_id',
         'compare' => 'EXISTS',
-    ];
+    ];*/
 
     // ===== Tax query =====
     $tax_query = [];

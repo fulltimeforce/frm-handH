@@ -92,7 +92,7 @@ function hnh_render_auction_card($auction_id, $venue_id = 0)
     // Datos del auction
     $title        = get_the_title($auction_id);
     $permalink    = get_permalink($auction_id);
-    $lots         = get_field('lots', $auction_id);
+    // $lots         = get_field('lots', $auction_id);
     $auction_date = get_field('auction_date', $auction_id); // guardado como "Y-m-d H:i:s"
     $date_label   = $auction_date ? hnh_format_auction_datetime($auction_date) : '';
 
@@ -144,9 +144,29 @@ function hnh_render_auction_card($auction_id, $venue_id = 0)
                         <li>Location: <b><?php echo esc_html($ubication); ?></b></li>
                     <?php endif; ?>
 
-                    <?php if (!empty($lots)): ?>
-                        <li>View Lots: <b><?php echo esc_html($lots); ?></b></li>
-                    <?php endif; ?>
+                    <?php
+                    $auctionSaleNumber = get_field('sale_number', $auction_id);
+
+                    $total_vehicles = 0;
+                    if ($auctionSaleNumber !== '' && $auctionSaleNumber !== null) {
+                        $q = new WP_Query([
+                            'post_type'               => 'vehicles',
+                            'post_status'             => 'publish',
+                            'meta_query'              => [[
+                                'key'     => 'auction_number_latest',
+                                'value'   => (int) $auctionSaleNumber,
+                                'compare' => '=',
+                                'type'    => 'NUMERIC',
+                            ]],
+                            'fields'                   => 'ids',
+                            'posts_per_page'          => 1,
+                        ]);
+                        $total_vehicles = (int) $q->found_posts;
+                        wp_reset_postdata();
+                    }
+                    ?>
+
+                    <li>View Lots: <b><?php echo $total_vehicles; ?></b></li>
                 </ul>
             </div>
 
@@ -185,7 +205,9 @@ function hnh_render_auction_card($auction_id, $venue_id = 0)
                     <li><a href="<?php echo $watch_live; ?>" target="_blank" alt="Watch Live">Watch Live</a></li>
                 <?php endif; ?>
 
-                <li><a href="<?php echo esc_url(home_url('ways-to-bid')) ?>" alt="Learn how to bid">Learn how to bid</a></li>
+                <?php if (!is_page('auction-results')): ?>
+                    <li><a href="<?php echo esc_url(home_url('ways-to-bid')) ?>" alt="Learn how to bid">Learn how to bid</a></li>
+                <?php endif; ?>
 
                 <?php
                 $catalogue = get_field('view_e-catalogue', $auction_id);
