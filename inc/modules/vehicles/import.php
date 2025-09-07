@@ -246,7 +246,7 @@ function vehicles_handle_import($file)
         $desc_triplet = vehicles_extract_from_description($raw_desc);
         update_field('registration_no', $desc_triplet['registration_no'], $post_id);
         update_field('chassis_no',      $desc_triplet['chassis_no'],      $post_id);
-        update_field('mot',             $desc_triplet['mot'],             $post_id);
+        // update_field('mot',             $desc_triplet['mot'],             $post_id);
         /** =================================================== */
 
         // Guardar ACF fields posicionalmente (todas las columnas normalizadas)
