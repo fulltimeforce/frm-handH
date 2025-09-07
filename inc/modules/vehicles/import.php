@@ -7,6 +7,9 @@ const HNH_MENU_PARENT        = 'edit.php?post_type=vehicles'; // Colgar el impor
 
 // CPT que guarda a los miembros del equipo (para el Post Object "member_to_contact")
 const HNH_TEAM_POST_TYPE     = 'team';
+
+// *** MODO ESPECIAL: SOLO ACTUALIZAR FECHAS POR TÍTULO ***
+const HNH_UPDATE_DATES_ONLY  = false; // ← pon false para volver al import normal
 // ======================================================================
 
 // === Admin Page: Vehicles → Import Vehicles
@@ -27,6 +30,10 @@ function vehicles_import_render_page()
     <div class="wrap">
         <h1>Import Vehicles</h1>
         <p>Upload a <strong>.xlsx</strong> (from the CRM) or <strong>.csv</strong> (comma-separated). The first row must be the header.</p>
+        <?php if (HNH_UPDATE_DATES_ONLY): ?>
+            <p><strong>Mode:</strong> <code>HNH_UPDATE_DATES_ONLY = true</code> — this will <u>only</u> update <code>auction_date_latest</code> by matching the post by <em>Title (main)</em>.</p>
+            <p>Required columns: <strong>Title (main)</strong>, <strong>Auction date (latest)</strong>. Date will be normalized to <code>Y-m-d H:i</code>.</p>
+        <?php endif; ?>
         <form method="post" enctype="multipart/form-data">
             <?php wp_nonce_field('vehicles_import_nonce', 'vehicles_import_nonce_f'); ?>
             <input type="file" name="vehicles_file" accept=".xlsx,.csv" required />
@@ -116,6 +123,14 @@ function vehicles_handle_import($file)
             $rows[$i] = array_slice($r, 0, $headerLen);
         }
     }
+
+    // *** MODO SOLO FECHAS ***
+    if (HNH_UPDATE_DATES_ONLY) {
+        vehicles_update_dates_only($rows, $headers_raw);
+        return;
+    }
+
+    // ============== MODO IMPORT NORMAL (tu lógica original) =================
 
     // === Map by COLUMN INDEX (positional)
     $map_by_index = [];
@@ -322,6 +337,107 @@ function vehicles_handle_import($file)
         . '| Skipped (empty rows/errors): ' . intval($skipped_empty) . ' '
         . '| Skipped (no stock number): ' . intval($skipped_no_stock) . ' '
         . '| Skipped (no title): ' . intval($skipped_no_title)
+        . '</p></div>';
+}
+
+/**
+ * *** SPECIAL MODE ***
+ * Actualiza SOLO el campo ACF 'auction_date_latest' buscando por título exacto.
+ * Requiere columnas: 'Title (main)' y 'Auction date (latest)'.
+ */
+function vehicles_update_dates_only(array $rows, array $headers_raw)
+{
+    $title_col = vehicles_find_header(['Title (main)'], $headers_raw);
+    $date_col  = vehicles_find_header(['Auction date (latest)'], $headers_raw);
+
+    if ($title_col === -1 || $date_col === -1) {
+        echo '<div class="notice notice-error"><p>Required headers not found. Needed: <strong>Title (main)</strong> and <strong>Auction date (latest)</strong>.</p></div>';
+        return;
+    }
+
+    $updated = 0;
+    $skipped_empty = 0;
+    $skipped_no_post = 0;
+    $skipped_bad_date = 0;
+
+    for ($i = 1; $i < count($rows); $i++) {
+        $row = $rows[$i];
+
+        // Detecta fila vacía
+        $nonEmpty = false;
+        foreach ($row as $cell) {
+            if ((string)$cell !== '') {
+                $nonEmpty = true;
+                break;
+            }
+        }
+        if (!$nonEmpty) {
+            $skipped_empty++;
+            continue;
+        }
+
+        $title = wp_strip_all_tags(trim((string)$row[$title_col]));
+        $date_raw = trim((string)$row[$date_col]);
+
+        if ($title === '' || $date_raw === '') {
+            $skipped_empty++;
+            continue;
+        }
+
+        // Normaliza a 'Y-m-d H:i'
+        $date_norm = vehicles_excel_serial_to_datetime($date_raw, 'Y-m-d H:i');
+        if ($date_norm === '') {
+            $skipped_bad_date++;
+            continue;
+        }
+
+        // Buscar post por título EXACTO en CPT vehicles
+        $post = get_page_by_title($title, OBJECT, HNH_IMPORT_POST_TYPE);
+        if (!$post || $post->post_status !== 'publish') {
+            // Si no está publish, intenta cualquier estado
+            if (!$post) {
+                $q = new WP_Query([
+                    'post_type'      => HNH_IMPORT_POST_TYPE,
+                    'title'          => $title, // WordPress no soporta 'title' de fábrica, pero mantenemos por claridad
+                    'post_status'    => 'any',
+                    'posts_per_page' => 1,
+                    'fields'         => 'ids',
+                    's'              => $title, // fallback fuzzy si hay variaciones menores
+                    'no_found_rows'  => true,
+                ]);
+                if (!empty($q->posts)) {
+                    $post_id = (int) $q->posts[0];
+                } else {
+                    $post_id = 0;
+                }
+            } else {
+                $post_id = (int) $post->ID;
+            }
+        } else {
+            $post_id = (int) $post->ID;
+        }
+
+        if (!$post_id) {
+            $skipped_no_post++;
+            continue;
+        }
+
+        // Actualiza ACF (o meta si no existe ACF)
+        if (function_exists('update_field')) {
+            update_field('auction_date_latest', $date_norm, $post_id);
+        } else {
+            update_post_meta($post_id, 'auction_date_latest', $date_norm);
+        }
+
+        $updated++;
+    }
+
+    echo '<div class="notice notice-success"><p>'
+        . 'Dates update finished. '
+        . 'Updated: <strong>' . intval($updated) . '</strong> '
+        . '| Skipped (empty rows): ' . intval($skipped_empty) . ' '
+        . '| Skipped (no matching post): ' . intval($skipped_no_post) . ' '
+        . '| Skipped (invalid date): ' . intval($skipped_bad_date)
         . '</p></div>';
 }
 

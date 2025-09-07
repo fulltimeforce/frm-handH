@@ -1531,7 +1531,9 @@
         justify-content: center;
     }
 
-    a {
+    button, a {
+        background: none;
+        border: none;
         @media (min-width: v.$tv) {
             @include square(px-to-vw(38px));
         }

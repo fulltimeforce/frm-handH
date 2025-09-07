@@ -78,6 +78,10 @@
         h3 {
             @include m.h2();
             font-weight: 300;
+
+            @include m.phone{
+                font-size: 26px;
+            }
         }
 
         .content {

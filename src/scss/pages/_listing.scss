@@ -864,6 +864,10 @@
                 }
             }
 
+            .social{
+                @include m.social_list_link;
+            }
+
             div {
                 @include m.flex(flex-start, m.px-to-vw(16px));
 

@@ -168,7 +168,13 @@ function hnh_render_auction_card($auction_id, $venue_id = 0)
 
         <div class="auction_actions">
             <ul>
-                <li><a href="<?php echo esc_url($permalink); ?>" alt="View Upcoming Lots">View Upcoming Lots</a></li>
+                <li>
+                    <?php if (is_page('auction-results')): ?>
+                        <a href="<?php echo esc_url($permalink); ?>" alt="View Auction Results">View Auction Results</a>
+                    <?php else: ?>
+                        <a href="<?php echo esc_url($permalink); ?>" alt="View Upcoming Lots">View Upcoming Lots</a>
+                    <?php endif; ?>
+                </li>
                 <li><a href="<?php echo esc_url(home_url('get-a-valuation')) ?>">Consign Your Classic</a></li>
 
                 <?php
