@@ -130,13 +130,13 @@
     }
 
     .single_team_name {
-      @include m.text-base(v.$goudysb, 400, m.px-to-vw(50px), 114%, 0);
+      @include m.text-base(v.$goudysb, 300, m.px-to-vw(50px), 114%, 0);
       text-transform: uppercase;
       color: v.$light_brown;
       margin-bottom: m.px-to-vw(25px);
 
       @media (max-width: v.$phone) {
-        @include m.text-base(v.$goudysb, 400, 30px, 114%, 0%);
+        @include m.text-base(v.$goudysb, 300, 30px, 114%, 0%);
         margin-bottom: 25px;
       }
       @include m.desktop {

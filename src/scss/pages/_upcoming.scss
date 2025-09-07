@@ -344,7 +344,11 @@
                 font-weight: 300;
             }
 
-            @include m.tv {}
+            @include m.tv {
+                font-size: 19px;
+                line-height: 1.2em;
+                font-weight: 300;
+            }
         }
 
         .content {

@@ -100,11 +100,11 @@ get_banner('Homepage / About / Meet the team', esc_url($bg_image), 'Meet the tea
                                             </div>
                                             <div>
                                                 <?php if (get_field('team_email')) : ?>
-                                                    <p class="specialist_item_body_email">Email: <strong><?php the_field('team_email'); ?></strong></p>
+                                                    <p class="specialist_item_body_email">Email: <a style="color:black" href="mailto:<?php the_field('team_email'); ?>"><strong><?php the_field('team_email'); ?></strong></a></p>
                                                 <?php endif; ?>
     
                                                 <?php if (get_field('team_phone')) : ?>
-                                                    <p class="specialist_item_body_tel">Tel: <strong><?php the_field('team_phone'); ?></strong></p>
+                                                    <p class="specialist_item_body_tel">Tel: <a style="color:black" href="tel:<?php the_field('team_phone'); ?>"><strong><?php the_field('team_phone'); ?></strong></a></p>
                                                 <?php endif; ?>
                                             </div>
 

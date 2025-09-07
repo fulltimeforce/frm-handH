@@ -548,12 +548,6 @@ import "@splidejs/splide/css";
 
         // ------------------------------------------------------------------------------------
 
-        const fullView = document.querySelector(".listing_fullview");
-
-        const openBtn = document.querySelector(".thumbnail-post");
-        const openBtn2 = document.getElementById("openGridView");
-        const closeBtn = document.querySelector(".listing_fullview-close");
-
         const fullViewSlide = new Splide('.listing_fullview-slide', {
             type: 'slider',
             perPage: 1,
@@ -570,38 +564,58 @@ import "@splidejs/splide/css";
 
         if (prev2) {
             prev2.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="26" viewBox="0 0 15 26" fill="none">
-                    <path d="M1 1L13 13L1 25" stroke="#8C6E47" stroke-width="2"/>
-                </svg>`;
+                <path d="M1 1L13 13L1 25" stroke="#8C6E47" stroke-width="2"/>
+            </svg>`;
         }
 
         if (next2) {
             next2.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="26" viewBox="0 0 15 26" fill="none">
-                    <path d="M1 1L13 13L1 25" stroke="#8C6E47" stroke-width="2"/>
-                </svg>`;
+                <path d="M1 1L13 13L1 25" stroke="#8C6E47" stroke-width="2"/>
+            </svg>`;
         }
 
-        if (openBtn) {
-            openBtn.addEventListener("click", () => {
+        const fullView = document.querySelector(".listing_fullview");
+        const openBtn = document.querySelector(".thumbnail-post");
+        const openBtn2 = document.getElementById("openGridView");
+        const closeBtn = document.querySelector(".listing_fullview-close");
+
+        if (fullView) {
+            // Función para abrir
+            const openFullView = () => {
                 fullView.classList.add("active");
                 document.body.style.overflow = "hidden";
                 document.body.style.height = "100vh";
-            });
-        }
+            };
 
-        if (openBtn2) {
-            openBtn2.addEventListener("click", () => {
-                fullView.classList.remove("active");
-                document.querySelector(".listing_grid").classList.add("active");
-                document.body.style.overflow = "hidden";
-                document.body.style.height = "100vh";
-            });
-        }
-
-        if (closeBtn) {
-            closeBtn.addEventListener("click", () => {
+            // Función para cerrar
+            const closeFullView = () => {
                 fullView.classList.remove("active");
                 document.body.style.overflow = "";
                 document.body.style.height = "auto";
+            };
+
+            if (openBtn) {
+                openBtn.addEventListener("click", openFullView);
+            }
+
+            if (openBtn2) {
+                openBtn2.addEventListener("click", () => {
+                    fullView.classList.remove("active");
+                    document.querySelector(".listing_grid").classList.add("active");
+                    document.body.style.overflow = "hidden";
+                    document.body.style.height = "100vh";
+                });
+            }
+
+            if (closeBtn) {
+                closeBtn.addEventListener("click", closeFullView);
+            }
+
+            // Cerrar con tecla ESC
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Escape" && fullView.classList.contains("active")) {
+                    closeFullView();
+                }
             });
         }
 
@@ -636,16 +650,28 @@ import "@splidejs/splide/css";
         const openBtn = document.getElementById("openGrid");
         const closeBtn = document.querySelector(".listing_grid-close");
 
-        openBtn.addEventListener("click", () => {
+        // Función para abrir
+        const openGrid = () => {
             grid.classList.add("active");
             document.body.style.overflow = "hidden";
             document.body.style.height = "100vh";
-        });
+        };
 
-        closeBtn.addEventListener("click", () => {
+        // Función para cerrar
+        const closeGrid = () => {
             grid.classList.remove("active");
             document.body.style.overflow = "";
             document.body.style.height = "auto";
+        };
+
+        openBtn.addEventListener("click", openGrid);
+        closeBtn.addEventListener("click", closeGrid);
+
+        // Cerrar con tecla ESC
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && grid.classList.contains("active")) {
+                closeGrid();
+            }
         });
     }
 

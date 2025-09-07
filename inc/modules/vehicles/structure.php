@@ -39,7 +39,7 @@ function hnh_render_vehicle_item($vehicle_id, $args = [])
     if (! $vehicle_id) return;
 
     $thumb_size   = $args['thumb_size']   ?? 'large';
-    $fallback_img = $args['fallback_img'] ?? (defined('IMG') ? IMG . '/car2.png' : '');
+    $fallback_img = $args['fallback_img'] ?? (defined('IMG') ? IMG . '/placeholder-vehicle.png' : '');
 
     // Datos
     $title     = get_the_title($vehicle_id);
@@ -139,7 +139,7 @@ function hnh_render_vehicle_card($vehicle_id, $args = [])
     if (!$vehicle_id) return;
 
     $thumb_size   = $args['thumb_size']   ?? 'large';
-    $fallback_img = $args['fallback_img'] ?? (defined('IMG') ? IMG . '/car2.png' : '');
+    $fallback_img = $args['fallback_img'] ?? (defined('IMG') ? IMG . '/placeholder-vehicle.png' : '');
     $max_slides   = isset($args['max_slides']) ? (int)$args['max_slides'] : 8;
 
     // Datos
@@ -533,8 +533,10 @@ if (!function_exists('hnh_render_buy_it_now_block')) {
                     <option value="lot" <?php selected($order_by, 'lot');          ?>><?php esc_html_e('Sort by lot number'); ?></option>
                     <option value="low-to-high" <?php selected($order_by, 'low-to-high');  ?>><?php esc_html_e('Estimate/Price - Low to High'); ?></option>
                     <option value="high-to-low" <?php selected($order_by, 'high-to-low');  ?>><?php esc_html_e('Estimate/Price - High to Low'); ?></option>
-                    <option value="oldest" <?php selected($order_by, 'oldest');       ?>><?php esc_html_e('Date - Oldest first'); ?></option>
-                    <option value="newest" <?php selected($order_by, 'newest');       ?>><?php esc_html_e('Date - Newest first'); ?></option>
+                    <?php if (NOT_APPEAR): ?>
+                        <option value="oldest" <?php selected($order_by, 'oldest');       ?>><?php esc_html_e('Date - Oldest first'); ?></option>
+                        <option value="newest" <?php selected($order_by, 'newest');       ?>><?php esc_html_e('Date - Newest first'); ?></option>
+                    <?php endif; ?>
                 </select>
             </div>
 

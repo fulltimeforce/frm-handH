@@ -41,7 +41,7 @@
     &_content {
         h1 {
             font-family: v.$goudysb;
-            font-weight: 400;
+            font-weight: 300;
             color: v.$white;
             text-transform: uppercase;
             text-align: center;
@@ -601,6 +601,7 @@
             h2 {
                 @include m.h4;
                 @extend %mb31;
+                font-weight: 300;
             }
 
             &>p {
@@ -1727,6 +1728,7 @@
                 font-family: v.$goudysb;
                 text-transform: uppercase;
                 margin-block: m.px-to-vw(24px);
+                font-weight: 300;
 
                 @include m.tv {
                     font-size: 20px;
@@ -1858,7 +1860,7 @@
 
             h3 {
                 font-family: v.$goudysb;
-                font-weight: 400;
+                font-weight: 300;
                 line-height: 115%;
                 text-transform: uppercase;
 

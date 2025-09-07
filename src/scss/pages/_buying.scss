@@ -26,6 +26,7 @@
 %h2-goudysb {
   font-family: v.$goudysb;
   font-size: 50px;
+  font-weight: 300;
   line-height: 115%;
   text-transform: uppercase;
   color: #000;
@@ -267,6 +268,7 @@
             font-family: v.$goudysb;
             text-transform: uppercase;
             color: #fff;
+            font-weight: 300;
 
             @media (min-width: v.$tv) {
               font-size: m.px-to-vw(36px);

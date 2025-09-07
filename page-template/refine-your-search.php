@@ -245,8 +245,10 @@ $maxYear = (int)date('Y');
                     <option value="lot" <?php selected($order_by, 'lot');          ?>><?php esc_html_e('Sort by lot number'); ?></option>
                     <option value="low-to-high" <?php selected($order_by, 'low-to-high');  ?>><?php esc_html_e('Estimate/Price - Low to High'); ?></option>
                     <option value="high-to-low" <?php selected($order_by, 'high-to-low');  ?>><?php esc_html_e('Estimate/Price - High to Low'); ?></option>
-                    <option value="oldest" <?php selected($order_by, 'oldest');       ?>><?php esc_html_e('Date - Oldest first'); ?></option>
-                    <option value="newest" <?php selected($order_by, 'newest');       ?>><?php esc_html_e('Date - Newest first'); ?></option>
+                    <?php if (NOT_APPEAR): ?>
+                        <option value="oldest" <?php selected($order_by, 'oldest');       ?>><?php esc_html_e('Date - Oldest first'); ?></option>
+                        <option value="newest" <?php selected($order_by, 'newest');       ?>><?php esc_html_e('Date - Newest first'); ?></option>
+                    <?php endif; ?>
                 </select>
             </div>
 
