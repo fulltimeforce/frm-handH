@@ -254,6 +254,7 @@ require_once get_template_directory() . '/inc/modules/cpt_venues.php';
 require_once get_template_directory() . '/inc/modules/cpt_testimonials.php';
 
 require_once get_template_directory() . '/inc/hooks.php';
+require_once get_template_directory() . '/inc/social_information.php';
 
 // -------------------------------------------------------------------------------------
 

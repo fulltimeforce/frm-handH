@@ -406,6 +406,18 @@ if (!function_exists('hnh_render_buy_it_now_block')) {
             ];
         }
 
+        // ...después de construir $meta_query con status y rango de años:
+
+        // Filtrar por tipo de vehículo SOLO en la página "vehicles-for-sale"
+        if (is_page('vehicles-for-sale')) {
+            // Si el ACF guarda exactamente "private-sale", usa '=' (más rápido):
+            $meta_query[] = [
+                'key'     => 'type_of_vehicle',
+                'value'   => 'private-sale',
+                'compare' => '=',
+            ];
+        }
+
         // Query
         $argsVehicle = [
             'post_type'      => $opt['post_type'],
