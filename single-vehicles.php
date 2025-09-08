@@ -264,18 +264,29 @@ if ($gallery && is_array($gallery)): ?>
 
             <?php
             $estimate_html = '';
-            if ($estimate_low && $estimate_high) {
-                $low  = (float) preg_replace('/[^\d.\-]/', '', (string) $estimate_low);
-                $high = (float) preg_replace('/[^\d.\-]/', '', (string) $estimate_high);
+
+            $low  = $estimate_low  ? (float) preg_replace('/[^\d.\-]/', '', (string) $estimate_low)  : null;
+            $high = $estimate_high ? (float) preg_replace('/[^\d.\-]/', '', (string) $estimate_high) : null;
+
+            if ($low && $high) {
+                // Si existen ambos
                 $estimate_html = '£' . esc_html(number_format_i18n($low, 0)) . ' - £' . esc_html(number_format_i18n($high, 0));
+            } elseif ($low) {
+                // Solo low
+                $estimate_html = '£' . esc_html(number_format_i18n($low, 0));
+            } elseif ($high) {
+                // Solo high
+                $estimate_html = '£' . esc_html(number_format_i18n($high, 0));
             }
-            if ($estimate_html):
             ?>
+
+            <?php if ($estimate_html): ?>
                 <div>
                     <p class="p17">Estimate</p>
                     <p class="gold-text"><?php echo $estimate_html; ?></p>
                 </div>
             <?php endif; ?>
+
         </div>
 
         <?php
