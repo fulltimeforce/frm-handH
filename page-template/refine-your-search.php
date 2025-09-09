@@ -44,17 +44,41 @@ $meta_query = ['relation' => 'AND'];
 // Filtro CURRENT/PAST por fecha del meta $auction_date_meta (comparación lexicográfica segura)
 if ($lots === 'current') {
     $meta_query[] = [
-        'key'     => $auction_date_meta,
-        'value'   => $now_minute,
-        'compare' => '>=',
-        'type'    => 'CHAR',
+        'relation' => 'OR',
+        [
+            'key'     => $auction_date_meta,
+            'value'   => $now_minute,
+            'compare' => '>=',
+            'type'    => 'CHAR',
+        ],
+        [
+            'key'     => $auction_date_meta,
+            'compare' => 'NOT EXISTS',
+        ],
+        [
+            'key'     => $auction_date_meta,
+            'value'   => '',
+            'compare' => '=',
+        ],
     ];
 } else { // past
     $meta_query[] = [
-        'key'     => $auction_date_meta,
-        'value'   => $now_minute,
-        'compare' => '<',
-        'type'    => 'CHAR',
+        'relation' => 'OR',
+        [
+            'key'     => $auction_date_meta,
+            'value'   => $now_minute,
+            'compare' => '<',
+            'type'    => 'CHAR',
+        ],
+        [
+            'key'     => $auction_date_meta,
+            'compare' => 'NOT EXISTS',
+        ],
+        [
+            'key'     => $auction_date_meta,
+            'value'   => '',
+            'compare' => '=',
+        ],
     ];
 }
 
