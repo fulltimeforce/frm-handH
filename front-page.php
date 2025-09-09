@@ -129,6 +129,7 @@ $testimonials_items = get_field('testimonials_items');
                     <?php
                     $number = get_sub_field('stats_number');
                     $text   = get_sub_field('stats_text');
+                    $content   = get_sub_field('stats_description');
                     ?>
                     <div>
                         <?php if ($number): ?>
@@ -137,6 +138,10 @@ $testimonials_items = get_field('testimonials_items');
 
                         <?php if ($text): ?>
                             <p><?php echo esc_html($text); ?></p>
+                        <?php endif; ?>
+
+                        <?php if ($content): ?>
+                            <span><?php echo $content; ?></span>
                         <?php endif; ?>
                     </div>
                 <?php endwhile; ?>
@@ -345,7 +350,7 @@ $testimonials_items = get_field('testimonials_items');
                 <p>Vehicles For Sale</p>
             </div>
             <div class="breadlines">
-                <p>Discover</p>
+                <p>Refine your Search</p>
             </div>
             <h2>Vehicles For Sale</h2>
         </div>

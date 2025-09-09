@@ -737,13 +737,13 @@ document.addEventListener("DOMContentLoaded", () => {
         sections.forEach(section => observer.observe(section));
     }
 
-    if (document.getElementById('blog-perpage')) {
+    /*if (document.getElementById('blog-perpage')) {
         document.getElementById('blog-perpage').addEventListener('change', function () {
             const url = new URL(window.location.href);
             url.searchParams.set('posts_per_page', this.value);
             window.location.href = url.toString();
         });
-    }
+    }*/
 
 });
 

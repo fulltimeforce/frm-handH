@@ -7,6 +7,7 @@ $auction = get_field('auction_latest');
 $auction_number = get_field('auction_number_latest');
 $estimate_high = get_field('estimate_high');
 $estimate_low = get_field('estimate_low');
+$sold_price = get_field('sold_price');
 $short_text = get_field('title_sub');
 
 $vehicle_video = '';
@@ -290,33 +291,62 @@ if ($gallery && is_array($gallery)): ?>
                             </div>
                         </div>
                     </div>
+                <?php else: ?>
+                    <div></div>
                 <?php endif; ?>
+            <?php else: ?>
+                <div></div>
             <?php endif; ?>
 
-            <?php
-            $estimate_html = '';
+            <?php $estimate_html = ''; ?>
 
-            $low  = $estimate_low  ? (float) preg_replace('/[^\d.\-]/', '', (string) $estimate_low)  : null;
-            $high = $estimate_high ? (float) preg_replace('/[^\d.\-]/', '', (string) $estimate_high) : null;
+            <?php if ($status && !empty($status)): ?>
 
-            if ($low && $high) {
-                // Si existen ambos
-                $estimate_html = '£' . esc_html(number_format_i18n($low, 0)) . ' - £' . esc_html(number_format_i18n($high, 0));
-            } elseif ($low) {
-                // Solo low
-                $estimate_html = '£' . esc_html(number_format_i18n($low, 0));
-            } elseif ($high) {
-                // Solo high
-                $estimate_html = '£' . esc_html(number_format_i18n($high, 0));
-            }
-            ?>
+                <?php if (strtolower($status) == 'sold'): ?>
 
-            <?php if ($estimate_html): ?>
-                <div>
-                    <p class="p17">Estimate</p>
-                    <p class="gold-text"><?php echo $estimate_html; ?></p>
-                </div>
+                    <?php
+                    $amount  = $sold_price  ? (float) preg_replace('/[^\d.\-]/', '', (string) $sold_price)  : null;
+                    if ($amount) {
+                        $estimate_html = '£' . esc_html(number_format_i18n($amount, 0));
+                    }
+                    ?>
+
+                    <?php if ($estimate_html): ?>
+                        <div>
+                            <p class="p17">Sold for</p>
+                            <p class="gold-text"><?php echo $estimate_html; ?></p>
+                        </div>
+                    <?php endif; ?>
+
+                <?php else: ?>
+
+                    <?php
+                    $low  = $estimate_low  ? (float) preg_replace('/[^\d.\-]/', '', (string) $estimate_low)  : null;
+                    $high = $estimate_high ? (float) preg_replace('/[^\d.\-]/', '', (string) $estimate_high) : null;
+
+                    if ($low && $high) {
+                        // Si existen ambos
+                        $estimate_html = '£' . esc_html(number_format_i18n($low, 0)) . ' - £' . esc_html(number_format_i18n($high, 0));
+                    } elseif ($low) {
+                        // Solo low
+                        $estimate_html = '£' . esc_html(number_format_i18n($low, 0));
+                    } elseif ($high) {
+                        // Solo high
+                        $estimate_html = '£' . esc_html(number_format_i18n($high, 0));
+                    }
+                    ?>
+
+                    <?php if ($estimate_html): ?>
+                        <div>
+                            <p class="p17">Estimate</p>
+                            <p class="gold-text"><?php echo $estimate_html; ?></p>
+                        </div>
+                    <?php endif; ?>
+
+                <?php endif; ?>
+
             <?php endif; ?>
+
 
         </div>
 

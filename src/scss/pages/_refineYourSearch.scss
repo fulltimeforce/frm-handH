@@ -192,7 +192,7 @@
                 margin-left: auto;
             }
 
-            form {
+            .form, form {
                 @media (min-width: v.$tv) {
                     @include m.flex(flex-end, m.px-to-vw(61px));
                 }

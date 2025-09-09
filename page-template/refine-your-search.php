@@ -59,7 +59,7 @@ if ($lots === 'current') {
 }
 
 // Rango por año sobre el mismo meta (coherencia)
-$year_from = (ctype_digit($year_from_param) ? (int)$year_from_param : null);
+/*$year_from = (ctype_digit($year_from_param) ? (int)$year_from_param : null);
 $year_to   = (ctype_digit($year_to_param)   ? (int)$year_to_param   : null);
 
 if ($year_from && $year_to) {
@@ -90,7 +90,7 @@ if ($year_from && $year_to) {
         'compare' => '<=',
         'type'    => 'CHAR',
     ];
-}
+}*/
 
 // Solo con thumbnail
 /*$meta_query[] = [
@@ -333,6 +333,8 @@ $base_url = $page_url;
                     <form method="get" action="<?php echo esc_url($base_url); ?>">
                         <input type="hidden" name="pgn" value="1">
                         <input type="hidden" name="lots" value="<?php echo esc_attr($lots); ?>">
+                        <input type="hidden" name="order_by" value="<?php echo esc_attr($order_by); ?>">
+
                         <div class="auction_result-filter-page">
                             <p>
                                 <?php esc_html_e('Showing'); ?>
@@ -385,8 +387,8 @@ $base_url = $page_url;
                         'current' => $pgn,
                         'total'   => (int) $vehicles->max_num_pages,
                         'mid_size' => 2,
-                        'prev_text' => '…',
-                        'next_text' => '…',
+                        'prev_text' => '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="14" viewBox="0 0 19 14" fill="none"><path d="M19 7L1.00049 7M1.00049 7L7.00049 13M1.00049 7L7.0005 0.999999" stroke="#8C6E47"/></svg>',
+                        'next_text' => '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="14" viewBox="0 0 19 14" fill="none"><path d="M-7.15494e-08 7L17.9995 7M17.9995 7L11.9995 1M17.9995 7L11.9995 13" stroke="#8C6E47"/></svg>',
                         'add_args'  => array_filter([
                             'lots'               => $lots,
                             'search_vehicle'     => $q,
@@ -421,10 +423,10 @@ $base_url = $page_url;
 
 <script>
     (function() {
-        // Ruta base SIEMPRE sin query
+        // URL limpia de la página (sin query)
         const PAGE_URL = "<?php echo esc_js($page_url); ?>";
 
-        // 1) Normaliza los action de ambos forms para evitar que un hook los infle con la query actual
+        // 1) Normaliza action de ambos forms (por si algún hook los infla con la query actual)
         document.querySelectorAll('form.auction_result-filter, .refine_views form')
             .forEach(f => f.setAttribute('action', PAGE_URL));
 
@@ -443,7 +445,7 @@ $base_url = $page_url;
             });
         }
 
-        // 3) Botones Current/Past => set lots y pgn=1 y enviar
+        // 3) Botones Current/Past => set lots + pgn=1 + submit
         const lotsButtons = document.querySelectorAll('.refine_buttons button[data-lots]');
         if (lotsButtons && filterForm) {
             lotsButtons.forEach(btn => {
@@ -476,21 +478,34 @@ $base_url = $page_url;
             });
         }
 
-        // 4) Cambio de "Per Page" => construimos la URL a mano y forzamos pgn=1
-        const perPageSelect = document.querySelector('.refine_views select[name="posts_per_page"]');
-        if (perPageSelect) {
-            perPageSelect.addEventListener('change', (e) => {
+        // 4) Cambio de "Per Page" => SIEMPRE reconstruimos la URL desde la query actual,
+        //    preservando TODOS los parámetros, y forzamos pgn=1
+        document.querySelectorAll('select[name="posts_per_page"]').forEach(sel => {
+            // Evita el submit automático del theme/markup
+            sel.removeAttribute('onchange');
+
+            sel.addEventListener('change', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (typeof e.stopImmediatePropagation === 'function') {
+                    e.stopImmediatePropagation();
+                }
+
                 const params = new URLSearchParams(window.location.search);
                 params.set('posts_per_page', e.target.value);
-                params.set('pgn', '1'); // ← aquí está la clave
-                // mantenemos el resto de filtros actuales
+                params.set('pgn', '1'); // ← vuelve a la primera página
+
                 const url = new URL(PAGE_URL, window.location.origin);
                 url.search = params.toString();
-                window.location.assign(url.toString());
-            });
-        }
 
-        // 5) Tu toggle de grid/list igual que antes
+                // Si quieres depurar la URL final:
+                // console.log(url.toString()); return;
+
+                window.location.assign(url.toString());
+            }, true); // captura para ganar a otros listeners
+        });
+
+        // 5) Toggle grid/list (igual que antes)
         const change_view = document.querySelectorAll('.change_view');
         const vehicles_module = document.querySelector('.refine_vehicles');
         if (change_view && vehicles_module) {

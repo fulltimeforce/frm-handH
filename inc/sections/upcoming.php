@@ -147,7 +147,7 @@ $auctions = new WP_Query($argsAuction);
                                                     <?php endif; ?>
                                                     <p>Lots Live (<?php echo $total_vehicles; ?>)</p>
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -176,4 +176,38 @@ $auctions = new WP_Query($argsAuction);
             </div>
         </div>
     </div>
+
+    <?php if (is_front_page()): ?>
+        <?php
+        $up_p = get_field('upcoming_text');
+        $up_button1 = get_field('upcoming_button_1');
+        $up_button2 = get_field('upcoming_button_2');
+        ?>
+        <div class="container">
+            <div class="upcoming_foot">
+                <?php if ($up_p): ?>
+                    <div>
+                        <p><?php echo $up_p; ?></p>
+                    </div>
+                <?php endif; ?>
+                <?php if ($up_button1): ?>
+                    <a href="<?php echo esc_url($up_button1['url']); ?>" class="permalink" target="<?php echo esc_attr($up_button1['target'] ?: '_self'); ?>">
+                        <?php echo ($up_button1['title']); ?>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18" fill="none">
+                            <path d="M9.5 4.55556V17M9.5 4.55556C9.5 3.61256 9.12072 2.70819 8.44558 2.0414C7.77045 1.3746 6.85478 1 5.9 1H1.4C1.16131 1 0.932387 1.09365 0.763604 1.26035C0.594821 1.42705 0.5 1.65314 0.5 1.88889V13.4444C0.5 13.6802 0.594821 13.9063 0.763604 14.073C0.932387 14.2397 1.16131 14.3333 1.4 14.3333H6.8C7.51608 14.3333 8.20284 14.6143 8.70919 15.1144C9.21554 15.6145 9.5 16.2928 9.5 17M9.5 4.55556C9.5 3.61256 9.87928 2.70819 10.5544 2.0414C11.2295 1.3746 12.1452 1 13.1 1H17.6C17.8387 1 18.0676 1.09365 18.2364 1.26035C18.4052 1.42705 18.5 1.65314 18.5 1.88889V13.4444C18.5 13.6802 18.4052 13.9063 18.2364 14.073C18.0676 14.2397 17.8387 14.3333 17.6 14.3333H12.2C11.4839 14.3333 10.7972 14.6143 10.2908 15.1144C9.78446 15.6145 9.5 16.2928 9.5 17" stroke="#8C6E47" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </a>
+                <?php endif; ?>
+            </div>
+            <?php if ($up_button2): ?>
+                <a href="<?php echo esc_url($up_button2['url']); ?>" class="permalink_border" target="<?php echo esc_attr($up_button2['target'] ?: '_self'); ?>">
+                    <?php echo ($up_button2['title']); ?>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
+                        <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
+                    </svg>
+                </a>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
+
 <?php endif; ?>

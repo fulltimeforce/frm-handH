@@ -76,7 +76,13 @@ function hnh_render_vehicle_item($vehicle_id, $args = [])
                         <?php endif; ?>
 
                         <?php if ($chassis_no) : ?>
-                            <p>Chassis No: <span><?php echo esc_html($chassis_no); ?></span></p>
+                            <p><?php
+                                if (has_term('motorcycles', 'vehicle_category', $vehicle_id)) {
+                                    echo 'Frame No:';
+                                } else {
+                                    echo 'Chassis No:';
+                                }
+                                ?> <span><?php echo esc_html($chassis_no); ?></span></p>
                         <?php endif; ?>
 
                         <?php if ($vehicle_mot) : ?>
@@ -295,7 +301,13 @@ function hnh_render_vehicle_card($vehicle_id, $args = [], $format = 1)
                             <li><b><?php esc_html_e('Registration No:'); ?></b> <?php echo esc_html($registration_no); ?></li>
                         <?php endif; ?>
                         <?php if ($chassis_no): ?>
-                            <li><b><?php esc_html_e('Chassis No:'); ?></b> <?php echo esc_html($chassis_no); ?></li>
+                            <li><b><?php
+                                    if (has_term('motorcycles', 'vehicle_category', $vehicle_id)) {
+                                        esc_html_e('Frame No:');
+                                    } else {
+                                        esc_html_e('Chassis No:');
+                                    }
+                                    ?></b> <?php echo esc_html($chassis_no); ?></li>
                         <?php endif; ?>
                         <?php if ($vehicle_mot): ?>
                             <li><b><?php esc_html_e('MOT:'); ?></b> <?php echo esc_html($vehicle_mot); ?></li>

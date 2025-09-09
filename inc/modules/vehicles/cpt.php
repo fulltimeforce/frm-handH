@@ -189,6 +189,7 @@ add_action('restrict_manage_posts', function ($post_type) {
         ''               => __('All Statuses', 'text-domain'),
         'Allocated'      => 'Allocated',
         'Back to vendor' => 'Back to vendor',
+        'Back to vendor (awaiting collection)' => 'Back to vendor (awaiting collection)',
         'Sold'           => 'Sold',
         'Appraisal'      => 'Appraisal',
         'Available'      => 'Available',

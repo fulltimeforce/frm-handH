@@ -293,7 +293,7 @@
     }
 
     @include m.tv {
-        margin-block: 31px 0;
+        margin-block: 12px 0;
     }
 }
 
@@ -472,11 +472,11 @@
         height: 636px;
     }
 
-    @include m.tablet{
+    @include m.tablet {
         height: 333px;
     }
 
-    @include m.phone{
+    @include m.phone {
         height: 300px;
     }
 
@@ -669,10 +669,13 @@
             max-width: 1184px;
         }
 
+        @include m.laptop{
+            flex-direction: column;
+            gap: 24px;
+        }
+
         @include m.tablet {
             padding-top: 20px;
-            gap: 20px;
-            flex-direction: column;
         }
 
         margin-inline: auto;
@@ -686,10 +689,31 @@
             @include m.h2(v.$light_brown, v.$gotham_m);
         }
 
+        span,
         p {
             @include m.p;
+            font-weight: 300;
+        }
+        
+        p {
             @extend %mb31;
             text-transform: uppercase;
+        }
+
+        span {
+            display: block;
+            text-align: center;
+            width: 100%;
+            margin-inline: auto;
+            @media (min-width: v.$tv) {
+                margin-top: m.px-to-vw(27px);
+                max-width: m.px-to-vw(348px);
+            }
+
+            @include m.tv {
+                margin-top: 18px;
+                max-width: 294px;
+            }
         }
     }
 }
