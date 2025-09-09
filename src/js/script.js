@@ -289,6 +289,39 @@ import "@splidejs/splide/css";
         splide.mount();
     }
 
+    if (document.querySelector('#vehiclesForSale')) {
+        const splide = new Splide('#vehiclesForSale', {
+            focus: 0,
+            start: 0,
+            arrows: true,
+            pagination: false,
+            autoWidth: true,
+            gap: '1.042vw',
+            padding: { right: '9.375vw' },
+            breakpoints: {
+                1420: { gap: '16px' },
+                768: { perPage: 1 }
+            }
+        });
+        splide.mount();
+    }
+
+    if (document.querySelector('#models')) {
+        const splide = new Splide('#models', {
+            focus: 0,
+            start: 0,
+            arrows: true,
+            pagination: false,
+            autoWidth: true,
+            gap: '1.146vw',
+            breakpoints: {
+                1420: { gap: '18px' },
+                768: { perPage: 1 }
+            }
+        });
+        splide.mount();
+    }
+
     if (document.querySelector('#whychooseSplide')) {
         const interval = 6000;
         const progress = document.querySelector('.progress');
@@ -326,44 +359,43 @@ import "@splidejs/splide/css";
     }
 
     if (document.querySelector('#brandsCar')) {
-        document.addEventListener('DOMContentLoaded', function () {
-            new Splide("#splide-auction", {
-                perPage: 3,
-                gap: '20px',
-                arrows: true,
-                pagination: false,
-                breakpoints: {
-                    1024: { perPage: 3 },
-                    768: { perPage: 2 },
-                    480: { perPage: 1 },
-                },
-            }).mount();
+        const splideAuction = new Splide("#splide-auction", {
+            perPage: 3,
+            gap: '20px',
+            arrows: true,
+            pagination: false,
+            breakpoints: {
+                768: { perPage: 2 },
+                480: { perPage: 1 },
+            },
+        })
 
-            new Splide("#splide-private", {
-                perPage: 3,
-                gap: '20px',
-                arrows: true,
-                pagination: false,
-                breakpoints: {
-                    1024: { perPage: 3 },
-                    768: { perPage: 2 },
-                    480: { perPage: 1 },
-                },
-            }).mount();
+        splideAuction.mount();
 
-            new Splide('#splide-models', {
-                perPage: 4,
-                gap: '20px',
-                rewind: false,
-                arrows: true,
-                pagination: false,
-                breakpoints: {
-                    1024: { perPage: 3 },
-                    768: { perPage: 2 },
-                    480: { perPage: 1 },
-                },
-            }).mount();
-        });
+        /*new Splide("#splide-private", {
+            perPage: 3,
+            gap: '20px',
+            arrows: true,
+            pagination: false,
+            breakpoints: {
+                1024: { perPage: 3 },
+                768: { perPage: 2 },
+                480: { perPage: 1 },
+            },
+        }).mount();
+
+        new Splide('#splide-models', {
+            perPage: 4,
+            gap: '20px',
+            rewind: false,
+            arrows: true,
+            pagination: false,
+            breakpoints: {
+                1024: { perPage: 3 },
+                768: { perPage: 2 },
+                480: { perPage: 1 },
+            },
+        }).mount();*/
     }
 
     if (document.querySelector('.trustpilot_reviews')) {

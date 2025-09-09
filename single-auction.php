@@ -4,14 +4,17 @@ get_header();
 
 $auction_id = get_the_ID();
 
-$bg_image = get_field('banner_venue-auction');
-$subtitle = get_field('pavilion_hero_subtitle');
-$text = get_field('pavilion_hero_text');
-$button = get_field('pavilion_hero_button');
-
-get_banner('Homepage / Classic Auctions / ' . get_the_title(), esc_url($bg_image));
-
 $venue_id = get_field('template_venue');
+
+$bg_image = get_field('banner_venue-auction', $venue_id);
+$subtitle = get_field('pavilion_hero_subtitle', $venue_id);
+
+$title = get_field('title_banner_venue-auction', $venue_id);
+if (empty($title)) {
+    $title = get_the_title($venue_id);
+}
+
+get_banner('Homepage / Classic Auctions / ' . $title, esc_url($bg_image), $title);
 
 ?>
 

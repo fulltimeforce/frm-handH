@@ -1,0 +1,515 @@
+@use "base/mixins" as m;
+@use "base/variables" as v;
+
+%p22 {
+    font-family: v.$gotham_light;
+    font-weight: 300;
+    color: v.$black;
+    opacity: 0.8;
+
+    @media (min-width: v.$tv) {
+        font-size: m.px-to-vw(22px);
+        line-height: m.px-to-vw(33px);
+    }
+
+    @include m.tv {
+        line-height: 1.1em;
+        font-size: 17px;
+    }
+
+    @include m.desktop {
+        font-size: 15px;
+    }
+}
+
+.vehicles_for_sale {
+    overflow: hidden;
+
+    @media (min-width: v.$tv) {
+        padding-top: m.px-to-vw(160px);
+    }
+
+    @include m.tv {
+        padding-top: 116px;
+    }
+
+    @include m.desktop {
+        padding-top: 86px;
+    }
+
+    @include m.tablet {
+        padding-top: 58px;
+    }
+
+    .vehicle_card {
+        @media (min-width: v.$tv) {
+            max-width: m.px-to-vw(418px);
+        }
+
+        @include m.tv {
+            max-width: 374px;
+        }
+    }
+}
+
+.faq {
+    &_in_vehicle {
+        padding-top: 0 !important;
+        @include m.pblock160(true);
+
+        .acc_head {
+            @media (min-width: v.$tv) {
+                padding-left: m.px-to-vw(32px);
+            }
+
+            @include m.tv {
+                padding-left: 21px;
+            }
+
+            @include m.tablet {
+                padding-left: 12px;
+            }
+
+            h3 {
+                padding-left: 0;
+            }
+        }
+    }
+
+    &_subtitle {
+        width: 100%;
+
+        @media (min-width: v.$tv) {
+            margin-bottom: m.px-to-vw(30px);
+        }
+
+        @include m.tv {
+            margin-bottom: 20px;
+        }
+
+        @include m.tablet {
+            margin-bottom: 12px;
+        }
+
+        @media (min-width: v.$tv) {
+            padding-left: m.px-to-vw(32px);
+        }
+
+        @include m.tv {
+            padding-left: 21px;
+        }
+
+        @include m.tablet {
+            padding-left: 12px;
+        }
+
+        h2 {
+            @include m.fz60;
+            font-weight: 300;
+            text-align: left;
+        }
+    }
+}
+
+%mb24 {
+    @media (min-width: v.$tv) {
+        margin-bottom: m.px-to-vw(24px);
+    }
+
+    @include m.tv {
+        margin-bottom: 17px;
+    }
+
+    @include m.desktop {
+        margin-bottom: 13px;
+    }
+}
+
+.vehicle_banner {
+    @media (min-width: v.$tv) {
+        margin-bottom: m.px-to-vw(80px);
+    }
+
+    @include m.tv {
+        margin-bottom: 58px;
+    }
+
+    @include m.desktop {
+        margin-bottom: 43px;
+    }
+
+    @include m.tablet {
+        margin-bottom: 29px;
+    }
+
+    &-container {
+        @include m.container_side;
+    }
+
+    &-box {
+        width: 100%;
+        background: #181D24;
+        position: relative;
+
+        @media (min-width: v.$tv) {
+            height: m.px-to-vw(357px);
+        }
+
+        @include m.tv {
+            height: 300px;
+        }
+
+        @include m.desktop {
+            height: 260px;
+        }
+
+        img {
+            @include m.fullWH;
+            object-fit: cover;
+            object-position: center;
+            opacity: 0.2;
+        }
+
+        h2 {
+            position: absolute;
+            @include m.centerXY;
+            z-index: 3;
+            font-family: v.$cormorant;
+            text-align: center;
+            color: v.$white;
+            font-weight: 500;
+
+            @media (min-width: v.$tv) {
+                letter-spacing: m.px-to-vw(-2.16px);
+                font-size: m.px-to-vw(72px);
+                line-height: m.px-to-vw(79.2px);
+            }
+
+            @include m.tv {
+                letter-spacing: -1.4px;
+                font-size: 48px;
+                line-height: 1.3em;
+            }
+
+            @include m.desktop {
+                line-height: 1.25em;
+                font-size: 40px;
+            }
+        }
+    }
+}
+
+.conclusion {
+    @include m.pblock160(true);
+
+    &_container {
+        @include m.container_side;
+    }
+
+    &_box {
+        width: 100%;
+
+        @media (min-width: v.$tv) {
+            padding: m.px-to-vw(32px);
+        }
+
+        @include m.tv {
+            padding: 21px;
+        }
+
+        @include m.tablet {
+            padding: 12px;
+        }
+
+
+        @media (min-width: v.$tv) {
+            border: m.px-to-vw(1px) solid v.$light_brown;
+        }
+
+        @include m.tv {
+            border: 1px solid v.$light_brown;
+        }
+
+        @media (min-width: v.$tv) {
+            margin-bottom: m.px-to-vw(32px);
+        }
+
+        @include m.tv {
+            margin-bottom: 21px;
+        }
+
+        @include m.tablet {
+            margin-bottom: 12px;
+        }
+
+        img {
+            width: 100%;
+
+            @media (min-width: v.$tv) {
+                height: m.px-to-vw(357px);
+            }
+
+            @include m.tv {
+                height: 312px;
+            }
+
+            @include m.tablet {
+                height: 260px;
+            }
+
+            object-fit: cover;
+            object-position: center;
+        }
+
+        h2 {
+            @include m.fz60;
+            font-weight: 300;
+            text-align: left;
+        }
+
+        div {
+
+            p,
+            li,
+            span {
+                @extend %p22;
+            }
+        }
+
+        &>* {
+            &:not(:last-child) {
+                @extend %mb24;
+            }
+        }
+    }
+}
+
+.paintings {
+    @include m.pblock160(true);
+
+    &_container {
+        @include m.container_side;
+    }
+
+    &_row {
+        width: 100%;
+
+        @media (min-width: v.$tv) {
+            @include m.flex(space-between, m.px-to-vw(32px) m.px-to-vw(24px));
+            align-items: normal;
+        }
+
+        @include m.tv {
+            @include m.flex(space-between, 24px 16px);
+            align-items: normal;
+        }
+
+        &>* {
+            @media (min-width: v.$tv) {
+                flex: 1;
+                min-width: m.px-to-vw(500px);
+                padding: m.px-to-vw(32px);
+                padding-bottom: m.px-to-vw(64px);
+            }
+
+            @include m.tv {
+                min-width: 300px;
+                flex: 1;
+                padding: 21px;
+                padding-bottom: 42px;
+            }
+
+            @include m.desktop {
+                width: 100%;
+            }
+
+            @include m.tablet {
+                padding: 12px;
+                padding-bottom: 24px;
+            }
+
+            @media (min-width: v.$tv) {
+                border: m.px-to-vw(1px) solid v.$light_brown;
+            }
+
+            @include m.tv {
+                border: 1px solid v.$light_brown;
+            }
+        }
+    }
+}
+
+.painting_box {
+    &>* {
+        width: 100%;
+
+        &:not(:last-child) {
+            @extend %mb24;
+        }
+    }
+
+    &-image {
+        img {
+            width: 100%;
+
+            @media (min-width: v.$tv) {
+                height: m.px-to-vw(240px);
+            }
+
+            @include m.tv {
+                height: 200px;
+            }
+
+            object-fit: cover;
+            object-position: center;
+        }
+    }
+
+    &-title {
+        h2 {
+            @media (min-width: v.$tv) {
+                @include m.flex(flex-start, m.px-to-vw(16px));
+                flex-wrap: nowrap;
+            }
+
+            @include m.tv {
+                @include m.flex(flex-start, 10px);
+                flex-wrap: nowrap;
+            }
+
+            @include m.h4v2(v.$black, v.$cormorant, false);
+            font-weight: 300;
+
+            img {
+                @media (min-width: v.$tv) {
+                    @include m.square(m.px-to-vw(56px));
+                    min-width: m.px-to-vw(56px);
+                }
+
+                @include m.tv {
+                    @include m.square(32px);
+                    min-width: 32px;
+                }
+
+                @include m.tablet {
+                    @include m.square(26px);
+                    min-width: 26px;
+                }
+            }
+        }
+    }
+
+    &-content {
+
+        p,
+        li,
+        span {
+            @extend %p22;
+        }
+    }
+
+    &:nth-child(3) {
+        .painting_box {
+            &-image {
+                img {
+                    @media (min-width: v.$tv) {
+                        height: m.px-to-vw(357px);
+                    }
+
+                    @include m.tv {
+                        height: 300px;
+                    }
+
+                    @include m.desktop {
+                        height: 200px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.select_model {
+    @media (min-width: v.$tv) {
+        padding-block: m.px-to-vw(120px);
+    }
+
+    @include m.tv {
+        padding-block: 96px;
+    }
+
+    @include m.desktop {
+        padding-block: 68px;
+    }
+
+    @include m.tablet {
+        padding-block: 42px;
+    }
+
+    &-container {
+        @include m.container_side;
+
+        @include m.splide_arrows;
+    }
+}
+
+.modelbox {
+    display: block;
+    position: relative;
+
+    @media (min-width: v.$tv) {
+        width: m.px-to-vw(268px);
+        height: m.px-to-vw(134px);
+    }
+
+    @include m.tv {
+        width: 224px;
+        height: 121px;
+    }
+
+    &-thumb {
+        @include m.fullWH;
+        background: #181D24;
+        position: relative;
+
+        &::before {
+            position: absolute;
+            z-index: 2;
+            content: '';
+            @include m.centerXY;
+            background: transparent;
+
+            @media (min-width: v.$tv) {
+                border: m.px-to-vw(2px) solid v.$light_brown;
+                width: calc(100% - m.px-to-vw(16px));
+                height: calc(100% - m.px-to-vw(16px));
+            }
+
+            @include m.tv {
+                border: 2px solid v.$light_brown;
+                width: calc(100% - 10px);
+                height: calc(100% - 10px);
+            }
+
+            @include m.desktop {
+                border: 1px solid v.$light_brown;
+            }
+        }
+
+        img {
+            opacity: 0.2;
+            @include m.fullWH;
+            object-fit: cover;
+            object-position: center;
+        }
+    }
+
+    h3 {
+        position: absolute;
+        @include m.centerXY;
+        z-index: 4;
+        text-align: center;
+        @include m.h3v2(v.$white, v.$goudysb, true, false);
+        @include m.lines(2);
+    }
+}

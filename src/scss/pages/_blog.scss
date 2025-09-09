@@ -148,6 +148,32 @@
     &-image {
         border: 1px solid v.$light_brown;
         border-bottom: none;
+
+        @media (min-width: v.$tv){
+            height: m.px-to-vw(249px);
+        }
+        @include m.tv{
+            height: 185px;
+        }
+        @include m.desktop{
+            height: auto;
+        }
+
+        img{
+            @media (min-width: v.$tv){
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+            }
+            @include m.tv{
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+            }
+            @include m.desktop{
+                height: auto;
+            }
+        }
     }
     &-content{
         padding: m.px-to-vw(36px);

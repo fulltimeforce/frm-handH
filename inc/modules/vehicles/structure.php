@@ -133,7 +133,7 @@ function hnh_render_vehicle_item($vehicle_id, $args = [])
  *   - max_slides   (int)    Máximo de slides a mostrar. Default 8
  *   - enquire_href (string) URL para "Enquire Now" (si no se pasa usa el permalink)
  */
-function hnh_render_vehicle_card($vehicle_id, $args = [])
+function hnh_render_vehicle_card($vehicle_id, $args = [], $format = 1)
 {
     $vehicle_id = (int) $vehicle_id;
     if (!$vehicle_id) return;
@@ -145,6 +145,14 @@ function hnh_render_vehicle_card($vehicle_id, $args = [])
     // Datos
     $title     = get_the_title($vehicle_id);
     $permalink = get_permalink($vehicle_id);
+
+    if (is_page('refine-your-search')) {
+        if (is_page('refine-your-search')) {
+            $permalink = add_query_arg([
+                'c' => 'search',
+            ], get_permalink($vehicle_id));
+        }
+    }
 
     $registration_no = get_field('registration_no', $vehicle_id);
     $chassis_no      = get_field('chassis_no', $vehicle_id);
@@ -215,7 +223,7 @@ function hnh_render_vehicle_card($vehicle_id, $args = [])
             $has_gallery_multi = (is_array($gallery) && count($gallery) > 1);
             ?>
 
-            <?php if ($has_gallery_multi): ?>
+            <?php if ($has_gallery_multi && $format == 1): ?>
                 <div class="splide vehicle_card-thumbs" role="group" aria-label="<?php echo esc_attr($title ?: 'Vehicle'); ?>">
                     <div class="splide__arrows">
                         <button class="splide__arrow splide__arrow--prev" type="button" aria-label="<?php esc_attr_e('Previous'); ?>">
@@ -321,7 +329,7 @@ if (!function_exists('hnh_render_buy_it_now_block')) {
     function hnh_render_buy_it_now_block(array $options = []): string
     {
         $defaults = [
-            'min_year' => 1920,
+            // 'min_year' => 1920,
             'post_type' => 'vehicles',
         ];
         $opt = array_merge($defaults, $options);
@@ -334,7 +342,7 @@ if (!function_exists('hnh_render_buy_it_now_block')) {
 
         // GET params
         $q               = isset($_GET['search_vehicle']) ? sanitize_text_field($_GET['search_vehicle']) : '';
-        $vehicle_status  = isset($_GET['vehicle_status']) ? sanitize_text_field($_GET['vehicle_status']) : 'allocated';
+        $vehicle_status  = isset($_GET['vehicle_status']) ? sanitize_text_field($_GET['vehicle_status']) : '';
         $year_from_param = isset($_GET['year_from'])      ? sanitize_text_field($_GET['year_from'])      : '';
         $year_to_param   = isset($_GET['year_to'])        ? sanitize_text_field($_GET['year_to'])        : '';
         $brand_slug      = isset($_GET['vehicle_brand'])  ? sanitize_text_field($_GET['vehicle_brand'])  : '';
@@ -415,6 +423,47 @@ if (!function_exists('hnh_render_buy_it_now_block')) {
                 'key'     => 'type_of_vehicle',
                 'value'   => 'private-sale',
                 'compare' => '=',
+            ];
+        }
+
+        if (is_page('buy-it-now')) {
+            // Fin de hoy en el timezone de WP (incluye todo el día de hoy)
+            $end_today = date_i18n('Y-m-d 23:59:59', current_time('timestamp'));
+
+            $meta_query[] = [
+                'relation' => 'AND',
+
+                // 1) status != 'sold' (case/whitespace-insensitive)
+                [
+                    'relation' => 'OR',
+                    [
+                        'key'     => 'status',
+                        'value'   => '^[[:space:]]*sold[[:space:]]*$',
+                        'compare' => 'NOT REGEXP',
+                    ],
+                    // si quieres incluir posts sin status, vuelve a agregar este bloque:
+                    // [ 'key' => 'status', 'compare' => 'NOT EXISTS' ],
+                ],
+
+                // 2) type_of_vehicle != 'private-sale' (case/whitespace-insensitive)
+                [
+                    'relation' => 'OR',
+                    [
+                        'key'     => 'type_of_vehicle',
+                        'value'   => '^[[:space:]]*private-sale[[:space:]]*$',
+                        'compare' => 'NOT REGEXP',
+                    ],
+                    // idem nota de arriba:
+                    // [ 'key' => 'type_of_vehicle', 'compare' => 'NOT EXISTS' ],
+                ],
+
+                // 3) Fecha <= fin de hoy (excluir futuros)
+                [
+                    'key'     => 'auction_date_latest', // <-- cambia a 'auction_date_latest' si ese es tu meta key
+                    'value'   => $end_today,
+                    'compare' => '<=',
+                    'type'    => 'DATETIME',
+                ],
             ];
         }
 
@@ -554,14 +603,23 @@ if (!function_exists('hnh_render_buy_it_now_block')) {
 
             <div class="auction_result-filter-select">
                 <select name="vehicle_status" onchange="this.form.submit()">
+                    <option value="">Select status</option>
                     <?php
-                    $status_selected = $vehicle_status ?: 'available';
-                    $status_opts = [
-                        'available' => 'Available for Sale',
-                        'appraisal' => 'Appraisal',
-                        'allocated' => 'Allocated',
-                        'sold'      => 'Sold'
-                    ];
+                    $status_selected = $vehicle_status ?: '';
+                    if (is_page('buy-it-now')) {
+                        $status_opts = [
+                            'available' => 'Available for Sale',
+                            'appraisal' => 'Appraisal',
+                            'allocated' => 'Allocated',
+                        ];
+                    } else {
+                        $status_opts = [
+                            'available' => 'Available for Sale',
+                            'appraisal' => 'Appraisal',
+                            'allocated' => 'Allocated',
+                            'sold'      => 'Sold'
+                        ];
+                    }
                     foreach ($status_opts as $val => $label): ?>
                         <option value="<?php echo esc_attr($val); ?>" <?php selected($status_selected, $val); ?>>
                             <?php echo esc_html($label); ?>
@@ -570,21 +628,25 @@ if (!function_exists('hnh_render_buy_it_now_block')) {
                 </select>
             </div>
 
-            <div class="auction_result-filter-year">
-                <select name="year_from" onchange="this.form.submit()">
-                    <option value=""><?php esc_html_e('From'); ?></option>
-                    <?php for ($y = $minYear; $y <= $maxYear; $y++): ?>
-                        <option value="<?php echo $y; ?>" <?php selected($yf_sel, (string)$y); ?>><?php echo $y; ?></option>
-                    <?php endfor; ?>
-                </select>
-                <p><?php esc_html_e('To'); ?></p>
-                <select name="year_to" onchange="this.form.submit()">
-                    <option value=""><?php esc_html_e('To'); ?></option>
-                    <?php for ($y = $minYear; $y <= $maxYear; $y++): ?>
-                        <option value="<?php echo $y; ?>" <?php selected($yt_sel, (string)$y); ?>><?php echo $y; ?></option>
-                    <?php endfor; ?>
-                </select>
-            </div>
+            <?php if (NOT_APPEAR): ?>
+                <div class="auction_result-filter-year">
+                    <select name="year_from" onchange="this.form.submit()">
+                        <option value=""><?php esc_html_e('From'); ?></option>
+                        <?php for ($y = $minYear; $y <= $maxYear; $y++): ?>
+                            <option value="<?php echo $y; ?>" <?php selected($yf_sel, (string)$y); ?>><?php echo $y; ?></option>
+                        <?php endfor; ?>
+                    </select>
+                    <p><?php esc_html_e('To'); ?></p>
+                    <select name="year_to" onchange="this.form.submit()">
+                        <option value=""><?php esc_html_e('To'); ?></option>
+                        <?php for ($y = $minYear; $y <= $maxYear; $y++): ?>
+                            <option value="<?php echo $y; ?>" <?php selected($yt_sel, (string)$y); ?>><?php echo $y; ?></option>
+                        <?php endfor; ?>
+                    </select>
+                </div>
+            <?php else: ?>
+                <div class="w-100"></div>
+            <?php endif; ?>
 
             <div class="auction_result-filter-page">
                 <p>

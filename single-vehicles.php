@@ -17,10 +17,41 @@ $vehicle_video = '';
     <div class="container">
         <div class="listing_head-col">
             <div>
-                <a href="/vehicles-for-sale" class="listing_btn-white p14"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M2.60156 8H2.60756M2.60156 14H2.60756M2.60156 2H2.60756M5.60156 8H13.4016M5.60156 14H13.4016M5.60156 2H13.4016" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                    Return to Auction List</a>
+                <?php if (!isset($_GET['c']) && $auction_number): ?>
+                    <?php
+
+                    $auction_permalink = '';
+
+                    $args = [
+                        'post_type'      => 'auction',
+                        'posts_per_page' => 1,
+                        'fields'         => 'ids',
+                        'meta_query'     => [
+                            [
+                                'key'   => 'sale_number',
+                                'value' => $auction_number,
+                            ],
+                        ],
+                    ];
+
+                    $query = new WP_Query($args);
+
+                    if ($query->have_posts()) {
+                        $auction_id   = $query->posts[0]; // primer resultado
+                        $auction_permalink    = get_permalink($auction_id);
+                        echo $permalink;
+                    }
+                    wp_reset_postdata();
+
+                    if (!empty($auction_permalink)):
+                    ?>
+                        <a href="<?php echo $auction_permalink; ?>" class="listing_btn-white p14">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M2.60156 8H2.60756M2.60156 14H2.60756M2.60156 2H2.60756M5.60156 8H13.4016M5.60156 14H13.4016M5.60156 2H13.4016" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            Return to Auction List</a>
+                    <?php endif; ?>
+                <?php endif; ?>
                 <p class="p20">
                     <?php
                     $date_raw = get_field('auction_date_latest'); // "2025-12-18 18:56"
@@ -49,60 +80,60 @@ $vehicle_video = '';
                 </div>
             <?php endif; ?>
             <div class="listing_head-actions">
-                <?php
-                $prev_post = get_previous_post();
-                $next_post = get_next_post();
-                ?>
+                <?php if (!isset($_GET['c'])): ?>
+                    <?php $prev_post = get_previous_post();
+                    $next_post = get_next_post(); ?>
 
-                <?php if ($prev_post) : ?>
-                    <a href="<?php echo get_permalink($prev_post->ID); ?>" class="listing_btn-brown p14">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                            <g clip-path="url(#clip0_1921_36983)">
-                                <path d="M14.3008 8L1.70078 8M1.70078 8L8.00078 15M1.70078 8L8.00078 0.999999" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                            </g>
-                            <defs>
-                                <clipPath id="clip0_1921_36983">
-                                    <rect width="16" height="16" fill="white" transform="translate(16 16) rotate(-180)" />
-                                </clipPath>
-                            </defs>
-                        </svg>
-                        Previous Lot
-                    </a>
-                <?php else : ?>
-                    <a class="listing_btn-brown p14 disabled">
-                        Previous Lot
-                    </a>
-                <?php endif; ?>
+                    <?php if ($prev_post) : ?>
+                        <a href="<?php echo get_permalink($prev_post->ID); ?>" class="listing_btn-brown p14">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <g clip-path="url(#clip0_1921_36983)">
+                                    <path d="M14.3008 8L1.70078 8M1.70078 8L8.00078 15M1.70078 8L8.00078 0.999999" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_1921_36983">
+                                        <rect width="16" height="16" fill="white" transform="translate(16 16) rotate(-180)" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                            Previous Lot
+                        </a>
+                    <?php else : ?>
+                        <a class="listing_btn-brown p14 disabled">
+                            Previous Lot
+                        </a>
+                    <?php endif; ?>
 
 
-                <?php if ($next_post) : ?>
-                    <a href="<?php echo get_permalink($next_post->ID); ?>" class="listing_btn-brown p14">
-                        Following Lot
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                            <g clip-path="url(#clip0_1921_36988)">
-                                <path d="M1.69922 8H14.2992M14.2992 8L7.99922 1M14.2992 8L7.99922 15" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                            </g>
-                            <defs>
-                                <clipPath id="clip0_1921_36988">
-                                    <rect width="16" height="16" fill="white" />
-                                </clipPath>
-                            </defs>
-                        </svg>
-                    </a>
-                <?php else : ?>
-                    <a class="listing_btn-brown p14 disabled">
-                        Following Lot
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                            <g clip-path="url(#clip0_1921_36988)">
-                                <path d="M1.69922 8H14.2992M14.2992 8L7.99922 1M14.2992 8L7.99922 15" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                            </g>
-                            <defs>
-                                <clipPath id="clip0_1921_36988">
-                                    <rect width="16" height="16" fill="white" />
-                                </clipPath>
-                            </defs>
-                        </svg>
-                    </a>
+                    <?php if ($next_post) : ?>
+                        <a href="<?php echo get_permalink($next_post->ID); ?>" class="listing_btn-brown p14">
+                            Following Lot
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <g clip-path="url(#clip0_1921_36988)">
+                                    <path d="M1.69922 8H14.2992M14.2992 8L7.99922 1M14.2992 8L7.99922 15" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_1921_36988">
+                                        <rect width="16" height="16" fill="white" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                        </a>
+                    <?php else : ?>
+                        <a class="listing_btn-brown p14 disabled">
+                            Following Lot
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <g clip-path="url(#clip0_1921_36988)">
+                                    <path d="M1.69922 8H14.2992M14.2992 8L7.99922 1M14.2992 8L7.99922 15" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_1921_36988">
+                                        <rect width="16" height="16" fill="white" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                        </a>
+                    <?php endif; ?>
                 <?php endif; ?>
 
                 <?php if (NOT_APPEAR): ?>

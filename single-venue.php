@@ -5,9 +5,13 @@ get_header();
 $bg_image = get_field('banner_venue-auction');
 $subtitle = get_field('pavilion_hero_subtitle');
 $text = get_field('pavilion_hero_text');
-$button = get_field('pavilion_hero_button');
 
-get_banner('Homepage / Classic Auctions / Pavilion Gardens', esc_url($bg_image), 'Pavillion Gardens');
+$title = get_field('title_banner_venue-auction');
+if (empty($title)) {
+    $title = get_the_title();
+}
+
+get_banner('Homepage / Classic Auctions / ' . $title, esc_url($bg_image), $title);
 
 ?>
 

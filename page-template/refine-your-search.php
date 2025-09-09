@@ -13,13 +13,13 @@ get_banner(
 
 // ===== Opciones seguras =====
 $defaults = [
-    'min_year'  => 1920,
+    // 'min_year'  => 1920,
     'post_type' => 'vehicles',
 ];
 $opt = $defaults;
 
 // ===== Paginación y per page =====
-$paged = max(1, get_query_var('paged') ? (int)get_query_var('paged') : (int)get_query_var('page'));
+$pgn   = isset($_GET['pgn']) ? max(1, (int) $_GET['pgn']) : 1;
 $ppp   = isset($_GET['posts_per_page']) ? max(1, (int)$_GET['posts_per_page']) : 6;
 
 // ===== GET params =====
@@ -122,7 +122,7 @@ $order_dir = ($lots === 'current') ? 'ASC' : 'DESC';
 $argsVehicle = [
     'post_type'      => $opt['post_type'],
     'posts_per_page' => $ppp,
-    'paged'          => $paged,
+    'paged'          => $pgn,
     'meta_query'     => $meta_query,
     'meta_key'       => $auction_date_meta,
     'orderby'        => 'meta_value',
@@ -218,11 +218,15 @@ $yt_sel  = $year_to_param;
 $minYear = (int)$opt['min_year'];
 $maxYear = (int)date('Y');
 
+$page_url = get_permalink(get_queried_object_id());
+$base_url = $page_url;
+
 ?>
 
 <section class="auction_vehicles without_spacing">
     <div class="auction_vehicles-container">
-        <form class="auction_result-filter" method="get" action="">
+        <form class="auction_result-filter" method="get" action="<?php echo esc_url($base_url); ?>">
+            <input type="hidden" name="pgn" value="1">
             <input type="hidden" name="lots" value="<?php echo esc_attr($lots); ?>">
             <input type="hidden" name="order_by" value="<?php echo esc_attr($order_by); ?>">
 
@@ -294,21 +298,23 @@ $maxYear = (int)date('Y');
                 </select>
             </div>
 
-            <div class="auction_result-filter-year">
-                <select name="year_from" onchange="this.form.submit()">
-                    <option value=""><?php esc_html_e('From'); ?></option>
-                    <?php for ($y = $minYear; $y <= $maxYear; $y++): ?>
-                        <option value="<?php echo $y; ?>" <?php selected($yf_sel, (string)$y); ?>><?php echo $y; ?></option>
-                    <?php endfor; ?>
-                </select>
-                <p><?php esc_html_e('To'); ?></p>
-                <select name="year_to" onchange="this.form.submit()">
-                    <option value=""><?php esc_html_e('To'); ?></option>
-                    <?php for ($y = $minYear; $y <= $maxYear; $y++): ?>
-                        <option value="<?php echo $y; ?>" <?php selected($yt_sel, (string)$y); ?>><?php echo $y; ?></option>
-                    <?php endfor; ?>
-                </select>
-            </div>
+            <?php if (NOT_APPEAR): ?>
+                <div class="auction_result-filter-year">
+                    <select name="year_from" onchange="this.form.submit()">
+                        <option value=""><?php esc_html_e('From'); ?></option>
+                        <?php for ($y = $minYear; $y <= $maxYear; $y++): ?>
+                            <option value="<?php echo $y; ?>" <?php selected($yf_sel, (string)$y); ?>><?php echo $y; ?></option>
+                        <?php endfor; ?>
+                    </select>
+                    <p><?php esc_html_e('To'); ?></p>
+                    <select name="year_to" onchange="this.form.submit()">
+                        <option value=""><?php esc_html_e('To'); ?></option>
+                        <?php for ($y = $minYear; $y <= $maxYear; $y++): ?>
+                            <option value="<?php echo $y; ?>" <?php selected($yt_sel, (string)$y); ?>><?php echo $y; ?></option>
+                        <?php endfor; ?>
+                    </select>
+                </div>
+            <?php endif; ?>
 
         </form>
     </div>
@@ -324,7 +330,8 @@ $maxYear = (int)date('Y');
                     <button type="button" class="<?php echo $lots === 'past'    ? 'active' : ''; ?>" data-lots="past">Past lots</button>
                 </div>
                 <div class="refine_views">
-                    <form method="get" action="">
+                    <form method="get" action="<?php echo esc_url($base_url); ?>">
+                        <input type="hidden" name="pgn" value="1">
                         <input type="hidden" name="lots" value="<?php echo esc_attr($lots); ?>">
                         <div class="auction_result-filter-page">
                             <p>
@@ -373,20 +380,22 @@ $maxYear = (int)date('Y');
                     <?php
                     // === Paginación ===
                     $pagination = paginate_links([
-                        'total'     => (int) $vehicles->max_num_pages,
-                        'current'   => $paged,
-                        'mid_size'  => 2,
-                        'prev_text' => '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="14" viewBox="0 0 19 14" fill="none"><path d="M19 7L1.00049 7M1.00049 7L7.00049 13M1.00049 7L7.0005 0.999999" stroke="#8C6E47"/></svg>',
-                        'next_text' => '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="14" viewBox="0 0 19 14" fill="none"><path d="M-7.15494e-08 7L17.9995 7M17.9995 7L11.9995 1M17.9995 7L11.9995 13" stroke="#8C6E47"/></svg>',
+                        'base'    => esc_url_raw(add_query_arg('pgn', '%#%', $page_url)),
+                        'format'  => '',
+                        'current' => $pgn,
+                        'total'   => (int) $vehicles->max_num_pages,
+                        'mid_size' => 2,
+                        'prev_text' => '…',
+                        'next_text' => '…',
                         'add_args'  => array_filter([
-                            'lots'              => $lots,
-                            'search_vehicle'    => $q,
-                            'vehicle_brand'     => $brand_slug,
+                            'lots'               => $lots,
+                            'search_vehicle'     => $q,
+                            'vehicle_brand'      => $brand_slug,
                             'vehicle_categories' => $cat_slug,
-                            'order_by'          => $_GET['order_by'] ?? '',
-                            'year_from'         => $year_from_param,
-                            'year_to'           => $year_to_param,
-                            'posts_per_page'    => $ppp,
+                            'order_by'           => $_GET['order_by'] ?? '',
+                            'year_from'          => $year_from_param,
+                            'year_to'            => $year_to_param,
+                            'posts_per_page'     => $ppp,
                         ], static fn($v) => $v !== '' && $v !== null),
                     ]);
 
@@ -411,60 +420,87 @@ $maxYear = (int)date('Y');
 <?php get_footer(); ?>
 
 <script>
-    // Toggle grid/list (ya lo tenías)
-    let change_view = document.querySelectorAll('.change_view'),
-        vehicles_module = document.querySelector('.refine_vehicles');
+    (function() {
+        // Ruta base SIEMPRE sin query
+        const PAGE_URL = "<?php echo esc_js($page_url); ?>";
 
-    if (change_view && vehicles_module) {
-        Array.from(change_view).forEach(view => {
-            view.addEventListener('click', (e) => {
-                e.preventDefault();
-                let id = e.currentTarget.getAttribute('data-view');
-                vehicles_module.setAttribute('data-state', id);
-            });
-        });
-    }
+        // 1) Normaliza los action de ambos forms para evitar que un hook los infle con la query actual
+        document.querySelectorAll('form.auction_result-filter, .refine_views form')
+            .forEach(f => f.setAttribute('action', PAGE_URL));
 
-    // Toggle Current/Past lots: setea hidden input 'lots' y envía el formulario principal
-    const lotsButtons = document.querySelectorAll('.refine_buttons button[data-lots]');
-    const filterForm = document.querySelector('form.auction_result-filter');
-    if (lotsButtons && filterForm) {
-        lotsButtons.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                const val = btn.getAttribute('data-lots') || 'current';
-                // actualiza hidden en el form
-                let hidden = filterForm.querySelector('input[name="lots"]');
-                if (!hidden) {
-                    hidden = document.createElement('input');
-                    hidden.type = 'hidden';
-                    hidden.name = 'lots';
-                    filterForm.appendChild(hidden);
+        // 2) Cualquier submit del form principal => pgn=1
+        const filterForm = document.querySelector('form.auction_result-filter');
+        if (filterForm) {
+            filterForm.addEventListener('submit', () => {
+                let pgn = filterForm.querySelector('input[name="pgn"]');
+                if (!pgn) {
+                    pgn = document.createElement('input');
+                    pgn.type = 'hidden';
+                    pgn.name = 'pgn';
+                    filterForm.appendChild(pgn);
                 }
-                hidden.value = val;
-
-                // estado visual
-                lotsButtons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-
-                filterForm.submit();
+                pgn.value = '1';
             });
-        });
-    }
-</script>
+        }
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const sel = document.getElementById('blog-perpage');
-        if (!sel) return;
+        // 3) Botones Current/Past => set lots y pgn=1 y enviar
+        const lotsButtons = document.querySelectorAll('.refine_buttons button[data-lots]');
+        if (lotsButtons && filterForm) {
+            lotsButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
 
-        sel.addEventListener('change', function() {
-            const url = new URL(window.location.href);
-            url.searchParams.set('posts_per_page', this.value);
-            // limpiar paginación para volver a la página 1
-            url.searchParams.delete('paged');
-            url.searchParams.delete('page');
-            window.location.href = url.toString();
-        });
-    });
+                    let lots = filterForm.querySelector('input[name="lots"]');
+                    if (!lots) {
+                        lots = document.createElement('input');
+                        lots.type = 'hidden';
+                        lots.name = 'lots';
+                        filterForm.appendChild(lots);
+                    }
+                    lots.value = btn.getAttribute('data-lots') || 'current';
+
+                    let pgn = filterForm.querySelector('input[name="pgn"]');
+                    if (!pgn) {
+                        pgn = document.createElement('input');
+                        pgn.type = 'hidden';
+                        pgn.name = 'pgn';
+                        filterForm.appendChild(pgn);
+                    }
+                    pgn.value = '1';
+
+                    lotsButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    filterForm.submit();
+                });
+            });
+        }
+
+        // 4) Cambio de "Per Page" => construimos la URL a mano y forzamos pgn=1
+        const perPageSelect = document.querySelector('.refine_views select[name="posts_per_page"]');
+        if (perPageSelect) {
+            perPageSelect.addEventListener('change', (e) => {
+                const params = new URLSearchParams(window.location.search);
+                params.set('posts_per_page', e.target.value);
+                params.set('pgn', '1'); // ← aquí está la clave
+                // mantenemos el resto de filtros actuales
+                const url = new URL(PAGE_URL, window.location.origin);
+                url.search = params.toString();
+                window.location.assign(url.toString());
+            });
+        }
+
+        // 5) Tu toggle de grid/list igual que antes
+        const change_view = document.querySelectorAll('.change_view');
+        const vehicles_module = document.querySelector('.refine_vehicles');
+        if (change_view && vehicles_module) {
+            Array.from(change_view).forEach(view => {
+                view.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const id = e.currentTarget.getAttribute('data-view');
+                    vehicles_module.setAttribute('data-state', id);
+                });
+            });
+        }
+    })();
 </script>

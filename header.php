@@ -7,6 +7,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php wp_head(); ?>
     <title><?php echo wp_get_document_title(); ?></title>
+
+    <?php if (is_singular('vehicles')) :
+        $vehicle_id = get_the_ID();
+
+        // ======= OG:IMAGE (galería → thumbnail → placeholder) =======
+        $og_image = '';
+        $gallery  = get_field('gallery_vehicle', $vehicle_id);
+
+        if (is_array($gallery) && !empty($gallery)) {
+            $first = $gallery[0];
+            if (is_numeric($first)) {
+                $og_image = wp_get_attachment_image_url((int) $first, 'full');
+            } elseif (is_array($first)) {
+                if (!empty($first['ID'])) {
+                    $og_image = wp_get_attachment_image_url((int) $first['ID'], 'full');
+                } elseif (!empty($first['url'])) {
+                    $og_image = $first['url'];
+                }
+            }
+        }
+        if (empty($og_image) && has_post_thumbnail($vehicle_id)) {
+            $og_image = get_the_post_thumbnail_url($vehicle_id, 'full');
+        }
+        if (empty($og_image)) {
+            $og_image = IMG . '/placeholder-vehicle.png';
+        }
+
+        // ======= OTROS DATOS =======
+        $og_title = get_the_title($vehicle_id);
+        $og_desc  = get_the_excerpt($vehicle_id) ?: wp_trim_words(strip_tags(get_the_content(null, false, $vehicle_id)), 30);
+        $og_url   = get_permalink($vehicle_id);
+    ?>
+        <!-- Open Graph -->
+        <meta property="og:type" content="article">
+        <meta property="og:title" content="<?php echo esc_attr($og_title); ?>">
+        <meta property="og:description" content="<?php echo esc_attr($og_desc); ?>">
+        <meta property="og:url" content="<?php echo esc_url($og_url); ?>">
+        <meta property="og:image" content="<?php echo esc_url($og_image); ?>">
+
+        <!-- Opcional: metadatos extra de la imagen -->
+        <meta property="og:image:alt" content="<?php echo esc_attr($og_title); ?>">
+        <?php
+        // Obtener dimensiones si la imagen es adjunto de WP
+        if ($attachment_id = attachment_url_to_postid($og_image)) {
+            $meta = wp_get_attachment_metadata($attachment_id);
+            if (!empty($meta['width']) && !empty($meta['height'])) {
+                echo '<meta property="og:image:width" content="' . esc_attr($meta['width']) . '">' . "\n";
+                echo '<meta property="og:image:height" content="' . esc_attr($meta['height']) . '">' . "\n";
+            }
+        }
+        ?>
+    <?php endif; ?>
+
 </head>
 
 <body <?php body_class(); ?>>
