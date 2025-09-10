@@ -7,7 +7,8 @@ get_header();
 
 get_banner('Homepage / classic auctions / Upcoming Auctions');
 
-$today = current_time('mysql');
+$today_ymd    = current_time('Y-m-d');
+$today_start  = $today_ymd . ' 00:00:00';
 
 $argsAuction = array(
     'post_type'      => 'auction',
@@ -19,8 +20,8 @@ $argsAuction = array(
     'meta_query'     => array(
         array(
             'key'     => 'auction_date',
-            'value'   => $today,
-            'compare' => '>',
+            'value'   => $today_start,
+            'compare' => '>=',
             'type'    => 'DATETIME'
         )
     )

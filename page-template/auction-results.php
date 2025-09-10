@@ -7,8 +7,6 @@ get_header();
 
 get_banner('Homepage / classic auctions / Auction Results', get_the_post_thumbnail_url(get_the_ID(), 'full'), 'Auction Results');
 
-$today = current_time('mysql');
-
 /* paginación */
 $paged = max(1, get_query_var('paged') ? (int) get_query_var('paged') : (int) get_query_var('page'));
 
@@ -25,12 +23,15 @@ if (!in_array($sale_type, $allowed_sale_types, true)) {
     $sale_type = 'all';
 }
 
+$today_ymd   = current_time('Y-m-d');
+$today_start = $today_ymd . ' 00:00:00';
+
 /* meta query (fechas pasadas + filtro por año + sale_type por ACF) */
 $meta_query = [
     'relation' => 'AND',
     [
         'key'     => 'auction_date',
-        'value'   => $today,
+        'value'   => $today_start,
         'compare' => '<',
         'type'    => 'DATETIME',
     ],

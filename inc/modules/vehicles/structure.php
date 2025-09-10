@@ -116,9 +116,25 @@ function hnh_render_vehicle_item($vehicle_id, $args = [])
 
             <div class="auction_result-list-data">
                 <?php if (strtolower((string)$vehicle_status) === 'sold'): ?>
-                    <div>
-                        <p>Sold</p>
-                    </div>
+
+
+                    <?php
+                    $sold_price = get_field('sold_price');
+                    if ($sold_price):
+                        $sold = (float) preg_replace('/[^\d.\-]/', '', (string) $sold_price);
+                    ?>
+                        <div style="border: none;">
+                            <p><?php esc_html_e('Sold for'); ?></p>
+                            <p class="gold-text">
+                                <?php echo '£' . esc_html(number_format_i18n($sold, 0)); ?>
+                            </p>
+                        </div>
+                    <?php else: ?>
+                        <div>
+                            <p>Sold</p>
+                        </div>
+                    <?php endif; ?>
+
                 <?php else: ?>
                     <?php if ($registration_no || $chassis_no || $vehicle_mot) : ?>
                         <div>
@@ -349,9 +365,20 @@ function hnh_render_vehicle_card($vehicle_id, $args = [], $format = 1)
 
             <div class="vehicle_card-price">
                 <?php if (strtolower($vehicle_status) == 'sold'): ?>
-                    <ul>
-                        <li><b>Sold</b></li>
-                    </ul>
+                    <?php
+                    $sold_price = get_field('sold_price');
+                    if ($sold_price):
+                        $sold = (float) preg_replace('/[^\d.\-]/', '', (string) $sold_price);
+                    ?>
+                        <h4 style="margin:0">
+                            <span><?php esc_html_e('Sold for'); ?></span>
+                            <?php echo '£' . esc_html(number_format_i18n($sold, 0)); ?>
+                        </h4>
+                    <?php else: ?>
+                        <ul>
+                            <li><b>Sold</b></li>
+                        </ul>
+                    <?php endif; ?>
                 <?php else: ?>
                     <?php if ($registration_no || $chassis_no || $vehicle_mot): ?>
                         <ul>
