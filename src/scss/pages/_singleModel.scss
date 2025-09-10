@@ -13,12 +13,16 @@
     }
 
     @include m.tv {
-        line-height: 1.1em;
-        font-size: 17px;
+        line-height: 1.3em;
+        font-size: 16px;
     }
 
     @include m.desktop {
         font-size: 15px;
+    }
+
+    @include m.tablet {
+        line-height: 1.25em;
     }
 }
 
@@ -313,7 +317,7 @@
             }
 
             @include m.tv {
-                min-width: 300px;
+                min-width: 420px;
                 flex: 1;
                 padding: 21px;
                 padding-bottom: 42px;
@@ -326,6 +330,10 @@
             @include m.tablet {
                 padding: 12px;
                 padding-bottom: 24px;
+            }
+
+            @media (max-width: 600px) {
+                min-width: 100%;
             }
 
             @media (min-width: v.$tv) {
@@ -451,20 +459,54 @@
 
         @include m.splide_arrows;
     }
+
+    &-head {
+        width: 100%;
+        @include m.flex(space-between);
+
+        @media (min-width: v.$tv) {
+            margin-bottom: m.px-to-vw(32px);
+        }
+
+        @include m.tv {
+            margin-bottom: 21px;
+        }
+
+        @include m.tablet {
+            margin-bottom: 16px;
+        }
+
+        h3 {
+            @include m.h4v2(v.$black, v.$cormorant, false);
+            font-weight: 300;
+        }
+
+        .splide_arrows {
+            margin-left: auto;
+            margin-bottom: 0 !important;
+        }
+    }
 }
 
 .modelbox {
     display: block;
     position: relative;
+    overflow: hidden;
 
     @media (min-width: v.$tv) {
         width: m.px-to-vw(268px);
         height: m.px-to-vw(134px);
+        border-radius: m.px-to-vw(4px);
     }
 
     @include m.tv {
         width: 224px;
         height: 121px;
+        border-radius: 3px;
+    }
+
+    &.empty {
+        background: #DDDDDD;
     }
 
     &-thumb {
@@ -480,19 +522,19 @@
             background: transparent;
 
             @media (min-width: v.$tv) {
-                border: m.px-to-vw(2px) solid v.$light_brown;
+                border: m.px-to-vw(2px) solid v.$white;
                 width: calc(100% - m.px-to-vw(16px));
                 height: calc(100% - m.px-to-vw(16px));
             }
 
             @include m.tv {
-                border: 2px solid v.$light_brown;
+                border: 2px solid v.$white;
                 width: calc(100% - 10px);
                 height: calc(100% - 10px);
             }
 
             @include m.desktop {
-                border: 1px solid v.$light_brown;
+                border: 1px solid v.$white;
             }
         }
 
@@ -511,5 +553,203 @@
         text-align: center;
         @include m.h3v2(v.$white, v.$goudysb, true, false);
         @include m.lines(2);
+    }
+
+    &.local {
+        .modelbox {
+            &-thumb {
+                &::before {
+                    @media (min-width: v.$tv) {
+                        border: m.px-to-vw(2px) solid v.$light_brown;
+                    }
+
+                    @include m.tv {
+                        border: 2px solid v.$light_brown;
+                    }
+
+                    @include m.desktop {
+                        border: 1px solid v.$light_brown;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.clouds {
+    @include m.pblock160(true);
+
+    &_container {
+        @include m.container_side;
+    }
+
+    &_grid {
+        width: 100%;
+
+        @media (min-width: v.$tv) {
+            @include m.grid(3, m.px-to-vw(24px) m.px-to-vw(24px));
+        }
+
+        @include m.tv {
+            @include m.grid(3, 16px 16px);
+        }
+
+        @include m.tablet {
+            grid-template-columns: 100%;
+        }
+
+        &>* {
+            width: 100%;
+        }
+    }
+
+    .cloud {
+        @include m.flex(center);
+        @include m.transition;
+        position: relative;
+        background: rgba($color: v.$white, $alpha: 0);
+
+        @media (min-width: v.$tv) {
+            border: m.px-to-vw(1px) solid v.$light_brown;
+            padding: m.px-to-vw(32px);
+            height: m.px-to-vw(239px);
+        }
+
+        @include m.tv {
+            border: 1px solid v.$light_brown;
+            padding: 21px;
+            height: 203px;
+        }
+
+        @include m.desktop {
+            height: 176px;
+        }
+
+        @include m.tablet {
+            padding: 12px;
+            height: auto;
+            min-height: 66px;
+        }
+
+        &::before {
+            position: absolute;
+            @include m.transition;
+            @include m.centerX;
+            content: '';
+            background: v.$beige;
+            opacity: 0;
+            pointer-events: none;
+            transform: rotate(45deg);
+            transform-origin: center;
+
+            @media (min-width: v.$tv) {
+                @include m.square(m.px-to-vw(24px));
+                top: calc(100% + m.px-to-vw(36px));
+                border: m.px-to-vw(1px) solid v.$light_brown;
+                border-bottom: none;
+                border-right: none;
+            }
+
+            @include m.tv {
+                @include m.square(16px);
+                top: calc(100% + 24px);
+                border: 1px solid v.$light_brown;
+                border-bottom: none;
+                border-right: none;
+            }
+        }
+
+        h3 {
+            @include m.h4(v.$black, v.$cormorant, false);
+            font-weight: 300;
+            text-align: center;
+            @include m.transition;
+        }
+
+        &:is(:hover) {
+            background: v.$light_brown_2;
+        }
+
+        &_description {
+            background: v.$beige;
+
+            @media (min-width: v.$tv) {
+                border: m.px-to-vw(1px) solid v.$light_brown;
+                padding: m.px-to-vw(32px);
+            }
+
+            @include m.tv {
+                border: 1px solid v.$light_brown;
+                padding: 21px;
+            }
+
+            @include m.tablet {
+                padding: 12px;
+            }
+
+            p,
+            li,
+            span {
+                @extend %p22;
+            }
+
+            &-container {
+                display: none;
+
+                @media (min-width: v.$tablet) {
+                    grid-column: 1/4;
+                }
+
+                width: 100%;
+
+                @media (min-width: v.$tv) {
+                    padding-block: m.px-to-vw(24px);
+                }
+
+                @include m.tv {
+                    padding-block: 16px;
+                }
+
+                &:nth-of-type(-n+5) {
+                    @media (min-width: v.$tablet) {
+                        grid-row: 2/3;
+                    }
+                }
+
+                &:nth-last-of-type(-n+6) {
+                    @media (min-width: v.$tablet) {
+                        grid-row: 4/5;
+                    }
+                }
+            }
+        }
+
+        &.active {
+            background: v.$light_brown;
+
+            h3 {
+                color: v.$white;
+            }
+
+            &+.cloud_description-container {
+                display: block;
+            }
+
+            &::before {
+                opacity: 1;
+            }
+        }
+
+        &:nth-of-type(-n+5) {
+            @media (min-width: v.$tablet) {
+                grid-row: 1/2;
+            }
+        }
+
+        &:nth-last-of-type(-n+6) {
+            @media (min-width: v.$tablet) {
+                grid-row: 3/4;
+            }
+        }
     }
 }

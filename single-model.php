@@ -3,6 +3,7 @@
 get_header();
 
 $title = get_the_title();
+$ID = get_the_ID();
 
 $vehicle_brand = get_field('brand');
 
@@ -96,23 +97,27 @@ $models = new WP_Query($argsModels);
     <section class="select_model">
         <div class="select_model-container">
             <div class="splide" role="group" id="models">
-                <div class="splide__arrows">
-                    <button class="splide__arrow splide__arrow--prev">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="26" viewBox="0 0 50 26" fill="none">
-                            <path d="M0 13H48M48 13L36 1M48 13L36 25" stroke="#8C6E47" stroke-width="2" />
-                        </svg>
-                    </button>
-                    <button class="splide__arrow splide__arrow--next">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="26" viewBox="0 0 50 26" fill="none">
-                            <path d="M0 13H48M48 13L36 1M48 13L36 25" stroke="#8C6E47" stroke-width="2" />
-                        </svg>
-                    </button>
+                <div class="select_model-head">
+                    <h3>Select Model</h3>
+                    <div class="splide__arrows">
+                        <button class="splide__arrow splide__arrow--prev">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="26" viewBox="0 0 50 26" fill="none">
+                                <path d="M0 13H48M48 13L36 1M48 13L36 25" stroke="#8C6E47" stroke-width="2" />
+                            </svg>
+                        </button>
+                        <button class="splide__arrow splide__arrow--next">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="26" viewBox="0 0 50 26" fill="none">
+                                <path d="M0 13H48M48 13L36 1M48 13L36 25" stroke="#8C6E47" stroke-width="2" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
                 <div class="splide__track">
                     <ul class="splide__list">
                         <?php while ($models->have_posts()) : $models->the_post(); ?>
+                            <?php $model_id = get_the_ID(); ?>
                             <li class="splide__slide">
-                                <a href="<?php the_permalink(); ?>" class="modelbox">
+                                <a href="<?php the_permalink(); ?>" data-id="<?php echo $model_id; ?>" class="modelbox <?php echo $model_id == $ID ? 'local' : 'nolocal'; ?>">
                                     <?php if (has_post_thumbnail()) : ?>
                                         <div class="modelbox-thumb">
                                             <?php the_post_thumbnail('full'); ?>
@@ -123,8 +128,22 @@ $models = new WP_Query($argsModels);
                                     </h3>
                                 </a>
                             </li>
-                        <?php endwhile;
-                        wp_reset_postdata(); ?>
+                        <?php endwhile; ?>
+                        <?php
+                        // 🔹 Agregar vacíos si hay pocos modelos
+                        $min_items = 4;   // mínimo que siempre quieres mostrar
+                        $max_fill  = 10;  // si ya hay 10 o más, no agregamos nada
+
+                        if ($model_count < $min_items && $model_count < $max_fill) {
+                            $fill_count = $min_items - $model_count;
+                            for ($i = 0; $i < $fill_count; $i++) {
+                                echo '<li class="splide__slide">
+                                    <div class="modelbox empty"></div>
+                                </li>';
+                            }
+                        }
+                        ?>
+                        <?php wp_reset_postdata(); ?>
                     </ul>
                 </div>
             </div>
@@ -178,6 +197,25 @@ $models = new WP_Query($argsModels);
                         </div>
                         <div class="painting_box-content">
                             <p><?php echo get_sub_field('content_frame'); ?></p>
+                        </div>
+                    </div>
+                <?php endwhile; ?>
+            </div>
+        </div>
+    </section>
+<?php endif; ?>
+
+<?php if (have_rows('squares')): ?>
+    <section class="clouds">
+        <div class="clouds_container">
+            <div class="clouds_grid">
+                <?php while (have_rows('squares')): the_row(); ?>
+                    <div class="cloud">
+                        <h3><?php echo get_sub_field('title_square'); ?></h3>
+                    </div>
+                    <div class="cloud_description-container">
+                        <div class="cloud_description">
+                            <p><?php echo get_sub_field('content_square'); ?></p>
                         </div>
                     </div>
                 <?php endwhile; ?>
@@ -304,13 +342,28 @@ $models = new WP_Query($argsModels);
 
 <?php get_footer(); ?>
 
-<?php if (have_rows('faqs_vehicle')): ?>
 <script>
-    $("#my-accordion").accordionjs({
-        closeAble: true,
-        closeOther: true,
-        slideSpeed: 150,
-        activeIndex: 100,
-    });
+    <?php if (have_rows('faqs_vehicle')): ?>
+        $("#my-accordion").accordionjs({
+            closeAble: true,
+            closeOther: true,
+            slideSpeed: 150,
+            activeIndex: 100,
+        });
+    <?php endif; ?>
+
+    <?php if (have_rows('squares')): ?>
+        document.addEventListener("DOMContentLoaded", () => {
+            const clouds = document.querySelectorAll(".cloud");
+
+            if (clouds) {
+                clouds.forEach(cloud => {
+                    cloud.addEventListener("click", () => {
+                        clouds.forEach(c => c.classList.remove("active"));
+                        cloud.classList.add("active");
+                    });
+                });
+            }
+        });
+    <?php endif; ?>
 </script>
-<?php endif; ?>

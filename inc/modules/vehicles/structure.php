@@ -36,7 +36,7 @@ function hnh_snippet_from_html($html, $max_chars = 260)
 function hnh_render_vehicle_item($vehicle_id, $args = [])
 {
     $vehicle_id = (int) $vehicle_id;
-    if (! $vehicle_id) return;
+    if (!$vehicle_id) return;
 
     $thumb_size   = $args['thumb_size']   ?? 'large';
     $fallback_img = $args['fallback_img'] ?? (defined('IMG') ? IMG . '/placeholder-vehicle.png' : '');
@@ -52,43 +52,95 @@ function hnh_render_vehicle_item($vehicle_id, $args = [])
     $estimate_low    = get_field('estimate_low', $vehicle_id);
     $estimate_high   = get_field('estimate_high', $vehicle_id);
 
+    $vehicle_status  = get_field('status', $vehicle_id);
+
     $full_description          = get_field('description', $vehicle_id);
     $vehicle_short_description = hnh_snippet_from_html($full_description, 260);
 
+    // === Imagen: featured -> primera de galería -> fallback ===
+    $image     = '';
+    $image_alt = $title ?: 'Vehicle';
+
+    // 1) Featured
     $image = get_the_post_thumbnail_url($vehicle_id, $thumb_size);
-    if (! $image && $fallback_img) {
-        $image = $fallback_img;
+    if ($image) {
+        $thumb_id  = get_post_thumbnail_id($vehicle_id);
+        $image_alt = get_post_meta($thumb_id, '_wp_attachment_image_alt', true) ?: $image_alt;
+    }
+
+    // 2) Si no hay featured, intenta con la primera de la galería ACF
+    if (!$image) {
+        $gallery = get_field('gallery_vehicle', $vehicle_id);
+        if ($gallery && is_array($gallery)) {
+            foreach ($gallery as $item) {
+                // ACF puede devolver array, ID o URL
+                if (is_array($item)) {
+                    $att_id = isset($item['ID']) ? (int)$item['ID'] : 0;
+                    if ($att_id) {
+                        $image     = wp_get_attachment_image_url($att_id, $thumb_size);
+                        $image_alt = get_post_meta($att_id, '_wp_attachment_image_alt', true)
+                            ?: ($item['alt'] ?? ($item['title'] ?? $image_alt));
+                    } else {
+                        $image     = $item['url'] ?? '';
+                        $image_alt = $item['alt'] ?? ($item['title'] ?? $image_alt);
+                    }
+                } elseif (is_numeric($item)) {
+                    $att_id    = (int)$item;
+                    $image     = wp_get_attachment_image_url($att_id, $thumb_size);
+                    $image_alt = get_post_meta($att_id, '_wp_attachment_image_alt', true) ?: $image_alt;
+                } elseif (is_string($item) && $item !== '') {
+                    $image     = $item;
+                    $image_alt = $image_alt; // deja el título como alt
+                }
+
+                if ($image) break; // solo la primera válida
+            }
+        }
+    }
+
+    // 3) Fallback si no hay nada
+    if (!$image && $fallback_img) {
+        $image     = $fallback_img;
+        $image_alt = $image_alt ?: 'Vehicle';
     }
 
 ?>
     <div class="auction_result-list-item">
         <div class="auction_result-list-img">
-            <img class="w-100" src="<?php echo esc_url($image); ?>" alt="<?php echo esc_attr($title); ?>">
+            <?php if ($image): ?>
+                <img class="w-100" src="<?php echo esc_url($image); ?>" alt="<?php echo esc_attr($image_alt); ?>">
+            <?php endif; ?>
         </div>
         <div class="auction_result-list-info">
             <h3><?php echo esc_html($title); ?></h3>
 
             <div class="auction_result-list-data">
-                <?php if ($registration_no || $chassis_no || $vehicle_mot) : ?>
+                <?php if (strtolower((string)$vehicle_status) === 'sold'): ?>
                     <div>
-                        <?php if ($registration_no) : ?>
-                            <p>Registration No: <span><?php echo esc_html($registration_no); ?></span></p>
-                        <?php endif; ?>
-
-                        <?php if ($chassis_no) : ?>
-                            <p><?php
-                                if (has_term('motorcycles', 'vehicle_category', $vehicle_id)) {
-                                    echo 'Frame No:';
-                                } else {
-                                    echo 'Chassis No:';
-                                }
-                                ?> <span><?php echo esc_html($chassis_no); ?></span></p>
-                        <?php endif; ?>
-
-                        <?php if ($vehicle_mot) : ?>
-                            <p>MOT: <span><?php echo esc_html($vehicle_mot); ?></span></p>
-                        <?php endif; ?>
+                        <p>Sold</p>
                     </div>
+                <?php else: ?>
+                    <?php if ($registration_no || $chassis_no || $vehicle_mot) : ?>
+                        <div>
+                            <?php if ($registration_no) : ?>
+                                <p>Registration No: <span><?php echo esc_html($registration_no); ?></span></p>
+                            <?php endif; ?>
+
+                            <?php if ($chassis_no) : ?>
+                                <p>
+                                    <?php
+                                    // Si pertenece a la categoría "motorcycles", renombra el label
+                                    echo has_term('motorcycles', 'vehicle_category', $vehicle_id) ? 'Frame No:' : 'Chassis No:';
+                                    ?>
+                                    <span><?php echo esc_html($chassis_no); ?></span>
+                                </p>
+                            <?php endif; ?>
+
+                            <?php if ($vehicle_mot) : ?>
+                                <p>MOT: <span><?php echo esc_html($vehicle_mot); ?></span></p>
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
                 <?php endif; ?>
 
                 <?php if ($estimate_low && $estimate_high) : ?>
@@ -128,7 +180,6 @@ function hnh_render_vehicle_item($vehicle_id, $args = [])
 }
 
 
-
 /**
  * Renderiza la nueva card de un Vehicle con carrusel de imágenes (Splide).
  *
@@ -166,6 +217,8 @@ function hnh_render_vehicle_card($vehicle_id, $args = [], $format = 1)
 
     $estimate_low    = get_field('estimate_low', $vehicle_id);
     $estimate_high   = get_field('estimate_high', $vehicle_id);
+
+    $vehicle_status   = get_field('status', $vehicle_id);
 
     // Formateo "Estimated at"
     $estimate_html = '';
@@ -295,24 +348,30 @@ function hnh_render_vehicle_card($vehicle_id, $args = [], $format = 1)
             </div>
 
             <div class="vehicle_card-price">
-                <?php if ($registration_no || $chassis_no || $vehicle_mot): ?>
+                <?php if (strtolower($vehicle_status) == 'sold'): ?>
                     <ul>
-                        <?php if ($registration_no): ?>
-                            <li><b><?php esc_html_e('Registration No:'); ?></b> <?php echo esc_html($registration_no); ?></li>
-                        <?php endif; ?>
-                        <?php if ($chassis_no): ?>
-                            <li><b><?php
-                                    if (has_term('motorcycles', 'vehicle_category', $vehicle_id)) {
-                                        esc_html_e('Frame No:');
-                                    } else {
-                                        esc_html_e('Chassis No:');
-                                    }
-                                    ?></b> <?php echo esc_html($chassis_no); ?></li>
-                        <?php endif; ?>
-                        <?php if ($vehicle_mot): ?>
-                            <li><b><?php esc_html_e('MOT:'); ?></b> <?php echo esc_html($vehicle_mot); ?></li>
-                        <?php endif; ?>
+                        <li><b>Sold</b></li>
                     </ul>
+                <?php else: ?>
+                    <?php if ($registration_no || $chassis_no || $vehicle_mot): ?>
+                        <ul>
+                            <?php if ($registration_no): ?>
+                                <li><b><?php esc_html_e('Registration No:'); ?></b> <?php echo esc_html($registration_no); ?></li>
+                            <?php endif; ?>
+                            <?php if ($chassis_no): ?>
+                                <li><b><?php
+                                        if (has_term('motorcycles', 'vehicle_category', $vehicle_id)) {
+                                            esc_html_e('Frame No:');
+                                        } else {
+                                            esc_html_e('Chassis No:');
+                                        }
+                                        ?></b> <?php echo esc_html($chassis_no); ?></li>
+                            <?php endif; ?>
+                            <?php if ($vehicle_mot): ?>
+                                <li><b><?php esc_html_e('MOT:'); ?></b> <?php echo esc_html($vehicle_mot); ?></li>
+                            <?php endif; ?>
+                        </ul>
+                    <?php endif; ?>
                 <?php endif; ?>
             </div>
             <div class="vehicle_card-actions">
