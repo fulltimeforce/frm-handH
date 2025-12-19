@@ -104,4 +104,43 @@ class EvaluationRequestRepository
 
         return $this->find($id);
     }
+
+    public function updateStatusIfCurrent(int $requestId, string $fromStatus, string $toStatus): bool
+    {
+        $updated = $this->wpdb->update(
+            $this->table,
+            [
+                'status'     => $toStatus,
+                'updated_at' => current_time('mysql'),
+            ],
+            [
+                'id'     => $requestId,
+                'status' => $fromStatus,
+            ],
+            ['%s', '%s'],
+            ['%d', '%s']
+        );
+
+        return ($updated !== false && $updated > 0);
+    }
+
+    public function assignUserAndMoveStatusIfCurrent(int $requestId, int $assignedUserId, string $fromStatus, string $toStatus): bool
+    {
+        $updated = $this->wpdb->update(
+            $this->table,
+            [
+                'assigned_user_id' => $assignedUserId,
+                'status'           => $toStatus,
+                'updated_at'       => current_time('mysql'),
+            ],
+            [
+                'id'     => $requestId,
+                'status' => $fromStatus,
+            ],
+            ['%d', '%s', '%s'],
+            ['%d', '%s']
+        );
+
+        return ($updated !== false && $updated > 0);
+    }
 }

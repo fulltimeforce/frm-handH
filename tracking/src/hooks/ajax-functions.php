@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../services/ConditionReportRequestService.php';
+require_once __DIR__ . '/../services/EvaluationRequestService.php';
 
 /**
  * NEW -> IN_PROGRESS (requiere assigned_user_id)
@@ -76,6 +77,124 @@ add_action('wp_ajax_hh_condition_request_pass_completed', function () {
         wp_send_json_success(['message' => 'Updated.']);
     } catch (Throwable $e) {
         error_log('[HH Tracking] AJAX passToCompleted failed: ' . $e->getMessage());
+        wp_send_json_error(['message' => 'Server error.'], 500);
+    }
+});
+
+// ------------------------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------------------------------------------
+
+/**
+ * AJAX: mover Evaluation Request de "new" => "client_contacted"
+ */
+add_action('wp_ajax_hh_eval_request_pass_client_contacted', function () {
+
+    if (!current_user_can(HH_TRACKING_VIEW_CAP)) {
+        wp_send_json_error(['message' => 'No permission.'], 403);
+    }
+
+    $nonce = isset($_POST['nonce']) ? sanitize_text_field($_POST['nonce']) : '';
+    if (!wp_verify_nonce($nonce, 'hh_eval_request_update')) {
+        wp_send_json_error(['message' => 'Invalid nonce.'], 400);
+    }
+
+    $request_id = isset($_POST['request_id']) ? absint($_POST['request_id']) : 0;
+    if ($request_id <= 0) {
+        wp_send_json_error(['message' => 'Invalid request id.'], 400);
+    }
+
+    try {
+        $service = new EvaluationRequestService();
+
+        $ok = $service->passToClientContacted($request_id);
+
+        if (!$ok) {
+            wp_send_json_error(['message' => 'Request not updated (maybe not in New anymore).'], 400);
+        }
+
+        wp_send_json_success(['message' => 'Updated.']);
+    } catch (Throwable $e) {
+        error_log('[HH Tracking] AJAX passToClientContacted failed: ' . $e->getMessage());
+        wp_send_json_error(['message' => 'Server error.'], 500);
+    }
+});
+
+
+/**
+ * AJAX: mover Evaluation Request de "client_contacted" => "assigned" asignando especialista.
+ */
+add_action('wp_ajax_hh_eval_request_pass_assigned', function () {
+
+    if (!current_user_can(HH_TRACKING_VIEW_CAP)) {
+        wp_send_json_error(['message' => 'No permission.'], 403);
+    }
+
+    $nonce = isset($_POST['nonce']) ? sanitize_text_field($_POST['nonce']) : '';
+    if (!wp_verify_nonce($nonce, 'hh_eval_request_update')) {
+        wp_send_json_error(['message' => 'Invalid nonce.'], 400);
+    }
+
+    $request_id       = isset($_POST['request_id']) ? absint($_POST['request_id']) : 0;
+    $assigned_user_id = isset($_POST['assigned_user_id']) ? absint($_POST['assigned_user_id']) : 0;
+
+    if ($request_id <= 0) {
+        wp_send_json_error(['message' => 'Invalid request id.'], 400);
+    }
+
+    // si no eligió usuario -> NO hacemos nada (se queda client_contacted)
+    if ($assigned_user_id <= 0) {
+        wp_send_json_success(['message' => 'No changes applied.']);
+    }
+
+    try {
+        $service = new EvaluationRequestService();
+
+        $ok = $service->passToAssigned($request_id, $assigned_user_id);
+
+        if (!$ok) {
+            wp_send_json_error(['message' => 'Request not updated (maybe not in Client Contacted anymore, invalid user, or db error).'], 400);
+        }
+
+        wp_send_json_success(['message' => 'Updated.']);
+    } catch (Throwable $e) {
+        error_log('[HH Tracking] AJAX passToAssigned failed: ' . $e->getMessage());
+        wp_send_json_error(['message' => 'Server error.'], 500);
+    }
+});
+
+/**
+ * AJAX: mover Evaluation Request de "assigned" a "under_review" (solo status).
+ */
+add_action('wp_ajax_hh_eval_request_pass_under_review', function () {
+
+    if (!current_user_can(HH_TRACKING_VIEW_CAP)) {
+        wp_send_json_error(['message' => 'No permission.'], 403);
+    }
+
+    $nonce = isset($_POST['nonce']) ? sanitize_text_field($_POST['nonce']) : '';
+    if (!wp_verify_nonce($nonce, 'hh_eval_request_update')) {
+        wp_send_json_error(['message' => 'Invalid nonce.'], 400);
+    }
+
+    $request_id = isset($_POST['request_id']) ? absint($_POST['request_id']) : 0;
+    if ($request_id <= 0) {
+        wp_send_json_error(['message' => 'Invalid request id.'], 400);
+    }
+
+    try {
+        $service = new EvaluationRequestService();
+
+        // Solo debe pasar si está en assigned (como hiciste en condition report)
+        $ok = $service->passToUnderReview($request_id);
+
+        if (!$ok) {
+            wp_send_json_error(['message' => 'Request not updated (maybe not in Assigned anymore, or db error).'], 400);
+        }
+
+        wp_send_json_success(['message' => 'Updated.']);
+    } catch (Throwable $e) {
+        error_log('[HH Tracking] AJAX passToUnderReview failed: ' . $e->getMessage());
         wp_send_json_error(['message' => 'Server error.'], 500);
     }
 });

@@ -116,6 +116,16 @@ add_action('admin_enqueue_scripts', function ($hook) {
             true
         );
     }
+
+    if ($screen->id === 'tracking_page_hh-evaluation-requests') {
+        wp_enqueue_script(
+            'hh-evaluation-requests-board',
+            get_template_directory_uri() . '/tracking/assets/evaluation-requests-board.js',
+            [],
+            '1.0.0',
+            true
+        );
+    }
 });
 
 

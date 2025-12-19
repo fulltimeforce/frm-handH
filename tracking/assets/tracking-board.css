@@ -111,6 +111,7 @@
 .hh-topbar .description {
     margin: 0;
     color: #646970;
+    display: none;
 }
 
 .hh-card--link {

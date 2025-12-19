@@ -119,7 +119,6 @@ function hh_condition_report_page()
                                     $url = admin_url('admin.php?page=gf_entries&view=entry&id=' . $form_id . '&lid=' . $gf_entry_id);
                                 }
 
-
                                 if (!empty($assigned_user_id) && $assigned_user_id > 0) {
                                     $assigned_user = get_user_by('id', (int) $assigned_user_id);
 

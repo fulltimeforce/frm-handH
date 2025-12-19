@@ -72,33 +72,29 @@ class EvaluationRequestService
         return $this->repository->update($dto);
     }
 
-    /* ===================== BUSINESS ACTIONS ===================== */
-
-    public function assignToUser(int $id, int $user_id)
+    public function passToClientContacted(int $requestId): bool
     {
-        $dto = new UpdateEvaluationRequestDto(
-            $id,
-            null,
-            $user_id
-        );
+        if ($requestId <= 0) return false;
 
-        return $this->repository->update($dto);
+        // Solo NEW -> CLIENT_CONTACTED
+        return $this->repository->updateStatusIfCurrent($requestId, 'new', 'client_contacted');
     }
 
-    public function changeStatus(int $id, string $status)
+    public function passToAssigned(int $requestId, int $assignedUserId): bool
     {
-        $dto = new UpdateEvaluationRequestDto(
-            $id,
-            $status
-        );
+        if ($requestId <= 0 || $assignedUserId <= 0) return false;
 
-        return $this->repository->update($dto);
+        // Validar usuario
+        $u = get_user_by('id', $assignedUserId);
+        if (!$u) return false;
+
+        // Solo CLIENT_CONTACTED -> ASSIGNED
+        return $this->repository->assignUserAndMoveStatusIfCurrent($requestId, $assignedUserId, 'client_contacted', 'assigned');
     }
 
-    /* ===================== READ ===================== */
-
-    public function get(int $id)
+    public function passToUnderReview(int $requestId): bool
     {
-        return $this->repository->find($id);
+        // Ideal: delega al repo, y fuerza transición desde "assigned"
+        return $this->repository->updateStatusIfCurrent($requestId, 'assigned', 'under_review');
     }
 }
