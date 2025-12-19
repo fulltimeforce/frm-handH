@@ -46,12 +46,12 @@ function hnh_format_mysql_datetime_friendly($mysql_datetime, $assume_noon_if_mid
     $month = $dt->format('F');         // February
     $day   = hnh_ordinal_day($dt->format('j')); // 12th
 
-    $time_label = $dt->format('g:i A'); // 12:00 PM
+    $time_label = $dt->format('g:ia'); // 12:00 PM
     // Etiqueta especial Noon/Midnight
     $note = '';
-    if ($dt->format('g:i A') === '12:00 PM') {
+    if ($dt->format('g:ia') === '12:00pm') {
         $note = ' (Noon)';
-    } elseif ($dt->format('g:i A') === '12:00 AM') {
+    } elseif ($dt->format('g:ia') === '12:00am') {
         $note = ' (Midnight)';
     }
 
@@ -67,7 +67,7 @@ function hnh_format_auction_datetime($datetime_string)
     $ts = strtotime($datetime_string);
     if ($ts === false) return esc_html($datetime_string);
     // date_i18n respeta el timezone de WP
-    return date_i18n('jS M, Y - g:i a', $ts);
+    return date_i18n('jS M, Y - g:ia', $ts);
 }
 
 /**
@@ -104,7 +104,7 @@ function hnh_render_auction_card($auction_id, $venue_id = 0)
     if (!$thumb_url) {
         // Fallback: usa la constante IMG si existe, sino construye ruta al tema
         $img_base = defined('IMG') ? IMG : get_template_directory_uri() . '/assets/img';
-        $thumb_url = $img_base . '/auction1.png';
+        $thumb_url = $img_base . '/placeholder-vehicle.png';
     }
 
     // Link al venue si existe
@@ -126,9 +126,9 @@ function hnh_render_auction_card($auction_id, $venue_id = 0)
 ?>
     <div class="auction">
         <div class="auction_thumb">
-            <div class="thumb">
+            <a class="d-block thumb" href="<?php echo esc_url($permalink); ?>" alt="<?php echo esc_attr($title); ?>">
                 <img src="<?php echo esc_url($thumb_url); ?>" alt="<?php echo esc_attr($title); ?>">
-            </div>
+            </a>
         </div>
 
         <div class="auction_info">

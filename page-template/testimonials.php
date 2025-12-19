@@ -15,7 +15,7 @@ get_banner('Homepage / About / Testimonials', get_the_post_thumbnail_url(get_the
 
 <section class="testimonials_page">
     <div class="container">
-        <h2>Trustpilot Reviews</h2>
+        <h2>Reviews</h2>
         <div class="splide trustpilot_reviews" aria-label="Trustpilot Reviews">
             <div class="splide__track">
                 <ul class="splide__list">

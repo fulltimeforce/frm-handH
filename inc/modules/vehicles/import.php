@@ -1,15 +1,15 @@
 <?php
 // ============ SETTINGS (fácil de cambiar si lo necesitas) =============
 const HNH_IMPORT_POST_TYPE   = 'vehicles';
-const HNH_TAX_CATEGORY       = 'vehicle_category';
-const HNH_TAX_BRAND          = 'vehicle_brand';
+const HNH_TAX_CATEGORY       = 'vehicle_category'; // ya no se usa en el import, pero lo dejo por si acaso
+const HNH_TAX_BRAND          = 'vehicle_brand';    // taxonomía con las "Makes"
 const HNH_MENU_PARENT        = 'edit.php?post_type=vehicles'; // Colgar el import del menú "Vehicles"
 
-// CPT que guarda a los miembros del equipo (para el Post Object "member_to_contact")
+// CPT que guarda a los miembros del equipo (para el Post Object "assigned_to" / "contact_rep")
 const HNH_TEAM_POST_TYPE     = 'team';
 
 // *** MODO ESPECIAL: SOLO ACTUALIZAR FECHAS POR TÍTULO ***
-const HNH_UPDATE_DATES_ONLY  = false; // ← pon false para volver al import normal
+const HNH_UPDATE_DATES_ONLY  = false; // ← pon true si quieres el modo solo fechas
 // ======================================================================
 
 // === Admin Page: Vehicles → Import Vehicles
@@ -130,61 +130,60 @@ function vehicles_handle_import($file)
         return;
     }
 
-    // ============== MODO IMPORT NORMAL (tu lógica original) =================
+    // ============== MODO IMPORT NORMAL (create / update por stock_number) =================
 
-    // === Map by COLUMN INDEX (positional)
-    $map_by_index = [];
-    foreach ($headers_raw as $colIdx => $label) {
-        $label = sanitize_text_field($label);
-        $name  = vehicles_sanitize_field_name($label);
-        $map_by_index[$colIdx] = $name ?: null;
-    }
+    // --- LOCALIZA TODAS LAS CABECERAS QUE NOS INTERESAN ---
+    $col_title_main         = vehicles_find_header(['Title (main)'], $headers_raw);                      // obligatorio
+    $col_description        = vehicles_find_header(['Description'], $headers_raw);                       // opcional
+    $col_auction_latest     = vehicles_find_header(['Auction (latest)'], $headers_raw);                  // opcional
+    $col_auction_date       = vehicles_find_header(['Auction date (latest)'], $headers_raw);             // opcional
+    $col_auction_number     = vehicles_find_header(['Auction number (latest)'], $headers_raw);           // opcional
+    $col_lot_number         = vehicles_find_header(['Lot number (latest)'], $headers_raw);               // opcional
+    $col_status             = vehicles_find_header(['Status'], $headers_raw);                            // opcional
+    $col_contact_rep        = vehicles_find_header(['Contact/Rep'], $headers_raw);                       // opcional
+    $col_sold_price         = vehicles_find_header(['Sold Price', 'Sold price'], $headers_raw);          // opcional
+    $col_artist_brand       = vehicles_find_header(['Artist/Maker/Brand'], $headers_raw);                // opcional
+    $col_assigned_to        = vehicles_find_header(['Assigned to', 'Assigned To'], $headers_raw);        // opcional
+    $col_category           = vehicles_find_header(['Category', 'Category (all levels)'], $headers_raw); // opcional
+    $col_estimate_range     = vehicles_find_header(['Estimate (range)'], $headers_raw);                  // opcional
+    $col_footnote           = vehicles_find_header(['Footnote'], $headers_raw);                          // opcional
+    $col_stock_number       = vehicles_find_header(['Stock Number', 'Stock number'], $headers_raw);      // obligatorio
+    $col_estimate_high      = vehicles_find_header(['Estimate (high)'], $headers_raw);                   // opcional
+    $col_estimate_low       = vehicles_find_header(['Estimate (low)'], $headers_raw);                    // opcional
+    $col_image_url          = vehicles_find_header(['Image URL (main image)', 'Image URL'], $headers_raw); // opcional
+    $col_lot_link           = vehicles_find_header(['Lot Link', 'Lot link'], $headers_raw);              // opcional
+    $col_title_sub          = vehicles_find_header(['Title (sub)'], $headers_raw);                       // opcional
 
-    // ---------------------------------------------
-    // Headers importantes (Title SOLO desde "Title (main)")
-    // ---------------------------------------------
-    $title_col      = vehicles_find_header(['Title (main)'], $headers_raw);
-    if ($title_col === -1) {
-        echo '<div class="notice notice-error"><p>Required header <strong>Title (main)</strong> not found. Import aborted.</p></div>';
+    // --- CABECERAS OBLIGATORIAS ---
+    $missing_required = [];
+    if ($col_title_main === -1)   $missing_required[] = 'Title (main)';
+    if ($col_stock_number === -1) $missing_required[] = 'Stock Number';
+
+    if (!empty($missing_required)) {
+        echo '<div class="notice notice-error"><p>'
+            . 'Import aborted. Missing required header(s): <strong>'
+            . esc_html(implode(', ', $missing_required))
+            . '</strong>.'
+            . '</p></div>';
         return;
     }
 
-    $content_col    = vehicles_find_header(['Description', 'Desc'], $headers_raw);
-    $image_url_col  = vehicles_find_header(['Image URL (main image)', 'Image URL', 'Main image URL'], $headers_raw);
-    $stock_col      = vehicles_find_header(['Stock number', 'Stock Number'], $headers_raw);
-
-    // Category columns
-    $category1_col  = vehicles_find_header(['Category 1', 'Category1'], $headers_raw);
-    $category2_col  = vehicles_find_header(['Category 2', 'Category2'], $headers_raw);
-
-    // Brand column (Artist/Maker/Brand)
-    $brand_col      = vehicles_find_header(['Artist/Maker/Brand', 'Artist', 'Maker', 'Brand'], $headers_raw);
-
-    // Contact/Rep o Assigned to → ACF Post Object "member_to_contact" (CPT team)
-    $contact_col    = vehicles_find_header([
-        'Contact/Rep or Assigned to',
-        'Contact/Rep',
-        'Assigned to',
-        'Assigned To',
-        'Member to Contact'
-    ], $headers_raw);
-
-    $created = 0;
-    $skipped_empty = 0;
-    $skipped_existing = 0;
-    $skipped_no_stock = 0;
-    $skipped_no_title = 0;
+    $created               = 0;
+    $updated               = 0;
+    $skipped_empty         = 0;
+    $skipped_no_stock      = 0;
+    $skipped_no_title      = 0;
+    $skipped_duplicate_row = 0;
 
     $seen_stocks_in_file = [];
 
-    // Term caches
-    $category_cache = []; // [CamelName => term_id]
-    $brand_cache    = []; // [CamelName => term_id]
+    // caché para CPT team
+    $team_cache = [];
 
     for ($i = 1; $i < count($rows); $i++) {
         $row = $rows[$i];
 
-        // Empty row?
+        // --- ¿fila completamente vacía? ---
         $nonEmpty = false;
         foreach ($row as $cell) {
             if ((string)$cell !== '') {
@@ -197,147 +196,294 @@ function vehicles_handle_import($file)
             continue;
         }
 
-        // --- Título obligatorio desde "Title (main)"
-        $title_value = wp_strip_all_tags(trim((string)$row[$title_col]));
+        // --- TÍTULO (obligatorio) ---
+        $title_value = wp_strip_all_tags(trim((string)$row[$col_title_main]));
         if ($title_value === '') {
             $skipped_no_title++;
             continue;
         }
 
-        // Stock number (unique)
-        $stock_value = '';
-        if ($stock_col !== -1) {
-            $stock_value = strtoupper(trim((string)$row[$stock_col]));
-            $stock_value = preg_replace('/\s+/', '', $stock_value);
-        }
+        // --- STOCK NUMBER (obligatorio) ---
+        $stock_value = strtoupper(trim((string)$row[$col_stock_number]));
+        $stock_value = preg_replace('/\s+/', '', $stock_value);
         if ($stock_value === '') {
             $skipped_no_stock++;
             continue;
         }
 
+        // Duplicado dentro del propio archivo (misma fila de stock repetida)
         if (isset($seen_stocks_in_file[$stock_value])) {
-            $skipped_existing++;
+            $skipped_duplicate_row++;
             continue;
         }
         $seen_stocks_in_file[$stock_value] = true;
 
-        if (vehicles_published_exists_by_stock_number($stock_value)) {
-            $skipped_existing++;
-            continue;
-        }
-
-        // Contenido (pretty)
-        $raw_desc     = $content_col !== -1 ? (string)$row[$content_col] : '';
+        // --- CONTENIDO (desde Description, si está) ---
+        $raw_desc     = ($col_description !== -1) ? (string)$row[$col_description] : '';
         $post_content = vehicles_format_description($raw_desc);
 
-        // Crear post (título SIN fallback)
-        $post_id = wp_insert_post([
-            'post_type'    => HNH_IMPORT_POST_TYPE,
-            'post_status'  => 'publish',
-            'post_title'   => $title_value, // solo Title (main)
-            'post_content' => $post_content,
-        ], true);
-        if (is_wp_error($post_id)) {
-            $skipped_empty++;
-            continue;
+        // ¿Ya existe un Vehicle con ese stock_number?
+        $existing_id = vehicles_get_post_id_by_stock_number($stock_value);
+
+        if ($existing_id) {
+            // ==== UPDATE EXISTENTE ====
+            $post_id = $existing_id;
+
+            wp_update_post([
+                'ID'           => $post_id,
+                'post_title'   => $title_value,
+                'post_content' => $post_content,
+                // no toco el status para no revivir borrados/trash
+            ]);
+
+            $updated++;
+        } else {
+            // ==== CREATE NUEVO ====
+            $post_id = wp_insert_post([
+                'post_type'    => HNH_IMPORT_POST_TYPE,
+                'post_status'  => 'publish',
+                'post_title'   => $title_value,
+                'post_content' => $post_content,
+            ], true);
+
+            if (is_wp_error($post_id)) {
+                $skipped_empty++;
+                continue;
+            }
+
+            $created++;
         }
 
-        /** ===== Extraer y guardar ACF desde Description ===== */
+        // ===== Extraer Registration No / Chassis No / MOT desde Description =====
         $desc_triplet = vehicles_extract_from_description($raw_desc);
         update_field('registration_no', $desc_triplet['registration_no'], $post_id);
         update_field('chassis_no',      $desc_triplet['chassis_no'],      $post_id);
-        // update_field('mot',             $desc_triplet['mot'],             $post_id);
-        /** =================================================== */
 
-        // Guardar ACF fields posicionalmente (todas las columnas normalizadas)
-        foreach ($headers_raw as $colIdx => $header_label) {
-            $field_name = $map_by_index[$colIdx] ?? null;
-            if (!$field_name) continue;
-
-            // Evita escribir el Post Object "member_to_contact" con texto crudo.
-            if ($field_name === 'member_to_contact') continue;
-
-            $value = (string)$row[$colIdx];
-            $lower = strtolower((string)$header_label);
-
-            if (strpos($lower, 'date') !== false) {
-                $value = vehicles_excel_serial_to_datetime($value, 'Y-m-d H:i');
+        if (!empty($desc_triplet['mot'])) {
+            $mot_val = vehicles_validate_mot($desc_triplet['mot']);
+            if ($mot_val !== '') {
+                update_field('mot', $mot_val, $post_id);
             }
-            update_field($field_name, $value, $post_id);
         }
-        update_field('stock_number', $stock_value, $post_id);
+        // =====================================================================
 
-        // === Member to Contact (Post Object -> Team) ===
-        static $team_cache = []; // cache por nombre normalizado
-        $contact_raw = ($contact_col !== -1) ? trim((string)$row[$contact_col]) : '';
-        if ($contact_raw !== '') {
-            $team_id = vehicles_get_team_id_by_display($contact_raw, $team_cache);
-            if ($team_id) {
-                // ACF acepta IDk
-                // update_field('member_to_contact', $team_id, $post_id);
+        // --- ACF: Title (main) + Description ---
+        update_field('title_main', $title_value, $post_id);
+        if ($col_description !== -1) {
+            // guardamos el HTML / texto EXACTO del Excel en el ACF
+            update_field('description', (string)$row[$col_description], $post_id);
+        }
+
+        // --- CAMPOS ACF SEGÚN CABECERAS PRESENTES ---
+
+        if ($col_auction_latest !== -1) {
+            update_field('auction_latest', (string)$row[$col_auction_latest], $post_id);
+        }
+
+        if ($col_auction_date !== -1) {
+            $date_raw  = (string)$row[$col_auction_date];
+            $date_norm = vehicles_excel_serial_to_datetime($date_raw, 'Y-m-d H:i');
+            if ($date_norm !== '') {
+                update_field('auction_date_latest', $date_norm, $post_id);
             }
         }
 
-        // Featured image from URL
-        if ($image_url_col !== -1) {
-            $img_url = trim((string)$row[$image_url_col]);
-            if ($img_url !== '') vehicles_set_featured_image_from_url($post_id, $img_url);
+        if ($col_auction_number !== -1) {
+            update_field('auction_number_latest', (string)$row[$col_auction_number], $post_id);
         }
 
-        // === Vehicle Categories (Category 1 / Category 2) ===
-        $assigned_category_ids = [];
-        if (taxonomy_exists(HNH_TAX_CATEGORY)) {
-            $raw1 = ($category1_col !== -1) ? trim((string)$row[$category1_col]) : '';
-            $raw2 = ($category2_col !== -1) ? trim((string)$row[$category2_col]) : '';
-            foreach ([$raw1, $raw2] as $raw) {
-                if ($raw === '') continue;
-                $camel = vehicles_to_camelcase($raw);
-                $tid   = vehicles_get_or_create_term($camel, HNH_TAX_CATEGORY, $category_cache);
-                if ($tid) $assigned_category_ids[] = (int)$tid;
-            }
-            if (!empty($assigned_category_ids)) {
-                wp_set_object_terms($post_id, $assigned_category_ids, HNH_TAX_CATEGORY, false);
+        if ($col_lot_number !== -1) {
+            update_field('lot_number_latest', (string)$row[$col_lot_number], $post_id);
+        }
+
+        if ($col_status !== -1) {
+            update_field('status', (string)$row[$col_status], $post_id);
+        }
+
+        // --- CONTACT REP → Post Object (CPT team) ---
+        if ($col_contact_rep !== -1) {
+            $contact_raw = trim((string)$row[$col_contact_rep]);
+            if ($contact_raw !== '') {
+                $team_id = vehicles_get_team_id_by_display($contact_raw, $team_cache);
+                if ($team_id) {
+                    update_field('contact_rep', $team_id, $post_id);
+                }
             }
         }
 
-        // === Vehicle Brand (Artist/Maker/Brand) → taxonomy HNH_TAX_BRAND ===
-        if (taxonomy_exists(HNH_TAX_BRAND) && $brand_col !== -1) {
-            $raw_brand = trim((string)$row[$brand_col]);
-            if ($raw_brand !== '') {
-                $brand_camel   = vehicles_to_camelcase($raw_brand);
-                $brand_term_id = vehicles_get_or_create_term($brand_camel, HNH_TAX_BRAND, $brand_cache);
+        if ($col_sold_price !== -1) {
+            update_field('sold_price', (string)$row[$col_sold_price], $post_id);
+        }
+
+        // --- ARTIST / MAKER / BRAND → TAXONOMY vehicle_brand + ACF (ID del término) ---
+        if ($col_artist_brand !== -1) {
+            $brand_raw = trim((string)$row[$col_artist_brand]);
+            if ($brand_raw !== '') {
+                $brand_term_id = vehicles_get_or_create_brand_term($brand_raw);
                 if ($brand_term_id) {
-                    wp_set_object_terms($post_id, (int)$brand_term_id, HNH_TAX_BRAND, false);
+                    // Guardar ID del término en el ACF
+                    update_field('artist_maker_brand', (int)$brand_term_id, $post_id);
 
-                    // Vincular brand → category (meta 'linked_vehicle_category')
-                    $primary_cat_id = 0;
-                    if (!empty($assigned_category_ids)) {
-                        $primary_cat_id = (int)$assigned_category_ids[0]; // toma Category 1 (o la primera que llegó)
-                    } else {
-                        $linked = (int) get_term_meta($brand_term_id, 'linked_' . HNH_TAX_CATEGORY, true);
-                        if ($linked) {
-                            $primary_cat_id = $linked;
-                            wp_set_object_terms($post_id, [$primary_cat_id], HNH_TAX_CATEGORY, true);
-                        }
-                    }
-                    if ($primary_cat_id && !get_term_meta($brand_term_id, 'linked_' . HNH_TAX_CATEGORY, true)) {
-                        update_term_meta($brand_term_id, 'linked_' . HNH_TAX_CATEGORY, $primary_cat_id);
+                    // Y asignarlo como taxonomy al vehicle
+                    if (taxonomy_exists(HNH_TAX_BRAND)) {
+                        wp_set_object_terms($post_id, [(int)$brand_term_id], HNH_TAX_BRAND, false);
                     }
                 }
             }
         }
 
-        $created++;
+        if ($col_category !== -1) {
+            update_field('category_all_levels', (string)$row[$col_category], $post_id);
+        }
+
+        if ($col_estimate_range !== -1) {
+            update_field('estimate_range', (string)$row[$col_estimate_range], $post_id);
+        }
+
+        if ($col_footnote !== -1) {
+            update_field('footnote', (string)$row[$col_footnote], $post_id);
+        }
+
+        if ($col_estimate_high !== -1) {
+            update_field('estimate_high', (string)$row[$col_estimate_high], $post_id);
+        }
+
+        if ($col_estimate_low !== -1) {
+            update_field('estimate_low', (string)$row[$col_estimate_low], $post_id);
+        }
+
+        if ($col_lot_link !== -1) {
+            update_field('lot_link', (string)$row[$col_lot_link], $post_id);
+        }
+
+        if ($col_title_sub !== -1) {
+            update_field('title_sub', (string)$row[$col_title_sub], $post_id);
+        }
+
+        // Siempre guardamos el stock_number porque es obligatorio
+        update_field('stock_number', $stock_value, $post_id);
+
+        // --- ASSIGNED TO → Post Object (CPT team) ---
+        if ($col_assigned_to !== -1) {
+            $assigned_raw = trim((string)$row[$col_assigned_to]);
+            if ($assigned_raw !== '') {
+                $team_id = vehicles_get_team_id_by_display($assigned_raw, $team_cache);
+                if ($team_id) {
+                    update_field('assigned_to', $team_id, $post_id);
+                }
+            }
+        }
+
+        // --- IMAGEN DESTACADA DESDE URL ---
+        if ($col_image_url !== -1) {
+            $img_url = trim((string)$row[$col_image_url]);
+            if ($img_url !== '') {
+                vehicles_set_featured_image_from_url($post_id, $img_url);
+                // además guardamos la URL en el ACF
+                update_field('image_url_main_image', $img_url, $post_id);
+            }
+        }
     }
 
     echo '<div class="notice notice-success"><p>'
         . 'Import completed. '
         . 'Created: <strong>' . intval($created) . '</strong> '
-        . '| Skipped (existing by published stock number): ' . intval($skipped_existing) . ' '
+        . '| Updated (same Stock Number): <strong>' . intval($updated) . '</strong> '
+        . '| Skipped (duplicate rows in file): ' . intval($skipped_duplicate_row) . ' '
         . '| Skipped (empty rows/errors): ' . intval($skipped_empty) . ' '
         . '| Skipped (no stock number): ' . intval($skipped_no_stock) . ' '
         . '| Skipped (no title): ' . intval($skipped_no_title)
         . '</p></div>';
+}
+
+/**
+ * Devuelve el ID de un Vehicle por stock_number (cualquier estado). 0 si no existe.
+ */
+function vehicles_get_post_id_by_stock_number($stock)
+{
+    if ($stock === '') return 0;
+
+    $q = new WP_Query([
+        'post_type'      => HNH_IMPORT_POST_TYPE,
+        'post_status'    => 'any',
+        'posts_per_page' => 1,
+        'fields'         => 'ids',
+        'meta_query'     => [
+            [
+                'key'   => 'stock_number',
+                'value' => $stock,
+            ],
+        ],
+        'no_found_rows'  => true,
+    ]);
+
+    if (!empty($q->posts)) {
+        return (int)$q->posts[0];
+    }
+    return 0;
+}
+
+/**
+ * Valida/normaliza el valor de MOT.
+ * Acepta:
+ *  - "Exempt" (insensible a mayúsculas) -> "Exempt"
+ *  - "Mes Año" (full o abreviado: Jan/January, Sep/Sept/September) -> "Month YYYY"
+ * Si no cumple, retorna ''.
+ */
+function vehicles_validate_mot($raw)
+{
+    $s = trim((string)$raw);
+    if ($s === '') return '';
+
+    // 1) Exempt
+    if (preg_match('~^exempt$~i', $s)) {
+        return 'Exempt';
+    }
+
+    // 2) Month + Year (admite abreviaturas)
+    // Map de abrevs -> mes completo
+    $month_map = [
+        'jan' => 'January',
+        'january'   => 'January',
+        'feb' => 'February',
+        'february'  => 'February',
+        'mar' => 'March',
+        'march'     => 'March',
+        'apr' => 'April',
+        'april'     => 'April',
+        'may' => 'May',
+        'jun' => 'June',
+        'june'      => 'June',
+        'jul' => 'July',
+        'july'      => 'July',
+        'aug' => 'August',
+        'august'    => 'August',
+        'sep' => 'September',
+        'sept'      => 'September',
+        'september' => 'September',
+        'oct' => 'October',
+        'october'   => 'October',
+        'nov' => 'November',
+        'november'  => 'November',
+        'dec' => 'December',
+        'december'  => 'December',
+    ];
+
+    // mes (abreviado o completo) + espacios + año de 4 dígitos
+    if (preg_match('~^\s*([A-Za-z]{3,9})\s+(\d{4})\s*$~', $s, $m)) {
+        $mon_key = strtolower($m[1]);
+        $year    = (int) $m[2];
+
+        // Rango razonable de año (ajústalo si quieres)
+        if ($year < 1950 || $year > 2100) return '';
+
+        if (isset($month_map[$mon_key])) {
+            return $month_map[$mon_key] . ' ' . $year; // normaliza a mes completo
+        }
+    }
+
+    // Si no coincide con ninguno, no guardes nada
+    return '';
 }
 
 /**
@@ -376,7 +522,7 @@ function vehicles_update_dates_only(array $rows, array $headers_raw)
             continue;
         }
 
-        $title = wp_strip_all_tags(trim((string)$row[$title_col]));
+        $title    = wp_strip_all_tags(trim((string)$row[$title_col]));
         $date_raw = trim((string)$row[$date_col]);
 
         if ($title === '' || $date_raw === '') {
@@ -398,11 +544,11 @@ function vehicles_update_dates_only(array $rows, array $headers_raw)
             if (!$post) {
                 $q = new WP_Query([
                     'post_type'      => HNH_IMPORT_POST_TYPE,
-                    'title'          => $title, // WordPress no soporta 'title' de fábrica, pero mantenemos por claridad
+                    'title'          => $title,
                     'post_status'    => 'any',
                     'posts_per_page' => 1,
                     'fields'         => 'ids',
-                    's'              => $title, // fallback fuzzy si hay variaciones menores
+                    's'              => $title,
                     'no_found_rows'  => true,
                 ]);
                 if (!empty($q->posts)) {
@@ -444,7 +590,7 @@ function vehicles_update_dates_only(array $rows, array $headers_raw)
 /**
  * Excel/Texto → string fecha normalizada (por defecto 'Y-m-d H:i').
  * - Detecta explícitamente dd/mm/yyyy [+ hh:mm[:ss]]
- * - Soporta / - .
+ * - Soporta / - . . 
  * - Convierte serial Excel válido (días desde 1899-12-30).
  * - Fallback europeo controlado.
  */
@@ -513,24 +659,6 @@ function vehicles_excel_serial_to_datetime($value, $format = 'Y-m-d H:i')
     return '';
 }
 
-// === Exists check among PUBLISHED vehicles only ===
-function vehicles_published_exists_by_stock_number($stock)
-{
-    $q = new WP_Query([
-        'post_type'      => HNH_IMPORT_POST_TYPE,
-        'post_status'    => 'publish',
-        'posts_per_page' => 1,
-        'fields'         => 'ids',
-        'meta_query'     => [
-            [
-                'key'   => 'stock_number',
-                'value' => $stock,
-            ],
-        ],
-    ]);
-    return !empty($q->posts);
-}
-
 // === Helpers ===
 function vehicles_find_header(array $candidates, array $headers)
 {
@@ -548,7 +676,7 @@ function vehicles_sanitize_field_name($label)
     return trim($name, '_');
 }
 
-// CamelCase para términos
+// CamelCase para términos (ya casi no lo usamos, pero lo dejo por si acaso)
 function vehicles_to_camelcase($value)
 {
     $v = trim((string)$value);
@@ -560,60 +688,53 @@ function vehicles_to_camelcase($value)
 }
 
 /**
- * Get or create a taxonomy term by CamelCase name (with small cache).
+ * Crea o devuelve un término en la taxonomía de marcas (vehicle_brand),
+ * usando el nombre EXACTO que viene del Excel.
+ * Devuelve 0 si algo falla.
  */
-function vehicles_get_or_create_term($camelName, $taxonomy, array &$cache)
+function vehicles_get_or_create_brand_term($label)
 {
-    if ($camelName === '' || !taxonomy_exists($taxonomy)) return 0;
-    if (isset($cache[$camelName])) return (int)$cache[$camelName];
+    $name = trim((string)$label);
+    if ($name === '' || !taxonomy_exists(HNH_TAX_BRAND)) return 0;
 
-    $existing = get_term_by('name', $camelName, $taxonomy);
-    if ($existing && !is_wp_error($existing)) {
-        $cache[$camelName] = (int)$existing->term_id;
-        return (int)$existing->term_id;
+    static $cache = [];
+
+    $key = strtolower($name);
+    if (isset($cache[$key])) {
+        return (int)$cache[$key];
     }
 
-    $res = wp_insert_term($camelName, $taxonomy, ['slug' => sanitize_title($camelName)]);
-    if (!is_wp_error($res) && isset($res['term_id'])) {
-        $cache[$camelName] = (int)$res['term_id'];
-        return (int)$res['term_id'];
+    // 1) Buscar por nombre
+    $term = get_term_by('name', $name, HNH_TAX_BRAND);
+    if ($term && !is_wp_error($term)) {
+        $cache[$key] = (int)$term->term_id;
+        return (int)$term->term_id;
     }
 
-    $existing = get_term_by('name', $camelName, $taxonomy);
-    if ($existing && !is_wp_error($existing)) {
-        $cache[$camelName] = (int)$existing->term_id;
-        return (int)$existing->term_id;
+    // 2) Crear nuevo término
+    $args = [
+        'slug' => sanitize_title($name),
+    ];
+    $res = wp_insert_term($name, HNH_TAX_BRAND, $args);
+    if (!is_wp_error($res) && !empty($res['term_id'])) {
+        $term_id      = (int)$res['term_id'];
+        $cache[$key]  = $term_id;
+        return $term_id;
     }
+
+    // 3) Fallback: quizá el slug ya existía
+    $term = get_term_by('slug', sanitize_title($name), HNH_TAX_BRAND);
+    if ($term && !is_wp_error($term)) {
+        $cache[$key] = (int)$term->term_id;
+        return (int)$term->term_id;
+    }
+
     return 0;
 }
 
-// Featured image
-function vehicles_set_featured_image_from_url($post_id, $url)
-{
-    if (!function_exists('download_url')) {
-        require_once ABSPATH . 'wp-admin/includes/file.php';
-    }
-    if (!function_exists('media_handle_sideload')) {
-        require_once ABSPATH . 'wp-admin/includes/media.php';
-        require_once ABSPATH . 'wp-admin/includes/image.php';
-    }
-
-    $tmp = download_url($url);
-    if (is_wp_error($tmp)) return false;
-
-    $name = basename(parse_url($url, PHP_URL_PATH)) ?: 'image.jpg';
-    $file = ['name' => sanitize_file_name($name), 'tmp_name' => $tmp];
-
-    $att_id = media_handle_sideload($file, $post_id);
-    if (is_wp_error($att_id)) {
-        @unlink($tmp);
-        return false;
-    }
-    set_post_thumbnail($post_id, $att_id);
-    return true;
-}
-
-// XLSX reader (preserves gaps)
+/**
+ * XLSX reader (preserves gaps)
+ */
 function vehicles_include_simplexlsx()
 {
     if (class_exists('SimpleXLSX')) return;
@@ -680,7 +801,13 @@ function vehicles_include_simplexlsx()
                     $colIndex = self::colIndexFromRef($ref);
                     $t  = (string)$c['t'];
                     $v  = (string)$c->v;
-                    $val = ($t === 's') ? ($shared[(int)$v] ?? '') : (($t === 'inlineStr' && isset($c->is->t)) ? (string)$c->is->t : $v);
+                    if ($t === 's') {
+                        $val = $shared[(int)$v] ?? '';
+                    } elseif ($t === 'inlineStr' && isset($c->is->t)) {
+                        $val = (string)$c->is->t;
+                    } else {
+                        $val = $v;
+                    }
                     $r[$colIndex] = $val;
                 }
                 if (!empty($r)) {
@@ -777,15 +904,37 @@ function vehicles_extract_from_description($html)
     $patterns = [
         'registration_no' => '~\bRegistration\s*(?:No\.?|Number)?\s*:\s*([^\r\n]+)~i',
         'chassis_no'      => '~\bChassis\s*(?:No\.?|Number)?\s*:\s*([^\r\n]+)~i',
-        'mot'             => '~\bMOT\s*:\s*([^\r\n]+)~i',
     ];
 
     foreach ($patterns as $key => $regex) {
         if (preg_match($regex, $text, $m)) {
             $val = trim($m[1]);
-            $val = preg_split('~\s*(?:Registration\s*(?:No\.?|Number)?|Chassis\s*(?:No\.?|Number)?|MOT)\s*:~i', $val, 2)[0];
+            $val = preg_split('~\s*(?:Registration\s*(?:No\.?|Number)?|Chassis\s*(?:No\.?|Number)?|MOT(?:\s*Expiry(?:\s*Date)?)?)\s*:~i', $val, 2)[0];
             $out[$key] = trim($val, " \t\n\r\0\x0B\xC2\xA0");
         }
+    }
+
+    // --- MOT: prioriza Expiry Date -> Expiry -> MOT
+    $mot_val = '';
+    if (preg_match('~\bMOT\s*Expiry\s*Date\s*:\s*([^\r\n]+)~i', $text, $m1)) {
+        $mot_val = trim($m1[1]);
+    } elseif (preg_match('~\bMOT\s*Expiry\s*:\s*([^\r\n]+)~i', $text, $m2)) {
+        $mot_val = trim($m2[1]);
+    } elseif (preg_match('~\bMOT\s*:\s*([^\r\n]+)~i', $text, $m3)) {
+        $mot_val = trim($m3[1]);
+    }
+
+    if ($mot_val !== '') {
+        $mot_val = preg_split('~\s*(?:Registration\s*(?:No\.?|Number)?|Chassis\s*(?:No\.?|Number)?|MOT(?:\s*Expiry(?:\s*Date)?)?)\s*:~i', $mot_val, 2)[0];
+        $mot_val = trim($mot_val, " \t\n\r\0\x0B\xC2\xA0");
+
+        // valida/normaliza (Exempt o Month YYYY)
+        if (function_exists('vehicles_validate_mot')) {
+            $mot_val = vehicles_validate_mot($mot_val);
+        } else {
+            $mot_val = preg_match('~^exempt$~i', $mot_val) ? 'Exempt' : '';
+        }
+        $out['mot'] = $mot_val;
     }
 
     return $out;
@@ -865,4 +1014,32 @@ function vehicles_normalize_person_name($raw)
     $s = mb_convert_case($s, MB_CASE_TITLE, 'UTF-8');
 
     return trim($s);
+}
+
+/**
+ * Featured image desde URL
+ */
+function vehicles_set_featured_image_from_url($post_id, $url)
+{
+    if (!function_exists('download_url')) {
+        require_once ABSPATH . 'wp-admin/includes/file.php';
+    }
+    if (!function_exists('media_handle_sideload')) {
+        require_once ABSPATH . 'wp-admin/includes/media.php';
+        require_once ABSPATH . 'wp-admin/includes/image.php';
+    }
+
+    $tmp = download_url($url);
+    if (is_wp_error($tmp)) return false;
+
+    $name = basename(parse_url($url, PHP_URL_PATH)) ?: 'image.jpg';
+    $file = ['name' => sanitize_file_name($name), 'tmp_name' => $tmp];
+
+    $att_id = media_handle_sideload($file, $post_id);
+    if (is_wp_error($att_id)) {
+        @unlink($tmp);
+        return false;
+    }
+    set_post_thumbnail($post_id, $att_id);
+    return true;
 }

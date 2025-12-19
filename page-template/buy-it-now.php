@@ -16,8 +16,8 @@ get_banner(
 <section class="auction_result-tab">
     <div class="container">
         <div>
-            <a href="<?php echo esc_url(home_url('auction-results')); ?>">PAST AUCTIONS</a>
-            <a class="active">Unsold Vehicles</a>
+            <a href="<?php echo esc_url(home_url('auction-results')); ?>" alt="PAST AUCTIONS">PAST AUCTIONS</a>
+            <a class="active" alt="STILL AVAILABLE">STILL AVAILABLE</a>
         </div>
     </div>
 </section>

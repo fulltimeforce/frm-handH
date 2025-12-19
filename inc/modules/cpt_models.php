@@ -33,6 +33,7 @@ function register_model_cpt()
         'labels'                => $labels,
         'public'                => true,
         'has_archive'           => true,
+        'show_in_export'        => false,
         'rewrite'               => array('slug' => 'models'),
         'menu_icon'             => 'dashicons-layout', // puedes cambiar el ícono
         'supports'              => array('title', 'editor', 'thumbnail', 'excerpt', 'custom-fields'),

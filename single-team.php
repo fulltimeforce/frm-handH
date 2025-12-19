@@ -45,7 +45,7 @@ get_header(); ?>
 
             <?php if (get_field('team_phone')) : ?>
               <p class="single_team_phone">
-                Tel:<strong><?php the_field('team_phone'); ?></strong>
+                Tel: <strong><?php the_field('team_phone'); ?></strong>
               </p>
             <?php endif; ?>
 

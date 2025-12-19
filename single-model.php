@@ -7,14 +7,18 @@ $ID = get_the_ID();
 
 $vehicle_brand = get_field('brand');
 
+$banner_url = '';
+
 if ($vehicle_brand) {
     $term = get_term($vehicle_brand, 'vehicle_brand');
     if (!is_wp_error($term) && $term) {
         $title = $term->name;
+		
+		 $bannerb_url = get_field('vehicle_brand_banner', 'vehicle_brand_' . $term->term_id);
     }
 }
 
-get_centered_banner('', $title);
+get_centered_banner($bannerb_url, $title);
 
 // ---------------------------------------------------------------------
 
@@ -130,9 +134,8 @@ $models = new WP_Query($argsModels);
                             </li>
                         <?php endwhile; ?>
                         <?php
-                        // 🔹 Agregar vacíos si hay pocos modelos
-                        $min_items = 4;   // mínimo que siempre quieres mostrar
-                        $max_fill  = 10;  // si ya hay 10 o más, no agregamos nada
+                        $min_items = 4;   // min
+                        $max_fill  = 10;  // max
 
                         if ($model_count < $min_items && $model_count < $max_fill) {
                             $fill_count = $min_items - $model_count;
@@ -164,8 +167,17 @@ $models = new WP_Query($argsModels);
     </section>
 <?php endif; ?>
 
+<?php if (!empty(get_field('introductionm_title'))): ?>
+	<section class="vehicle_banner model_introduction">
+		<div class="vehicle_banner-container">
+			<h3><?php echo get_field('introductionm_title'); ?></h3>
+			<p><?php echo get_field('introductionm_text'); ?></p>
+		</div>
+	</section>
+<?php endif; ?>
+
 <?php if (have_rows('frames')): ?>
-    <section class="paintings">
+    <section class="paintings paintings_1">
         <div class="paintings_container">
             <div class="paintings_row">
                 <?php while (have_rows('frames')): the_row(); ?>
@@ -205,8 +217,28 @@ $models = new WP_Query($argsModels);
     </section>
 <?php endif; ?>
 
+<?php if (!empty(get_field('auctionm_title'))): ?>
+<section class="model_section_beige">
+	<div class="vehicle_banner-container">
+		<div class="model_beige_grid">
+			<h3><?php echo get_field('auctionm_title'); ?></h3>
+			<p><?php echo get_field('auctionm_text'); ?></p>
+		</div>
+		<div class="model_line"></div>
+		<div class="model_beige_content">
+			<p><?php echo get_field('auctionm_description'); ?></p>
+			<div class="auction_actions">
+				<ul>
+					<li><?php if($link = get_field('auctionm_button')) echo '<a href="'.esc_url($link['url']).'" target="'.esc_attr($link['target'] ?: '_self').'">'.esc_html($link['title']).'</a>'; ?></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</section>
+<?php endif; ?>
+
 <?php if (have_rows('squares')): ?>
-    <section class="clouds">
+    <section class="clouds clouds_1">
         <div class="clouds_container">
             <div class="clouds_grid">
                 <?php while (have_rows('squares')): the_row(); ?>
@@ -224,8 +256,28 @@ $models = new WP_Query($argsModels);
     </section>
 <?php endif; ?>
 
+<?php if (!empty(get_field('auctionm2_title'))): ?>
+<section class="model_section2">
+	<div class="vehicle_banner-container">
+		<div class="model_sections2_image" style="background-image:url(<?php echo get_field('auctionm2_background'); ?>)">
+			<h3><?php echo get_field('auctionm2_title'); ?></h3>
+		</div>
+		<div class="model_section2_content">
+			<div>
+				<?php echo get_field('auctionm2_text'); ?>
+			</div>
+			<div class="auction_actions">
+				<ul>
+					<li><?php if($link2 = get_field('auctionm2_button')) echo '<a href="'.esc_url($link2['url']).'" target="'.esc_attr($link2['target'] ?: '_self').'">'.esc_html($link2['title']).'</a>'; ?></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</section>
+<?php endif; ?>
+
 <?php if (have_rows('frames_2')): ?>
-    <section class="paintings">
+    <section class="paintings paintings_2">
         <div class="paintings_container">
             <div class="paintings_row">
                 <?php while (have_rows('frames_2')): the_row(); ?>
@@ -257,6 +309,126 @@ $models = new WP_Query($argsModels);
                         </div>
                         <div class="painting_box-content">
                             <p><?php echo get_sub_field('content_frame2'); ?></p>
+                        </div>
+                    </div>
+                <?php endwhile; ?>
+            </div>
+        </div>
+    </section>
+<?php endif; ?>
+
+<?php if (have_rows('squares_2')): ?>
+    <section class="clouds clouds_2">
+        <div class="clouds_container">
+            <div class="clouds_grid">
+                <?php while (have_rows('squares_2')): the_row(); ?>
+                    <div class="cloud">
+                        <h3><?php echo get_sub_field('title_square2'); ?></h3>
+                    </div>
+                    <div class="cloud_description-container">
+                        <div class="cloud_description">
+                            <p><?php echo get_sub_field('content_square2'); ?></p>
+                        </div>
+                    </div>
+                <?php endwhile; ?>
+            </div>
+        </div>
+    </section>
+<?php endif; ?>
+
+<?php if (have_rows('frames_3')): ?>
+    <section class="paintings paintings_3">
+        <div class="paintings_container">
+            <div class="paintings_row">
+                <?php while (have_rows('frames_3')): the_row(); ?>
+                    <div class="painting_box">
+                        <?php if (!empty(get_sub_field('image_frame3'))): ?>
+                            <div class="painting_box-image">
+                                <img
+                                    src="<?php echo get_sub_field('image_frame3')['url'] ?>"
+                                    title="<?php echo get_sub_field('image_frame3')['title'] ?>"
+                                    alt="<?php echo get_sub_field('image_frame3')['alt'] ?>"
+                                    width="<?php echo get_sub_field('image_frame3')['width'] ?>"
+                                    height="<?php echo get_sub_field('image_frame3')['height'] ?>"
+                                    loading="lazy">
+                            </div>
+                        <?php endif; ?>
+                        <div class="painting_box-title">
+                            <h2>
+                                <?php if (!empty(get_sub_field('icon_frame3'))): ?>
+                                    <img
+                                        src="<?php echo get_sub_field('icon_frame3')['url'] ?>"
+                                        title="<?php echo get_sub_field('icon_frame3')['title'] ?>"
+                                        alt="<?php echo get_sub_field('icon_frame3')['alt'] ?>"
+                                        width="<?php echo get_sub_field('icon_frame3')['width'] ?>"
+                                        height="<?php echo get_sub_field('icon_frame3')['height'] ?>"
+                                        loading="lazy">
+                                <?php endif; ?>
+                                <?php echo get_sub_field('title_frame3'); ?>
+                            </h2>
+                        </div>
+                        <div class="painting_box-content">
+                            <p><?php echo get_sub_field('content_frame3'); ?></p>
+                        </div>
+                    </div>
+                <?php endwhile; ?>
+            </div>
+        </div>
+    </section>
+<?php endif; ?>
+
+<?php if (have_rows('squares_3')): ?>
+    <section class="clouds clouds_3">
+        <div class="clouds_container">
+            <div class="clouds_grid">
+                <?php while (have_rows('squares_3')): the_row(); ?>
+                    <div class="cloud">
+                        <h3><?php echo get_sub_field('title_square3'); ?></h3>
+                    </div>
+                    <div class="cloud_description-container">
+                        <div class="cloud_description">
+                            <p><?php echo get_sub_field('content_square3'); ?></p>
+                        </div>
+                    </div>
+                <?php endwhile; ?>
+            </div>
+        </div>
+    </section>
+<?php endif; ?>
+
+<?php if (have_rows('frames_4')): ?>
+    <section class="paintings paintings_4">
+        <div class="paintings_container">
+            <div class="paintings_row">
+                <?php while (have_rows('frames_4')): the_row(); ?>
+                    <div class="painting_box">
+                        <?php if (!empty(get_sub_field('image_frame4'))): ?>
+                            <div class="painting_box-image">
+                                <img
+                                    src="<?php echo get_sub_field('image_frame4')['url'] ?>"
+                                    title="<?php echo get_sub_field('image_frame4')['title'] ?>"
+                                    alt="<?php echo get_sub_field('image_frame4')['alt'] ?>"
+                                    width="<?php echo get_sub_field('image_frame4')['width'] ?>"
+                                    height="<?php echo get_sub_field('image_frame4')['height'] ?>"
+                                    loading="lazy">
+                            </div>
+                        <?php endif; ?>
+                        <div class="painting_box-title">
+                            <h2>
+                                <?php if (!empty(get_sub_field('icon_frame4'))): ?>
+                                    <img
+                                        src="<?php echo get_sub_field('icon_frame4')['url'] ?>"
+                                        title="<?php echo get_sub_field('icon_frame4')['title'] ?>"
+                                        alt="<?php echo get_sub_field('icon_frame4')['alt'] ?>"
+                                        width="<?php echo get_sub_field('icon_frame4')['width'] ?>"
+                                        height="<?php echo get_sub_field('icon_frame4')['height'] ?>"
+                                        loading="lazy">
+                                <?php endif; ?>
+                                <?php echo get_sub_field('title_frame4'); ?>
+                            </h2>
+                        </div>
+                        <div class="painting_box-content">
+                            <p><?php echo get_sub_field('content_frame4'); ?></p>
                         </div>
                     </div>
                 <?php endwhile; ?>
@@ -334,7 +506,20 @@ $models = new WP_Query($argsModels);
     </section>
 <?php endif; ?>
 
-<?php get_template_part('inc/sections/cta-single-product'); ?>
+<section class="cta">
+    <div class="cta_bg">
+        <img src="https://handh-bqha9.projectbeta.co.uk/wp-content/uploads/2025/09/cta-models.jpg" alt="Banner">
+    </div>
+    <div class="container">
+        <div class="cta_content">
+            <h2>Trusted auctioneers of classic and collector motorcars and motorcycles since 1993</h2>
+            <div class="cta_links">
+                <a href="<?php echo esc_url(home_url('contact')); ?>" alt="Contact Us Now">Contact Us Now</a>
+                <a href="<?php echo esc_url(home_url('upcoming-auctions')); ?>" alt="Upcoming Auctions">Upcoming Auctions</a>
+            </div>
+        </div>
+    </div>
+</section>
 
 <section class="upcoming pb160">
     <?php get_template_part('inc/sections/upcoming'); ?>

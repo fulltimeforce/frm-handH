@@ -429,6 +429,7 @@
     }
 
     textarea {
+        resize: none;
         @media (min-width: v.$tv) {
             padding-block: px-to-vw(20px) !important;
             height: px-to-vw(156px) !important;
@@ -442,6 +443,9 @@
         }
     }
 
+    #field_11_21,
+    #field_10_21,
+    #field_8_21,
     #field_3_8,
     #field_4_8 {
         background: v.$white;

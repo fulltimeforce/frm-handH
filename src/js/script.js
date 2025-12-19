@@ -348,9 +348,9 @@ import "@splidejs/splide/css";
     if (document.querySelector('#pavilionSlider')) {
         const pavilionSplide = new Splide('#pavilionSlider', {
             type: 'slider',
-            arrows: true,
+            arrows: false,
             pagination: false,
-            autoWidth: true,
+            autoWidth: false,
             perPage: 1,
             perMove: 1,
         });

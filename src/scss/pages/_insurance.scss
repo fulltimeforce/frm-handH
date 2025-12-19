@@ -439,3 +439,77 @@
 
     }
 }
+
+.insurance_popup {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    z-index: 500;
+    @include m.transition(.45s);
+    height: 100vh;
+
+    &>* {
+        @include m.transition(.45s);
+        position: absolute;
+    }
+
+    &-bg {
+        inset: 0;
+        z-index: 501;
+        @include m.fullWH;
+        background: v.$light_brown;
+        opacity: 0.5;
+    }
+
+    &-content {
+        z-index: 502;
+        width: 95% !important;
+        background: v.$white;
+
+        @media (min-width: v.$tv) {
+            max-width: m.px-to-vw(700px);
+            padding: m.px-to-vw(32px);
+        }
+
+        @include m.tv {
+            max-width: 600px;
+            padding: 26.6px;
+        }
+
+        @include m.desktop {
+            padding: 24px;
+        }
+
+        @include m.centerXY;
+
+        h3 {
+            @include m.h4(v.$black, v.$goudysb, false);
+
+            @media (min-width: v.$tv) {
+                margin-bottom: m.px-to-vw(32px);
+            }
+
+            @include m.tv {
+                margin-bottom: 21px;
+            }
+
+            @include m.tablet {
+                margin-bottom: 16px;
+            }
+        }
+
+        @include m.gform;
+    }
+
+    &:not(.active) {
+        opacity: 0;
+        pointer-events: none;
+        user-select: none;
+
+        &>* {
+            opacity: 0;
+            pointer-events: none;
+            user-select: none;
+        }
+    }
+}

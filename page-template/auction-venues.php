@@ -5,7 +5,7 @@
 
 get_header();
 
-get_banner('Homepage / Classic Auctions / Auction Venues', '', 'H&H Auction Venues 2025');
+get_banner('Homepage / Classic Auctions / Auction Venues', get_the_post_thumbnail_url(get_the_ID(), 'full'), 'H&H Auction Venues 2025');
 
 ?>
 
@@ -68,41 +68,7 @@ get_banner('Homepage / Classic Auctions / Auction Venues', '', 'H&H Auction Venu
                             <div class="content">
                                 <p>Victorian-era gardens in historic spa town center hosts classic car auctions in elegant Octagon Hall and outdoor marquees, perfect for showcasing vehicles.</p>
                             </div>
-                            <a href="<?php echo esc_url(home_url('pavilion-gardens')); ?>" alt="Venue Details">
-                                Venue Details
-                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
-                                    <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="map_place">
-                        <div class="map_place-image">
-                            <img src="<?php echo IMG; ?>/map/2.png">
-                        </div>
-                        <div class="map_place-content">
-                            <h3>National Motorcycle Museum</h3>
-                            <div class="content">
-                                <p>World's largest British motorcycle museum with 1,000+ restored bikes provides unique backdrop for classic car auctions, attracting 250,000 annual visitors.</p>
-                            </div>
-                            <a href="<?php echo esc_url(home_url('national-motorcycle-museum')); ?>" alt="Venue Details">
-                                Venue Details
-                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
-                                    <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="map_place">
-                        <div class="map_place-image">
-                            <img src="<?php echo IMG; ?>/map/3.png">
-                        </div>
-                        <div class="map_place-content">
-                            <h3>Imperial War Museum</h3>
-                            <div class="content">
-                                <p>Europe's largest aviation museum hosts classic car auctions beneath historic aircraft, featuring Spitfires and Concorde, with modern facilities and easy M11 motorway access.</p>
-                            </div>
-                            <a href="<?php echo esc_url(home_url('the-imperial-war-museum')); ?>" alt="Venue Details">
+                            <a href="<?php echo esc_url(home_url('venues/pavilion-gardens')); ?>" alt="Venue Details">
                                 Venue Details
                                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
                                     <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
@@ -119,7 +85,24 @@ get_banner('Homepage / Classic Auctions / Auction Venues', '', 'H&H Auction Venu
                             <div class="content">
                                 <p>Historic Victorian mansion with elegant rooms and grounds hosting H&H classic car auctions, featuring period architecture and modern auction facilities.</p>
                             </div>
-                            <a href="<?php echo esc_url(home_url('kelham-hall')); ?>" alt="Venue Details">
+                            <a href="<?php echo esc_url(home_url('venues/kelham-hall')); ?>" alt="Venue Details">
+                                Venue Details
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
+                                    <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="map_place">
+                        <div class="map_place-image">
+                            <img src="<?php echo IMG; ?>/map/2.png">
+                        </div>
+                        <div class="map_place-content">
+                            <h3>National Motorcycle Museum</h3>
+                            <div class="content">
+                                <p>World's largest British motorcycle museum with 1,000+ restored bikes provides unique backdrop for classic car auctions, attracting 250,000 annual visitors.</p>
+                            </div>
+                            <a href="<?php echo esc_url(home_url('venues/national-motorcycle-museum')); ?>" alt="Venue Details">
                                 Venue Details
                                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
                                     <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
@@ -136,7 +119,24 @@ get_banner('Homepage / Classic Auctions / Auction Venues', '', 'H&H Auction Venu
                             <div class="content">
                                 <p>An advanced automotive research facility featuring sophisticated testing equipment, technical laboratories, and precision measurement systems for comprehensive vehicle evaluations.</p>
                             </div>
-                            <a href="<?php echo esc_url(home_url('utac-millbrook-proving-ground')); ?>" alt="Venue Details">
+                            <a href="<?php echo esc_url(home_url('venues/utac-millbrook-proving-ground')); ?>" alt="Venue Details">
+                                Venue Details
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
+                                    <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="map_place">
+                        <div class="map_place-image">
+                            <img src="<?php echo IMG; ?>/map/3.png">
+                        </div>
+                        <div class="map_place-content">
+                            <h3>Imperial War Museum</h3>
+                            <div class="content">
+                                <p>Europe's largest aviation museum hosts classic car auctions beneath historic aircraft, featuring Spitfires and Concorde, with modern facilities and easy M11 motorway access.</p>
+                            </div>
+                            <a href="<?php echo esc_url(home_url('venues/the-imperial-war-museum')); ?>" alt="Venue Details">
                                 Venue Details
                                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
                                     <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
@@ -160,16 +160,22 @@ get_banner('Homepage / Classic Auctions / Auction Venues', '', 'H&H Auction Venu
             videoDiv.addEventListener("click", () => {
                 const currentState = videoDiv.getAttribute("data-state");
                 videoDiv.setAttribute("data-state", "2");
+                
+                let video = videoDiv.querySelector('video')
 
-                /*if (currentState === "1") {
+                if (currentState === "1") {
                     videoDiv.setAttribute("data-state", "2");
+                    if(video){
+                        video.play();
+                    }
                 } else {
                     videoDiv.setAttribute("data-state", "1");
 
-                    let video = videoDiv.querySelector('video')
-                    video.pause()
-                    video.muted = false;
-                }*/
+                    if(video){
+                        video.pause()
+                        video.muted = false;
+                    }
+                }
             });
         }
     });

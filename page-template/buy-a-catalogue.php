@@ -15,28 +15,35 @@ get_banner('Homepage / Classic Auctions / Buy A Catalogue', get_the_post_thumbna
             <?php if (get_field('buycatalogue_title')): ?>
                 <h2><?php echo get_field('buycatalogue_title'); ?></h2>
             <?php endif; ?>
-            <div class="content">
-                <?php if (get_field('buycatalogue_text')): ?>
+
+            <?php if (get_field('buycatalogue_text')): ?>
+                <div class="content">
                     <?php echo get_field('buycatalogue_text'); ?>
+                </div>
+            <?php endif; ?>
+
+            <div class="buy_catalogue-product">
+                <?php if (get_field('buycatalogue_image')): ?>
+                    <img src="<?php echo esc_url(get_field('buycatalogue_image')['url']); ?>" class="thumb">
+                <?php endif; ?>
+
+                <?php if (get_field('buycatalogue_link')): ?>
+                    <div class="actions">
+                        <a href="<?php echo esc_url(get_field('buycatalogue_link')['url']); ?>" target="<?php echo get_field('buycatalogue_link')['target']; ?>">
+                            <?php echo get_field('buycatalogue_link')['title']; ?>
+                        </a>
+                    </div>
+                    <img src="<?php echo IMG; ?>/payments.png" class="payments">
                 <?php endif; ?>
             </div>
-            <?php if (get_field('buycatalogue_image')): ?>
-            <div class="buy_catalogue-product">
-                <img src="<?php echo esc_url(get_field('buycatalogue_image')['url']); ?>" class="thumb">
-                <div class="actions">
-                    <a href="<?php echo esc_url(get_field('buycatalogue_link')['url']); ?>">Purchase a Catalogue</a>
-                </div>
-                <img src="<?php echo IMG; ?>/payments.png" class="payments">
-            </div>
-            <?php endif; ?>
         </div>
         <div class="line"></div>
         <?php if (get_field('buycatalogue_qr_code')): ?>
-        <div class="qr">
-            <h2>Or scan the QR code</h2>
-            <img src="<?php echo esc_url(get_field('buycatalogue_qr_code')['url']); ?>">
-            <?php echo get_field('buycatalogue_qr_code_text'); ?>
-        </div>
+            <div class="qr">
+                <h2>Or scan the QR code</h2>
+                <img src="<?php echo esc_url(get_field('buycatalogue_qr_code')['url']); ?>">
+                <?php echo get_field('buycatalogue_qr_code_text'); ?>
+            </div>
         <?php endif; ?>
     </div>
 </section>

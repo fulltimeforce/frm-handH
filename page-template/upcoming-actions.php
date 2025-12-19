@@ -12,7 +12,7 @@ $today_start  = $today_ymd . ' 00:00:00';
 
 $argsAuction = array(
     'post_type'      => 'auction',
-    'posts_per_page' => 6,
+    'posts_per_page' => -1,
     'orderby'        => 'meta_value',
     'order'          => 'ASC',
     'meta_key'       => 'auction_date',

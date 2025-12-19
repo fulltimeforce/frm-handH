@@ -73,7 +73,7 @@
 
     <header class="header <?php echo $class; ?>">
         <div class="header_container">
-            <a href="<?php echo esc_url(home_url('/')); ?>" title="<?php echo get_bloginfo('name'); ?>" class="header_logo d-block w-100">
+            <a href="<?php echo esc_url(home_url('/')); ?>" alt="<?php echo get_bloginfo('name'); ?>" class="header_logo d-block w-100">
                 <img src="<?php echo IMG; ?>/logo.svg" title="<?php echo get_bloginfo('name'); ?>" alt="<?php echo get_bloginfo('name'); ?>" class="w-100" loading="lazy">
             </a>
             <nav>
@@ -342,9 +342,11 @@
                                     </div>
                                 </div>
                             </li>
-                            <li>
-                                <a href="<?php echo esc_url(home_url('shop')); ?>" alt="Shop">Shop</a>
-                            </li>
+                            <?php if (NOT_APPEAR): ?>
+                                <li>
+                                    <a href="<?php echo esc_url(home_url('shop')); ?>" alt="Shop">Shop</a>
+                                </li>
+                            <?php endif; ?>
                             <li>
                                 <a href="<?php echo esc_url(home_url('contact')); ?>" alt="Contact">Contact</a>
                             </li>

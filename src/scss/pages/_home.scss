@@ -489,11 +489,11 @@
     }
 
     &::before,
-    video {
+    video, img {
         @include m.fullWH;
     }
 
-    video {
+    img, video {
         object-fit: cover;
         object-position: center;
     }

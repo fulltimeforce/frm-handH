@@ -63,7 +63,7 @@ $argsAuction = [
     'posts_per_page' => $ppp,
     'paged'          => $paged,
     'orderby'        => 'meta_value',
-    'order'          => 'ASC',
+    'order'          => 'DESC',
     'meta_key'       => 'auction_date',
     'meta_type'      => 'DATETIME',
     'meta_query'     => $meta_query,
@@ -75,8 +75,8 @@ $past_auctions = new WP_Query($argsAuction);
 <section class="auction_result-tab">
     <div class="container" style="border: none;">
         <div>
-            <a class="active">PAST AUCTIONS</a>
-            <a href="<?php echo esc_url(home_url('buy-it-now')); ?>">Unsold Vehicles</a>
+            <a class="active" alt="PAST AUCTIONS">PAST AUCTIONS</a>
+            <a href="<?php echo esc_url(home_url('buy-it-now')); ?>" alt="STILL AVAILABLE">STILL AVAILABLE</a>
         </div>
     </div>
 </section>

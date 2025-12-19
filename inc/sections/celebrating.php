@@ -42,8 +42,8 @@ $auction_button = get_field('auction_button');
                 <div class="image">
                     <?php if ($auction_button): ?>
                         <a href="<?php echo esc_url($auction_button['url']); ?>" class="permalink">Learn More</a>
-                        <img src="<?php echo IMG; ?>/vector3.svg" class="image-vector">
-                        <img src="<?php echo IMG; ?>/3.jpg" class="image-thumb">
+                        <img src="<?php echo IMG; ?>/vector3.svg" class="image-vector" alt="vector">
+                        <img src="<?php echo IMG; ?>/3.jpg" class="image-thumb" alt="icon">
                     <?php endif; ?>
                 </div>
             </div>

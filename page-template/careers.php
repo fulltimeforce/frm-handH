@@ -5,7 +5,7 @@
 
 get_header();
 
-get_banner('Homepage / About / Careers', '', 'Careers');
+get_banner('Homepage / About / Careers', get_the_post_thumbnail_url(get_the_ID(), 'full'), 'Careers');
 
 $title = get_field('title_careers');
 $description = get_field('description_careers');

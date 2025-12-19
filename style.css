@@ -8,4 +8,549 @@
     Tags: Wordpress
 */
 
-*{margin:0;padding:0;box-sizing:border-box;}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.hero_scroll {
+    right: 50% !important;
+    transform: translateX(50%) !important;
+}
+
+@media (max-width:390px) {
+    .hero_scroll {
+        width: 100% !important;
+        gap: 8px !important;
+    }
+}
+
+img {
+    pointer-events: none;
+}
+
+@media (max-width: 1420px) and (min-width: 1200px) {
+    .specialist_toggle {
+        aspect-ratio: 1/1;
+        width: 44px !important;
+        height: 44px !important;
+    }
+}
+
+.modelbox h3 {
+    width: 73% !important;
+}
+
+.model_line {
+    width: 100%;
+    height: 1px;
+    background-color: #8C6E47;
+    margin-block: 40px;
+}
+
+.model_introduction .vehicle_banner-container,
+.model_beige_grid,
+.model_section2 .vehicle_banner-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.model_section2 .vehicle_banner-container {
+    gap: 24px;
+}
+
+.model_sections2_image {
+    position: relative;
+    padding: 24px;
+    align-items: end;
+    display: flex;
+    background-position: center;
+}
+
+.model_sections2_image::before {
+    position: absolute;
+    content: '';
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.60) 0%, rgba(0, 0, 0, 0.00) 100%);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.model_introduction p,
+.model_beige_grid p,
+.model_section2 p {
+    font-size: 17px;
+    line-height: 150%;
+    padding-inline: 32px 48px;
+}
+
+.model_introduction h3,
+.model_section_beige h3,
+.model_section2 h3 {
+    font-size: 50px;
+    font-family: 'CormorantGaramond';
+    font-weight: 500;
+    letter-spacing: -1.8px;
+    padding-inline: 32px 48px;
+}
+
+.model_beige_content p {
+    font-size: 27px;
+    color: rgba(0, 0, 0, 0.80);
+    padding-right: 32px;
+    padding-bottom: 40px;
+    line-height: 120%;
+}
+
+.model_section_beige {
+    padding-block: 80px;
+    margin-bottom: 80px;
+    background-color: #D3C7B6;
+}
+
+.model_section_beige a,
+.model_section2 a {
+    max-width: 310px;
+}
+
+.model_section2_content {
+    padding: 32px 24px;
+    border: 1px solid #8C6E47;
+}
+
+.model_section2 .auction_actions {
+    margin-top: 56px;
+}
+
+.model_section2 h4 {
+    font-family: 'Inter';
+    font-weight: 300;
+    font-size: 22px;
+    margin-bottom: 8px;
+}
+
+.model_section2 {
+    margin-bottom: 120px;
+}
+
+@media(min-width:1420px) {
+    .model_line {
+        margin-block: 2.083vw;
+    }
+
+    .model_introduction h3,
+    .model_section_beige h3,
+    .model_section2 h3 {
+        font-size: 3.125vw;
+        padding-inline: 1.667vw 3.125vw;
+    }
+
+    .model_introduction p,
+    .model_beige_grid p,
+    .model_section2 p {
+        font-size: 0.938vw;
+        padding-inline: 1.667vw 2.5vw;
+    }
+
+    .model_beige_content p {
+        font-size: 1.406vw;
+        padding-right: 1.667vw;
+        padding-bottom: 2.917vw;
+    }
+
+    .model_section_beige {
+        padding-block: 6.25vw;
+        margin-bottom: 4.167vw;
+    }
+
+    .model_section_beige a,
+    .model_section2 a {
+        max-width: 16.146vw;
+    }
+
+    .model_section2 .vehicle_banner-container {
+        gap: 1.25vw;
+    }
+
+    .model_section2_content {
+        padding: 1.667vw 1.25vw;
+    }
+
+    .model_section2 .auction_actions {
+        margin-top: 2.917vw;
+    }
+
+    .model_section2 h4 {
+        font-size: 1.146vw;
+        margin-bottom: 0.417vw;
+    }
+
+    .model_section2 {
+        margin-bottom: 8.333vw;
+    }
+}
+
+@media(max-width:820px) {
+
+    .model_introduction .vehicle_banner-container,
+    .model_beige_grid,
+    .model_section2 .vehicle_banner-container {
+        grid-template-columns: 1fr;
+    }
+
+    .model_introduction h3,
+    .model_section_beige h3,
+    .model_section2 h3 {
+        font-size: 30px;
+        padding-inline: 0;
+        padding-bottom: 20px;
+    }
+
+    .model_introduction p,
+    .model_beige_grid p {
+        padding-inline: 0;
+    }
+
+    .model_line {
+        margin-block: 20px;
+    }
+
+    .model_beige_content p {
+        font-size: 20px;
+        padding-right: 0;
+        padding-bottom: 40px;
+    }
+
+    .model_section_beige {
+        padding-block: 60px;
+        margin-bottom: 40px;
+    }
+
+    .model_section_beige .auction_actions {
+        margin-bottom: 0;
+    }
+
+    .model_section2 .auction_actions {
+        margin-top: 30px;
+    }
+
+    .model_section2 {
+        margin-bottom: 60px;
+    }
+
+    .model_sections2_image {
+        min-height: 320px;
+    }
+}
+
+.model_section2 h3 {
+    position: relative;
+    padding-inline: 0;
+    color: #ffffff;
+    z-index: 1;
+}
+
+.model_section2 p {
+    padding-inline: 0;
+    font-family: 'Inter';
+}
+
+.featured_articles .new_content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.featured_articles .new_content>span {
+    margin-block: 0 !important;
+    font-family: 'GothamMedium';
+    color: #8C6E47;
+    text-decoration: underline;
+}
+
+.contact_banners-insurance .headquarter-content .description {
+    margin-inline: auto;
+    width: 100%;
+}
+
+@media (min-width: 1420px) {
+    .contact_banners-insurance .headquarter-content .description {
+        max-width: 40.833vw;
+    }
+
+    .featured_articles .new.big .new_content a,
+    .featured_articles .new.big .new_content span {
+        font-size: 0.729vw !important;
+    }
+
+    .featured_articles .new:not(.big) span {
+        font-size: 0.625vw !important;
+    }
+
+    .footer_suscription-form form [type=submit] {
+        font-size: 0.885vw !important;
+        height: 2.7083333333vw !important;
+        letter-spacing: 0.053vw !important;
+        line-height: 1.24vw !important;
+        gap: 0.833vw !important;
+    }
+
+    .bid_online-content ul h4 {
+        font-size: 2.083vw !important;
+        letter-spacing: -0.063vw !important;
+    }
+}
+
+.bid_online-content ul h4 {
+    font-family: 'CormorantGaramond' !important;
+}
+
+@media (max-width: 1420px) {
+    .contact_banners-insurance .headquarter-content .description {
+        max-width: 582px;
+    }
+}
+
+.showcase-title h2 strong,
+.showcase-title h2 b {
+    font-weight: 600 !important;
+}
+
+.gform-theme--framework .field_description_below .gfield_description:where(:not(.gfield_creditcard_warning_message):not(.field_validation_above .gfield_validation_message):not(.ginput_counter_tinymce):not(.gfield_choice_limit_message)),
+.gform-theme--framework .gform_validation_errors .gform_submission_error {
+    font-family: 'GothamLight' !important;
+}
+
+@media (min-width: 1420px) {
+    .auction_vehicles-head.vfs h2 {
+        max-width: 67.229167vw !important;
+    }
+}
+
+.bid_online-content ul strong,
+.bid_online-content ul b {
+    font-family: 'GothamMedium' !important;
+    font-weight: 300 !important;
+}
+
+
+.auction-tabs.selling_tabs .auction-tabs-nav li {
+    min-width: auto !important;
+}
+
+.auction-tabs.selling_tabs {
+    height: auto !important;
+}
+
+.selling_tabs .faq_list {
+    padding-top: 0 !important;
+}
+
+.blog_article-content a {
+    opacity: .8 !important;
+    font-family: 'GothamMedium' !important;
+    font-weight: 300 !important;
+}
+
+@media (min-width: 1420px) {
+    .blog_article-content h3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3 !important;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        padding-block: 0 !important;
+        margin-block: 1.25vw !important;
+    }
+
+    .blog_article-content p {
+        display: -webkit-box;
+        -webkit-line-clamp: 3 !important;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+}
+
+@media (min-width: 1420px) {
+    .timecard-grid {
+        grid-template-rows: 22.322917vw 22.322917vw !important;
+    }
+
+    .blog_article-content h3 {
+        line-height: 1.198vw !important;
+    }
+}
+
+@media (max-width: 1200px) {
+    .blog_article-image img {
+        aspect-ratio: 16 / 9;
+    }
+}
+
+.gfield_consent_description {
+    font-family: GothamLight !important;
+    font-weight: 300 !important;
+    color: black !important;
+    outline: none !important;
+}
+
+.gfield_consent_description:focus {
+    border-color: #8c6e47 !important;
+}
+
+.ginput_container_consent input[type="checkbox"]::before {
+    color: #8C6E47 !important;
+}
+
+.ginput_container_consent {
+    align-items: center !important;
+}
+
+.gform-theme--foundation .gfield_list_icons button {
+    background: #8c6e47 !important;
+}
+
+.gform_fileupload_rules,
+.gform_drop_instructions {
+    font-family: GothamLight !important;
+    font-weight: 300 !important;
+    color: #8c6e47 !important;
+}
+
+.gform-theme--framework .gfield:where(.gfield--type-fileupload, .gfield--input-type-fileupload) .gform_drop_area::before {
+    color: #8c6e47 !important;
+}
+
+.gform-theme.gform-theme--framework.gform_wrapper .button:where(:not(.gform-theme-no-framework):not(.gform-theme__disable):not(.gform-theme__disable *):not(.gform-theme__disable-framework):not(.gform-theme__disable-framework *)).gform-theme-button--control,
+.gform-theme.gform-theme--framework.gform_wrapper .gform-theme-button:where(:not(.gform-theme-no-framework):not(.gform-theme__disable):not(.gform-theme__disable *):not(.gform-theme__disable-framework):not(.gform-theme__disable-framework *)).gform-theme-button--control,
+.gform-theme.gform-theme--framework.gform_wrapper :where(:not(.mce-splitbtn))>button:not([id*=mceu_]):not(.mce-open):where(:not(.gform-theme-no-framework):not(.gform-theme__disable):not(.gform-theme__disable *):not(.gform-theme__disable-framework):not(.gform-theme__disable-framework *)).gform-theme-button--control,
+.gform-theme.gform-theme--framework.gform_wrapper button.button:where(:not(.gform-theme-no-framework):not(.gform-theme__disable):not(.gform-theme__disable *):not(.gform-theme__disable-framework):not(.gform-theme__disable-framework *)).gform-theme-button--control,
+.gform-theme.gform-theme--framework.gform_wrapper input:is([type=submit], [type=button], [type=reset]).button:where(:not(.gform-theme-no-framework):not(.gform-theme__disable):not(.gform-theme__disable *):not(.gform-theme__disable-framework):not(.gform-theme__disable-framework *)).gform-theme-button--control,
+.gform-theme.gform-theme--framework.gform_wrapper input:is([type=submit], [type=button], [type=reset]):where(:not(.gform-theme-no-framework):not(.gform-theme__disable):not(.gform-theme__disable *):not(.gform-theme__disable-framework):not(.gform-theme__disable-framework *)).gform-theme-button--control,
+.gform-theme.gform-theme--framework.gform_wrapper input[type=submit].button.gform_button:where(:not(.gform-theme-no-framework):not(.gform-theme__disable):not(.gform-theme__disable *):not(.gform-theme__disable-framework):not(.gform-theme__disable-framework *)).gform-theme-button--control {
+    background-color: #8c6e47 !important;
+    font-family: GothamLight !important;
+    font-weight: 300 !important;
+    color: #ffffff !important;
+}
+
+.gform-theme--framework .gfield:where(.gfield--type-fileupload, .gfield--input-type-fileupload) .ginput_preview .gfield_fileupload_progressbar_progress {
+    background-color: #8c6e47 !important;
+}
+
+.gfield_fileupload_percent,
+.gfield_fileupload_filesize,
+.gfield_fileupload_filename,
+.gfield_validation_message {
+    font-family: GothamLight !important;
+    font-weight: 300 !important;
+}
+
+.gform_validation_errors h2 {
+    margin: 0 !important;
+}
+
+.gform_validation_errors * {
+    font-family: GothamLight !important;
+    font-weight: 300 !important;
+    letter-spacing: 0px !important;
+}
+
+@media (min-width: 1420px) {
+
+    .gfield_validation_message {
+        font-size: 0.677vw !important;
+    }
+
+    .other_forms_mt {
+        margin-top: 0.833vw;
+    }
+
+    .gform-theme--foundation .gfield_list_group,
+    .gform-theme--foundation .gfield_list_header {
+        justify-content: space-between !important;
+        gap: 0.521vw !important;
+    }
+
+    .gform-theme--foundation .gfield_list_group:not(:last-child) {
+        margin-bottom: 0.521vw !important;
+    }
+
+    .gfield_consent_description {
+        font-size: .8854166667vw !important;
+        letter-spacing: .053125vw !important;
+        line-height: 1.2395833333vw !important;
+    }
+
+    .gform_drop_area {
+        border: .1041666667vw dashed #8c6e47 !important;
+    }
+
+    .ginput_container_consent input[type="checkbox"] {
+        aspect-ratio: 1/1 !important;
+        height: auto !important;
+        padding: 0.156vw !important;
+        width: 1.563vw !important;
+    }
+
+    .ginput_container_consent label {
+        padding-left: 0.729vw !important;
+        margin: 0 !important;
+    }
+}
+
+@media (max-width: 1420px) {
+
+    .gfield_validation_message {
+        font-size: 11px !important;
+    }
+
+    .other_forms_mt {
+        margin-top: 10px;
+    }
+
+    .gform-theme--foundation .gfield_list_group:not(:last-child) {
+        margin-bottom: 7px !important;
+    }
+
+    .gform-theme--foundation .gfield_list_group,
+    .gform-theme--foundation .gfield_list_header {
+        justify-content: space-between !important;
+        gap: 7px !important;
+    }
+
+    .gfield_consent_description {
+        font-size: 14.5px !important;
+        letter-spacing: .4px !important;
+        line-height: 1.3em !important;
+    }
+
+    .gform_drop_area {
+        border: 2px dashed #8c6e47 !important;
+    }
+
+    .ginput_container_consent input[type="checkbox"] {
+        aspect-ratio: 1/1 !important;
+        height: auto !important;
+        padding: 2.8px !important;
+        width: 24px !important;
+    }
+
+    .ginput_container_consent label {
+        padding-left: 8px !important;
+        margin: 0 !important;
+    }
+}
+
+
+@media (max-width: 642px) {
+    .gfield_list_groups .gfield_list_group_item::before {
+        font-size: 11.6px !important;
+        margin: 0 0 7px !important;
+        font-family: GothamMedium !important;
+        font-weight: 300;
+        line-height: normal !important;
+        opacity: .6 !important;
+    }
+}

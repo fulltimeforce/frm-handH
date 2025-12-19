@@ -5,7 +5,7 @@
 
 get_header();
 
-get_banner('Homepage / About / FAQs', '', 'Frequently Asked Questions');
+get_banner('Homepage / About / FAQs', get_the_post_thumbnail_url(get_the_ID(), 'full'), 'Frequently Asked Questions');
 
 $title = get_field('title_faq');
 $description = get_field('description_faq');

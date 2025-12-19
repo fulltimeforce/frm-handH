@@ -432,20 +432,34 @@ if (is_singular('auction') && $venue_id) {
                         </div>
                     <?php endif; ?>
                 <?php else: ?>
+                	<div class="how_to_get-col">
                     <?php if (have_rows('how_to_get_items')): ?>
-                        <div class="how_to_get-col">
                             <?php while (have_rows('how_to_get_items')): the_row();
                                 $subtitle = get_sub_field('item_subtitle');
                                 $desc     = get_sub_field('item_description'); ?>
                                 <div class="how_to_get-row">
                                     <?php if ($subtitle): ?><h3><?php echo esc_html($subtitle); ?></h3><?php endif; ?>
                                     <?php if ($desc): ?><div class="content">
-                                            <p><?php echo wp_kses_post($desc); ?></p>
+                                            <?php echo wp_kses_post($desc); ?>
                                         </div><?php endif; ?>
                                 </div>
                             <?php endwhile; ?>
-                        </div>
                     <?php endif; ?>
+                    
+                    	<?php if(!empty(get_field('title_w3w')) && !empty(get_field('content_w3w'))): ?>
+                    	<div class="how_to_get-row">
+                        	<?php if(!empty(get_field('title_w3w'))): ?>
+                        		<h3><?php echo get_field('title_w3w'); ?></h3>
+                            <?php endif; ?>
+                            <?php if(!empty(get_field('content_w3w'))): ?>
+                            	<div class="content">
+                            		<?php echo wp_kses_post(get_field('content_w3w')); ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                        <?php endif; ?>
+                        
+                    </div>
                 <?php endif; ?>
             </div>
         <?php endif; ?>

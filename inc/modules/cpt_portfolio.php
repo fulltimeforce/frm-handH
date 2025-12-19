@@ -27,6 +27,7 @@ function custom_post_portfolio()
             'publicly_queryable' => true,
             'exclude_from_search' => false,
             'show_ui' => true,
+            'show_in_export' => false,
             'query_var' => true,
             'menu_position' => 10,
             'menu_icon' => 'dashicons-portfolio',

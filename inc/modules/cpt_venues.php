@@ -34,6 +34,7 @@ function register_venues_cpt()
         'menu_icon'          => 'dashicons-location-alt',
         'supports'           => array('title', 'editor', 'thumbnail', 'excerpt'),
         'show_in_rest'       => true,
+        'show_in_export'     => false,
     );
 
     register_post_type('venue', $args);

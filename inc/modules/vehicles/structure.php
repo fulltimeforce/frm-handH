@@ -123,19 +123,21 @@ function hnh_render_vehicle_item($vehicle_id, $args = [])
                     if ($sold_price):
                         $sold = (float) preg_replace('/[^\d.\-]/', '', (string) $sold_price);
                     ?>
-                        <div style="border: none;">
+                        <div style="border: none;padding-left:0;">
                             <p><?php esc_html_e('Sold for'); ?></p>
                             <p class="gold-text">
                                 <?php echo '£' . esc_html(number_format_i18n($sold, 0)); ?>
                             </p>
                         </div>
                     <?php else: ?>
-                        <div>
-                            <p>Sold</p>
+                        <div style="border: none;padding-left:0;">
+                            <p class="gold-text"><?php esc_html_e('Sold'); ?></p>
                         </div>
                     <?php endif; ?>
 
                 <?php else: ?>
+
+
                     <?php if ($registration_no || $chassis_no || $vehicle_mot) : ?>
                         <div>
                             <?php if ($registration_no) : ?>
@@ -157,24 +159,43 @@ function hnh_render_vehicle_item($vehicle_id, $args = [])
                             <?php endif; ?>
                         </div>
                     <?php endif; ?>
-                <?php endif; ?>
 
-                <?php if ($estimate_low && $estimate_high) : ?>
-                    <div>
-                        <p>Estimated at</p>
-                        <p class="gold-text">
-                            <?php
-                            $low  = (float) preg_replace('/[^\d.\-]/', '', (string) $estimate_low);
-                            $high = (float) preg_replace('/[^\d.\-]/', '', (string) $estimate_high);
 
-                            printf(
-                                '£%s - £%s',
-                                esc_html(number_format_i18n($low, 0)),
-                                esc_html(number_format_i18n($high, 0))
-                            );
-                            ?>
-                        </p>
-                    </div>
+                    <?php
+                    $low  = (float) preg_replace('/[^\d.\-]/', '', (string) $estimate_low);
+                    $high = (float) preg_replace('/[^\d.\-]/', '', (string) $estimate_high);
+
+                    if ($low > 0 || $high > 0) : ?>
+                        <div>
+                            <p>Estimated at</p>
+                            <p class="gold-text">
+                                <?php
+                                if ($low > 0 && $high > 0) {
+                                    // Mostrar rango
+                                    printf(
+                                        '£%s - £%s',
+                                        esc_html(number_format_i18n($low, 0)),
+                                        esc_html(number_format_i18n($high, 0))
+                                    );
+                                } elseif ($low > 0) {
+                                    // Solo low
+                                    printf(
+                                        '£%s',
+                                        esc_html(number_format_i18n($low, 0))
+                                    );
+                                } elseif ($high > 0) {
+                                    // Solo high
+                                    printf(
+                                        '£%s',
+                                        esc_html(number_format_i18n($high, 0))
+                                    );
+                                }
+                                ?>
+                            </p>
+                        </div>
+                    <?php endif; ?>
+
+
                 <?php endif; ?>
             </div>
 
@@ -184,12 +205,22 @@ function hnh_render_vehicle_item($vehicle_id, $args = [])
                 </p>
             <?php endif; ?>
 
-            <a alt="Enquire Now" href="<?php echo esc_url($permalink); ?>" class="permalink_border">
-                Enquire Now
-                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
-                    <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
-                </svg>
-            </a>
+            <?php if (is_page('vehicles-for-sale')): ?>
+                <a alt="View Details" href="<?php echo esc_url($permalink); ?>" class="permalink_border">
+                    View Details
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
+                        <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
+                    </svg>
+                </a>
+            <?php else: ?>
+                <?php $enquire_href = esc_url(home_url('request-condition-report')) . '?vehicle=' . $vehicle_id; ?>
+                <a alt="Enquire Now" href="<?php echo esc_url($enquire_href); ?>" class="permalink_border">
+                    Enquire Now
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
+                        <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
+                    </svg>
+                </a>
+            <?php endif; ?>
         </div>
     </div>
 <?php
@@ -288,7 +319,8 @@ function hnh_render_vehicle_card($vehicle_id, $args = [], $format = 1)
     }
 
     // Enquire
-    $enquire_href = get_field('lot_link') ?? $permalink;
+    // $enquire_href = get_field('lot_link');
+    $enquire_href = esc_url(home_url('request-condition-report')) . '?vehicle=' . $vehicle_id;
 
 ?>
     <div class="vehicle_card">
@@ -355,18 +387,22 @@ function hnh_render_vehicle_card($vehicle_id, $args = [], $format = 1)
                         <h3><?php echo esc_html($title); ?></h3>
                     </a>
                 </div>
-                <?php if ($estimate_html): ?>
-                    <h4>
-                        <span><?php esc_html_e('Estimated at'); ?></span>
-                        <?php echo $estimate_html; ?>
-                    </h4>
+                <?php $sold_price = get_field('sold_price'); ?>
+                <?php if (!$sold_price): ?>
+
+                    <?php if ($estimate_html): ?>
+                        <h4>
+                            <span><?php esc_html_e('Estimated at'); ?></span>
+                            <?php echo $estimate_html; ?>
+                        </h4>
+                    <?php endif; ?>
+
                 <?php endif; ?>
             </div>
 
             <div class="vehicle_card-price">
                 <?php if (strtolower($vehicle_status) == 'sold'): ?>
                     <?php
-                    $sold_price = get_field('sold_price');
                     if ($sold_price):
                         $sold = (float) preg_replace('/[^\d.\-]/', '', (string) $sold_price);
                     ?>
@@ -375,9 +411,7 @@ function hnh_render_vehicle_card($vehicle_id, $args = [], $format = 1)
                             <?php echo '£' . esc_html(number_format_i18n($sold, 0)); ?>
                         </h4>
                     <?php else: ?>
-                        <ul>
-                            <li><b>Sold</b></li>
-                        </ul>
+                        <h4 style="margin:0">Sold</h4>
                     <?php endif; ?>
                 <?php else: ?>
                     <?php if ($registration_no || $chassis_no || $vehicle_mot): ?>
@@ -405,9 +439,11 @@ function hnh_render_vehicle_card($vehicle_id, $args = [], $format = 1)
                 <a class="btn-view" href="<?php echo esc_url($permalink); ?>">
                     <?php esc_html_e('View Details'); ?>
                 </a>
-                <a class="btn-enquire" href="<?php echo esc_url($enquire_href); ?>" target="_blank">
-                    <?php esc_html_e('Enquire Now'); ?>
-                </a>
+                <?php if (!empty($enquire_href)): ?>
+                    <a class="btn-enquire" href="<?php echo esc_url($enquire_href); ?>" target="_blank">
+                        <?php esc_html_e('Enquire Now'); ?>
+                    </a>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -568,6 +604,7 @@ if (!function_exists('hnh_render_buy_it_now_block')) {
         // Query
         $argsVehicle = [
             'post_type'      => $opt['post_type'],
+            'post_status'    => 'publish',
             'posts_per_page' => $ppp,
             'paged'          => $paged,
             'meta_query'     => $meta_query,

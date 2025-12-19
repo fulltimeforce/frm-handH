@@ -111,7 +111,7 @@ get_banner('Homepage / Classic Auctions / Buying at auction', esc_url($bg_image)
       ?>
       <div class="headquarter-content">
         <div class="description">
-          <p><?php echo wp_kses_post($insurance_content); ?></p>
+          <?php echo wp_kses_post($insurance_content); ?>
         </div>
         <?php if ($insurance_link): ?>
           <div class="actions">

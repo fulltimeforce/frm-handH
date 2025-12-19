@@ -5,7 +5,7 @@
 
 get_header();
 
-get_banner('Homepage / Classic Auctions / Get a Valuation', '', 'Get a Valuation');
+get_banner('Homepage / Classic Auctions / Get a Valuation', get_the_post_thumbnail_url(get_the_ID(), 'full'), 'Get a Valuation');
 
 ?>
 
@@ -20,7 +20,7 @@ get_banner('Homepage / Classic Auctions / Get a Valuation', '', 'Get a Valuation
             <?php if (get_field('getvaluation_column_1')): ?>
             <div class="valuation_info-col">
                 <p><?php echo get_field('getvaluation_column_1'); ?></p>
-                <h3><?php echo get_field('getvaluation_subtitle_1'); ?></h3>
+                <!--<h3><?php //echo get_field('getvaluation_subtitle_1'); ?></h3>-->
                 <?php if (get_field('getvaluation_text_1')): ?>
                 <?php echo get_field('getvaluation_text_1'); ?>
                 <?php endif; ?>
@@ -29,7 +29,9 @@ get_banner('Homepage / Classic Auctions / Get a Valuation', '', 'Get a Valuation
             <?php if (get_field('getvaluation_column_2')): ?>
             <div class="valuation_info-col">
                 <p><?php echo get_field('getvaluation_column_2'); ?></p>
+                <?php if(!empty(get_field('getvaluation_subtitle_2'))): ?>
                 <h3><?php echo get_field('getvaluation_subtitle_2'); ?></h3>
+                <?php endif; ?>
                 <?php if (get_field('getvaluation_text_2')): ?>
                 <?php echo get_field('getvaluation_text_2'); ?>
                 <?php endif; ?>
@@ -43,7 +45,7 @@ get_banner('Homepage / Classic Auctions / Get a Valuation', '', 'Get a Valuation
     <div class="showcase-container">
          <?php if (get_field('getvaluation_form_title')): ?>
         <div class="showcase-title">
-            <h2><?php echo get_field('getvaluation_form_title'); ?></h2>
+            <?php echo get_field('getvaluation_form_title'); ?>
         </div>
          <?php endif; ?>
         <div class="showcase-form w-100">

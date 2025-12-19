@@ -19,8 +19,8 @@ define('NOT_APPEAR', false);
 function general_scripts()
 {
     // CSS
-    wp_enqueue_style('style', get_stylesheet_uri(), [], '1.0.0', 'all');
     wp_enqueue_style('main-css', get_template_directory_uri() . '/public/css/app.min.css', [], '1.0.0', 'all');
+    wp_enqueue_style('style', get_stylesheet_uri(), [], '1.0.0', 'all');
 
     // JavaScript
     wp_enqueue_script('main-js', get_template_directory_uri() . '/public/js/main.min.js', [], '1.0.0', true);
@@ -198,7 +198,7 @@ add_filter('gform_submit_button', function ($button_html, $form) {
         $label   = $mValue[1]   ?? __('Submit', 'gravityforms');
 
         // SVG (hereda color del texto)
-        $svg = '<img src="' . IMG . '/arrow-brown.png">';
+        $svg = '<img src="' . IMG . '/arrow-brown.png" alt="arrow">';
 
         return sprintf(
             '<button type="submit" id="%s" class="%s custom-submit"%s>
@@ -217,7 +217,7 @@ add_filter('gform_submit_button', function ($button_html, $form) {
 }, 10, 2);
 
 add_filter('gform_field_content_3', function ($content, $field, $value, $entry_id, $form_id) {
-    if ((int) $field->id === 8 && $field->type === 'fileupload') {
+    if ((int) $field->id === 8 && $field->type === 'fileupload' && !is_admin()) {
         return '<div class="my-filewrap">'
             . $content .
             '<img src="' . IMG . '/upload.png">
@@ -229,7 +229,7 @@ add_filter('gform_field_content_3', function ($content, $field, $value, $entry_i
 }, 10, 5);
 
 add_filter('gform_field_content_4', function ($content, $field, $value, $entry_id, $form_id) {
-    if ((int) $field->id === 8 && $field->type === 'fileupload') {
+    if ((int) $field->id === 8 && $field->type === 'fileupload' && !is_admin()) {
         return '<div class="my-filewrap">'
             . $content .
             '<img src="' . IMG . '/upload.png">
@@ -239,6 +239,42 @@ add_filter('gform_field_content_4', function ($content, $field, $value, $entry_i
     }
     return $content;
 }, 10, 5);
+
+/*add_filter('gform_field_content_8', function ($content, $field, $value, $entry_id, $form_id) {
+    if ((int) $field->id === 21 && $field->type === 'fileupload') {
+        return '<div class="my-filewrap">'
+            . $content .
+            '<img src="' . IMG . '/upload.png">
+            <p>Drag and drop files here to upload, or click to select.</p>
+            <span class="browse_file">Browse File</span>
+        </div>';
+    }
+    return $content;
+}, 10, 5);
+
+add_filter('gform_field_content_10', function ($content, $field, $value, $entry_id, $form_id) {
+    if ((int) $field->id === 21 && $field->type === 'fileupload') {
+        return '<div class="my-filewrap">'
+            . $content .
+            '<img src="' . IMG . '/upload.png">
+            <p>Drag and drop files here to upload, or click to select.</p>
+            <span class="browse_file">Browse File</span>
+        </div>';
+    }
+    return $content;
+}, 10, 5);
+
+add_filter('gform_field_content_11', function ($content, $field, $value, $entry_id, $form_id) {
+    if ((int) $field->id === 21 && $field->type === 'fileupload') {
+        return '<div class="my-filewrap">'
+            . $content .
+            '<img src="' . IMG . '/upload.png">
+            <p>Drag and drop files here to upload, or click to select.</p>
+            <span class="browse_file">Browse File</span>
+        </div>';
+    }
+    return $content;
+}, 10, 5);*/
 
 // -------------------------------------------------------------------------------------
 
@@ -336,31 +372,328 @@ add_action('init', 'hnh_remove_editor_from_vehicle');
 /**
  * Limita la búsqueda a post_title cuando la query tenga el flag 'hnh_title_only'.
  */
-function hnh_search_only_in_title( $search, \WP_Query $q ) {
+function hnh_search_only_in_title($search, \WP_Query $q)
+{
     global $wpdb;
 
     // Solo actuar si nos pasan el flag y hay término de búsqueda
-    if ( ! $q->get('hnh_title_only') || ! $q->is_search() && $q->get('s') === '' ) {
+    if (! $q->get('hnh_title_only') || ! $q->is_search() && $q->get('s') === '') {
         return $search;
     }
 
-    $s = trim( $q->get('s') );
-    if ( $s === '' ) {
+    $s = trim($q->get('s'));
+    if ($s === '') {
         return $search;
     }
 
     // Divide en palabras y exige que TODAS estén en el título (AND)
-    $terms = preg_split( '/\s+/', $s );
+    $terms = preg_split('/\s+/', $s);
     $pieces = [];
-    foreach ( $terms as $term ) {
-        $like     = '%' . $wpdb->esc_like( $term ) . '%';
-        $pieces[] = $wpdb->prepare( "{$wpdb->posts}.post_title LIKE %s", $like );
+    foreach ($terms as $term) {
+        $like     = '%' . $wpdb->esc_like($term) . '%';
+        $pieces[] = $wpdb->prepare("{$wpdb->posts}.post_title LIKE %s", $like);
     }
 
-    if ( $pieces ) {
+    if ($pieces) {
         // Reemplaza la búsqueda por defecto
-        $search = ' AND (' . implode( ' AND ', $pieces ) . ') ';
+        $search = ' AND (' . implode(' AND ', $pieces) . ') ';
     }
 
     return $search;
 }
+
+
+
+add_action('admin_head', function () {
+    echo '<style>
+		tr[data-slug="media-sync"], tr[data-slug="wp-sort-order"] { display: none !important; }
+		.acf-field[data-key="field_auction_date_latest"] input {
+			background: #f5f5f5 !important;
+            color: #666 !important;
+            opacity: .8;
+            pointer-events: none;
+			cursor: not-allowed;
+		}
+	</style>';
+});
+
+
+
+
+// Admin search: Auctions -> title OR ACF `sale_number`
+add_filter('posts_search', function ($search, $wp_query) {
+    global $wpdb;
+
+    // Solo en admin, query principal y para el CPT 'auction'
+    if (! is_admin() || ! $wp_query->is_main_query()) return $search;
+    if ($wp_query->get('post_type') !== 'auction') return $search;
+
+    $s = $wp_query->get('s');
+    if ($s === null || $s === '') return $search;
+
+    // Construye condiciones
+    $like     = '%' . $wpdb->esc_like($s) . '%';
+    $numeric  = is_numeric($s) ? (int) $s : null;
+
+    $where_parts = [];
+
+    // Título del post
+    $where_parts[] = $wpdb->prepare("{$wpdb->posts}.post_title LIKE %s", $like);
+
+    // Meta ACF sale_number (búsqueda parcial)
+    $where_parts[] = $wpdb->prepare(
+        "EXISTS (
+            SELECT 1 FROM {$wpdb->postmeta} pm
+            WHERE pm.post_id = {$wpdb->posts}.ID
+              AND pm.meta_key = 'sale_number'
+              AND pm.meta_value LIKE %s
+        )",
+        $like
+    );
+
+    // Si la búsqueda es numérica, también prueba igualdad exacta (más precisa)
+    if ($numeric !== null) {
+        $where_parts[] = $wpdb->prepare(
+            "EXISTS (
+                SELECT 1 FROM {$wpdb->postmeta} pm2
+                WHERE pm2.post_id = {$wpdb->posts}.ID
+                  AND pm2.meta_key = 'sale_number'
+                  AND CAST(pm2.meta_value AS UNSIGNED) = %d
+            )",
+            $numeric
+        );
+    }
+
+    // Reemplaza la cláusula de búsqueda por la nuestra (solo título + sale_number)
+    $search = ' AND (' . implode(' OR ', $where_parts) . ') ';
+
+    return $search;
+}, 10, 2);
+
+
+
+
+
+/**
+ * Añade la columna "Auction Date" al listado del CPT Auctions.
+ */
+add_filter('manage_auction_posts_columns', function ($columns) {
+    // Inserta la columna después del título
+    $new_columns = [];
+    foreach ($columns as $key => $label) {
+        $new_columns[$key] = $label;
+        if ($key === 'title') {
+            $new_columns['auction_date'] = __('Auction Date', 'textdomain');
+        }
+    }
+    return $new_columns;
+});
+
+/**
+ * Muestra el valor del campo ACF "auction_date" en la columna.
+ */
+add_action('manage_auction_posts_custom_column', function ($column, $post_id) {
+    if ($column === 'auction_date') {
+        $date = get_field('auction_date', $post_id);
+        echo $date ? esc_html($date) : '—';
+    }
+}, 10, 2);
+
+/**
+ * Hace que la columna "Auction Date" sea ordenable.
+ */
+add_filter('manage_edit-auction_sortable_columns', function ($columns) {
+    $columns['auction_date'] = 'auction_date';
+    return $columns;
+});
+
+/**
+ * Aplica el ordenamiento por el campo ACF "auction_date".
+ * Además, establece que por defecto se muestren los más recientes primero.
+ */
+add_action('pre_get_posts', function ($query) {
+    if (!is_admin() || !$query->is_main_query()) {
+        return;
+    }
+
+    if ($query->get('post_type') !== 'auction') {
+        return;
+    }
+
+    // Si el usuario hace clic en la columna para ordenar
+    if ($query->get('orderby') === 'auction_date') {
+        $query->set('meta_key', 'auction_date');
+        $query->set('orderby', 'meta_value');
+        $query->set('meta_type', 'DATETIME');
+    }
+
+    // Si no hay orden definido, aplica el orden por defecto
+    if (!$query->get('orderby')) {
+        $query->set('meta_key', 'auction_date');
+        $query->set('orderby', 'meta_value');
+        $query->set('meta_type', 'DATETIME');
+        $query->set('order', 'DESC'); // Más recientes primero
+    }
+});
+
+// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
+
+add_filter('manage_vehicles_posts_columns', function ($cols) {
+    $new = [];
+    foreach ($cols as $k => $v) {
+        $new[$k] = $v;
+        if ($k === 'title') {
+            $new['auction_date_latest'] = __('Auction Date', 'textdomain');
+        }
+    }
+    return $new;
+});
+
+add_action('manage_vehicles_posts_custom_column', function ($col, $post_id) {
+    if ($col !== 'auction_date_latest') return;
+    $raw = get_post_meta($post_id, 'auction_date_latest', true); // ACF/meta key
+    echo $raw ? esc_html($raw) : '—';
+}, 10, 2);
+
+require_once get_template_directory() . '/autocomplete_search_auction_date.php';
+
+
+
+
+
+
+
+
+/**
+ * Orden por defecto y ordenación desde cabecera para Vehicles
+ * Campo ACF: auction_date_latest (formato 'Y-m-d H:i:s' o 'Y-m-d H:i')
+ */
+/*add_action('pre_get_posts', function ($query) {
+    if (!is_admin() || !$query->is_main_query()) return;
+
+    // Solo en el listado del CPT vehicles
+    if ($query->get('post_type') !== 'vehicles') return;
+
+    // 1) Orden por defecto (cuando no se pide otro orderby)
+    if (!isset($_GET['orderby'])) {
+        $query->set('meta_key', 'auction_date_latest');
+        $query->set('meta_type', 'DATETIME');     // fuerza CAST para ordenar bien
+        $query->set('orderby', 'meta_value');     // ordena por el meta (string/datetime)
+        $query->set('order', 'DESC');             // más reciente primero
+        return;
+    }
+
+    // 2) Si el usuario hace clic en la columna "Auction Date" (ver filtro de columnas abajo)
+    if (isset($_GET['orderby']) && $_GET['orderby'] === 'auction_date_latest') {
+        $query->set('meta_key', 'auction_date_latest');
+        $query->set('meta_type', 'DATETIME');
+        $query->set('orderby', 'meta_value');
+        // respeta el parámetro &order=ASC|DESC que manda WP al hacer clic
+    }
+});*/
+
+/**
+ * Hacer la columna de fecha de subasta "sortable" (si tienes una columna para ello)
+ * Cambia 'auction_date_latest' por el ID de la columna que uses en el listado.
+ */
+add_filter('manage_edit-vehicles_sortable_columns', function ($columns) {
+    // clave = ID de la columna; valor = 'orderby' que envia WP
+    $columns['auction_date_latest'] = 'auction_date_latest';
+    return $columns;
+});
+
+
+
+
+
+add_action('admin_footer', function () {
+?>
+    <style>
+        tr[data-plugin="wp-duplicate-page/wp-duplicate-page.php"],
+        tr[data-plugin="woocommerce-ajax-cart/wooajaxcart.php"] {
+            display: none !important;
+        }
+    </style>
+<?php
+});
+
+
+
+add_filter('export_post_type_enabled', function ($enabled, $post_type) {
+    $remove = ['vehicles', 'team', 'venues', 'models'];
+
+    if (in_array($post_type, $remove)) {
+        return false; // los oculta de la pantalla Export
+    }
+
+    return $enabled;
+}, 10, 2);
+
+add_filter('register_post_type_args', function ($args, $post_type) {
+
+    // Slugs de los CPT que quieres ocultar en Export.
+    $to_hide = array(
+        'vehicles',
+        'team',
+        'venue',
+        'testimonials',
+        'auction',
+        'model',
+    );
+
+    if (in_array($post_type, $to_hide, true)) {
+        $args['can_export'] = false;
+    }
+
+    return $args;
+}, 10, 2);
+
+
+function hnh_add_member_team_role()
+{
+    // 1) Crear rol si NO existe
+    if (!get_role('member_team')) {
+        add_role(
+            'member_team',
+            'Member Team',
+            [
+                'read'         => true,
+                'edit_posts'   => false,
+                'delete_posts' => false,
+                'publish_posts' => false,
+            ]
+        );
+    }
+}
+add_action('init', 'hnh_add_member_team_role', 20);
+
+
+// Cambiar la base de la URL para usuarios visibles en "Meet the Team"
+function hnh_member_team_author_link($link, $author_id, $author_nicename)
+{
+    $show_in_team = get_field('show_in_meet_the_team_page', 'user_' . $author_id);
+
+    if ($show_in_team) {
+        // Nueva base: /member/{username}/
+        return home_url('/member/' . $author_nicename . '/');
+    }
+
+    return $link;
+}
+add_filter('author_link', 'hnh_member_team_author_link', 10, 3);
+
+// Regla de rewrite para que /member-team/usuario/ funcione
+function hnh_member_team_rewrite()
+{
+    add_rewrite_rule(
+        '^member/([^/]+)/?$',
+        'index.php?author_name=$matches[1]',
+        'top'
+    );
+}
+add_action('init', 'hnh_member_team_rewrite');
+
+
+require_once get_template_directory() . '/tracking/index.php';

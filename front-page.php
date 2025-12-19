@@ -77,11 +77,15 @@ $testimonials_items = get_field('testimonials_items');
     <?php get_template_part('inc/sections/upcoming'); ?>
 </section>
 
-<?php if ($why_video): ?>
+<?php if ($why_video && !empty(get_field('whychoose_poster_video'))): ?>
     <section class="banner_car">
-        <video autoplay loop muted>
-            <source src="<?php echo $why_video; ?>">
-        </video>
+        <img
+            src="<?php echo get_field('whychoose_poster_video')['url'] ?>"
+            title="<?php echo get_field('whychoose_poster_video')['title'] ?>"
+            alt="<?php echo get_field('whychoose_poster_video')['alt'] ?>"
+            width="<?php echo get_field('whychoose_poster_video')['width'] ?>"
+            height="<?php echo get_field('whychoose_poster_video')['height'] ?>"
+            loading="lazy">
     </section>
 <?php endif; ?>
 
@@ -278,7 +282,7 @@ $testimonials_items = get_field('testimonials_items');
                             <ul class="splide__list">
                                 <?php for ($i = 0; $i < 5; $i++): ?>
                                     <li class="splide__slide">
-                                        <h3>2024 Motorcar Highlights</h3>
+                                        <h3>2024 Motorcycle Highlights</h3>
                                     </li>
                                     <li class="splide__slide">
                                         <h3>•</h3>
@@ -343,139 +347,138 @@ $testimonials_items = get_field('testimonials_items');
     </section>
 <?php endif; ?>
 
-<section class="discover" data-state="1">
-    <div class="container">
-        <div class="discover_head title_watermark">
-            <div class="watermark">
-                <p>Vehicles For Sale</p>
-            </div>
-            <div class="breadlines">
-                <p>Refine your Search</p>
-            </div>
-            <h2>Vehicles For Sale</h2>
-        </div>
+<?php
+// Query 1: vehicle_category = 27
+$args_1 = [
+    'post_type'           => 'vehicles',
+    'posts_per_page'      => 6,
+    'post_status'         => 'publish',
+    'meta_query'          => [
+        [
+            'key'     => 'type_of_vehicle',
+            'value'   => 'private-sale',
+            'compare' => '=',
+        ]
+    ],
+    'orderby'             => 'meta_value',
+    'order'               => 'DESC',
+    'meta_type'           => 'DATETIME',
+];
+$q1 = new WP_Query($args_1);
+?>
 
-        <div class="opportunities-buttons w-100" style="max-width: 100%;padding: 0;">
-            <button class="scroll_opportunity active" data-id="1">Classic Motorcars</button>
-            <button class="scroll_opportunity" data-id="2">Classic Motorcycles</button>
-            <button class="scroll_opportunity" data-id="3">Vintage Scooters</button>
-        </div>
+<?php if ($q1->have_posts()): ?>
+    <section class="discover" data-state="1">
+        <div class="container">
+            <div class="discover_head title_watermark">
+                <div class="watermark">
+                    <p>Private Vehicles For Sale</p>
+                </div>
+                <div class="breadlines">
+                    <p>Refine your Search</p>
+                </div>
+                <h2>Private Vehicles For Sale</h2>
+            </div>
 
-        <div class="discover_body">
-            <?php
-            // Query 1: vehicle_category = 27
-            $args_1 = [
-                'post_type'           => 'vehicles',
-                'posts_per_page'      => 6,
-                'post_status'         => 'publish',
-                'no_found_rows'       => true,
-                'ignore_sticky_posts' => true,
-                'tax_query'           => [
-                    [
-                        'taxonomy' => 'vehicle_category',
-                        'field'    => 'term_id',
-                        'terms'    => [27],
-                    ],
-                ],
-                'meta_query'          => [
-                    [
-                        'key'     => '_thumbnail_id',
-                        'compare' => 'EXISTS',
-                    ],
-                ],
-                'orderby'             => 'date',
-                'order'               => 'DESC',
-            ];
-            $q1 = new WP_Query($args_1);
-            ?>
-            <div class="vehicles_grid" id="vehicle_type_1">
-                <?php if ($q1->have_posts()): ?>
+            <?php if (NOT_APPEAR): ?>
+                <div class="opportunities-buttons w-100" style="max-width: 100%;padding: 0;">
+                    <button class="scroll_opportunity active" data-id="1">Classic Motorcars</button>
+                    <button class="scroll_opportunity" data-id="2">Classic Motorcycles</button>
+                    <button class="scroll_opportunity" data-id="3">Vintage Scooters</button>
+                </div>
+            <?php endif; ?>
+
+            <div class="discover_body">
+
+                <div class="vehicles_grid" id="vehicle_type_1">
                     <?php while ($q1->have_posts()): $q1->the_post(); ?>
                         <?php hnh_render_vehicle_card(get_the_ID()); ?>
                     <?php endwhile;
                     wp_reset_postdata(); ?>
-                <?php endif; ?>
-            </div>
+                </div>
 
-            <?php
-            // Query 2: vehicle_category = 22
-            $args_2 = [
-                'post_type'           => 'vehicles',
-                'posts_per_page'      => 6,
-                'post_status'         => 'publish',
-                'no_found_rows'       => true,
-                'ignore_sticky_posts' => true,
-                'tax_query'           => [
-                    [
-                        'taxonomy' => 'vehicle_category',
-                        'field'    => 'term_id',
-                        'terms'    => [22],
-                    ],
-                ],
-                'meta_query'          => [
-                    [
-                        'key'     => '_thumbnail_id',
-                        'compare' => 'EXISTS',
-                    ],
-                ],
-                'orderby'             => 'date',
-                'order'               => 'DESC',
-            ];
-            $q2 = new WP_Query($args_2);
-            ?>
-            <div class="vehicles_grid" id="vehicle_type_2">
-                <?php if ($q2->have_posts()): ?>
-                    <?php while ($q2->have_posts()): $q2->the_post(); ?>
-                        <?php hnh_render_vehicle_card(get_the_ID()); ?>
-                    <?php endwhile;
-                    wp_reset_postdata(); ?>
-                <?php endif; ?>
-            </div>
+                <?php if (NOT_APPEAR): ?>
+                    <?php
+                    // Query 2: vehicle_category = 22
+                    $args_2 = [
+                        'post_type'           => 'vehicles',
+                        'posts_per_page'      => 6,
+                        'post_status'         => 'publish',
+                        'no_found_rows'       => true,
+                        'ignore_sticky_posts' => true,
+                        'tax_query'           => [
+                            [
+                                'taxonomy' => 'vehicle_category',
+                                'field'    => 'term_id',
+                                'terms'    => [22],
+                            ],
+                        ],
+                        'meta_query'          => [
+                            [
+                                'key'     => '_thumbnail_id',
+                                'compare' => 'EXISTS',
+                            ],
+                        ],
+                        'orderby'             => 'date',
+                        'order'               => 'DESC',
+                    ];
+                    $q2 = new WP_Query($args_2);
+                    ?>
+                    <div class="vehicles_grid" id="vehicle_type_2">
+                        <?php if ($q2->have_posts()): ?>
+                            <?php while ($q2->have_posts()): $q2->the_post(); ?>
+                                <?php hnh_render_vehicle_card(get_the_ID()); ?>
+                            <?php endwhile;
+                            wp_reset_postdata(); ?>
+                        <?php endif; ?>
+                    </div>
 
-            <?php
-            // Query 3: vehicle_category = 36
-            $args_3 = [
-                'post_type'           => 'vehicles',
-                'posts_per_page'      => 6,
-                'post_status'         => 'publish',
-                'no_found_rows'       => true,
-                'ignore_sticky_posts' => true,
-                'tax_query'           => [
-                    [
-                        'taxonomy' => 'vehicle_category',
-                        'field'    => 'term_id',
-                        'terms'    => [36],
-                    ],
-                ],
-                'meta_query'          => [
-                    [
-                        'key'     => '_thumbnail_id',
-                        'compare' => 'EXISTS',
-                    ],
-                ],
-                'orderby'             => 'date',
-                'order'               => 'DESC',
-            ];
-            $q3 = new WP_Query($args_3);
-            ?>
-            <div class="vehicles_grid" id="vehicle_type_3">
-                <?php if ($q3->have_posts()): ?>
-                    <?php while ($q3->have_posts()): $q3->the_post(); ?>
-                        <?php hnh_render_vehicle_card(get_the_ID()); ?>
-                    <?php endwhile;
-                    wp_reset_postdata(); ?>
+                    <?php
+                    // Query 3: vehicle_category = 36
+                    $args_3 = [
+                        'post_type'           => 'vehicles',
+                        'posts_per_page'      => 6,
+                        'post_status'         => 'publish',
+                        'no_found_rows'       => true,
+                        'ignore_sticky_posts' => true,
+                        'tax_query'           => [
+                            [
+                                'taxonomy' => 'vehicle_category',
+                                'field'    => 'term_id',
+                                'terms'    => [36],
+                            ],
+                        ],
+                        'meta_query'          => [
+                            [
+                                'key'     => '_thumbnail_id',
+                                'compare' => 'EXISTS',
+                            ],
+                        ],
+                        'orderby'             => 'date',
+                        'order'               => 'DESC',
+                    ];
+                    $q3 = new WP_Query($args_3);
+                    ?>
+                    <div class="vehicles_grid" id="vehicle_type_3">
+                        <?php if ($q3->have_posts()): ?>
+                            <?php while ($q3->have_posts()): $q3->the_post(); ?>
+                                <?php hnh_render_vehicle_card(get_the_ID()); ?>
+                            <?php endwhile;
+                            wp_reset_postdata(); ?>
+                        <?php endif; ?>
+                    </div>
                 <?php endif; ?>
-            </div>
 
-            <a href="<?php echo esc_url(home_url('vehicles-for-sale')); ?>" class="permalink" alt="View All Vehicles">
-                View All Vehicles
-                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
-                    <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
-                </svg>
-            </a>
+                <a href="<?php echo esc_url(home_url('vehicles-for-sale')); ?>" class="permalink" alt="View All Vehicles">
+                    View All Vehicles
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
+                        <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
+                    </svg>
+                </a>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
+<?php endif; ?>
 
 <?php get_template_part('inc/sections/request-register'); ?>
 
@@ -590,6 +593,8 @@ $testimonials_items = get_field('testimonials_items');
             $args = array(
                 'post_type'      => 'post',
                 'posts_per_page' => 9,
+                'orderby'        => 'date',
+                'order'          => 'ASC',
             );
             $query = new WP_Query($args);
 
@@ -613,22 +618,23 @@ $testimonials_items = get_field('testimonials_items');
                             </div>
                         <?php endif; ?>
                         <a class="new_content" href="<?php the_permalink(); ?>">
-                            <span><?php echo get_the_date('d/m/y'); ?></span>
-                            <h3>
-                                <?php
-                                $title = get_the_title();
-                                if ($size_class === 'medium') {
-                                    echo mb_strimwidth($title, 0, 70, '...');
-                                } elseif ($size_class === 'small') {
-                                    echo mb_strimwidth($title, 0, 56, '...');
-                                } else {
-                                    echo $title;
-                                }
-                                ?>
-                            </h3>
+                            <div class="w-100">
+                                <span><?php echo get_the_date('d/m/y'); ?></span>
+                                <h3>
+                                    <?php
+                                    $title = get_the_title();
+                                    if ($size_class === 'medium') {
+                                        echo mb_strimwidth($title, 0, 70, '...');
+                                    } elseif ($size_class === 'small') {
+                                        echo mb_strimwidth($title, 0, 56, '...');
+                                    } else {
+                                        echo $title;
+                                    }
+                                    ?>
+                                </h3>
+                            </div>
                             <?php
-                            $short_desc = get_field('post_short_description');
-
+                            /*$short_desc = get_field('post_short_description');
                             if ($short_desc) {
                                 if ($size_class === 'big') {
                                     echo '<p>' . mb_strimwidth($short_desc, 0, 225, '...') . '</p>';
@@ -637,7 +643,7 @@ $testimonials_items = get_field('testimonials_items');
                                 } elseif ($size_class === 'small') {
                                     echo '<p>' . mb_strimwidth($short_desc, 0, 112, '...') . '</p>';
                                 }
-                            }
+                            }*/
                             ?>
                             <span href="<?php the_permalink(); ?>">Read More >></span>
                         </a>
@@ -739,3 +745,21 @@ $testimonials_items = get_field('testimonials_items');
 </script>
 
 <?php get_footer(); ?>
+
+<?php if ($why_video && !empty(get_field('whychoose_poster_video'))): ?>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            setTimeout(function() {
+                const banner = document.querySelector(".banner_car");
+                if (banner) {
+                    banner.innerHTML = `
+                <video autoplay muted loop playsinline>
+                    <source src="<?php echo $why_video; ?>" type="video/mp4">
+                    Your browser does not support the video.
+                </video>
+            `;
+                }
+            }, 1000); // 1 segundo
+        });
+    </script>
+<?php endif; ?>

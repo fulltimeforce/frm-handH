@@ -35,6 +35,7 @@ function create_testimonials_cpt()
         'hierarchical'          => false,
         'supports'              => array('title', 'editor', 'thumbnail', 'excerpt'),
         'show_in_rest'          => true, // Para usar en Gutenberg/ACF/REST API
+        'show_in_export'        => false,
     );
 
     register_post_type('testimonials', $args);

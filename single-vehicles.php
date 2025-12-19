@@ -9,10 +9,32 @@ $estimate_high = get_field('estimate_high');
 $estimate_low = get_field('estimate_low');
 $sold_price = get_field('sold_price');
 $short_text = get_field('title_sub');
+$status = get_field('status');
 
 $vehicle_video = '';
+$post_id = get_the_ID();
 
 ?>
+
+<style>
+    @media (min-width: 1420px) {
+        .listing_info-details {
+            margin-top: 3.3333333333vw;
+        }
+    }
+
+    @media (max-width: 1420px) {
+        .listing_info-details {
+            margin-top: 44px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .listing_info-details {
+            margin-top: 32px;
+        }
+    }
+</style>
 
 <section class="listing_head">
     <div class="container">
@@ -242,8 +264,6 @@ if ($gallery && is_array($gallery)): ?>
         <div class="listing_info-bid">
 
             <?php
-            $status = get_field('status');
-
             $upcoming_auctions_ids = [];
             $date_meta_key = 'auction_date';
             $now_mysql     = current_time('mysql');
@@ -347,109 +367,7 @@ if ($gallery && is_array($gallery)): ?>
 
             <?php endif; ?>
 
-
         </div>
-
-        <?php
-        // 1) Toma el nombre desde los ACF de texto
-        $member_name = trim((string)(get_field('assigned_to') ?: get_field('contact_rep') ?: ''));
-
-        if ($member_name !== ''):
-
-            // 2) Helper para localizar el CPT 'team' por nombre
-            if (!function_exists('hnh_find_team_by_name')) {
-                function hnh_find_team_by_name($name)
-                {
-                    $name = trim((string)$name);
-                    if ($name === '') return null;
-
-                    // a) Coincidencia exacta por título
-                    $p = get_page_by_title($name, OBJECT, 'team');
-                    if ($p instanceof WP_Post && $p->post_status === 'publish') return $p;
-
-                    // b) Por slug (por si el título exacto no coincide pero el slug sí)
-                    $slug = sanitize_title($name);
-                    $p = get_page_by_path($slug, OBJECT, 'team');
-                    if ($p instanceof WP_Post && $p->post_status === 'publish') return $p;
-
-                    // c) Búsqueda de respaldo
-                    $q = new WP_Query([
-                        'post_type'           => 'team',
-                        'post_status'         => 'publish',
-                        'posts_per_page'      => 1,
-                        'no_found_rows'       => true,
-                        'ignore_sticky_posts' => true,
-                        's'                   => $name,
-                        'orderby'             => 'title',
-                        'order'               => 'ASC',
-                        'fields'              => 'ids',
-                    ]);
-                    if (!empty($q->posts)) return get_post($q->posts[0]);
-
-                    return null;
-                }
-            }
-
-            // 3) Busca el miembro y pinta sus datos
-            $team_post = hnh_find_team_by_name($member_name);
-
-            if ($team_post) :
-                $member_id = (int) $team_post->ID;
-
-                $name     = get_the_title($member_id);
-                $email    = (string) get_field('team_email', $member_id);
-                $phone    = (string) (get_field('team_phone', $member_id) ?: get_field('phone', $member_id));
-                $position = (string) get_field('job_position', $member_id);
-
-                // Imagen destacada con fallback
-                $img_url  = get_the_post_thumbnail_url($member_id, 'medium');
-                if (!$img_url && defined('IMG')) $img_url = IMG . '/face2.png';
-
-                if ($name && ($email || $phone)) : ?>
-                    <div class="listing_info-contact">
-                        <div class="listing_info-contact-info">
-                            <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($name); ?>">
-                            <div>
-                                <p class="listing_info-contact-subtitle">
-                                    If you would like to enquire further, please contact:
-                                </p>
-                                <p class="listing_info-contact-title"><?php echo esc_html($name); ?></p>
-                                <?php if ($position): ?>
-                                    <p class="listing_info-contact-subtitle">- <?php echo esc_html($position); ?></p>
-                                <?php endif; ?>
-                                <div>
-                                    <?php if ($email): ?>
-                                        <p class="listing_info-contact-text">
-                                            Email: <span><a href="mailto:<?php echo esc_attr($email); ?>"><?php echo esc_html($email); ?></a></span>
-                                        </p>
-                                    <?php endif; ?>
-                                    <?php if ($phone): ?>
-                                        <p class="listing_info-contact-text">
-                                            Tel: <span><?php echo esc_html($phone); ?></span>
-                                        </p>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="listing_info-contact-btn w-100">
-                            <a href="<?php echo esc_url(get_permalink($member_id)); ?>" class="listing_btn-white p14">
-                                View Bio
-                                <svg xmlns="http://www.w3.org/2000/svg" width="29" height="16" viewBox="0 0 29 16" fill="none">
-                                    <path d="M2.5 8H26.5M26.5 8L21.122 2M26.5 8L21.122 14" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                <?php else: ?>
-                    <div class="empty-listing_info-contact"></div>
-                <?php endif; ?>
-            <?php else: ?>
-                <div class="empty-listing_info-contact"></div>
-            <?php endif; ?>
-        <?php else: ?>
-            <div class="empty-listing_info-contact"></div>
-        <?php endif; ?>
-
         <div class="listing_info-details">
 
             <div class="listing_info-details-tabs">
@@ -459,9 +377,13 @@ if ($gallery && is_array($gallery)): ?>
                         <li>
                             <div>
                                 <h3>Lot Details</h3>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                                    <path d="M0 8.99943L18 8.99943M8.99969 0L8.99969 18" stroke="#8C6E47" stroke-width="2" />
-                                </svg>
+                                <?php if (NOT_APPEAR): ?>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                        <path d="M0 8.99943L18 8.99943M8.99969 0L8.99969 18" stroke="#8C6E47" stroke-width="2" />
+                                    </svg>
+                                <?php else: ?>
+                                    <p style="color:#8c6e47;font-family:GothamMedium;font-weight:300;">Read More</p>
+                                <?php endif; ?>
                             </div>
                             <div>
                                 <div class="description">
@@ -479,6 +401,99 @@ if ($gallery && is_array($gallery)): ?>
                 </div>
             </div>
         </div>
+        <?php
+        /**
+         * Resuelve un Team a partir de un valor de ACF Post Object.
+         * Acepta: WP_Post | ID | array (p.ej., si tuviera "multiple" y quieres el primero).
+         */
+        if (!function_exists('hnh_resolve_team_post')) {
+            function hnh_resolve_team_post($val)
+            {
+                if (empty($val)) return null;
+
+                // Si viene un array (por si algún día activan "Select Multiple")
+                if (is_array($val)) {
+                    // Caso ACF: array de objetos/IDs -> usamos el primero
+                    $val = reset($val);
+                }
+
+                $id = null;
+                if (is_object($val)) {
+                    // WP_Post u objeto con ID
+                    $id = isset($val->ID) ? (int)$val->ID : null;
+                } else {
+                    // ID numérico
+                    $id = (int)$val;
+                }
+                if (!$id) return null;
+
+                $p = get_post($id);
+                if ($p instanceof WP_Post && $p->post_type === 'team' && $p->post_status === 'publish') {
+                    return $p;
+                }
+                return null;
+            }
+        }
+
+        /** 1) Primero intentamos con assigned_to (Post Object). Si está vacío, usamos contact_rep. */
+        $team_post = hnh_resolve_team_post(get_field('assigned_to'));
+        if (!$team_post) {
+            $team_post = hnh_resolve_team_post(get_field('contact_rep'));
+        }
+
+        if ($team_post) :
+            $member_id = (int) $team_post->ID;
+
+            $name     = get_the_title($member_id);
+            $email    = (string) get_field('team_email', $member_id);
+            $phone    = (string) (get_field('team_phone', $member_id) ?: get_field('phone', $member_id));
+            $position = (string) get_field('job_position', $member_id);
+
+            // Imagen destacada con fallback
+            $img_url  = get_the_post_thumbnail_url($member_id, 'medium');
+            if (!$img_url && defined('IMG')) $img_url = IMG . '/face2.png';
+
+            if ($name && ($email || $phone)) : ?>
+                <div class="listing_info-contact" style="margin-bottom:0">
+                    <div class="listing_info-contact-info">
+                        <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($name); ?>">
+                        <div>
+                            <p class="listing_info-contact-subtitle">
+                                If you would like to enquire further, please contact:
+                            </p>
+                            <p class="listing_info-contact-title"><?php echo esc_html($name); ?></p>
+                            <?php if ($position): ?>
+                                <p class="listing_info-contact-subtitle">- <?php echo esc_html($position); ?></p>
+                            <?php endif; ?>
+                            <div>
+                                <?php if ($email): ?>
+                                    <p class="listing_info-contact-text">
+                                        Email: <span><a href="mailto:<?php echo esc_attr($email); ?>"><?php echo esc_html($email); ?></a></span>
+                                    </p>
+                                <?php endif; ?>
+                                <?php if ($phone): ?>
+                                    <p class="listing_info-contact-text">
+                                        Tel: <span><?php echo esc_html($phone); ?></span>
+                                    </p>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="listing_info-contact-btn w-100">
+                        <a href="<?php echo esc_url(get_permalink($member_id)); ?>" class="listing_btn-white p14">
+                            View Bio
+                            <svg xmlns="http://www.w3.org/2000/svg" width="29" height="16" viewBox="0 0 29 16" fill="none">
+                                <path d="M2.5 8H26.5M26.5 8L21.122 2M26.5 8L21.122 14" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            <?php else: ?>
+                <div class="empty-listing_info-contact"></div>
+            <?php endif; ?>
+        <?php else: ?>
+            <div class="empty-listing_info-contact"></div>
+        <?php endif; ?>
 
         <?php if ($vehicle_video): ?>
             <div class="listing_info-image w-100">
@@ -560,6 +575,16 @@ if ($gallery && is_array($gallery)): ?>
 
 
         </div>
+
+        <?php if ($status && strtolower($status) != 'sold'): ?>
+            <div class="insurance insurance_share other_forms_mt">
+                <div class="actions" style="justify-content: flex-start;">
+                    <a href="<?php echo esc_url(home_url('telephone-bid')); ?>?vehicle=<?php echo get_the_ID(); ?>" title="Telephone Bid">Telephone Bid</a>
+                    <a href="<?php echo esc_url(home_url('commision-bid')); ?>?vehicle=<?php echo get_the_ID(); ?>" title="Commision Bid">Commision Bid</a>
+                    <a href="<?php echo esc_url(home_url('request-condition-report')); ?>?vehicle=<?php echo get_the_ID(); ?>" title="Request Condition Report">Request Condition Report</a>
+                </div>
+            </div>
+        <?php endif; ?>
 
         <?php
         $vehicle_notes = get_field('footnote');

@@ -63,7 +63,7 @@ get_banner('Homepage / Classic Auctions / ' . $title, esc_url($bg_image), $title
                 <div class="auction_dates-item">
                     <?php if (!empty(get_field('auction_date'))): ?>
                         <div class="auction_dates-head">
-                            <p>
+                            <p style="text-transform:none">
                                 <?php
                                 $date_raw = get_field('auction_date'); // "2025-09-10 12:00:00"
 
@@ -166,7 +166,7 @@ $lng = $venue_id ? get_field('lng', $venue_id) : '';
             d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n))
         })
         ({
-            key: "AIzaSyDm16PUTSAsojL7diI8zmW3Df2lYU2mqxQ",
+            key: "AIzaSyCVON0lmLwo6CvxrrGs7UtyCknZkI5sBBk",
             v: "weekly"
         });
     </script>

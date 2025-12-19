@@ -26,7 +26,7 @@
                 </div>
                 <div class="footer_east">
                     <b>H&H Classics is proud to support</b>
-                    <img src="<?php echo IMG; ?>/logo-east.svg" class="w-100">
+                    <img src="<?php echo IMG; ?>/logo-east.svg" class="w-100" alt="logo">
                 </div>
             </div>
             <div class="footer_col">
@@ -34,10 +34,15 @@
                     <div class="footer_nav">
                         <p class="footer_nav-head">Auctions</p>
                         <div class="footer_nav-list">
-                            <a href="https://issuu.com/handhclassicsadmin/docs/h_h-2025-auction-calendar">Auction Calendar</a>
+                            <?php if (NOT_APPEAR): ?>
+                                <a href="https://issuu.com/handhclassicsadmin/docs/h_h-2025-auction-calendar" alt="Auction Calendar">Auction Calendar</a>
+                            <?php else: ?>
+                                
+                            <?php endif; ?>
+
                             <a href="<?php echo esc_url(home_url('auction-results')) ?>">Auction Results</a>
                             <a href="<?php echo esc_url(home_url('get-a-valuation')) ?>">Enter Your Classic</a>
-                            <a target="_blank" href="https://issuu.com/handhclassics/docs/handh-welcome-booklet-20231215?fr=sYjkxNTYzMTE1NDY" target="_blank">H&H Welcome Pack</a>
+                            <!--<a target="_blank" href="https://issuu.com/handhclassics/docs/handh-welcome-booklet-20231215?fr=sYjkxNTYzMTE1NDY" target="_blank">H&H Welcome Pack</a>-->
                         </div>
                     </div>
                     <div class="footer_nav">
@@ -52,7 +57,7 @@
                         <p class="footer_nav-head">Account & Bidding</p>
                         <div class="footer_nav-list">
                             <a href="https://www.handh.co.uk/account/register/" alt="Register / Sign In">Register / Sign In</a>
-                            <a target="_blank" href="https://handh.blob.core.windows.net/main/HandH-Telephone-Bidding-Form-20230714.pdf">Telephone Bid Form</a>
+                            <a href="https://handh-bqha9.projectbeta.co.uk/telephone-bid/">Telephone Bid Form</a>
                         </div>
                     </div>
                 </div>
@@ -65,7 +70,7 @@
                         </div>
                     </div>
                     <div class="footer_award">
-                        <img src="<?php echo IMG; ?>/award.svg" class="w-100">
+                        <img src="<?php echo IMG; ?>/award.svg" class="w-100" alt="award">
                         <?php get_template_part('inc/sections/social-list-links'); ?>
                         <div class="links">
                             <a href="<?php echo esc_url(home_url('news-and-insights')); ?>">News</a>

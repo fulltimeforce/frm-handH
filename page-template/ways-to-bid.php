@@ -107,7 +107,8 @@ get_banner('Homepage / Classic Auctions / Ways to Bid', get_the_post_thumbnail_u
 </section>
 
 <section class="once">
-    <div class="once-container">
+    <!--<div class="once-container">-->
+    <div class="container">
         <?php if ($title = get_field('ways_completed_title')): ?>
             <div class="once-title">
                 <h2><?= esc_html($title); ?></h2>

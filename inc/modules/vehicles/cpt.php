@@ -41,6 +41,7 @@ if (! function_exists('cpt_vehicles_init')) {
             // 'supports'           => array('title', 'editor', 'thumbnail', 'excerpt', 'custom-fields'),
             'supports'           => array('title', 'thumbnail', 'excerpt', 'custom-fields'),
             'show_in_rest'       => true,
+            'show_in_export'     => false,
             'taxonomies'         => array('vehicle_category', 'vehicle_brand'),
         );
 
@@ -85,11 +86,11 @@ if (! function_exists('vehicles_register_tax_brand')) {
     function vehicles_register_tax_brand()
     {
         $labels = array(
-            'name'                       => 'Vehicle Brands',
-            'singular_name'              => 'Vehicle Brand',
-            'search_items'               => 'Search Vehicle Brands',
-            'popular_items'              => 'Popular Vehicle Brands',
-            'all_items'                  => 'All Vehicle Brands',
+            'name'                       => 'Makes',
+            'singular_name'              => 'Makes',
+            'search_items'               => 'Search Makes',
+            'popular_items'              => 'Popular Makes',
+            'all_items'                  => 'All Makes',
             'edit_item'                  => 'Edit Vehicle Brand',
             'update_item'                => 'Update Vehicle Brand',
             'add_new_item'               => 'Add New Vehicle Brand',
@@ -97,7 +98,7 @@ if (! function_exists('vehicles_register_tax_brand')) {
             'separate_items_with_commas' => 'Separate brands with commas',
             'add_or_remove_items'        => 'Add or remove brands',
             'choose_from_most_used'      => 'Choose from the most used brands',
-            'menu_name'                  => 'Vehicle Brands',
+            'menu_name'                  => 'Makes',
         );
 
         register_taxonomy('vehicle_brand', array('vehicles'), array(
@@ -238,3 +239,93 @@ add_action('pre_get_posts', function ($query) {
         $query->set('meta_query', $meta_query);
     }
 });
+
+
+
+
+
+
+/**
+ * Filtro: lot_number_latest con/ sin 'p' o 'P'
+ */
+/*add_action('restrict_manage_posts', function ($post_type) {
+    if ($post_type !== 'vehicles') return;
+
+    $current = isset($_GET['lot_letters']) ? sanitize_text_field($_GET['lot_letters']) : '';
+
+    echo '<select name="lot_letters">';
+    echo '<option value=""' . selected($current, '', false) . '>' . esc_html__('All lot numbers', 'text-domain') . '</option>';
+    echo '<option value="with"' . selected($current, 'with', false) . '>' . esc_html__("Lot with 'p'/'P'", 'text-domain') . '</option>';
+    echo '<option value="without"' . selected($current, 'without', false) . '>' . esc_html__("Lot without 'p'/'P' (or empty)", 'text-domain') . '</option>';
+    echo '</select>';
+});*/
+
+/**
+ * Aplica el filtro a la query principal del admin
+ */
+/*add_action('pre_get_posts', function ($query) {
+    global $pagenow;
+
+    if (!is_admin() || $pagenow !== 'edit.php' || !$query->is_main_query() || $query->get('post_type') !== 'vehicles') {
+        return;
+    }
+
+    // Conserva meta_query existente (por ejemplo, el de Status)
+    $meta_query = (array) $query->get('meta_query');
+
+    if (!empty($_GET['vehicle_status_filter'])) {
+        $status = sanitize_text_field($_GET['vehicle_status_filter']);
+        $meta_query[] = [
+            'key'     => 'status',
+            'value'   => $status,
+            'compare' => '=',
+        ];
+    }
+
+    if (!empty($_GET['lot_letters'])) {
+        $choice = sanitize_text_field($_GET['lot_letters']);
+
+        if ($choice === 'with') {
+            // Contiene 'p' o 'P'
+            $meta_query[] = [
+                'key'     => 'lot_number_latest',
+                'value'   => '[pP]',
+                'compare' => 'REGEXP',
+            ];
+        } elseif ($choice === 'without') {
+            // No contiene 'p' ni 'P' o está vacío / no existe
+            $meta_query[] = [
+                'relation' => 'OR',
+                [
+                    'key'     => 'lot_number_latest',
+                    'value'   => '[pP]',
+                    'compare' => 'NOT REGEXP',
+                ],
+                [
+                    'key'     => 'lot_number_latest',
+                    'value'   => '',
+                    'compare' => '=',
+                ],
+                [
+                    'key'     => 'lot_number_latest',
+                    'compare' => 'NOT EXISTS',
+                ],
+            ];
+        }
+    }
+
+    if (!empty($meta_query)) {
+        $query->set('meta_query', $meta_query);
+    }
+});*/
+
+
+
+
+// Ocultar el filtro "All dates" en Vehicles y Auctions
+add_filter('disable_months_dropdown', function ($disable, $post_type) {
+    if (in_array($post_type, ['vehicles', 'auction'], true)) {
+        return true;
+    }
+    return $disable;
+}, 10, 2);

@@ -155,6 +155,16 @@ get_banner('Homepage / Classic Auctions / Insurance', get_the_post_thumbnail_url
     <?php get_template_part('inc/sections/upcoming'); ?>
 </section>
 
+<div class="insurance_popup">
+    <div class="insurance_popup-bg"></div>
+    <div class="insurance_popup-content">
+        <div class="w-100">
+            <h3></h3>
+            <?php echo do_shortcode('[gravityform id="6" title="true" ajax="true"]'); ?>
+        </div>
+    </div>
+</div>
+
 <?php get_footer(); ?>
 
 <script>
@@ -163,5 +173,37 @@ get_banner('Homepage / Classic Auctions / Insurance', get_the_post_thumbnail_url
         closeOther: false,
         slideSpeed: 150,
         activeIndex: 100,
+    });
+
+    // -----------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const buttons = document.querySelectorAll(".actions a"); // tus botones
+        const popup = document.querySelector(".insurance_popup");
+        const popupBg = document.querySelector(".insurance_popup-bg");
+        const popupTitle = popup.querySelector("h3");
+
+        // abrir popup al dar click en cualquier botón
+        buttons.forEach(btn => {
+            btn.addEventListener("click", function(e) {
+                e.preventDefault(); // evita la navegación del <a>
+                popup.classList.add("active");
+                popupTitle.textContent = this.textContent; // pone el texto del botón
+            });
+        });
+
+        // cerrar popup al hacer click en el fondo
+        popupBg.addEventListener("click", function() {
+            popup.classList.remove("active");
+        });
+
+        // cerrar popup al presionar ESC
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "Escape" && popup.classList.contains("active")) {
+                popup.classList.remove("active");
+            }
+        });
     });
 </script>

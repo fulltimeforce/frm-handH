@@ -1,3 +1,13 @@
+<?php if(is_page('contact')): ?>
+<style>
+    .shadows{
+        background: url('<?php echo IMG; ?>/contact3.webp') no-repeat;
+        background-position: 50%;
+        background-size: cover;
+    }
+</style>
+<?php endif; ?>
+
 <section class="shadows">
     <div class="shadows_grid">
         <div class="col">

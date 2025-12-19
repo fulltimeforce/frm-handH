@@ -1,0 +1,96 @@
+
+/**
+ * ================================
+ * Vehicles admin list ordering
+ * by ACF 'auction_date_latest'
+ * - Empty dates first
+ * - Then newest -> oldest
+ * ================================
+ */
+
+/**
+ * 1) Mostrar columna "Auction Date (Latest)" en el listado de Vehicles
+ */
+add_filter('manage_vehicles_posts_columns', function ($cols) {
+    $new = [];
+    foreach ($cols as $k => $v) {
+        $new[$k] = $v;
+        if ($k === 'title') {
+            $new['auction_date_latest'] = __('Auction Date', 'textdomain');
+        }
+    }
+    return $new;
+});
+
+add_action('manage_vehicles_posts_custom_column', function ($col, $post_id) {
+    if ($col !== 'auction_date_latest') return;
+    $raw = get_post_meta($post_id, 'auction_date_latest', true); // ACF/meta key
+    echo $raw ? esc_html($raw) : '—';
+}, 10, 2);
+
+/**
+ * 2) Hacer la columna ordenable desde el encabezado
+ */
+add_filter('manage_edit-vehicles_sortable_columns', function ($cols) {
+    $cols['auction_date_latest'] = 'auction_date_latest';
+    return $cols;
+});
+
+/**
+ * 3) Forzar el orden por defecto y detectar cuando el usuario pide orden por la columna
+ *    - No cambiamos posts_per_page para no romper la paginación.
+ */
+add_action('pre_get_posts', function ($q) {
+    if (!is_admin() || !$q->is_main_query()) return;
+    if ($q->get('post_type') !== 'vehicles') return;
+
+    // Si el usuario hizo clic en la cabecera de "Auction Date (Latest)"
+    if ($q->get('orderby') === 'auction_date_latest') {
+        // Marcamos una bandera para armar ORDER BY custom en posts_clauses
+        $q->set('auction_date_latest_order', '1');
+        // Por defecto: más recientes primero
+        if (!$q->get('order')) $q->set('order', 'DESC');
+        return;
+    }
+
+    // Si no hay un orderby específico, aplicamos nuestro orden por defecto
+    if (!$q->get('orderby')) {
+        $q->set('auction_date_latest_order', '1');
+        $q->set('order', 'DESC'); // más recientes primero
+    }
+});
+
+/**
+ * 4) Construir JOIN + ORDER BY eficiente y seguro
+ *    - Alias estable para el meta de vehicles: 'pm_adl'
+ *    - Empties primero, luego fecha DESC (o ASC si el usuario lo pide)
+ */
+add_filter('posts_clauses', function ($clauses, $q) {
+    if (!is_admin() || !$q->is_main_query()) return $clauses;
+    if ($q->get('post_type') !== 'vehicles') return $clauses;
+    if (!$q->get('auction_date_latest_order')) return $clauses;
+
+    global $wpdb;
+
+    // JOIN al meta 'auction_date_latest' del post (vehicle)
+    // Usamos LEFT JOIN para que los que no tienen meta también aparezcan
+    $clauses['join'] .= "
+        LEFT JOIN {$wpdb->postmeta} pm_adl
+               ON pm_adl.post_id = {$wpdb->posts}.ID
+              AND pm_adl.meta_key = 'auction_date_latest'
+    ";
+
+    // Orden requerido
+    $dir = strtoupper($q->get('order')) === 'ASC' ? 'ASC' : 'DESC';
+
+    // Empties primero: (pm_adl.meta_value IS NULL OR pm_adl.meta_value = '') -> TRUE(1) va primero con DESC
+    // Luego por fecha (YYYY-MM-DD HH:MM) casteada a DATETIME
+    // Finalmente por ID para orden estable
+    $clauses['orderby'] = "
+        (pm_adl.meta_value IS NULL OR pm_adl.meta_value = '') DESC,
+        CAST(pm_adl.meta_value AS DATETIME) {$dir},
+        {$wpdb->posts}.ID {$dir}
+    ";
+
+    return $clauses;
+}, 10, 2);
