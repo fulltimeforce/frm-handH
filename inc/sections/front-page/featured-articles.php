@@ -19,7 +19,7 @@
         'post_type' => 'post',
         'posts_per_page' => 9,
         'orderby' => 'date',
-        'order' => 'ASC',
+        'order' => 'DESC',
       );
       $query = new WP_Query($args);
 
