@@ -2,51 +2,30 @@
 /*
     Template name: upcoming-auctions
 */
-
 get_header();
 
-get_banner('Homepage / classic auctions / Upcoming Auctions');
+$banner_breadcrumb = get_field("ua_banner_breadcrumb") ?: 'Homepage / classic auctions / Upcoming Auctions';
 
-$today_ymd    = current_time('Y-m-d');
-$today_start  = $today_ymd . ' 00:00:00';
-
-$argsAuction = array(
-    'post_type'      => 'auction',
-    'posts_per_page' => -1,
-    'orderby'        => 'meta_value',
-    'order'          => 'ASC',
-    'meta_key'       => 'auction_date',
-    'meta_type'      => 'DATETIME',
-    'meta_query'     => array(
-        array(
-            'key'     => 'auction_date',
-            'value'   => $today_start,
-            'compare' => '>=',
-            'type'    => 'DATETIME'
-        )
-    )
-);
-
-$upcoming_auctions = new WP_Query($argsAuction);
+get_banner($banner_breadcrumb);
+$upcoming_auctions = hnh_get_upcoming_auctions_query();
 ?>
-
 <section class="auction_list">
     <div class="auction_list-container">
         <?php if ($upcoming_auctions->have_posts()): ?>
             <div class="w-100">
-                <?php while ($upcoming_auctions->have_posts()) : ?>
+                <?php while ($upcoming_auctions->have_posts()): ?>
                     <?php
                     $upcoming_auctions->the_post();
-
                     $auction_id = get_the_ID();
                     $venue_id = (int) get_field('template_venue', $auction_id);
-                    hnh_render_auction_card($auction_id, $venue_id);
-                    ?>
+                    hnh_render_auction_card(
+                        $auction_id,
+                        $venue_id
+                    ); ?>
                 <?php endwhile; ?>
                 <?php wp_reset_postdata(); ?>
             </div>
         <?php endif; ?>
     </div>
 </section>
-
 <?php get_footer(); ?>

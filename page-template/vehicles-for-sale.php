@@ -14,7 +14,7 @@ get_banner('Homepage / Private Sales / Vehicles For Sale', get_the_post_thumbnai
         <div class="auction_vehicles-head vfs">
             <h2>The vehicles listed below are available for Private Sale and can be viewed by appointment only.</h2>
             <div class="content">
-                <p>To submit your vehicle for Private Sale or make an offer please contact our <a href="<?php echo esc_url(home_url('our-showroom')); ?>" alt="Private Sales Showroom">Private Sales Showroom</a></p>
+				<?php the_content(); ?>
             </div>
         </div>
         <?php echo hnh_render_buy_it_now_block(); ?>

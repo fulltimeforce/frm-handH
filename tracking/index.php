@@ -115,23 +115,50 @@ add_action('admin_enqueue_scripts', function ($hook) {
             '1.0.0',
             true
         );
-    }
 
-    if ($screen->id === 'tracking_page_hh-evaluation-requests') {
         wp_enqueue_script(
-            'hh-evaluation-requests-board',
-            get_template_directory_uri() . '/tracking/assets/evaluation-requests-board.js',
+            'hh-condition-report-lead-details',
+            get_template_directory_uri() . '/tracking/assets/condition-report-lead-details.js',
             [],
             '1.0.0',
             true
         );
     }
-});
 
+    if ($screen->id === 'tracking_page_hh-evaluation-requests') {
+        wp_enqueue_script('jquery-ui-autocomplete');
+
+        wp_enqueue_script(
+            'hh-evaluation-requests-board',
+            get_template_directory_uri() . '/tracking/assets/evaluation-requests-board.js',
+            ['jquery-ui-autocomplete',],
+            '1.0.0',
+            true
+        );
+
+        wp_enqueue_script(
+            'hh-evaluation-lead-details',
+            get_template_directory_uri() . '/tracking/assets/evaluation-lead-details.js',
+            ['hh-evaluation-requests-board'],
+            '1.0.0',
+            true
+        );
+
+        wp_localize_script('hh-evaluation-requests-board', 'HH_EVAL', [
+            'ajaxurl' => admin_url('admin-ajax.php'),
+            'auctionSearchNonce' => wp_create_nonce('hh_auction_search'),
+        ]);
+    }
+});
 
 require_once __DIR__ . '/src/hooks/global-vars.php';
 require_once __DIR__ . '/src/views/tracking-dashboard.php';
 require_once __DIR__ . '/src/views/condition-report-requests.php';
 require_once __DIR__ . '/src/views/evaluation-requests.php';
 require_once __DIR__ . '/src/hooks/gravity-forms-hooks.php';
-require_once __DIR__ . '/src/hooks/ajax-functions.php';
+require_once __DIR__ . '/src/hooks/update_when_vehicle_save.php';
+require_once __DIR__ . '/src/hooks/ajax/condition-report-requests-functions.php';
+require_once __DIR__ . '/src/hooks/ajax/evaluation-requests-functions.php';
+
+require_once __DIR__ . '/src/hooks/excel/export-condition.php';
+require_once __DIR__ . '/src/hooks/excel/export-evaluation.php';

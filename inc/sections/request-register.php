@@ -22,7 +22,7 @@
                     <p>Get a complimentary valuation to consign your Classic Motorcar, Motorbike or Scooter.</p>
                 </div>
             </div>
-            <a class="permalink" href="<?php echo esc_url(home_url('get-a-valuation')) ?>">Get a <br>Valuation</a>
+            <a class="permalink" href="<?php echo esc_url(get_permalink(280)); ?>" title="Get A Valuation">Get a <br>Valuation</a>
         </div>
         <div class="col">
             <div class="col_head">
@@ -36,7 +36,7 @@
                     <p>Registering to bid is quick, easy & and safe using our secure online bidding platform.</p>
                 </div>
             </div>
-            <a class="permalink" href="https://www.handh.co.uk/account/register/">Register <br>Now</a>
+            <a class="permalink" href="https://www.handh.co.uk/account/register/" title="Register">Register <br>Now</a>
         </div>
         <div class="col">
             <div class="col_head">
@@ -50,7 +50,7 @@
                     <p>We look after the clients’ interests, despite our auctioning services - we also offer private sales.</p>
                 </div>
             </div>
-            <a class="permalink" href="<?php echo esc_url(home_url('contact')) ?>">Book an <br>Appointment</a>
+            <a class="permalink" href="<?php echo esc_url(get_permalink(48)); ?>" title="Book An Appointment">Book an <br>Appointment</a>
         </div>
     </div>
 </section>

@@ -13,6 +13,7 @@ class ConditionReportRequestEntity
     private ?string $auction_name;
     private int $lot_id;
 
+    private ?string $lot_name;
     private ?string $lot_year;
     private ?string $lot_make;
     private ?string $lot_model;
@@ -34,6 +35,7 @@ class ConditionReportRequestEntity
         ?string $auction_name = null,
         int $lot_id = 0,
 
+        ?string $lot_name = null,
         ?string $lot_year = null,
         ?string $lot_make = null,
         ?string $lot_model = null,
@@ -54,6 +56,7 @@ class ConditionReportRequestEntity
         $this->auction_name = $auction_name;
         $this->lot_id = $lot_id;
 
+        $this->lot_name = $lot_name;
         $this->lot_year = $lot_year;
         $this->lot_make = $lot_make;
         $this->lot_model = $lot_model;
@@ -107,6 +110,11 @@ class ConditionReportRequestEntity
     public function getLotId(): int
     {
         return $this->lot_id;
+    }
+
+    public function getLotName(): ?string
+    {
+        return $this->lot_name;
     }
 
     public function getLotYear(): ?string
@@ -167,6 +175,11 @@ class ConditionReportRequestEntity
     public function setLotId(int $lot_id): void
     {
         $this->lot_id = $lot_id;
+    }
+
+    public function setLotName(?string $name): void
+    {
+        $this->lot_name = $name;
     }
 
     public function setLotYear(?string $year): void

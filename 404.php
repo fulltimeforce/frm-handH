@@ -1,4 +1,10 @@
-<?php get_header(); ?>
+<?php
+/*
+    Template name: 404
+*/
+get_header();
+
+?>
 
 <section class="page_404">
     <div class="container">
@@ -14,7 +20,7 @@
         </div>
         <div class="page_404-cta">
             <p>If you believe this is an error, please contact our support team for assistance.</p>
-            <a href="<?php echo esc_url(home_url('contact')) ?>">Contact Support</a>
+            <a href="<?php echo esc_url(get_permalink(48)); ?>">Contact Support</a>
         </div>
     </div>
 </section>

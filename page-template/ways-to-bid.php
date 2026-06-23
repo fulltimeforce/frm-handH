@@ -29,7 +29,7 @@ get_banner('Homepage / Classic Auctions / Ways to Bid', get_the_post_thumbnail_u
                 <?php endif; ?>
             </div>
             <div class="bid_online-content">
-               <div class="w-100">
+                <div class="w-100">
                     <?php if ($title = get_field('ways_title_2')): ?>
                         <h3><?= esc_html($title); ?></h3>
                     <?php endif; ?>
@@ -42,18 +42,18 @@ get_banner('Homepage / Classic Auctions / Ways to Bid', get_the_post_thumbnail_u
 
                     <?php if (have_rows('ways_steps')): ?>
                         <ul>
-                            <?php 
-                            $i = 1; 
-                            while (have_rows('ways_steps')): the_row(); 
+                            <?php
+                            $i = 1;
+                            while (have_rows('ways_steps')): the_row();
                                 $step_text = get_sub_field('ways_step_text');
                             ?>
                                 <li>
                                     <h4>Step <?= $i; ?></h4>
                                     <p><?= esc_html($step_text); ?></p>
                                 </li>
-                            <?php 
+                            <?php
                                 $i++;
-                            endwhile; 
+                            endwhile;
                             ?>
                         </ul>
                     <?php endif; ?>
@@ -77,7 +77,7 @@ get_banner('Homepage / Classic Auctions / Ways to Bid', get_the_post_thumbnail_u
         <div class="other_methods-dropdown w-100">
             <?php if (have_rows('ways_method_items')): ?>
                 <ul id="my-accordion" class="accordionjs">
-                    <?php while (have_rows('ways_method_items')): the_row(); 
+                    <?php while (have_rows('ways_method_items')): the_row();
                         $item_title = get_sub_field('ways_method_item_title');
                         $item_text  = get_sub_field('ways_method_item_text');
                     ?>
@@ -87,9 +87,9 @@ get_banner('Homepage / Classic Auctions / Ways to Bid', get_the_post_thumbnail_u
                                     <h3><?= esc_html($item_title); ?></h3>
                                 <?php endif; ?>
 
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" 
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
                                     viewBox="0 0 18 18" fill="none">
-                                    <path d="M0 8.99943L18 8.99943M8.99969 0L8.99969 18" 
+                                    <path d="M0 8.99943L18 8.99943M8.99969 0L8.99969 18"
                                         stroke="#8C6E47" stroke-width="2" />
                                 </svg>
                             </div>
@@ -122,18 +122,32 @@ get_banner('Homepage / Classic Auctions / Ways to Bid', get_the_post_thumbnail_u
         <?php endif; ?>
 
         <div class="actions">
-            <?php if ($btn1 = get_field('ways_completed_button_1')): ?>
-                <a href="<?= esc_url($btn1['url']); ?>" target="<?= esc_attr($btn1['target'] ?: '_self'); ?>">
-                    <?= esc_html($btn1['title']); ?>
+            <?php
+            $btn1_text = get_field('ways_completed_button_text_1');
+            $btn1_link = get_field('ways_completed_button_1');
+
+            if ($btn1_link):
+                $btn1_url = is_array($btn1_link) ? $btn1_link['url'] : $btn1_link;
+            ?>
+                <a href="<?php echo esc_url($btn1_url); ?>">
+                    <?php echo esc_html($btn1_text ?: 'Contact Us Now'); ?>
                 </a>
             <?php endif; ?>
 
-            <?php if ($btn2 = get_field('ways_completed_button_2')): ?>
-                <a href="<?= esc_url($btn2['url']); ?>" target="<?= esc_attr($btn2['target'] ?: '_self'); ?>">
-                    <?= esc_html($btn2['title']); ?>
+
+            <?php
+            $btn2_text = get_field('ways_completed_button_text_2');
+            $btn2_link = get_field('ways_completed_button_2');
+
+            if ($btn2_link):
+                $btn2_url = is_array($btn2_link) ? $btn2_link['url'] : $btn2_link;
+            ?>
+                <a href="<?php echo esc_url($btn2_url); ?>">
+                    <?php echo esc_html($btn2_text ?: 'Contact Us Now'); ?>
                 </a>
             <?php endif; ?>
         </div>
+
     </div>
 </section>
 

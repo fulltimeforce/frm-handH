@@ -45,9 +45,30 @@ function hnh_render_vehicle_item($vehicle_id, $args = [])
     $title     = get_the_title($vehicle_id);
     $permalink = get_permalink($vehicle_id);
 
+    if (!empty($args['list_context']) && is_array($args['list_context'])) {
+        $permalink = hnh_vehicle_permalink_with_list_context($vehicle_id, $args['list_context']);
+    }
+
     $registration_no = get_field('registration_no', $vehicle_id);
     $chassis_no      = get_field('chassis_no', $vehicle_id);
     $vehicle_mot     = get_field('mot', $vehicle_id);
+
+    $lot_number     = get_field('lot_number_latest', $vehicle_id);
+
+    // --------------------------------------------
+
+    $auction = get_field('auction_number_latest', $vehicle_id);
+
+    if ($auction) {
+        $auction_id = $auction->ID;
+        $check_provisional_number = get_field('show_provisional_numbers', $auction_id);
+
+        if (!$check_provisional_number && stripos($lot_number, 'p')) {
+            $lot_number = '';
+        }
+    }
+
+    // --------------------------------------------
 
     $estimate_low    = get_field('estimate_low', $vehicle_id);
     $estimate_high   = get_field('estimate_high', $vehicle_id);
@@ -105,7 +126,7 @@ function hnh_render_vehicle_item($vehicle_id, $args = [])
     }
 
 ?>
-    <div class="auction_result-list-item">
+    <div class="auction_result-list-item" vehicle-id="<?php echo $vehicle_id; ?>">
         <div class="auction_result-list-img">
             <?php if ($image): ?>
                 <img class="w-100" src="<?php echo esc_url($image); ?>" alt="<?php echo esc_attr($image_alt); ?>">
@@ -120,7 +141,14 @@ function hnh_render_vehicle_item($vehicle_id, $args = [])
 
                     <?php
                     $sold_price = get_field('sold_price');
-                    if ($sold_price):
+                    $hide_sold_price = get_field('hide_sold_price') ?: false;
+
+                    if ($hide_sold_price):
+                    ?>
+                        <div style="border: none;padding-left:0;">
+                            <p class="gold-text only-text"><?php esc_html_e('Sold'); ?></p>
+                        </div>
+                    <?php elseif ($sold_price):
                         $sold = (float) preg_replace('/[^\d.\-]/', '', (string) $sold_price);
                     ?>
                         <div style="border: none;padding-left:0;">
@@ -138,8 +166,12 @@ function hnh_render_vehicle_item($vehicle_id, $args = [])
                 <?php else: ?>
 
 
-                    <?php if ($registration_no || $chassis_no || $vehicle_mot) : ?>
+                    <?php if ($registration_no || $chassis_no || $vehicle_mot || $lot_number) : ?>
                         <div>
+                            <?php if ($lot_number) : ?>
+                                <p>Lot No: <span><?php echo esc_html($lot_number); ?></span></p>
+                            <?php endif; ?>
+
                             <?php if ($registration_no) : ?>
                                 <p>Registration No: <span><?php echo esc_html($registration_no); ?></span></p>
                             <?php endif; ?>
@@ -167,7 +199,7 @@ function hnh_render_vehicle_item($vehicle_id, $args = [])
 
                     if ($low > 0 || $high > 0) : ?>
                         <div>
-                            <p>Estimated at</p>
+                            <p>Price</p>
                             <p class="gold-text">
                                 <?php
                                 if ($low > 0 && $high > 0) {
@@ -193,6 +225,8 @@ function hnh_render_vehicle_item($vehicle_id, $args = [])
                                 ?>
                             </p>
                         </div>
+                    <?php else: ?>
+                        <div></div>
                     <?php endif; ?>
 
 
@@ -213,7 +247,7 @@ function hnh_render_vehicle_item($vehicle_id, $args = [])
                     </svg>
                 </a>
             <?php else: ?>
-                <?php $enquire_href = esc_url(home_url('request-condition-report')) . '?vehicle=' . $vehicle_id; ?>
+                <?php $enquire_href = esc_url(get_permalink(123876)) . '?vehicle=' . $vehicle_id; ?>
                 <a alt="Enquire Now" href="<?php echo esc_url($enquire_href); ?>" class="permalink_border">
                     Enquire Now
                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
@@ -250,7 +284,9 @@ function hnh_render_vehicle_card($vehicle_id, $args = [], $format = 1)
     $title     = get_the_title($vehicle_id);
     $permalink = get_permalink($vehicle_id);
 
-    if (is_page('refine-your-search')) {
+    if (!empty($args['list_context']) && is_array($args['list_context'])) {
+        $permalink = hnh_vehicle_permalink_with_list_context($vehicle_id, $args['list_context']);
+    } elseif (is_page('refine-your-search')) {
         if (is_page('refine-your-search')) {
             $permalink = add_query_arg([
                 'c' => 'search',
@@ -262,12 +298,29 @@ function hnh_render_vehicle_card($vehicle_id, $args = [], $format = 1)
     $chassis_no      = get_field('chassis_no', $vehicle_id);
     $vehicle_mot     = get_field('mot', $vehicle_id);
 
+    $lot_number     = get_field('lot_number_latest', $vehicle_id);
+
+    // --------------------------------------------
+
+    $auction = get_field('auction_number_latest', $vehicle_id);
+
+    if ($auction) {
+        $auction_id = $auction->ID;
+        $check_provisional_number = get_field('show_provisional_numbers', $auction_id);
+
+        if (!$check_provisional_number && stripos($lot_number, 'p')) {
+            $lot_number = '';
+        }
+    }
+
+    // --------------------------------------------
+
     $estimate_low    = get_field('estimate_low', $vehicle_id);
     $estimate_high   = get_field('estimate_high', $vehicle_id);
 
     $vehicle_status   = get_field('status', $vehicle_id);
 
-    // Formateo "Estimated at"
+    // Formateo "Price"
     $estimate_html = '';
     if ($estimate_low && $estimate_high) {
         $low  = (float) preg_replace('/[^\d.\-]/', '', (string) $estimate_low);
@@ -320,8 +373,7 @@ function hnh_render_vehicle_card($vehicle_id, $args = [], $format = 1)
 
     // Enquire
     // $enquire_href = get_field('lot_link');
-    $enquire_href = esc_url(home_url('request-condition-report')) . '?vehicle=' . $vehicle_id;
-
+    $enquire_href = esc_url(get_permalink(123876)) . '?vehicle=' . $vehicle_id;
 ?>
     <div class="vehicle_card">
         <div class="vehicle_card-image">
@@ -349,7 +401,7 @@ function hnh_render_vehicle_card($vehicle_id, $args = [], $format = 1)
                             <?php foreach ($slides as $s): ?>
                                 <li class="splide__slide">
                                     <img src="<?php echo esc_url($s['url']); ?>"
-                                        alt="<?php echo esc_attr($s['alt'] ?: ($title ?: 'Vehicle Image')); ?>">
+                                        alt="<?php echo esc_attr($s['alt'] ?: ($title ?: 'Vehicle Image')); ?>" title="Vehicle Image">
                                 </li>
                             <?php endforeach; ?>
                         </ul>
@@ -374,8 +426,7 @@ function hnh_render_vehicle_card($vehicle_id, $args = [], $format = 1)
                 ?>
 
                 <?php if ($single_url): ?>
-                    <img class="vehicle_card-single" src="<?php echo esc_url($single_url); ?>"
-                        alt="<?php echo esc_attr($single_alt); ?>">
+                    <img class="vehicle_card-single" src="<?php echo esc_url($single_url); ?>" alt="<?php echo esc_attr($single_alt); ?>" title="Vehicle Image">
                 <?php endif; ?>
             <?php endif; ?>
         </div>
@@ -389,21 +440,36 @@ function hnh_render_vehicle_card($vehicle_id, $args = [], $format = 1)
                 </div>
                 <?php $sold_price = get_field('sold_price'); ?>
                 <?php if (!$sold_price): ?>
-
                     <?php if ($estimate_html): ?>
                         <h4>
-                            <span><?php esc_html_e('Estimated at'); ?></span>
+                            <span><?php esc_html_e('Price'); ?></span>
                             <?php echo $estimate_html; ?>
                         </h4>
+                    <?php else: ?>
+                        <h4 style="opacity:0;pointer-events:none;user-select:none;">
+                            <span>-</span>
+                            -
+                        </h4>
                     <?php endif; ?>
-
+                <?php else: ?>
+                    <h4 style="opacity:0;pointer-events:none;user-select:none;">
+                        <span>-</span>
+                        -
+                    </h4>
                 <?php endif; ?>
             </div>
 
             <div class="vehicle_card-price">
                 <?php if (strtolower($vehicle_status) == 'sold'): ?>
                     <?php
-                    if ($sold_price):
+                    $hide_sold_price = get_field('hide_sold_price') ?: false;
+
+                    if ($hide_sold_price):
+                    ?>
+                        <h4 style="margin:0">
+                            <span class="only-text"><?php esc_html_e('Sold'); ?></span>
+                        </h4>
+                    <?php elseif ($sold_price):
                         $sold = (float) preg_replace('/[^\d.\-]/', '', (string) $sold_price);
                     ?>
                         <h4 style="margin:0">
@@ -411,11 +477,16 @@ function hnh_render_vehicle_card($vehicle_id, $args = [], $format = 1)
                             <?php echo '£' . esc_html(number_format_i18n($sold, 0)); ?>
                         </h4>
                     <?php else: ?>
-                        <h4 style="margin:0">Sold</h4>
+                        <h4 style="margin:0">
+                            <span><?php esc_html_e('Sold'); ?></span>
+                        </h4>
                     <?php endif; ?>
                 <?php else: ?>
-                    <?php if ($registration_no || $chassis_no || $vehicle_mot): ?>
+                    <?php if ($registration_no || $chassis_no || $vehicle_mot || $lot_number): ?>
                         <ul>
+                            <?php if ($lot_number): ?>
+                                <li><b><?php esc_html_e('Lot No:'); ?></b> <?php echo esc_html($lot_number); ?></li>
+                            <?php endif; ?>
                             <?php if ($registration_no): ?>
                                 <li><b><?php esc_html_e('Registration No:'); ?></b> <?php echo esc_html($registration_no); ?></li>
                             <?php endif; ?>
@@ -462,239 +533,49 @@ if (!function_exists('hnh_render_buy_it_now_block')) {
      */
     function hnh_render_buy_it_now_block(array $options = []): string
     {
-        $defaults = [
-            // 'min_year' => 1920,
-            'post_type' => 'vehicles',
-        ];
-        $opt = array_merge($defaults, $options);
 
-        // Paginación
-        $paged = max(1, get_query_var('paged') ? (int) get_query_var('paged') : (int) get_query_var('page'));
+        // ===== Paginación y per page =====
+        $pgn = isset($_GET['pgn']) ? max(1, (int) $_GET['pgn']) : 1;
+        $ppp = isset($_GET['posts_per_page']) ? max(1, (int) $_GET['posts_per_page']) : 48;
 
-        // Per page
-        $ppp = isset($_GET['posts_per_page']) ? max(1, (int) $_GET['posts_per_page']) : 6;
+        // ===== GET params =====
+        $q        = isset($_GET['search_vehicle']) ? sanitize_text_field($_GET['search_vehicle']) : '';
 
         // GET params
-        $q               = isset($_GET['search_vehicle']) ? sanitize_text_field($_GET['search_vehicle']) : '';
+        $order_by = isset($_GET['order_by']) ? sanitize_text_field($_GET['order_by']) : '';
+        $model_id  = isset($_GET['model_id']) ? (int) $_GET['model_id'] : 0;
+        $vehicle_type = is_page(803) ? 'private-sale' : 'auction';
         $vehicle_status  = isset($_GET['vehicle_status']) ? sanitize_text_field($_GET['vehicle_status']) : '';
-        $year_from_param = isset($_GET['year_from'])      ? sanitize_text_field($_GET['year_from'])      : '';
-        $year_to_param   = isset($_GET['year_to'])        ? sanitize_text_field($_GET['year_to'])        : '';
-        $brand_slug      = isset($_GET['vehicle_brand'])  ? sanitize_text_field($_GET['vehicle_brand'])  : '';
-        $order_by        = isset($_GET['order_by']) ? sanitize_text_field($_GET['order_by']) : 'lot';
 
-        // Campo meta de fecha/hora a comparar (ajusta si tu clave es otra)
-        $auction_date_meta = 'auction_date_latest';
+        $lots = is_page(6297) ? 'past' : '';
 
-        // Meta query builder
-        $meta_query = ['relation' => 'AND'];
-
-        // Status (ACF: status) — exacto, ignorando mayúsculas y espacios
-        if ($vehicle_status !== '') {
-            $status_regex = '^[[:space:]]*' . preg_quote(strtolower($vehicle_status), '~') . '[[:space:]]*$';
-            $meta_query[] = [
-                'key'     => 'status',
-                'value'   => $status_regex,
-                'compare' => 'REGEXP',
-            ];
+        if(is_page(6297)){
+            $order_by = 'lot';
         }
 
-        // Rango por año sobre ACF: auction_date_latest (YYYY-mm-dd HH:ii)
-        $year_from = (ctype_digit($year_from_param) ? (int) $year_from_param : null);
-        $year_to   = (ctype_digit($year_to_param)   ? (int) $year_to_param   : null);
-
-        if ($year_from && $year_to) {
-            if ($year_from > $year_to) {
-                [$year_from, $year_to] = [$year_to, $year_from];
-            }
-            $start_dt = sprintf('%04d-01-01 00:00:00', $year_from);
-            $end_dt   = sprintf('%04d-12-31 23:59:59', $year_to);
-            $meta_query[] = [
-                'key'     => 'auction_date_latest',
-                'value'   => [$start_dt, $end_dt],
-                'compare' => 'BETWEEN',
-                'type'    => 'DATETIME',
-            ];
-        } elseif ($year_from) {
-            $start_dt = sprintf('%04d-01-01 00:00:00', $year_from);
-            $meta_query[] = [
-                'key'     => 'auction_date_latest',
-                'value'   => $start_dt,
-                'compare' => '>=',
-                'type'    => 'DATETIME',
-            ];
-        } elseif ($year_to) {
-            $end_dt = sprintf('%04d-12-31 23:59:59', $year_to);
-            $meta_query[] = [
-                'key'     => 'auction_date_latest',
-                'value'   => $end_dt,
-                'compare' => '<=',
-                'type'    => 'DATETIME',
-            ];
+        // ===== Repo query =====
+        if (!class_exists('VehiclesSearchRepository')) {
+            require_once get_template_directory() . '/VehiclesSearchRepository.php';
         }
 
-        // Solo traer vehicles con thumbnail
-        /*$meta_query[] = [
-            'key'     => '_thumbnail_id',
-            'compare' => 'EXISTS',
-        ];*/
+        global $wpdb;
+        $repo = new VehiclesSearchRepository($wpdb);
 
-        // Tax query (brands)
-        $tax_query = [];
-        if ($brand_slug !== '') {
-            $tax_query[] = [
-                'taxonomy' => 'vehicle_brand',
-                'field'    => 'slug',
-                'terms'    => [$brand_slug],
-            ];
-        }
+        $result = $repo->search([
+            'q'        => $q,
+            'lots'     => $lots,
+            'order_by' => $order_by,
+            'model_id'  => $model_id,
+            'status' => $vehicle_status,
+            'vehicle_type' => $vehicle_type,
+            'per_page' => $ppp,
+            'page'     => $pgn,
+        ]);
 
-        // ...después de construir $meta_query con status y rango de años:
+        $rows      = $result['items'];
+        $total     = (int) $result['total'];
+        $max_pages = (int) max(1, (int) ceil($total / $ppp));
 
-        // Filtrar por tipo de vehículo SOLO en la página "vehicles-for-sale"
-        if (is_page('vehicles-for-sale')) {
-            // Si el ACF guarda exactamente "private-sale", usa '=' (más rápido):
-            $meta_query[] = [
-                'key'     => 'type_of_vehicle',
-                'value'   => 'private-sale',
-                'compare' => '=',
-            ];
-        }
-
-        if (is_page('buy-it-now')) {
-            // Fin de hoy en el timezone de WP (incluye todo el día de hoy)
-            $end_today = date_i18n('Y-m-d 23:59:59', current_time('timestamp'));
-
-            $meta_query[] = [
-                'relation' => 'AND',
-
-                // 1) status != 'sold' (case/whitespace-insensitive)
-                [
-                    'relation' => 'OR',
-                    [
-                        'key'     => 'status',
-                        'value'   => '^[[:space:]]*sold[[:space:]]*$',
-                        'compare' => 'NOT REGEXP',
-                    ],
-                    // si quieres incluir posts sin status, vuelve a agregar este bloque:
-                    // [ 'key' => 'status', 'compare' => 'NOT EXISTS' ],
-                ],
-
-                // 2) type_of_vehicle != 'private-sale' (case/whitespace-insensitive)
-                [
-                    'relation' => 'OR',
-                    [
-                        'key'     => 'type_of_vehicle',
-                        'value'   => '^[[:space:]]*private-sale[[:space:]]*$',
-                        'compare' => 'NOT REGEXP',
-                    ],
-                    // idem nota de arriba:
-                    // [ 'key' => 'type_of_vehicle', 'compare' => 'NOT EXISTS' ],
-                ],
-
-                // 3) Fecha <= fin de hoy (excluir futuros)
-                [
-                    'key'     => 'auction_date_latest', // <-- cambia a 'auction_date_latest' si ese es tu meta key
-                    'value'   => $end_today,
-                    'compare' => '<=',
-                    'type'    => 'DATETIME',
-                ],
-            ];
-        }
-
-        // Query
-        $argsVehicle = [
-            'post_type'      => $opt['post_type'],
-            'post_status'    => 'publish',
-            'posts_per_page' => $ppp,
-            'paged'          => $paged,
-            'meta_query'     => $meta_query,
-            'meta_key'       => $auction_date_meta,
-            'orderby'        => 'meta_value',
-            'order'          => 'DESC',
-            'meta_type'      => 'DATETIME',
-        ];
-
-        if ($q !== '') {
-            $argsVehicle['s'] = $q; // Busca en título/contenido
-        }
-        if (!empty($tax_query)) {
-            $argsVehicle['tax_query'] = $tax_query;
-        }
-
-        // ===== Orden dinámico según order_by =====
-        switch ($order_by) {
-            case 'lot':
-                // Solo con número de lote y orden numérico
-                $meta_query[] = [
-                    'key'     => 'lot_number_latest',
-                    'compare' => 'EXISTS',
-                ];
-                $argsVehicle['meta_query'] = $meta_query;
-
-                $argsVehicle['meta_key'] = 'lot_number_latest';
-                $argsVehicle['orderby']  = 'meta_value_num';
-                $argsVehicle['order']    = 'ASC'; // cambia a DESC si lo prefieres
-                unset($argsVehicle['meta_type']);
-                break;
-
-            case 'low-to-high':
-                // Precio estimado bajo (ASC) – numérico
-                $meta_query[] = [
-                    'key'     => 'estimate_low',
-                    'compare' => 'EXISTS',
-                ];
-                $argsVehicle['meta_query'] = $meta_query;
-
-                $argsVehicle['meta_key'] = 'estimate_low';
-                $argsVehicle['orderby']  = 'meta_value_num';
-                $argsVehicle['order']    = 'ASC';
-                unset($argsVehicle['meta_type']);
-                break;
-
-            case 'high-to-low':
-                // Precio estimado bajo (DESC) – numérico
-                $meta_query[] = [
-                    'key'     => 'estimate_low',
-                    'compare' => 'EXISTS',
-                ];
-                $argsVehicle['meta_query'] = $meta_query;
-
-                $argsVehicle['meta_key'] = 'estimate_low';
-                $argsVehicle['orderby']  = 'meta_value_num';
-                $argsVehicle['order']    = 'DESC';
-                unset($argsVehicle['meta_type']);
-                break;
-
-            case 'oldest':
-                // Fecha más antigua primero (string "Y-m-d H:i")
-                $argsVehicle['meta_key']  = $auction_date_meta;
-                $argsVehicle['orderby']   = 'meta_value';
-                $argsVehicle['order']     = 'ASC';
-                $argsVehicle['meta_type'] = 'CHAR';
-                break;
-
-            case 'newest':
-                // Fecha más reciente primero
-                $argsVehicle['meta_key']  = $auction_date_meta;
-                $argsVehicle['orderby']   = 'meta_value';
-                $argsVehicle['order']     = 'DESC';
-                $argsVehicle['meta_type'] = 'CHAR';
-                break;
-
-            default:
-                // Deja la orden base por fecha según CURRENT/PAST
-                break;
-        }
-
-        $vehicles = new WP_Query($argsVehicle);
-
-        // Years
-        $yf_sel = $year_from_param;
-        $yt_sel = $year_to_param;
-        $minYear = (int) $opt['min_year'];
-        $maxYear = (int) date('Y');
-
-        ob_start();
     ?>
         <form class="auction_result-filter" method="get" action="">
             <div class="auction_result-filter-search">
@@ -704,19 +585,22 @@ if (!function_exists('hnh_render_buy_it_now_block')) {
 
             <div class="auction_result-filter-select">
                 <?php
-                $brands = get_terms([
-                    'taxonomy'   => 'vehicle_brand',
-                    'hide_empty' => true,
-                    'orderby'    => 'name',
-                    'order'      => 'ASC',
+                $models = get_posts([
+                    'post_type'      => 'model',
+                    'post_status'    => 'publish',
+                    'posts_per_page' => -1,
+                    'orderby'        => 'title',
+                    'order'          => 'ASC',
+                    'fields'         => 'ids',
                 ]);
                 ?>
-                <select name="vehicle_brand" onchange="this.form.submit()">
+                <select name="model_id" onchange="this.form.submit()">
                     <option value=""><?php esc_html_e('All Models'); ?></option>
-                    <?php if (!is_wp_error($brands) && $brands): ?>
-                        <?php foreach ($brands as $term): ?>
-                            <option value="<?php echo esc_attr($term->slug); ?>" <?php selected($brand_slug, $term->slug); ?>>
-                                <?php echo esc_html($term->name); ?>
+
+                    <?php if ($models): ?>
+                        <?php foreach ($models as $mid): ?>
+                            <option value="<?php echo esc_attr($mid); ?>" <?php selected($model_id, (int)$mid); ?>>
+                                <?php echo esc_html(get_the_title($mid)); ?>
                             </option>
                         <?php endforeach; ?>
                     <?php endif; ?>
@@ -729,10 +613,6 @@ if (!function_exists('hnh_render_buy_it_now_block')) {
                     <option value="lot" <?php selected($order_by, 'lot');          ?>><?php esc_html_e('Sort by lot number'); ?></option>
                     <option value="low-to-high" <?php selected($order_by, 'low-to-high');  ?>><?php esc_html_e('Estimate/Price - Low to High'); ?></option>
                     <option value="high-to-low" <?php selected($order_by, 'high-to-low');  ?>><?php esc_html_e('Estimate/Price - High to Low'); ?></option>
-                    <?php if (NOT_APPEAR): ?>
-                        <option value="oldest" <?php selected($order_by, 'oldest');       ?>><?php esc_html_e('Date - Oldest first'); ?></option>
-                        <option value="newest" <?php selected($order_by, 'newest');       ?>><?php esc_html_e('Date - Newest first'); ?></option>
-                    <?php endif; ?>
                 </select>
             </div>
 
@@ -741,21 +621,28 @@ if (!function_exists('hnh_render_buy_it_now_block')) {
                     <option value="">Select status</option>
                     <?php
                     $status_selected = $vehicle_status ?: '';
-                    if (is_page('buy-it-now')) {
+
+                    if (is_page(803)) {
                         $status_opts = [
-                            'available' => 'Available for Sale',
-                            'appraisal' => 'Appraisal',
-                            'allocated' => 'Allocated',
+                            'Appraisal' => 'Appraisal',
+                            'Available' => 'Available',
+                            'Allocated' => 'Allocated',
+                            'Sold' => 'Sold',
+                            'Back to vendor' => 'Back to vendor',
+                            'Offsite/Disposal' => 'Offsite/Disposal',
+                            'Merged' => 'Merged',
+                            'Split' => 'Split',
                         ];
                     } else {
                         $status_opts = [
-                            'available' => 'Available for Sale',
-                            'appraisal' => 'Appraisal',
-                            'allocated' => 'Allocated',
-                            'sold'      => 'Sold'
+                            'Appraisal' => 'Appraisal',
+                            'Available' => 'Available',
+                            'Allocated' => 'Allocated',
                         ];
                     }
-                    foreach ($status_opts as $val => $label): ?>
+
+                    ?>
+                    <?php foreach ($status_opts as $val => $label): ?>
                         <option value="<?php echo esc_attr($val); ?>" <?php selected($status_selected, $val); ?>>
                             <?php echo esc_html($label); ?>
                         </option>
@@ -763,77 +650,50 @@ if (!function_exists('hnh_render_buy_it_now_block')) {
                 </select>
             </div>
 
-            <?php if (NOT_APPEAR): ?>
-                <div class="auction_result-filter-year">
-                    <select name="year_from" onchange="this.form.submit()">
-                        <option value=""><?php esc_html_e('From'); ?></option>
-                        <?php for ($y = $minYear; $y <= $maxYear; $y++): ?>
-                            <option value="<?php echo $y; ?>" <?php selected($yf_sel, (string)$y); ?>><?php echo $y; ?></option>
-                        <?php endfor; ?>
-                    </select>
-                    <p><?php esc_html_e('To'); ?></p>
-                    <select name="year_to" onchange="this.form.submit()">
-                        <option value=""><?php esc_html_e('To'); ?></option>
-                        <?php for ($y = $minYear; $y <= $maxYear; $y++): ?>
-                            <option value="<?php echo $y; ?>" <?php selected($yt_sel, (string)$y); ?>><?php echo $y; ?></option>
-                        <?php endfor; ?>
-                    </select>
-                </div>
-            <?php else: ?>
-                <div class="w-100"></div>
-            <?php endif; ?>
+            <div class="w-100"></div>
 
             <div class="auction_result-filter-page">
                 <p>
                     <?php esc_html_e('Showing'); ?>
                     <select id="blog-perpage" class="blog_section-filter-page" name="posts_per_page" onchange="this.form.submit()">
-                        <option value="6" <?php selected((int)$ppp, 6);  ?>>6</option>
                         <option value="12" <?php selected((int)$ppp, 12); ?>>12</option>
                         <option value="24" <?php selected((int)$ppp, 24); ?>>24</option>
+                        <option value="48" <?php selected((int)$ppp, 48); ?>>48</option>
+                        <option value="96" <?php selected((int)$ppp, 96); ?>>96</option>
                     </select>
                     <?php esc_html_e('Per Page'); ?>
                 </p>
             </div>
         </form>
 
-        <?php if ($vehicles->have_posts()): ?>
+        <?php if (!empty($rows)): ?>
             <div class="w-100">
-                <?php while ($vehicles->have_posts()) : $vehicles->the_post(); ?>
-                    <?php
-                    $id = get_the_ID();
-                    // Función de render propia (como en tu template)
-                    if (function_exists('hnh_render_vehicle_item')) {
-                        hnh_render_vehicle_item($id);
-                    } else {
-                        // Fallback mínimo
-                        printf('<article><a href="%s">%s</a></article>', esc_url(get_permalink()), esc_html(get_the_title()));
-                    }
-                    ?>
-                <?php endwhile;
-                wp_reset_postdata(); ?>
+                <?php foreach ($rows as $r): ?>
+                    <?php hnh_render_vehicle_item((int)$r['vehicle_id']); ?>
+                <?php endforeach; ?>
             </div>
 
             <?php
             $pagination = paginate_links([
-                'total'     => (int) $vehicles->max_num_pages,
-                'current'   => $paged,
+                'base'      => esc_url_raw(add_query_arg('pgn', '%#%', $page_url)),
+                'format'    => '',
+                'current'   => $pgn,
+                'total'     => $max_pages,
                 'mid_size'  => 2,
                 'prev_text' => '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="14" viewBox="0 0 19 14" fill="none"><path d="M19 7L1.00049 7M1.00049 7L7.00049 13M1.00049 7L7.0005 0.999999" stroke="#8C6E47"/></svg>',
                 'next_text' => '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="14" viewBox="0 0 19 14" fill="none"><path d="M-7.15494e-08 7L17.9995 7M17.9995 7L11.9995 1M17.9995 7L11.9995 13" stroke="#8C6E47"/></svg>',
                 'add_args'  => array_filter([
-                    'search_vehicle' => $q,
-                    'vehicle_brand'  => $brand_slug,
-                    'vehicle_model'  => $_GET['vehicle_model']  ?? '',
-                    'order_by'       => $_GET['order_by']       ?? '',
+                    'search_vehicle'     => $q,
+                    'lots'               => $lots,
+                    'order_by'           => $order_by,
+                    'model_id'            => $model_id,
                     'vehicle_status' => $vehicle_status,
-                    'year_from'      => $year_from_param,
-                    'year_to'        => $year_to_param,
-                    'posts_per_page' => $ppp,
-                ], static fn($v) => $v !== '' && $v !== null),
+                    'posts_per_page'     => $ppp,
+                ], static fn($v) => $v !== '' && $v !== null && $v !== 0),
             ]);
 
             if ($pagination) {
-                echo '<div class="auction_result-pagination with_border">' . $pagination . '</div>';
+                echo '<div class="auction_result-pagination">' . $pagination . '</div>';
             }
             ?>
         <?php else: ?>

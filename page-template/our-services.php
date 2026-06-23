@@ -10,6 +10,7 @@ get_banner('Homepage / About / Our Services', get_the_post_thumbnail_url(get_the
 $title = get_field('title_careers');
 $description = get_field('description_careers');
 $link = get_field('link_careers');
+$link_text = get_field('link_careers_text');
 
 ?>
 
@@ -24,10 +25,10 @@ $link = get_field('link_careers');
                     <?php echo $description; ?>
                 </div>
 
-                <?php if (!empty($link)): ?>
+                <?php if (!empty($link) && !empty($link_text)): ?>
                     <div class="actions">
-                        <a href="<?php echo $link['url']; ?>" alt="<?php echo $link['title']; ?>" class="permalink_border">
-                            <?php echo $link['title']; ?>
+                        <a href="<?php echo $link; ?>" alt="<?php echo $link_text; ?>" class="permalink_border">
+                            <?php echo $link_text; ?>
                             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
                                 <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
                             </svg>
@@ -103,7 +104,9 @@ $link = get_field('link_careers');
     <div class="request_quote-container">
         <h3>Request a transport quote</h3>
         <div class="request_quote-box">
-            <?php echo do_shortcode('[gravityform id="5" title="true" ajax="true"]'); ?>
+            <!--<p class="required-fields-note">Fields marked with an asterisk <span class="required-asterisk">*</span> are
+                required.</p>-->
+            <?php echo do_shortcode('[gravityform id="14" title="true" ajax="true"]'); ?>
         </div>
     </div>
 </section>

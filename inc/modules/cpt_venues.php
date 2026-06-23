@@ -26,7 +26,7 @@ function register_venues_cpt()
         'show_ui'            => true,
         'show_in_menu'       => true,
         'query_var'          => true,
-        'rewrite'            => array('slug' => 'venues'),
+        'rewrite'            => array('slug' => 'venues', 'with_front' => false),
         'capability_type'    => 'post',
         'has_archive'        => true,
         'hierarchical'       => false,

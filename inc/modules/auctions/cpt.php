@@ -26,7 +26,7 @@ function register_auctions_cpt()
         'show_ui'            => true,
         'show_in_menu'       => true,
         'query_var'          => true,
-        'rewrite'            => array('slug' => 'auctions'),
+        'rewrite'            => array('slug' => 'auction', 'with_front' => false),
         'capability_type'    => 'post',
         'has_archive'        => true,
         'hierarchical'       => false,
@@ -41,7 +41,7 @@ function register_auctions_cpt()
 add_action('init', 'register_auctions_cpt');
 
 // Register Custom Taxonomy: Auction Categories
-function register_auction_categories_taxonomy()
+/*function register_auction_categories_taxonomy()
 {
     $labels = array(
         'name'              => 'Auction Categories',
@@ -63,13 +63,13 @@ function register_auction_categories_taxonomy()
         'show_ui'           => true,
         'show_admin_column' => true,
         'query_var'         => true,
-        'rewrite'           => array('slug' => 'auction-category'),
+        'rewrite'           => array('slug' => 'auction-category', 'with_front' => false),
         'show_in_rest'      => true,
     );
 
     register_taxonomy('auction_category', array('auction'), $args);
 }
-add_action('init', 'register_auction_categories_taxonomy');
+add_action('init', 'register_auction_categories_taxonomy');*/
 
 
 

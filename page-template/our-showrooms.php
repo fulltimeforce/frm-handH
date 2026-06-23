@@ -10,6 +10,7 @@ get_banner('Homepage / Private Sales / Our Showroom', '', 'Our Showroom');
 $title = get_field('title_os');
 $description = get_field('description_os');
 $link = get_field('link_os');
+$link_text = get_field('link_os_text');
 $gallery = get_field('gallery');
 
 ?>
@@ -25,10 +26,10 @@ $gallery = get_field('gallery');
                     <?php echo $description; ?>
                 </div>
 
-                <?php if (!empty($link)): ?>
+                <?php if (!empty($link) && !empty($link_text)): ?>
                     <div class="actions">
-                        <a href="<?php echo $link['url']; ?>" alt="<?php echo $link['title']; ?>" class="permalink_border">
-                            <?php echo $link['title']; ?>
+                        <a href="<?php echo $link; ?>" alt="<?php echo $link_text; ?>" class="permalink_border">
+                            <?php echo $link_text; ?>
                             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
                                 <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
                             </svg>

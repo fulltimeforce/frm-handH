@@ -100,7 +100,9 @@ function hnh_render_auction_card($auction_id, $venue_id = 0)
     $ubication = $venue_id ? get_field('slider_subtitle', $venue_id) : '';
 
     // Thumbnail (con fallback)
-    $thumb_url = get_the_post_thumbnail_url($auction_id, 'large');
+    //$thumb_url = get_the_post_thumbnail_url($auction_id, 'large');
+    $thumb_url = get_field('image_card_auction', $venue_id);
+
     if (!$thumb_url) {
         // Fallback: usa la constante IMG si existe, sino construye ruta al tema
         $img_base = defined('IMG') ? IMG : get_template_directory_uri() . '/assets/img';
@@ -145,25 +147,14 @@ function hnh_render_auction_card($auction_id, $venue_id = 0)
                     <?php endif; ?>
 
                     <?php
-                    $auctionSaleNumber = get_field('sale_number', $auction_id);
-
-                    $total_vehicles = 0;
-                    if ($auctionSaleNumber !== '' && $auctionSaleNumber !== null) {
-                        $q = new WP_Query([
-                            'post_type'               => 'vehicles',
-                            'post_status'             => 'publish',
-                            'meta_query'              => [[
-                                'key'     => 'auction_number_latest',
-                                'value'   => (int) $auctionSaleNumber,
-                                'compare' => '=',
-                                'type'    => 'NUMERIC',
-                            ]],
-                            'fields'                   => 'ids',
-                            'posts_per_page'          => 1,
-                        ]);
-                        $total_vehicles = (int) $q->found_posts;
-                        wp_reset_postdata();
+                    if (!class_exists('VehiclesSearchRepository')) {
+                        require_once get_template_directory() . '/VehiclesSearchRepository.php';
                     }
+
+                    global $wpdb;
+                    $repo = new VehiclesSearchRepository($wpdb);
+
+                    $total_vehicles = $repo->countVehiclesByAuctionId((int) $auction_id);
                     ?>
 
                     <li>View Lots: <b><?php echo $total_vehicles; ?></b></li>
@@ -195,7 +186,7 @@ function hnh_render_auction_card($auction_id, $venue_id = 0)
                         <a href="<?php echo esc_url($permalink); ?>" alt="View Upcoming Lots">View Upcoming Lots</a>
                     <?php endif; ?>
                 </li>
-                <li><a href="<?php echo esc_url(home_url('get-a-valuation')) ?>">Consign Your Classic</a></li>
+                <li><a href="<?php echo esc_url(get_permalink(280)); ?>" alt="Consign Your Classic">Consign Your Classic</a></li>
 
                 <?php
                 $watch_live = get_field('watch_live', $auction_id);
@@ -206,7 +197,7 @@ function hnh_render_auction_card($auction_id, $venue_id = 0)
                 <?php endif; ?>
 
                 <?php if (!is_page('auction-results')): ?>
-                    <li><a href="<?php echo esc_url(home_url('ways-to-bid')) ?>" alt="Learn how to bid">Learn how to bid</a></li>
+                    <li><a href="<?php echo esc_url(get_permalink(302)); ?>" alt="Learn how to bid">Learn how to bid</a></li>
                 <?php endif; ?>
 
                 <?php

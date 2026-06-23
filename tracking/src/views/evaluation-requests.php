@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/../services/EvaluationRequestService.php';
+
 function hh_evaluation_requests_page()
 {
     if (!current_user_can(HH_TRACKING_VIEW_CAP)) {
@@ -52,16 +54,15 @@ function hh_evaluation_requests_page()
     ];
 
     // Si es Member Team → no ve la columna "New"
-    if ((current_user_can(HH_TRACKING_VIEW_JUST_MT) && $current_sales_manager != $current_user_id)) {
+    if ((current_user_can(HH_TRACKING_VIEW_JUST_MT))) {
         unset($columns['new']);
         unset($columns['client_contacted']);
     }
 
-    // Traer leads desde BD (orden más reciente primero)
-    $rows = $wpdb->get_results("SELECT * FROM {$table} ORDER BY created_at DESC");
-    if (!is_array($rows)) {
-        $rows = [];
-    }
+    $service = new EvaluationRequestService();
+    $rows = $service->getAll();
+
+    if (!is_array($rows)) $rows = [];
 
     // Agrupar por status
     $grouped = [];
@@ -99,6 +100,15 @@ function hh_evaluation_requests_page()
                     <?php endif; ?>
                 </p>
             </div>
+            <div>
+            	<form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" style="margin: 10px 0 0;" class="<?php if (empty($rows)){echo 'disabled';} ?>">
+                	<input type="hidden" name="action" value="hh_export_evaluation_requests">
+                    <?php wp_nonce_field('hh_export_evaluation_requests'); ?>
+					<button type="submit" class="button button-primary">
+                    	Export Leads (Excel)
+					</button>
+				</form>
+			</div>
         </div>
 
         <div class="hh-board">
@@ -143,6 +153,22 @@ function hh_evaluation_requests_page()
                                 $lot_make  = isset($r->lot_make) ? (string) $r->lot_make : '';
                                 $lot_model = isset($r->lot_model) ? (string) $r->lot_model : '';
 
+                                $lot_valuation = isset($r->lot_valuation) ? (string) $r->lot_valuation : '';
+                                $sold          = isset($r->sold) ? (int) $r->sold : 0;
+                                $sold_price    = isset($r->sold_price) ? (string) $r->sold_price : '';
+                                $created_at    = isset($r->created_at) ? (string) $r->created_at : '';
+
+                                $recommended_auction_id = isset($r->recommended_auction_id) ? (int) $r->recommended_auction_id : 0;
+                                $auction_title = '';
+                                if ($recommended_auction_id > 0) {
+                                    $auction_post = get_post($recommended_auction_id);
+                                    if ($auction_post && $auction_post->post_type === 'auction') {
+                                        $auction_title = get_the_title($recommended_auction_id);
+                                    }
+                                }
+
+                                $not_consigned_reason = isset($r->not_consigned_reason) ? (string) $r->not_consigned_reason : '';
+
                                 // $lot_title = trim($lot_make . ' ' . $lot_model);
                                 if ($lot_title === '') $lot_title = 'Evaluation Request';
 
@@ -163,63 +189,116 @@ function hh_evaluation_requests_page()
                                 $is_assigned_to_me = ($current_user_id > 0 && (int)$assigned_user_id === (int)$current_user_id);
 
                             ?>
-                                <div class="hh-card hh-card--link"
-                                    data-request-id="<?php echo esc_attr($request_id); ?>"
-                                    data-nonce="<?php echo esc_attr($nonce); ?>">
+                                <?php if ($is_assigned_to_me || current_user_can(HH_TRACKING_ADMIN_CAP)): ?>
+                                    <div class="hh-card hh-card--link"
+                                        data-request-id="<?php echo esc_attr($request_id); ?>"
+                                        data-nonce="<?php echo esc_attr($nonce); ?>"
 
-                                    <p class="hh-card__title">
-                                        <b><?php echo esc_html($lot_title); ?></b>
-                                        <hr>
-                                        <?php if (!empty($assigned_user_name)) : ?>
-                                            <small style="display:block;margin:0;">
-                                                <b>Assigned to: <?php echo esc_html($assigned_user_name); ?></b>
-                                            </small>
-                                        <?php endif; ?>
+                                        data-lot-make="<?php echo esc_attr($lot_make); ?>"
+                                        data-lot-model="<?php echo esc_attr($lot_model); ?>"
+                                        data-lot-year="<?php echo esc_attr($lot_year); ?>"
+                                        data-lot-valuation="<?php echo esc_attr($lot_valuation); ?>"
 
-                                        <?php if (!empty($lot_make)) : ?>
-                                            <small style="display:block;">Make: <?php echo esc_html($lot_make); ?></small>
-                                        <?php endif; ?>
-                                        <?php if (!empty($lot_model)) : ?>
-                                            <small style="display:block;">Model: <?php echo esc_html($lot_model); ?></small>
-                                        <?php endif; ?>
-                                        <?php if (!empty($lot_year)) : ?>
-                                            <small style="display:block;">Year: <?php echo esc_html($lot_year); ?></small>
-                                        <?php endif; ?>
-                                    </p>
+                                        data-sold="<?php echo esc_attr($sold); ?>"
+                                        data-sold-price="<?php echo esc_attr($sold_price); ?>"
 
-                                    <div class="hh-card__meta">
-                                        <a class="hh-pill" data-id="<?php echo esc_attr($gf_entry_id ?: '—'); ?>" href="<?php echo esc_url($url); ?>" target="_blank">
-                                            View Entry
-                                        </a>
+                                        data-assigned-user="<?php echo esc_attr($assigned_user_name); ?>"
+                                        data-created-at="<?php echo esc_attr($created_at); ?>"
 
-                                        <span class="hh-pill">Date: <?php echo esc_html($date); ?></span>
+                                        data-recommended-auction-id="<?php echo esc_attr($recommended_auction_id); ?>"
+                                        data-recommended-auction-title="<?php echo esc_attr($auction_title); ?>"
 
-                                        <?php if ($key === 'new') : ?>
-                                            <button type="button"
-                                                class="hh-pill hh-4-state hh-eval-pass-client-contacted"
-                                                data-request-id="<?php echo esc_attr($request_id); ?>">
-                                                Pass to Client Contacted
-                                            </button>
-                                        <?php endif; ?>
+                                        data-not-consigned-reason="<?php echo esc_attr($not_consigned_reason); ?>">
 
-                                        <?php if ($key === 'client_contacted') : ?>
-                                            <button type="button"
-                                                class="hh-pill hh-4-state hh-eval-pass-assigned"
-                                                data-request-id="<?php echo esc_attr($request_id); ?>">
-                                                Pass to Assigned to Specialist
-                                            </button>
-                                        <?php endif; ?>
 
-                                        <?php if ($key === 'assigned') : ?>
-                                            <button type="button"
-                                                class="hh-pill hh-4-state hh-eval-pass-under-review"
-                                                data-request-id="<?php echo esc_attr($request_id); ?>">
-                                                Pass to Under Review
-                                            </button>
-                                        <?php endif; ?>
+                                        <p class="hh-card__title">
+                                            <b><?php echo esc_html($lot_title); ?></b>
+                                            <hr>
+                                            <?php if (!empty($assigned_user_name)) : ?>
+                                                <small style="display:block;margin:0;">
+                                                    <b>Assigned to: <?php echo esc_html($assigned_user_name); ?></b>
+                                                </small>
+                                            <?php endif; ?>
 
+                                            <?php if (!empty($lot_make)) : ?>
+                                                <small style="display:block;">Make: <?php echo esc_html($lot_make); ?></small>
+                                            <?php endif; ?>
+                                            <?php if (!empty($lot_model)) : ?>
+                                                <small style="display:block;">Model: <?php echo esc_html($lot_model); ?></small>
+                                            <?php endif; ?>
+                                            <?php if (!empty($lot_year)) : ?>
+                                                <small style="display:block;">Year: <?php echo esc_html($lot_year); ?></small>
+                                            <?php endif; ?>
+                                        </p>
+
+                                        <div class="hh-card__meta">
+                                            <a class="hh-pill" data-id="<?php echo esc_attr($gf_entry_id ?: '—'); ?>" href="<?php echo esc_url($url); ?>" target="_blank">
+                                                View Entry
+                                            </a>
+
+                                            <span class="hh-pill">Date: <?php echo esc_html($date); ?></span>
+
+                                            <?php if ($key === 'new') : ?>
+                                                <button type="button"
+                                                    class="hh-pill hh-4-state hh-eval-pass-client-contacted"
+                                                    data-request-id="<?php echo esc_attr($request_id); ?>">
+                                                    Move to Client Contacted
+                                                </button>
+                                            <?php endif; ?>
+
+                                            <?php if ($key === 'client_contacted') : ?>
+                                                <button type="button"
+                                                    class="hh-pill hh-4-state hh-eval-pass-assigned"
+                                                    data-request-id="<?php echo esc_attr($request_id); ?>">
+                                                    Move to Assigned to Specialist
+                                                </button>
+                                            <?php endif; ?>
+
+                                            <?php if ($is_assigned_to_me): ?>
+                                                <?php if ($key === 'assigned') : ?>
+                                                    <button type="button"
+                                                        class="hh-pill hh-4-state hh-eval-pass-under-review"
+                                                        data-request-id="<?php echo esc_attr($request_id); ?>">
+                                                        Move to Under Review
+                                                    </button>
+                                                <?php endif; ?>
+
+                                                <?php if ($key === 'under_review') : ?>
+                                                    <button type="button"
+                                                        class="hh-pill hh-4-state hh-eval-consignment-decision"
+                                                        data-request-id="<?php echo esc_attr($request_id); ?>">
+                                                        Move to Consignment Decision
+                                                    </button>
+                                                <?php endif; ?>
+
+                                                <?php if ($key === 'consignment_confirmed') : ?>
+                                                    <button type="button"
+                                                        class="hh-pill hh-4-state hh-eval-pass-in-progress"
+                                                        data-request-id="<?php echo esc_attr($request_id); ?>">
+                                                        Move to In Progress
+                                                    </button>
+                                                <?php endif; ?>
+
+                                                <?php if ($key === 'in_progress') : ?>
+                                                    <button type="button"
+                                                        class="hh-pill hh-4-state hh-eval-pass-finalised"
+                                                        data-request-id="<?php echo esc_attr($request_id); ?>">
+                                                        Move to Finalised
+                                                    </button>
+                                                <?php endif; ?>
+                                            <?php endif; ?>
+
+                                            <?php if (in_array($key, ['consignment_confirmed', 'not_consigned', 'in_progress', 'finalised'], true)) : ?>
+                                                <button type="button" class="hh-lead-details-btn" aria-label="Lead Details">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+                                                        <path d="M384 224v184a40 40 0 01-40 40H104a40 40 0 01-40-40V168a40 40 0 0140-40h167.48M336 64h112v112M224 288L440 72" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" />
+                                                    </svg>
+                                                </button>
+                                            <?php endif; ?>
+
+                                        </div>
                                     </div>
-                                </div>
+                                <?php endif; ?>
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </div>
@@ -248,11 +327,9 @@ function hh_evaluation_requests_page()
             <select id="hh-eval-assigned-user" class="regular-text">
                 <option value="0">— Select user —</option>
                 <?php foreach (HH_TEAM_USERS as $u): ?>
-                    <?php if ($current_sales_manager != (int) $u->ID): ?>
-                        <option value="<?php echo (int) $u->ID; ?>">
-                            <?php echo esc_html($u->display_name . ' (' . $u->user_login . ')'); ?>
-                        </option>
-                    <?php endif; ?>
+                    <option value="<?php echo (int) $u->ID; ?>">
+                        <?php echo esc_html($u->display_name . ' (' . $u->user_login . ')'); ?>
+                    </option>
                 <?php endforeach; ?>
             </select>
 
@@ -264,5 +341,120 @@ function hh_evaluation_requests_page()
             <p id="hh-eval-msg" style="margin:10px 0 0; color:#b32d2e; display:none;"></p>
         </div>
     </div>
+
+    <!-- Modal: Consignment decision (Under Review -> Confirmed / Not Consigned) -->
+    <div id="hh-eval-consignment-modal" class="hh-modal" style="display:none;">
+        <div class="hh-modal__backdrop"></div>
+
+        <div class="hh-modal__panel" role="dialog" aria-modal="true" aria-labelledby="hh-eval-consignment-title">
+            <h2 id="hh-eval-consignment-title" style="margin-top:0;">Consignment decision</h2>
+            <p class="description" style="margin-top:-6px;">
+                Is the vehicle accepted for consignment?
+            </p>
+
+            <input type="hidden" id="hh-eval-consignment-request-id" value="0" />
+            <input type="hidden" id="hh-eval-consignment-accepted" value="1" />
+
+            <div style="display:flex; gap:8px; margin-top:12px;">
+                <button type="button" class="button" id="hh-eval-consignment-yes">Yes</button>
+                <button type="button" class="button" id="hh-eval-consignment-no">No</button>
+            </div>
+
+            <div id="hh-eval-consignment-reason-wrap" style="display:none; margin-top:12px;">
+                <label for="hh-eval-consignment-reason" style="display:block; margin: 0 0 6px;">
+                    Reason (required)
+                </label>
+                <textarea id="hh-eval-consignment-reason" class="large-text" rows="4" placeholder="Write the reason..."></textarea>
+            </div>
+
+            <div id="hh-eval-consignment-yes-fields" style="display:none; margin-top:12px;">
+                <label for="hh-eval-lot-valuation" style="display:block; margin: 0 0 6px;">
+                    Lot valuation (required)
+                </label>
+                <input
+                    type="text"
+                    id="hh-eval-lot-valuation"
+                    class="regular-text"
+                    placeholder="e.g. 15000.00"
+                    style="width: 100%;" />
+
+                <label for="hh-eval-recommended-auction" style="display:block; margin: 12px 0 6px;">
+                    Recommended auction (required)
+                </label>
+
+                <input
+                    type="text"
+                    id="hh-eval-recommended-auction"
+                    class="regular-text"
+                    placeholder="Start typing to search auctions..."
+                    autocomplete="off"
+                    style="width:100%;" />
+
+                <input type="hidden" id="hh-eval-recommended-auction-id" value="0" />
+
+            </div>
+
+            <div style="margin-top:14px; display:flex; gap:8px; justify-content:flex-end;">
+                <button type="button" class="button" id="hh-eval-consignment-cancel">Cancel</button>
+                <button type="button" class="button button-primary" id="hh-eval-consignment-save">Save</button>
+            </div>
+
+            <p id="hh-eval-consignment-msg" style="margin:10px 0 0; color:#b32d2e; display:none;"></p>
+        </div>
+    </div>
+
+    <!-- Modal: Finalise (In Progress -> Finalised) -->
+    <div id="hh-eval-finalise-modal" class="hh-modal" style="display:none;">
+        <div class="hh-modal__backdrop"></div>
+
+        <div class="hh-modal__panel" role="dialog" aria-modal="true" aria-labelledby="hh-eval-finalise-title">
+            <h2 id="hh-eval-finalise-title" style="margin-top:0;">Finalise request</h2>
+
+            <p class="description" style="margin-top:-6px;">
+                Search and select the <strong>Vehicle</strong> to attach to this request.
+            </p>
+
+            <input type="hidden" id="hh-eval-finalise-request-id" value="0" />
+            <input type="hidden" id="hh-eval-finalise-vehicle-id" value="0" />
+
+            <label for="hh-eval-finalise-vehicle-search" style="display:block; margin: 10px 0 6px;">
+                Vehicle (type to search)
+            </label>
+
+            <input
+                type="text"
+                id="hh-eval-finalise-vehicle-search"
+                class="regular-text"
+                placeholder="Start typing vehicle title..."
+                autocomplete="off" style="width: 100%;" />
+
+            <!-- <p class="description" style="margin:8px 0 0;">
+                Selected ID: <code id="hh-eval-finalise-vehicle-preview">—</code>
+            </p> -->
+
+            <div style="margin-top:14px; display:flex; gap:8px; justify-content:flex-end;">
+                <button type="button" class="button" id="hh-eval-finalise-cancel">Cancel</button>
+                <button type="button" class="button button-primary" id="hh-eval-finalise-save">Save</button>
+            </div>
+
+            <p id="hh-eval-finalise-msg" style="margin:10px 0 0; color:#b32d2e; display:none;"></p>
+        </div>
+    </div>
+
+    <!-- Modal: Lead Details -->
+    <div id="hh-lead-details-modal" class="hh-modal" style="display:none;">
+        <div class="hh-modal__backdrop"></div>
+
+        <div class="hh-modal__panel" role="dialog" aria-modal="true" aria-labelledby="hh-lead-details-title">
+            <h2 id="hh-lead-details-title" style="margin-top:0;">Lead Details</h2>
+
+            <div id="hh-lead-details-body" style="margin-top:10px;"></div>
+
+            <div style="margin-top:14px; display:flex; gap:8px; justify-content:flex-end;">
+                <button type="button" class="button button-primary" id="hh-lead-details-close">Close</button>
+            </div>
+        </div>
+    </div>
+
 <?php
 }

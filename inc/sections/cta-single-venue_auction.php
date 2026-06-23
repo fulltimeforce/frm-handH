@@ -10,8 +10,8 @@
         <div class="cta_content">
             <h2>Trusted auctioneers of classic and collector motorcars and motorcycles since 1993</h2>
             <div class="cta_links">
-                <a href="<?php echo esc_url(home_url('contact')); ?>" alt="Contact Us Now">Contact Us Now</a>
-                <a href="<?php echo esc_url(home_url('upcoming-auctions')); ?>" alt="Upcoming Auctions">Upcoming Auctions</a>
+                <a href="<?php echo esc_url(get_permalink(48)); ?>" alt="Contact Us Now">Contact Us Now</a>
+                <a href="<?php echo esc_url(get_permalink(50)); ?>" alt="Upcoming Auctions">Upcoming Auctions</a>
             </div>
         </div>
     </div>

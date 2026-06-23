@@ -9,6 +9,7 @@ class EvaluationRequestEntity
     private int $assigned_user_id;
 
     private int $lot_id;
+    private ?string $lot_name;
     private ?string $lot_year;
     private ?string $lot_make;
     private ?string $lot_model;
@@ -18,7 +19,6 @@ class EvaluationRequestEntity
     private ?string $not_consigned_reason;
     private ?int $recommended_auction_id;
 
-    private ?int $consigned_id;
     private ?int $sold;
     private ?float $sold_price;
 
@@ -32,15 +32,15 @@ class EvaluationRequestEntity
         int $assigned_user_id = 0,
 
         int $lot_id = 0,
+        ?string $lot_name = null,
         ?string $lot_year = null,
         ?string $lot_make = null,
         ?string $lot_model = null,
-        
+
         ?int $fit_for_auction = null,
         ?float $lot_valuation = null,
         ?string $not_consigned_reason = null,
         ?int $recommended_auction_id = null,
-        ?int $consigned_id = null,
         ?int $sold = null,
         ?float $sold_price = null,
         ?string $updated_at = null
@@ -52,6 +52,7 @@ class EvaluationRequestEntity
         $this->assigned_user_id = $assigned_user_id;
 
         $this->lot_id = $lot_id;
+        $this->lot_name = $lot_name;
         $this->lot_year = $lot_year;
         $this->lot_make = $lot_make;
         $this->lot_model = $lot_model;
@@ -61,7 +62,6 @@ class EvaluationRequestEntity
         $this->not_consigned_reason = $not_consigned_reason;
         $this->recommended_auction_id = $recommended_auction_id;
 
-        $this->consigned_id = $consigned_id;
         $this->sold = $sold;
         $this->sold_price = $sold_price;
 
@@ -96,6 +96,11 @@ class EvaluationRequestEntity
     public function getLotId(): int
     {
         return $this->lot_id;
+    }
+
+    public function getLotName(): ?string
+    {
+        return $this->lot_name;
     }
 
     public function getLotYear(): ?string
@@ -133,11 +138,6 @@ class EvaluationRequestEntity
         return $this->recommended_auction_id;
     }
 
-    public function getConsignedId(): ?int
-    {
-        return $this->consigned_id;
-    }
-
     public function getSold(): ?int
     {
         return $this->sold;
@@ -166,6 +166,11 @@ class EvaluationRequestEntity
     public function setLotId(int $lot_id): void
     {
         $this->lot_id = $lot_id;
+    }
+
+    public function setLotName(?string $name): void
+    {
+        $this->lot_name = $name;
     }
 
     public function setLotYear(?string $year): void
@@ -201,11 +206,6 @@ class EvaluationRequestEntity
     public function setRecommendedAuctionId(?int $auction_id): void
     {
         $this->recommended_auction_id = $auction_id;
-    }
-
-    public function setConsignedId(?int $consigned_id): void
-    {
-        $this->consigned_id = $consigned_id;
     }
 
     public function setSold(?int $sold): void

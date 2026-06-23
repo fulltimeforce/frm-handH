@@ -9,6 +9,7 @@ $bg_image = get_field('breadcrumb_image');
 $subtitle = get_field('specialist_subtitle');
 $text = get_field('specialist_text');
 $button = get_field('specialist_button');
+$button_text = get_field('specialist_button_text');
 
 get_banner('Homepage / About / Meet the team', esc_url($bg_image), 'Meet the team');
 ?>
@@ -16,15 +17,15 @@ get_banner('Homepage / About / Meet the team', esc_url($bg_image), 'Meet the tea
 <section class="specialist_page">
     <div class="specialist_page-container">
         <div class="specialist_content">
-             <?php if ($subtitle): ?>
+            <?php if ($subtitle): ?>
                 <h2><?php echo esc_html($subtitle); ?></h2>
             <?php endif; ?>
             <?php if ($text): ?>
                 <div class="specialist_text text">
-                <?php echo $text; ?>
-                    <?php if ($button): ?>
-                        <a class="link_btn" href="<?php echo esc_url($button['url']); ?>" target="<?php echo esc_attr($button['target']); ?>">
-                            <span><?php echo esc_html($button['title']); ?></span>
+                    <?php echo $text; ?>
+                    <?php if ($button && !empty($button_text)): ?>
+                        <a class="link_btn" href="<?php echo esc_url($button); ?>">
+                            <span><?php echo $button_text; ?></span>
                             <img src="<?php echo IMG; ?>/arrow.svg">
                         </a>
                     <?php endif; ?>
@@ -32,7 +33,7 @@ get_banner('Homepage / About / Meet the team', esc_url($bg_image), 'Meet the tea
             <?php endif; ?>
         </div>
         <div class="specialist_list">
-          <?php
+            <?php
             $categories = get_terms([
                 'taxonomy' => 'category',
                 'hide_empty' => true,
@@ -59,7 +60,7 @@ get_banner('Homepage / About / Meet the team', esc_url($bg_image), 'Meet the tea
                         if ($index !== 0) : ?>
                             <h3 class="specialist_position"><?php echo esc_html($category->name); ?></h3>
                         <?php endif; ?>
-                        
+
                         <div class="specialist_row">
                             <?php while ($team_query->have_posts()) : $team_query->the_post(); ?>
                                 <div class="specialist_item_wrapper">
@@ -79,7 +80,7 @@ get_banner('Homepage / About / Meet the team', esc_url($bg_image), 'Meet the tea
                                                 </div>
                                                 <button class="specialist_toggle open" aria-expanded="false" type="button">
                                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M3 11.9994L21 11.9994M11.9997 3L11.9997 21" stroke="#F5F2EE" stroke-width="2"/>
+                                                        <path d="M3 11.9994L21 11.9994M11.9997 3L11.9997 21" stroke="#F5F2EE" stroke-width="2" />
                                                     </svg>
                                                 </button>
                                             </div>
@@ -94,7 +95,7 @@ get_banner('Homepage / About / Meet the team', esc_url($bg_image), 'Meet the tea
                                                 </div>
                                                 <button class="specialist_toggle close" aria-expanded="false" type="button">
                                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M3 12L21 12" stroke="#F5F2EE" stroke-width="2"/>
+                                                        <path d="M3 12L21 12" stroke="#F5F2EE" stroke-width="2" />
                                                     </svg>
                                                 </button>
                                             </div>
@@ -102,7 +103,7 @@ get_banner('Homepage / About / Meet the team', esc_url($bg_image), 'Meet the tea
                                                 <?php if (get_field('team_email')) : ?>
                                                     <p class="specialist_item_body_email">Email: <a style="color:black" href="mailto:<?php the_field('team_email'); ?>"><strong><?php the_field('team_email'); ?></strong></a></p>
                                                 <?php endif; ?>
-    
+
                                                 <?php if (get_field('team_phone')) : ?>
                                                     <p class="specialist_item_body_tel">Tel: <a style="color:black" href="tel:<?php the_field('team_phone'); ?>"><strong><?php the_field('team_phone'); ?></strong></a></p>
                                                 <?php endif; ?>
@@ -118,7 +119,7 @@ get_banner('Homepage / About / Meet the team', esc_url($bg_image), 'Meet the tea
                                 </div>
                             <?php endwhile; ?>
                         </div>
-                        <?php
+            <?php
                         wp_reset_postdata();
                         $index++;
                     endif;

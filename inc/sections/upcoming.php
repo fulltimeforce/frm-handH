@@ -72,7 +72,7 @@ $auctions = new WP_Query($argsAuction);
                                 <div class="vehicle <?php echo $count === 0 ? 'active' : ''; ?>">
 
                                     <?php if ($auction_icon): ?>
-                                        <img src="<?php echo esc_url($auction_icon); ?>" alt="<?php echo $venue_name; ?>" class="vehicle-logo">
+                                        <img src="<?php echo esc_url($auction_icon); ?>" title="<?php echo $venue_name; ?>" alt="<?php echo $venue_name; ?>" class="vehicle-logo">
                                     <?php endif; ?>
 
                                     <div class="vehicle_bg">
@@ -80,12 +80,12 @@ $auctions = new WP_Query($argsAuction);
                                         if ($venue_id) {
                                             $thumb_id = get_post_thumbnail_id($venue_id);
                                             if ($thumb_id) {
-                                                echo wp_get_attachment_image($thumb_id, 'large');
+                                                echo wp_get_attachment_image($thumb_id, 'large', false, ['alt' => $venue_name, 'title' => $venue_name]);
                                             }
                                         } else {
                                             $thumb_id = get_post_thumbnail_id($auction_id);
                                             if ($thumb_id) {
-                                                echo wp_get_attachment_image($thumb_id, 'large');
+                                                echo wp_get_attachment_image($thumb_id, 'large', false, ['alt' => $venue_name, 'title' => $venue_name]);
                                             }
                                         }
                                         ?>
@@ -116,28 +116,27 @@ $auctions = new WP_Query($argsAuction);
                                                     <?php endif; ?>
                                                 </ul>
                                                 <div class="flex">
-                                                    <a href="<?php the_permalink(); ?>">View Auction</a>
+                                                    <a href="<?php the_permalink(); ?>" alt="View Auction">View Auction</a>
                                                 </div>
-                                                <?php
-                                                $auctionSaleNumber = get_field('sale_number', $auction_id);
-
+                                                
+												<?php
                                                 $total_vehicles = 0;
-                                                if ($auctionSaleNumber !== '' && $auctionSaleNumber !== null) {
-                                                    $q = new WP_Query([
-                                                        'post_type'               => 'vehicles',
-                                                        'post_status'             => 'publish',
-                                                        'meta_query'              => [[
+
+                                                $q = new WP_Query([
+                                                    'post_type' => 'vehicles',
+                                                    'post_status' => 'publish',
+                                                    'meta_query' => [
+                                                        [
                                                             'key'     => 'auction_number_latest',
-                                                            'value'   => (int) $auctionSaleNumber,
+                                                            'value'   => (int) $auction_id,
                                                             'compare' => '=',
                                                             'type'    => 'NUMERIC',
-                                                        ]],
-                                                        'fields'                   => 'ids',
-                                                        'posts_per_page'          => 1,
-                                                    ]);
-                                                    $total_vehicles = (int) $q->found_posts;
-                                                    wp_reset_postdata();
-                                                }
+                                                        ]
+                                                    ],
+                                                    'fields' => 'ids',
+                                                ]);
+
+                                                $total_vehicles = (int) $q->found_posts;
                                                 ?>
                                                 <div class="lots_live">
                                                     <?php if (intval($total_vehicles) == 0): ?>
@@ -164,7 +163,7 @@ $auctions = new WP_Query($argsAuction);
                                 <?php if (($count + 1) === $total) : ?>
                                     <div class="vehicle_final">
                                         <h3>Stay tuned for more classic auctions to come</h3>
-                                        <img src="<?php echo IMG; ?>/path_car.svg">
+                                        <img src="<?php echo IMG; ?>/path_car.svg" title="Car" alt="Car">
                                     </div>
                                 <?php endif; ?>
                             </li>
@@ -180,8 +179,10 @@ $auctions = new WP_Query($argsAuction);
     <?php if (is_front_page()): ?>
         <?php
         $up_p = get_field('upcoming_text');
-        $up_button1 = get_field('upcoming_button_1');
-        $up_button2 = get_field('upcoming_button_2');
+        $up_button2 = get_field('upcoming_button_1');
+        $up_button1 = get_field('upcoming_button_2');
+        $up_button2_text = get_field('upcoming_button_1_text');
+        $up_button1_text = get_field('upcoming_button_2_text');
         ?>
         <div class="container">
             <div class="upcoming_foot">
@@ -190,18 +191,18 @@ $auctions = new WP_Query($argsAuction);
                         <p><?php echo $up_p; ?></p>
                     </div>
                 <?php endif; ?>
-                <?php if ($up_button1): ?>
-                    <a href="<?php echo esc_url($up_button1['url']); ?>" class="permalink" target="<?php echo esc_attr($up_button1['target'] ?: '_self'); ?>">
-                        <?php echo ($up_button1['title']); ?>
+                <?php if ($up_button1 && !empty($up_button1_text)): ?>
+                    <a href="<?php echo esc_url($up_button1); ?>" class="permalink">
+                        <?php echo $up_button1_text; ?>
                         <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18" fill="none">
                             <path d="M9.5 4.55556V17M9.5 4.55556C9.5 3.61256 9.12072 2.70819 8.44558 2.0414C7.77045 1.3746 6.85478 1 5.9 1H1.4C1.16131 1 0.932387 1.09365 0.763604 1.26035C0.594821 1.42705 0.5 1.65314 0.5 1.88889V13.4444C0.5 13.6802 0.594821 13.9063 0.763604 14.073C0.932387 14.2397 1.16131 14.3333 1.4 14.3333H6.8C7.51608 14.3333 8.20284 14.6143 8.70919 15.1144C9.21554 15.6145 9.5 16.2928 9.5 17M9.5 4.55556C9.5 3.61256 9.87928 2.70819 10.5544 2.0414C11.2295 1.3746 12.1452 1 13.1 1H17.6C17.8387 1 18.0676 1.09365 18.2364 1.26035C18.4052 1.42705 18.5 1.65314 18.5 1.88889V13.4444C18.5 13.6802 18.4052 13.9063 18.2364 14.073C18.0676 14.2397 17.8387 14.3333 17.6 14.3333H12.2C11.4839 14.3333 10.7972 14.6143 10.2908 15.1144C9.78446 15.6145 9.5 16.2928 9.5 17" stroke="#8C6E47" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                     </a>
                 <?php endif; ?>
             </div>
-            <?php if ($up_button2): ?>
-                <a href="<?php echo esc_url($up_button2['url']); ?>" class="permalink_border" target="<?php echo esc_attr($up_button2['target'] ?: '_self'); ?>">
-                    <?php echo ($up_button2['title']); ?>
+            <?php if ($up_button2 && !empty($up_button2_text)): ?>
+                <a href="<?php echo esc_url($up_button2); ?>" class="permalink_border">
+                    <?php echo $up_button2_text; ?>
                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
                         <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
                     </svg>

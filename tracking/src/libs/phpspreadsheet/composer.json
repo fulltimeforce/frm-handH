@@ -1,0 +1,10 @@
+{
+    "name": "frm/tracking-phpspreadsheet",
+    "description": "PhpSpreadsheet for tracking exports",
+    "type": "library",
+    "license": "MIT",
+    "minimum-stability": "stable",
+    "require": {
+        "phpoffice/phpspreadsheet": "^5.3"
+    }
+}

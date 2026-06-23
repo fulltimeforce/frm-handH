@@ -9,6 +9,7 @@ $bg_image = get_field('breadcrumb_image');
 $subtitle = get_field('specialist_subtitle');
 $text = get_field('specialist_text');
 $button = get_field('specialist_button');
+$button_text = get_field('specialist_button_text');
 
 get_banner('Homepage / About / Meet the team', esc_url($bg_image), 'Meet the team');
 ?>
@@ -22,9 +23,9 @@ get_banner('Homepage / About / Meet the team', esc_url($bg_image), 'Meet the tea
             <?php if ($text): ?>
                 <div class="specialist_text text">
                     <?php echo $text; ?>
-                    <?php if ($button): ?>
-                        <a class="link_btn" href="<?php echo esc_url($button['url']); ?>" target="<?php echo esc_attr($button['target']); ?>">
-                            <span><?php echo esc_html($button['title']); ?></span>
+                    <?php if ($button && !empty($button_text)): ?>
+                        <a class="link_btn" href="<?php echo esc_url($button); ?>">
+                            <span><?php echo $button_text; ?></span>
                             <img src="<?php echo IMG; ?>/arrow.svg">
                         </a>
                     <?php endif; ?>

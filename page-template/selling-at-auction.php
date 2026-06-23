@@ -10,37 +10,48 @@ get_banner('Homepage / Classic Auctions / Selling at Auction', get_the_post_thum
 //set fields
 $title = get_field('selling_title');
 $text = get_field('selling_text');
+
 $button1 = get_field('selling_button_1');
 $button2 = get_field('selling_button_2');
+$button1_text = get_field('selling_button_1_text');
+$button2_text = get_field('selling_button_2_text');
+
 $title2 = get_field('selling_auctions_high_title');
 $title3 = get_field('selling_auctions_title');
 $text2 = get_field('selling_auctions_text');
+
+$center_button_text = get_field('center_button_text');
+$center_button_text = !empty($center_button_text) ? $center_button_text : 'Interactive Forms';
+
 ?>
 
 <section class="insurance insurance_v1 insurance_share">
     <div class="insurance_container">
         <?php if ($title): ?>
-        <div class="insurance-title">
-            <h2><?php echo $title; ?></h2>
-        </div>
+            <div class="insurance-title">
+                <h2><?php echo $title; ?></h2>
+            </div>
         <?php endif; ?>
         <?php if ($text): ?>
-        <div class="content">
-            <?php echo $text; ?>
-        </div>
+            <div class="content">
+                <?php echo $text; ?>
+            </div>
         <?php endif; ?>
         <div class="actions">
-            <?php if ($button1): ?>
-            <a href="<?php echo esc_url($button1['url']); ?>"
-                <?php echo $button1['target'] ? 'target="' . esc_attr($button1['target']) . '"' : ''; ?>>
-                <?php echo esc_html($button1['title']); ?>
-            </a>
+            <?php if ($button1 && !empty($button1_text)): ?>
+                <a href="<?php echo esc_url($button1); ?>" alt="<?php echo esc_html($button1_text); ?>">
+                    <?php echo esc_html($button1_text); ?>
+                </a>
             <?php endif; ?>
-            <?php if ($button2): ?>
-            <a href="<?php echo esc_url($button2['url']); ?>"
-                <?php echo $button2['target'] ? 'target="' . esc_attr($button2['target']) . '"' : ''; ?>>
-                <?php echo esc_html($button2['title']); ?>
-            </a>
+			
+			<a href="#interactive_forms" class="scroll-to-interactive" alt="<?php echo esc_attr($center_button_text); ?>">
+    			<?php echo esc_html($center_button_text); ?>
+			</a>
+
+            <?php if ($button2 && !empty($button2_text)): ?>
+                <a href="<?php echo esc_url($button2); ?>" alt="<?php echo esc_html($button2_text); ?>">
+                    <?php echo esc_html($button2_text); ?>
+                </a>
             <?php endif; ?>
         </div>
     </div>
@@ -52,14 +63,14 @@ $text2 = get_field('selling_auctions_text');
             <div class="splide splidev1" role="group" id="logos1">
                 <div class="splide__track">
                     <ul class="splide__list">
-                        <?php if( have_rows('selling_brands') ): ?>
-                        <?php while( have_rows('selling_brands') ): the_row(); 
+                        <?php if (have_rows('selling_brands')): ?>
+                            <?php while (have_rows('selling_brands')): the_row();
                                 $brand_img = get_sub_field('selling_brand');
                             ?>
-                        <li class="splide__slide">
-                            <img src="<?php echo esc_url($brand_img); ?>" alt="Brand Logo">
-                        </li>
-                        <?php endwhile; ?>
+                                <li class="splide__slide">
+                                    <img src="<?php echo esc_url($brand_img); ?>" alt="Brand Logo">
+                                </li>
+                            <?php endwhile; ?>
                         <?php endif; ?>
                     </ul>
                 </div>
@@ -74,30 +85,30 @@ $text2 = get_field('selling_auctions_text');
 <section class="heritage_container selling_heritage">
     <div class="heritage_information">
         <div class="heritage_images">
-            <?php if( have_rows('selling_auctions') ): ?>
-            <?php 
+            <?php if (have_rows('selling_auctions')): ?>
+                <?php
                 the_row();
                 $first_img = get_sub_field('selling_auction_image');
-            ?>
-            <img class="heritage_images-main" src="<?php echo esc_url($first_img); ?>" alt="Auction Image">
-            <div class="heritage_images-slider">
-                <div id="heritage" class="splide">
-                    <div class="splide__track">
-                        <ul class="splide__list">
-                            <?php while( have_rows('selling_auctions') ): the_row(); 
+                ?>
+                <img class="heritage_images-main" src="<?php echo esc_url($first_img); ?>" alt="Auction Image">
+                <div class="heritage_images-slider">
+                    <div id="heritage" class="splide">
+                        <div class="splide__track">
+                            <ul class="splide__list">
+                                <?php while (have_rows('selling_auctions')): the_row();
                                     $auction_img = get_sub_field('selling_auction_image');
                                 ?>
-                            <li class="splide__slide">
-                                <img src="<?php echo esc_url($auction_img); ?>" alt="Auction Image">
-                            </li>
-                            <?php endwhile; ?>
-                        </ul>
+                                    <li class="splide__slide">
+                                        <img src="<?php echo esc_url($auction_img); ?>" alt="Auction Image">
+                                    </li>
+                                <?php endwhile; ?>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="image_progress">
+                        <div class="progress"></div>
                     </div>
                 </div>
-                <div class="image_progress">
-                    <div class="progress"></div>
-                </div>
-            </div>
             <?php endif; ?>
         </div>
         <div class="heritage_content">
@@ -106,16 +117,16 @@ $text2 = get_field('selling_auctions_text');
             </div>
             <h2>
                 <?php if ($title2): ?>
-                <span><?php echo $title2; ?></span>
+                    <span><?php echo $title2; ?></span>
                 <?php endif; ?>
                 <?php if ($title3): ?>
-                <?php echo $title3; ?>
+                    <?php echo $title3; ?>
                 <?php endif; ?>
             </h2>
             <?php if ($text2): ?>
-            <div class="content">
-                <?php echo $text2; ?>
-            </div>
+                <div class="content">
+                    <?php echo $text2; ?>
+                </div>
             <?php endif; ?>
         </div>
     </div>
@@ -168,16 +179,16 @@ $text2 = get_field('selling_auctions_text');
     <div class="container">
         <ul class="auction-tabs-nav">
             <?php if (get_field('before_auction_title')): ?>
-            <li class="active" data-tab="before">Before the Auction</li>
+                <li class="active" data-tab="before">Before the Auction</li>
             <?php endif; ?>
             <?php if (get_field('bidding_auction_title')): ?>
-            <li data-tab="bidding">Bidding at Auction</li>
+                <li data-tab="bidding">Bidding at Auction</li>
             <?php endif; ?>
             <?php if (get_field('after_auction_title')): ?>
-            <li data-tab="after">After the Auction</li>
+                <li data-tab="after">After the Auction</li>
             <?php endif; ?>
             <?php if (get_field('fees_auction_title')): ?>
-            <li data-tab="fees">Fees</li>
+                <li data-tab="fees">Fees</li>
             <?php endif; ?>
         </ul>
 
@@ -185,17 +196,17 @@ $text2 = get_field('selling_auctions_text');
             <div class="tab-panel active" id="before">
                 <div class="auction-grid">
                     <?php if (get_field('before_auction_image')): ?>
-                    <div class="auction-image">
-                        <img src="<?php echo get_field('before_auction_image'); ?>" alt="Auction">
-                    </div>
+                        <div class="auction-image">
+                            <img src="<?php echo get_field('before_auction_image'); ?>" alt="Auction">
+                        </div>
                     <?php endif; ?>
                     <div class="auction-info">
                         <?php if (get_field('before_auction_title')): ?>
-                        <h2><?php echo get_field('before_auction_title'); ?></h2>
+                            <h2><?php echo get_field('before_auction_title'); ?></h2>
                         <?php endif; ?>
                         <div>
                             <?php if (get_field('before_auction_text')): ?>
-                            <?php echo get_field('before_auction_text'); ?>
+                                <?php echo get_field('before_auction_text'); ?>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -205,17 +216,17 @@ $text2 = get_field('selling_auctions_text');
             <div class="tab-panel" id="bidding">
                 <div class="auction-grid">
                     <?php if (get_field('bidding_auction_image')): ?>
-                    <div class="auction-image">
-                        <img src="<?php echo get_field('bidding_auction_image'); ?>" alt="Auction">
-                    </div>
+                        <div class="auction-image">
+                            <img src="<?php echo get_field('bidding_auction_image'); ?>" alt="Auction">
+                        </div>
                     <?php endif; ?>
                     <div class="auction-info">
                         <?php if (get_field('bidding_auction_title')): ?>
-                        <h2><?php echo get_field('bidding_auction_title'); ?></h2>
+                            <h2><?php echo get_field('bidding_auction_title'); ?></h2>
                         <?php endif; ?>
                         <div>
                             <?php if (get_field('bidding_auction_text')): ?>
-                            <?php echo get_field('bidding_auction_text'); ?>
+                                <?php echo get_field('bidding_auction_text'); ?>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -225,17 +236,17 @@ $text2 = get_field('selling_auctions_text');
             <div class="tab-panel" id="after">
                 <div class="auction-grid">
                     <?php if (get_field('after_auction_image')): ?>
-                    <div class="auction-image">
-                        <img src="<?php echo get_field('after_auction_image'); ?>" alt="Auction">
-                    </div>
+                        <div class="auction-image">
+                            <img src="<?php echo get_field('after_auction_image'); ?>" alt="Auction">
+                        </div>
                     <?php endif; ?>
                     <div class="auction-info">
                         <?php if (get_field('after_auction_title')): ?>
-                        <h2><?php echo get_field('after_auction_title'); ?></h2>
+                            <h2><?php echo get_field('after_auction_title'); ?></h2>
                         <?php endif; ?>
                         <div>
                             <?php if (get_field('after_auction_text')): ?>
-                            <?php echo get_field('after_auction_text'); ?>
+                                <?php echo get_field('after_auction_text'); ?>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -245,29 +256,29 @@ $text2 = get_field('selling_auctions_text');
             <div class="tab-panel" id="fees">
                 <div class="auction-grid">
                     <?php if (get_field('fees_auction_image')): ?>
-                    <div class="auction-image">
-                        <img src="<?php echo get_field('fees_auction_image'); ?>" alt="Auction">
-                    </div>
+                        <div class="auction-image">
+                            <img src="<?php echo get_field('fees_auction_image'); ?>" alt="Auction">
+                        </div>
                     <?php endif; ?>
                     <div class="auction-info">
                         <?php if (get_field('fees_auction_title')): ?>
-                        <h2><?php echo get_field('fees_auction_title'); ?></h2>
+                            <h2><?php echo get_field('fees_auction_title'); ?></h2>
                         <?php endif; ?>
                         <div>
                             <?php if (get_field('fees_auction_text')): ?>
-                            <?php echo get_field('fees_auction_text'); ?>
+                                <?php echo get_field('fees_auction_text'); ?>
                             <?php endif; ?>
                         </div>
                         <?php if (get_field('fees_auction_card_text')): ?>
-                        <div class="auction-cards">
-                            <div class="auction-card">
-                                <?php echo get_field('fees_auction_card_text'); ?>
+                            <div class="auction-cards">
+                                <div class="auction-card">
+                                    <?php echo get_field('fees_auction_card_text'); ?>
+                                </div>
                             </div>
-                        </div>
                         <?php endif; ?>
                         <div>
                             <?php if (get_field('fees_auction_text_2')): ?>
-                            <?php echo get_field('fees_auction_text_2'); ?>
+                                <?php echo get_field('fees_auction_text_2'); ?>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -275,40 +286,61 @@ $text2 = get_field('selling_auctions_text');
             </div>
         </div>
     </div>
-    <?php if (get_field('selling_terms')): ?>
-    <div class="faq_list">
-        <ul id="my-accordion" class="accordionjs">
-            <li>
-                <div>
-                    <h3>Terms & Conditions</h3>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                        <path d="M0 8.99943L18 8.99943M8.99969 0L8.99969 18" stroke="#8C6E47" stroke-width="2" />
-                    </svg>
-                </div>
-                <div>
-                    <div class="description">
-                        <?php echo get_field('selling_terms'); ?>
-                    </div>
-                </div>
-            </li>
-            <?php if (get_field('selling_download')): ?>
-            <li>
-                <div>
-                    <h3>Download Forms</h3>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                        <path d="M0 8.99943L18 8.99943M8.99969 0L8.99969 18" stroke="#8C6E47" stroke-width="2" />
-                    </svg>
-                </div>
-                <div>
-                    <div class="description">
-                        <?php echo get_field('selling_download'); ?>
-                    </div>
-                </div>
-            </li>
-            <?php endif; ?>
-        </ul>
-    </div>
+
+    <?php if (!empty(get_field('selling_terms')) || !empty(get_field('selling_download')) || !empty(get_field('interactive_forms'))): ?>
+        <div class="faq_list">
+            <ul id="my-accordion" class="accordionjs">
+                <?php if (get_field('selling_terms')): ?>
+                    <li id="selling_terms">
+                        <div>
+                            <h3>Terms & Conditions</h3>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                <path d="M0 8.99943L18 8.99943M8.99969 0L8.99969 18" stroke="#8C6E47" stroke-width="2" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="description">
+                                <?php echo get_field('selling_terms'); ?>
+                            </div>
+                        </div>
+                    </li>
+                <?php endif; ?>
+
+                <?php if (get_field('selling_download')): ?>
+                    <li id="selling_download">
+                        <div>
+                            <h3>Download Forms</h3>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                <path d="M0 8.99943L18 8.99943M8.99969 0L8.99969 18" stroke="#8C6E47" stroke-width="2" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="description">
+                                <?php echo get_field('selling_download'); ?>
+                            </div>
+                        </div>
+                    </li>
+                <?php endif; ?>
+
+                <?php if (get_field('interactive_forms')): ?>
+                    <li id="interactive_forms">
+                        <div>
+                            <h3><?php echo $center_button_text; ?></h3>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                <path d="M0 8.99943L18 8.99943M8.99969 0L8.99969 18" stroke="#8C6E47" stroke-width="2" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="description">
+                                <?php echo get_field('interactive_forms'); ?>
+                            </div>
+                        </div>
+                    </li>
+                <?php endif; ?>
+            </ul>
+        </div>
     <?php endif; ?>
+
 </section>
 
 
@@ -316,35 +348,38 @@ $text2 = get_field('selling_auctions_text');
 <?php
 $bg2 = get_field('cta2_background_image');
 $title2 = get_field('cta2_title');
+
 $first_link2 = get_field('cta2_first_link');
 $second_link2 = get_field('cta2_second_link');
+$first_link2_text = get_field('cta2_first_link_text');
+$second_link2_text = get_field('cta2_second_link_text');
 ?>
 
 <?php if (!empty($title2)): ?>
-<section class="cta">
-    <?php if (!empty($bg2)): ?>
-    <div class="cta_bg">
-        <img src="<?php echo $bg2['url']; ?>" alt="<?php echo $bg2['alt']; ?>">
-    </div>
-    <?php endif; ?>
-    <div class="container">
-        <div class="cta_content">
-            <h2><?php echo $title2; ?></h2>
+    <section class="cta">
+        <?php if (!empty($bg2)): ?>
+            <div class="cta_bg">
+                <img src="<?php echo $bg2['url']; ?>" alt="<?php echo $bg2['alt']; ?>">
+            </div>
+        <?php endif; ?>
+        <div class="container">
+            <div class="cta_content">
+                <h2><?php echo $title2; ?></h2>
 
-            <div class="cta_links">
-                <?php if (!empty($first_link2)): ?>
-                <a href="<?php echo $first_link2['url'] ?>"
-                    alt="<?php echo $first_link2['title'] ?>"><?php echo $first_link2['title'] ?></a>
-                <?php endif; ?>
+                <div class="cta_links">
+                    <?php if (!empty($first_link2) && !empty($first_link2_text)): ?>
+                        <a href="<?php echo $first_link2 ?>"
+                            alt="<?php echo $first_link2_text; ?>"><?php echo $first_link2_text; ?></a>
+                    <?php endif; ?>
 
-                <?php if (!empty($second_link2)): ?>
-                <a href="<?php echo $second_link2['url'] ?>"
-                    alt="<?php echo $second_link2['title'] ?>"><?php echo $second_link2['title'] ?></a>
-                <?php endif; ?>
+                    <?php if (!empty($second_link2) && !empty($first_link2_text)): ?>
+                        <a href="<?php echo $second_link2 ?>"
+                            alt="<?php echo $first_link2_text; ?>"><?php echo $first_link2_text; ?></a>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 <?php endif; ?>
 
 <section class="upcoming pb160">
@@ -352,33 +387,61 @@ $second_link2 = get_field('cta2_second_link');
 </section>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    const tabs = document.querySelectorAll(".auction-tabs-nav li");
-    const panels = document.querySelectorAll(".tab-panel");
+    document.addEventListener("DOMContentLoaded", function() {
+        const tabs = document.querySelectorAll(".auction-tabs-nav li");
+        const panels = document.querySelectorAll(".tab-panel");
 
-    tabs.forEach(tab => {
-        tab.addEventListener("click", () => {
-            const target = tab.getAttribute("data-tab");
+        tabs.forEach(tab => {
+            tab.addEventListener("click", () => {
+                const target = tab.getAttribute("data-tab");
 
-            // remove active
-            tabs.forEach(t => t.classList.remove("active"));
-            panels.forEach(p => p.classList.remove("active"));
+                // remove active
+                tabs.forEach(t => t.classList.remove("active"));
+                panels.forEach(p => p.classList.remove("active"));
 
-            // add active
-            tab.classList.add("active");
-            document.getElementById(target).classList.add("active");
+                // add active
+                tab.classList.add("active");
+                document.getElementById(target).classList.add("active");
+            });
         });
     });
-});
 </script>
 
 <?php get_footer(); ?>
 
 <script>
-$("#my-accordion").accordionjs({
-    closeAble: true,
-    closeOther: true,
-    slideSpeed: 150,
-    activeIndex: 100,
+    $("#my-accordion").accordionjs({
+        closeAble: true,
+        closeOther: true,
+        slideSpeed: 150,
+        activeIndex: 100,
+    });
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', function (e) {
+            const hash = this.getAttribute('href');
+
+            // Ignorar anchors vacíos o solo "#"
+            if (!hash || hash === '#') return;
+
+            const targetId = hash.substring(1);
+            const target = document.getElementById(targetId);
+
+            if (!target) return;
+
+            e.preventDefault();
+
+            const offset = 200; // px
+            const targetPosition = target.getBoundingClientRect().top + window.pageYOffset;
+            const scrollToPosition = targetPosition - offset;
+
+            window.scrollTo({
+                top: scrollToPosition,
+                behavior: 'smooth'
+            });
+        });
+    });
 });
 </script>

@@ -105,16 +105,16 @@ $query = new WP_Query($args);
                         $thumbnail  = get_the_post_thumbnail_url(get_the_ID(), 'medium_large');
                     ?>
                         <article class="blog_article">
-                            <div class="blog_article-image">
+                            <a class="d-block blog_article-image" href="<?php echo esc_url($permalink); ?>" title="<?php echo esc_html($title); ?>">
                                 <?php if ($thumbnail): ?>
                                     <img src="<?php echo esc_url($thumbnail); ?>" alt="<?php echo esc_attr($title); ?>">
                                 <?php else: ?>
                                     <img src="<?php echo esc_url(get_template_directory_uri() . '/images/default.jpg'); ?>" alt="Placeholder">
                                 <?php endif; ?>
-                            </div>
+                            </a>
                             <div class="blog_article-content">
                                 <span class="p12"><?php echo esc_html($date); ?></span>
-                                <h3><?php echo esc_html($title); ?></h3>
+                                <a class="d-block" href="<?php echo esc_url($permalink); ?>" style="text-decoration:none;" title="<?php echo esc_html($title); ?>"><h3><?php echo esc_html($title); ?></h3></a>
 
                                 <?php if (!empty($short_description)) : ?>
                                     <p class="p14"><?php echo esc_html($short_description); ?></p>

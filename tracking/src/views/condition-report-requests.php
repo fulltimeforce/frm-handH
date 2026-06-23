@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/../services/ConditionReportRequestService.php';
+
 function hh_condition_report_page()
 {
     if (!current_user_can(HH_TRACKING_VIEW_CAP)) {
@@ -32,7 +34,9 @@ function hh_condition_report_page()
         unset($columns['new']);
     }
 
-    $rows = $wpdb->get_results("SELECT * FROM {$table} ORDER BY created_at DESC");
+    $service = new ConditionReportRequestService();
+    $rows = $service->getAll();
+
     if (!is_array($rows)) $rows = [];
 
     $grouped = [
@@ -69,6 +73,15 @@ function hh_condition_report_page()
                     <?php endif; ?>
                 </p>
             </div>
+			<div>
+				<form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" style="margin: 10px 0 0;" class="<?php if (empty($rows)){echo 'disabled';} ?>">
+					<input type="hidden" name="action" value="hh_export_condition_report_requests">
+					<?php wp_nonce_field('hh_export_condition_report_requests'); ?>
+                    <button type="submit" class="button button-primary">
+                    	Export Leads (Excel)
+                    </button>
+				</form>
+			</div>
         </div>
 
         <div class="hh-board">
@@ -130,51 +143,68 @@ function hh_condition_report_page()
                                 $is_assigned_to_me = ($current_user_id > 0 && (int)$assigned_user_id === (int)$current_user_id);
 
                             ?>
-                                <div class="hh-card hh-card--link" data-request-id="<?php echo esc_attr($request_id); ?>" data-nonce="<?php echo esc_attr($nonce); ?>">
-                                    <p class="hh-card__title">
-                                        <b><?php echo esc_html($lot_title); ?></b>
-                                        <hr>
-                                        <?php if (!empty($assigned_user_name) && $key != 'new') : ?>
-                                            <small style="display:block;margin:0;">
-                                                <b>Assigned to: <?php echo esc_html($assigned_user_name); ?></b>
-                                            </small>
-                                        <?php endif; ?>
+                                <?php if ($is_assigned_to_me || current_user_can(HH_TRACKING_ADMIN_CAP)): ?>
+                                    <div
+                                        class="hh-card hh-card--link"
+                                        data-request-id="<?php echo esc_attr($request_id); ?>"
+                                        data-nonce="<?php echo esc_attr($nonce); ?>"
 
-                                        <?php if (!empty($lot_make)) : ?>
-                                            <small style="display:block;">Make: <?php echo esc_html($lot_make); ?></small>
-                                        <?php endif; ?>
-                                        <?php if (!empty($lot_model)) : ?>
-                                            <small style="display:block;">Model: <?php echo esc_html($lot_model); ?></small>
-                                        <?php endif; ?>
-                                        <?php if (!empty($lot_year)) : ?>
-                                            <small style="display:block;">Year: <?php echo esc_html($lot_year); ?></small>
-                                        <?php endif; ?>
-                                    </p>
+                                        data-lot-make="<?php echo esc_attr($lot_make); ?>"
+                                        data-lot-model="<?php echo esc_attr($lot_model); ?>"
+                                        data-lot-year="<?php echo esc_attr($lot_year); ?>"
+                                        data-assigned-user="<?php echo esc_attr($assigned_user_name); ?>"
+                                        data-created-at="<?php echo esc_attr($r->created_at ?? ''); ?>">
+                                        <p class="hh-card__title">
+                                            <b><?php echo esc_html($lot_title); ?></b>
+                                            <hr>
+                                            <?php if (!empty($assigned_user_name) && $key != 'new') : ?>
+                                                <small style="display:block;margin:0;">
+                                                    <b>Assigned to: <?php echo esc_html($assigned_user_name); ?></b>
+                                                </small>
+                                            <?php endif; ?>
 
-                                    <div class="hh-card__meta">
-                                        <a class="hh-pill" data-id="<?php echo esc_html($gf_entry_id ?: '—'); ?>" href="<?php echo esc_url($url); ?>" target="_blank">
-                                            View Entry
-                                        </a>
+                                            <?php if (!empty($lot_make)) : ?>
+                                                <small style="display:block;">Make: <?php echo esc_html($lot_make); ?></small>
+                                            <?php endif; ?>
+                                            <?php if (!empty($lot_model)) : ?>
+                                                <small style="display:block;">Model: <?php echo esc_html($lot_model); ?></small>
+                                            <?php endif; ?>
+                                            <?php if (!empty($lot_year)) : ?>
+                                                <small style="display:block;">Year: <?php echo esc_html($lot_year); ?></small>
+                                            <?php endif; ?>
+                                        </p>
 
-                                        <span class="hh-pill">Date: <?php echo esc_html($date); ?></span>
+                                        <div class="hh-card__meta">
+                                            <a class="hh-pill" data-id="<?php echo esc_html($gf_entry_id ?: '—'); ?>" href="<?php echo esc_url($url); ?>" target="_blank">
+                                                View Entry
+                                            </a>
 
-                                        <?php if ($key === 'new') : ?>
-                                            <button type="button"
-                                                class="hh-pill hh-4-state hh-pass-in-progress"
-                                                data-request-id="<?php echo esc_attr($request_id); ?>">
-                                                Pass to In Progress
+                                            <span class="hh-pill">Date: <?php echo esc_html($date); ?></span>
+
+                                            <?php if ($key === 'new') : ?>
+                                                <button type="button"
+                                                    class="hh-pill hh-4-state hh-pass-in-progress"
+                                                    data-request-id="<?php echo esc_attr($request_id); ?>">
+                                                    Pass to In Progress
+                                                </button>
+                                            <?php endif; ?>
+
+                                            <?php if ($key === 'in_progress' && $is_assigned_to_me) : ?>
+                                                <button type="button"
+                                                    class="hh-pill hh-4-state hh-pass-completed"
+                                                    data-request-id="<?php echo esc_attr($request_id); ?>">
+                                                    Pass to Completed
+                                                </button>
+                                            <?php endif; ?>
+
+                                            <button type="button" class="hh-lead-details-btn" title="Lead details" aria-label="Lead details">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+                                                    <path d="M384 224v184a40 40 0 01-40 40H104a40 40 0 01-40-40V168a40 40 0 0140-40h167.48M336 64h112v112M224 288L440 72" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" />
+                                                </svg>
                                             </button>
-                                        <?php endif; ?>
-
-                                        <?php if ($key === 'in_progress' && $is_assigned_to_me) : ?>
-                                            <button type="button"
-                                                class="hh-pill hh-4-state hh-pass-completed"
-                                                data-request-id="<?php echo esc_attr($request_id); ?>">
-                                                Pass to Completed
-                                            </button>
-                                        <?php endif; ?>
+                                        </div>
                                     </div>
-                                </div>
+                                <?php endif; ?>
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </div>
@@ -215,5 +245,23 @@ function hh_condition_report_page()
             <p id="hh-cr-msg" style="margin:10px 0 0; color:#b32d2e; display:none;"></p>
         </div>
     </div>
+
+    <!-- Modal: Lead Details -->
+    <div id="hh-cr-lead-details-modal" class="hh-modal" style="display:none;">
+        <div class="hh-modal__backdrop"></div>
+
+        <div class="hh-modal__panel" role="dialog" aria-modal="true" aria-labelledby="hh-cr-lead-details-title" style="max-width:620px;">
+            <h2 id="hh-cr-lead-details-title" style="margin-top:0;">Lead Details</h2>
+
+            <div id="hh-cr-lead-details-body" style="margin-top:10px;">
+                <!-- contenido inyectado por JS -->
+            </div>
+
+            <div style="margin-top:14px; display:flex; gap:8px; justify-content:flex-end;">
+                <button type="button" class="button" id="hh-cr-lead-details-close">Close</button>
+            </div>
+        </div>
+    </div>
+
 <?php
 }

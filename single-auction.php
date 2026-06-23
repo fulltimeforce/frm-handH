@@ -82,29 +82,18 @@ get_banner('Homepage / Classic Auctions / ' . $title, esc_url($bg_image), $title
                     <?php endif; ?>
 
                     <?php
-                    $auctionSaleNumber = get_field('sale_number');
-
-                    $total_vehicles = 0;
-                    if ($auctionSaleNumber !== '' && $auctionSaleNumber !== null) {
-                        $q = new WP_Query([
-                            'post_type'               => 'vehicles',
-                            'post_status'             => 'publish',
-                            'meta_query'              => [[
-                                'key'     => 'auction_number_latest',
-                                'value'   => (int) $auctionSaleNumber,
-                                'compare' => '=',
-                                'type'    => 'NUMERIC',
-                            ]],
-                            'fields'                   => 'ids',
-                            'posts_per_page'          => 1,
-                        ]);
-                        $total_vehicles = (int) $q->found_posts;
-                        wp_reset_postdata();
+                    if (!class_exists('VehiclesSearchRepository')) {
+                        require_once get_template_directory() . '/VehiclesSearchRepository.php';
                     }
+
+                    global $wpdb;
+                    $repo = new VehiclesSearchRepository($wpdb);
+
+                    $total_vehicles = $repo->countVehiclesByAuctionId((int) $auction_id);
                     ?>
                     <div class="auction_dates-lots">
                         <p>
-                            <?php if ($total_vehicles > 1): ?>
+                            <?php if (intval($total_vehicles) >= 1): ?>
                                 <span></span>
                             <?php endif; ?>
                             Lots live (<?php echo $total_vehicles; ?>)

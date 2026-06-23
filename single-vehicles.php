@@ -3,8 +3,6 @@
 get_header();
 
 $current_lot = get_field('lot_number_latest');
-$auction = get_field('auction_latest');
-$auction_number = get_field('auction_number_latest');
 $estimate_high = get_field('estimate_high');
 $estimate_low = get_field('estimate_low');
 $sold_price = get_field('sold_price');
@@ -14,9 +12,53 @@ $status = get_field('status');
 $vehicle_video = '';
 $post_id = get_the_ID();
 
+$auction = get_field('auction_number_latest');
+
+$auction_name = '';
+$auction_permalink = '';
+$auction_number = '';
+$auction_date = '';
+$auction_id = 0;
+
+if ($auction) {
+    $auction_id = $auction->ID;
+
+    $auction_name = $auction->post_title;
+    $auction_permalink = get_permalink($auction_id);
+
+    $auction_number = get_field('sale_number', $auction_id);
+
+    $check_provisional_number = get_field('show_provisional_numbers', $auction_id);
+    if (!$check_provisional_number && stripos($current_lot, 'p')) {
+        $current_lot = '';
+    }
+
+    $auction_date = get_field('auction_date', $auction_id);
+}
+
+$nav_context = hnh_get_auction_list_nav_context_from_request();
+$nav_query_args = hnh_auction_list_nav_query_args($nav_context);
+$auction_return_url = $auction_permalink;
+if ($nav_query_args && $auction_permalink) {
+    $auction_return_url = add_query_arg($nav_query_args, $auction_permalink);
+}
+
 ?>
 
 <style>
+    .listing_fullview {
+        position: fixed;
+    }
+
+    .listing_grid {
+        background: white;
+    }
+
+    .listing_grid-item img {
+        cursor: zoom-in;
+        pointer-events: all;
+    }
+
     @media (min-width: 1420px) {
         .listing_info-details {
             margin-top: 3.3333333333vw;
@@ -33,6 +75,10 @@ $post_id = get_the_ID();
         .listing_info-details {
             margin-top: 32px;
         }
+
+        .accordionjs .acc_section .acc_head p {
+            display: none !important;
+        }
     }
 </style>
 
@@ -41,58 +87,28 @@ $post_id = get_the_ID();
         <div class="listing_head-col">
             <div>
                 <?php if (!isset($_GET['c']) && $auction_number): ?>
-                    <?php
-
-                    $auction_permalink = '';
-
-                    $args = [
-                        'post_type'      => 'auction',
-                        'posts_per_page' => 1,
-                        'fields'         => 'ids',
-                        'meta_query'     => [
-                            [
-                                'key'   => 'sale_number',
-                                'value' => $auction_number,
-                            ],
-                        ],
-                    ];
-
-                    $query = new WP_Query($args);
-
-                    if ($query->have_posts()) {
-                        $auction_id   = $query->posts[0]; // primer resultado
-                        $auction_permalink    = get_permalink($auction_id);
-                        echo $permalink;
-                    }
-                    wp_reset_postdata();
-
-                    if (!empty($auction_permalink)):
-                    ?>
-                        <a href="<?php echo $auction_permalink; ?>" class="listing_btn-white p14">
+                    <?php if (!empty($auction_return_url)): ?>
+                        <a href="<?php echo esc_url($auction_return_url); ?>" class="listing_btn-white p14">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                                 <path d="M2.60156 8H2.60756M2.60156 14H2.60756M2.60156 2H2.60756M5.60156 8H13.4016M5.60156 14H13.4016M5.60156 2H13.4016" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
                             Return to Auction List</a>
                     <?php endif; ?>
                 <?php endif; ?>
-                <p class="p20">
-                    <?php
-                    $date_raw = get_field('auction_date_latest'); // "2025-12-18 18:56"
 
-                    if ($date_raw) {
-                        $dt = DateTime::createFromFormat('Y-m-d H:i', $date_raw);
-                        if ($dt) {
-                            echo $dt->format('jS M, Y g:i');
-                            // Resultado: "18th Dec, 2025 6:56"
-                        } else {
-                            echo esc_html($date_raw); // fallback
-                        }
-                    }
-                    ?>
-                </p>
+                <?php if ($auction_date): ?>
+                    <p class="p20">
+                        <?php
+                        $date = new DateTime($auction_date);
+                        $formatted_date = $date->format('jS M, Y H:i');
+                        echo $formatted_date;
+                        ?>
+                    </p>
+                <?php endif; ?>
             </div>
-            <?php if ($auction): ?>
-                <p class="listing_head-title"><?php echo $auction; ?></p>
+
+            <?php if ($auction_name): ?>
+                <p class="listing_head-title"><?php echo $auction_name; ?></p>
             <?php endif; ?>
         </div>
         <div class="listing_head-col">
@@ -102,13 +118,40 @@ $post_id = get_the_ID();
                     <span class="p24"><?php echo $current_lot; ?></span>
                 </div>
             <?php endif; ?>
+
             <div class="listing_head-actions">
+
                 <?php if (!isset($_GET['c'])): ?>
-                    <?php $prev_post = get_previous_post();
-                    $next_post = get_next_post(); ?>
+                    <?php
+                    $prev_post = null;
+                    $next_post = null;
+
+                    if ($auction_id > 0) {
+                        $prev_id = hnh_get_adjacent_lot_vehicle_id($post_id, $auction_id, 'prev', $nav_context);
+                        $next_id = hnh_get_adjacent_lot_vehicle_id($post_id, $auction_id, 'next', $nav_context);
+
+                        if ($prev_id) {
+                            $prev_post = get_post($prev_id);
+                        }
+                        if ($next_id) {
+                            $next_post = get_post($next_id);
+                        }
+                    }
+
+                    $prev_url = $prev_post
+                        ? ($nav_query_args
+                            ? add_query_arg($nav_query_args, get_permalink($prev_post->ID))
+                            : get_permalink($prev_post->ID))
+                        : '';
+                    $next_url = $next_post
+                        ? ($nav_query_args
+                            ? add_query_arg($nav_query_args, get_permalink($next_post->ID))
+                            : get_permalink($next_post->ID))
+                        : '';
+                    ?>
 
                     <?php if ($prev_post) : ?>
-                        <a href="<?php echo get_permalink($prev_post->ID); ?>" class="listing_btn-brown p14">
+                        <a href="<?php echo esc_url($prev_url); ?>" class="listing_btn-brown p14">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                                 <g clip-path="url(#clip0_1921_36983)">
                                     <path d="M14.3008 8L1.70078 8M1.70078 8L8.00078 15M1.70078 8L8.00078 0.999999" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -123,13 +166,23 @@ $post_id = get_the_ID();
                         </a>
                     <?php else : ?>
                         <a class="listing_btn-brown p14 disabled">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <g clip-path="url(#clip0_1921_36983)">
+                                    <path d="M14.3008 8L1.70078 8M1.70078 8L8.00078 15M1.70078 8L8.00078 0.999999" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_1921_36983">
+                                        <rect width="16" height="16" fill="white" transform="translate(16 16) rotate(-180)" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
                             Previous Lot
                         </a>
                     <?php endif; ?>
 
 
                     <?php if ($next_post) : ?>
-                        <a href="<?php echo get_permalink($next_post->ID); ?>" class="listing_btn-brown p14">
+                        <a href="<?php echo esc_url($next_url); ?>" class="listing_btn-brown p14">
                             Following Lot
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                                 <g clip-path="url(#clip0_1921_36988)">
@@ -157,16 +210,9 @@ $post_id = get_the_ID();
                             </svg>
                         </a>
                     <?php endif; ?>
+
                 <?php endif; ?>
 
-                <?php if (NOT_APPEAR): ?>
-                    <a class="listing_btn-white p14">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                            <path d="M7.68266 1.97392C7.71187 1.9149 7.757 1.86522 7.81295 1.83048C7.8689 1.79575 7.93344 1.77734 7.9993 1.77734C8.06515 1.77734 8.12969 1.79575 8.18564 1.83048C8.24159 1.86522 8.28672 1.9149 8.31593 1.97392L9.85579 5.09297C9.95724 5.29827 10.107 5.47588 10.2922 5.61056C10.4774 5.74525 10.6925 5.83298 10.919 5.86624L14.3627 6.37019C14.428 6.37965 14.4893 6.40717 14.5397 6.44965C14.5901 6.49213 14.6277 6.54787 14.648 6.61057C14.6684 6.67327 14.6709 6.74043 14.6551 6.80444C14.6393 6.86846 14.6059 6.92678 14.5587 6.9728L12.0683 9.39792C11.904 9.55797 11.7811 9.75554 11.7102 9.97362C11.6392 10.1917 11.6223 10.4238 11.661 10.6498L12.2489 14.0762C12.2604 14.1414 12.2534 14.2085 12.2286 14.2699C12.2038 14.3313 12.1622 14.3845 12.1086 14.4235C12.055 14.4624 11.9916 14.4855 11.9255 14.4901C11.8594 14.4947 11.7934 14.4806 11.735 14.4495L8.65657 12.8309C8.45373 12.7244 8.22806 12.6688 7.99896 12.6688C7.76986 12.6688 7.54419 12.7244 7.34135 12.8309L4.26363 14.4495C4.20519 14.4804 4.13924 14.4943 4.07328 14.4896C4.00733 14.4849 3.94401 14.4618 3.89053 14.4229C3.83705 14.3841 3.79556 14.3309 3.77078 14.2696C3.746 14.2083 3.73892 14.1413 3.75035 14.0762L4.33763 10.6505C4.37642 10.4243 4.35961 10.1921 4.28866 9.9739C4.2177 9.75568 4.09472 9.55801 3.93033 9.39792L1.43989 6.97347C1.39229 6.9275 1.35856 6.86908 1.34254 6.80487C1.32652 6.74066 1.32886 6.67324 1.34928 6.6103C1.36971 6.54735 1.4074 6.49141 1.45807 6.44884C1.50874 6.40627 1.57035 6.37879 1.63587 6.36953L5.07889 5.86624C5.30571 5.83324 5.52111 5.74562 5.70656 5.61092C5.89201 5.47622 6.04194 5.29847 6.14346 5.09297L7.68266 1.97392Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                        Watchlist
-                    </a>
-                <?php endif; ?>
                 <a href="#share" class="listing_btn-white p14">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                         <path d="M6.11222 9.057L10.8932 11.843M10.8862 4.157L6.11222 6.943M14.7992 3.1C14.7992 4.2598 13.859 5.2 12.6992 5.2C11.5394 5.2 10.5992 4.2598 10.5992 3.1C10.5992 1.9402 11.5394 1 12.6992 1C13.859 1 14.7992 1.9402 14.7992 3.1ZM6.39922 8C6.39922 9.1598 5.45902 10.1 4.29922 10.1C3.13942 10.1 2.19922 9.1598 2.19922 8C2.19922 6.8402 3.13942 5.9 4.29922 5.9C5.45902 5.9 6.39922 6.8402 6.39922 8ZM14.7992 12.9C14.7992 14.0598 13.859 15 12.6992 15C11.5394 15 10.5992 14.0598 10.5992 12.9C10.5992 11.7402 11.5394 10.8 12.6992 10.8C13.859 10.8 14.7992 11.7402 14.7992 12.9Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -178,9 +224,9 @@ $post_id = get_the_ID();
     </div>
 </section>
 
-<?php
-$gallery = get_field('gallery_vehicle');
-if ($gallery && is_array($gallery)): ?>
+<?php $gallery = get_field('gallery_vehicle'); ?>
+
+<?php if ($gallery && is_array($gallery)): ?>
     <section class="listing_images">
         <div class="container">
             <?php
@@ -214,7 +260,7 @@ if ($gallery && is_array($gallery)): ?>
                 </div>
 
                 <div class="listing_images-main">
-                    <img class="wh-100 thumbnail-post" src="<?php echo esc_url($first['url']); ?>" alt="<?php echo esc_attr($first['alt'] ?: 'vehicle'); ?>">
+                    <img style="pointer-events: all;" class="wh-100 thumbnail-post" src="<?php echo esc_url($first['url']); ?>" alt="<?php echo esc_attr($first['alt'] ?: 'vehicle'); ?>">
                     <div id="openFullView" class="listing_images-counter p18" data-total="<?php echo $total; ?>">1/<?php echo $total; ?></div>
                     <div id="openGrid" class="listing_images-grid">
                         <img src="<?php echo IMG; ?>/grid-icon.svg" alt="icon">
@@ -377,13 +423,7 @@ if ($gallery && is_array($gallery)): ?>
                         <li>
                             <div>
                                 <h3>Lot Details</h3>
-                                <?php if (NOT_APPEAR): ?>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                                        <path d="M0 8.99943L18 8.99943M8.99969 0L8.99969 18" stroke="#8C6E47" stroke-width="2" />
-                                    </svg>
-                                <?php else: ?>
-                                    <p style="color:#8c6e47;font-family:GothamMedium;font-weight:300;">Read More</p>
-                                <?php endif; ?>
+                                <p style="color:#8c6e47;font-family:GothamMedium;font-weight:300;">Read More</p>
                             </div>
                             <div>
                                 <div class="description">
@@ -401,57 +441,77 @@ if ($gallery && is_array($gallery)): ?>
                 </div>
             </div>
         </div>
+
         <?php
         /**
-         * Resuelve un Team a partir de un valor de ACF Post Object.
-         * Acepta: WP_Post | ID | array (p.ej., si tuviera "multiple" y quieres el primero).
+         * Resuelve un usuario a partir de un valor ACF (User ID | WP_User | array).
+         * Retorna WP_User o null.
          */
-        if (!function_exists('hnh_resolve_team_post')) {
-            function hnh_resolve_team_post($val)
+        if (!function_exists('hnh_resolve_user')) {
+            function hnh_resolve_user($val): ?WP_User
             {
                 if (empty($val)) return null;
 
                 // Si viene un array (por si algún día activan "Select Multiple")
                 if (is_array($val)) {
-                    // Caso ACF: array de objetos/IDs -> usamos el primero
                     $val = reset($val);
                 }
 
-                $id = null;
-                if (is_object($val)) {
-                    // WP_Post u objeto con ID
-                    $id = isset($val->ID) ? (int)$val->ID : null;
-                } else {
-                    // ID numérico
-                    $id = (int)$val;
-                }
-                if (!$id) return null;
+                $user_id = 0;
 
-                $p = get_post($id);
-                if ($p instanceof WP_Post && $p->post_type === 'team' && $p->post_status === 'publish') {
-                    return $p;
+                if ($val instanceof WP_User) {
+                    $user_id = (int) $val->ID;
+                } elseif (is_object($val) && isset($val->ID)) {
+                    // Por si viene algún objeto con propiedad ID
+                    $user_id = (int) $val->ID;
+                } else {
+                    $user_id = (int) $val;
                 }
-                return null;
+
+                if ($user_id <= 0) return null;
+
+                $u = get_user_by('id', $user_id);
+                return ($u instanceof WP_User) ? $u : null;
             }
         }
 
-        /** 1) Primero intentamos con assigned_to (Post Object). Si está vacío, usamos contact_rep. */
-        $team_post = hnh_resolve_team_post(get_field('assigned_to'));
-        if (!$team_post) {
-            $team_post = hnh_resolve_team_post(get_field('contact_rep'));
+        /** 1) assigned_to (User ID). Si está vacío, usamos contact_rep (User ID). */
+        $user = hnh_resolve_user(get_field('assigned_to'));
+        if (!$user) {
+            $user = hnh_resolve_user(get_field('contact_rep'));
         }
 
-        if ($team_post) :
-            $member_id = (int) $team_post->ID;
+        if ($user) :
+            $user_id  = (int) $user->ID;
 
-            $name     = get_the_title($member_id);
-            $email    = (string) get_field('team_email', $member_id);
-            $phone    = (string) (get_field('team_phone', $member_id) ?: get_field('phone', $member_id));
-            $position = (string) get_field('job_position', $member_id);
+            // Nombre: si antes usabas get_the_title(), ahora sacamos display_name
+            $name     = trim($user->display_name ?: ($user->first_name . ' ' . $user->last_name));
+            if (!$name) $name = $user->user_login;
 
-            // Imagen destacada con fallback
-            $img_url  = get_the_post_thumbnail_url($member_id, 'medium');
+            // ACF en usuarios: pasar "user_{$id}" como segundo parámetro
+            $email    = (string) get_field('team_email', 'user_' . $user_id);
+            $phone    = (string) (get_field('team_phone', 'user_' . $user_id) ?: get_field('phone', 'user_' . $user_id));
+            $position = (string) get_field('job_position', 'user_' . $user_id);
+
+            // Imagen: si tienes un ACF tipo image para el usuario (ej: thumbnail_member / avatar)
+            // Ajusta el nombre del campo si ya tienes uno.
+            $img_url = '';
+            $acf_img = get_field('thumbnail_member', 'user_' . $user_id); // <- cambia si tu campo se llama diferente
+
+            if (is_array($acf_img) && !empty($acf_img['sizes']['medium'])) {
+                $img_url = $acf_img['sizes']['medium'];
+            } elseif (is_string($acf_img) && filter_var($acf_img, FILTER_VALIDATE_URL)) {
+                $img_url = $acf_img;
+            } else {
+                // fallback: avatar WP
+                $img_url = get_avatar_url($user_id, ['size' => 300]);
+            }
+
             if (!$img_url && defined('IMG')) $img_url = IMG . '/face2.png';
+
+            // Link al perfil: si tienes author page o una página /member/{nicename}/
+            // Ajusta según tu routing.
+            $profile_url = get_author_posts_url($user_id); // o home_url('/member/' . $user->user_nicename . '/');
 
             if ($name && ($email || $phone)) : ?>
                 <div class="listing_info-contact" style="margin-bottom:0">
@@ -462,15 +522,18 @@ if ($gallery && is_array($gallery)): ?>
                                 If you would like to enquire further, please contact:
                             </p>
                             <p class="listing_info-contact-title"><?php echo esc_html($name); ?></p>
+
                             <?php if ($position): ?>
                                 <p class="listing_info-contact-subtitle">- <?php echo esc_html($position); ?></p>
                             <?php endif; ?>
+
                             <div>
                                 <?php if ($email): ?>
                                     <p class="listing_info-contact-text">
                                         Email: <span><a href="mailto:<?php echo esc_attr($email); ?>"><?php echo esc_html($email); ?></a></span>
                                     </p>
                                 <?php endif; ?>
+
                                 <?php if ($phone): ?>
                                     <p class="listing_info-contact-text">
                                         Tel: <span><?php echo esc_html($phone); ?></span>
@@ -479,8 +542,9 @@ if ($gallery && is_array($gallery)): ?>
                             </div>
                         </div>
                     </div>
+
                     <div class="listing_info-contact-btn w-100">
-                        <a href="<?php echo esc_url(get_permalink($member_id)); ?>" class="listing_btn-white p14">
+                        <a href="<?php echo esc_url($profile_url); ?>" class="listing_btn-white p14">
                             View Bio
                             <svg xmlns="http://www.w3.org/2000/svg" width="29" height="16" viewBox="0 0 29 16" fill="none">
                                 <path d="M2.5 8H26.5M26.5 8L21.122 2M26.5 8L21.122 14" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -491,6 +555,7 @@ if ($gallery && is_array($gallery)): ?>
             <?php else: ?>
                 <div class="empty-listing_info-contact"></div>
             <?php endif; ?>
+
         <?php else: ?>
             <div class="empty-listing_info-contact"></div>
         <?php endif; ?>
@@ -576,12 +641,17 @@ if ($gallery && is_array($gallery)): ?>
 
         </div>
 
+        <?php $type_of_vehicle = get_field('type_of_vehicle'); ?>
         <?php if ($status && strtolower($status) != 'sold'): ?>
             <div class="insurance insurance_share other_forms_mt">
                 <div class="actions" style="justify-content: flex-start;">
-                    <a href="<?php echo esc_url(home_url('telephone-bid')); ?>?vehicle=<?php echo get_the_ID(); ?>" title="Telephone Bid">Telephone Bid</a>
-                    <a href="<?php echo esc_url(home_url('commision-bid')); ?>?vehicle=<?php echo get_the_ID(); ?>" title="Commision Bid">Commision Bid</a>
-                    <a href="<?php echo esc_url(home_url('request-condition-report')); ?>?vehicle=<?php echo get_the_ID(); ?>" title="Request Condition Report">Request Condition Report</a>
+                    <?php if ($type_of_vehicle == 'auction'): ?>
+                        <a target="_blank" href="<?php echo esc_url(get_permalink(123872)); ?>?vehicle=<?php echo get_the_ID(); ?>" title="Telephone Bid">Telephone Bid</a>
+                        <a target="_blank" href="<?php echo esc_url(get_permalink(123874)); ?>?vehicle=<?php echo get_the_ID(); ?>" title="Commision Bid">Commision Bid</a>
+                        <a target="_blank" href="<?php echo esc_url(get_permalink(123876)); ?>?vehicle=<?php echo get_the_ID(); ?>" title="Request Condition Report">Request Condition Report</a>
+                    <?php else: ?>
+                        <a target="_blank" href="<?php echo esc_url(get_permalink(48)); ?>" title="Contact Us">Contact Us</a>
+                    <?php endif; ?>
                 </div>
             </div>
         <?php endif; ?>
@@ -607,6 +677,83 @@ if ($gallery && is_array($gallery)): ?>
 <?php get_template_part('inc/sections/grid-popup'); ?>
 <?php get_template_part('inc/sections/fullview-popup'); ?>
 
+<style>
+    .listing_grid-item[data-fullview-index] {
+        cursor: pointer;
+    }
+
+    .listing_grid.active .listing_grid-scroll-hint {
+        display: flex;
+    }
+
+    .listing_grid-scroll-hint {
+        display: none;
+        position: fixed;
+        right: 32px;
+        bottom: 32px;
+        z-index: 102;
+        width: 48px;
+        height: 76px;
+        margin: 0;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        padding: 14px;
+        border-radius: 999px;
+        background: rgb(238, 233, 226);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+        transition: opacity 0.3s ease;
+    }
+
+    .listing_grid-scroll-hint .mousey {
+        width: 4px;
+        padding: 12px 18px;
+        height: 42px;
+        border: 2px solid #8C6E47;
+        border-radius: 25px;
+        opacity: 1;
+        box-sizing: content-box;
+    }
+
+    .listing_grid-scroll-hint .scroller {
+        width: 5px;
+        height: 12px;
+        border-radius: 25%;
+        background-color: #8C6E47;
+        animation-name: listing-grid-scroll;
+        animation-duration: 2.2s;
+        animation-timing-function: cubic-bezier(.15, .41, .69, .94);
+        animation-iteration-count: infinite;
+    }
+
+    @keyframes listing-grid-scroll {
+        0% {
+            opacity: 0;
+            transform: translateY(0);
+        }
+
+        10% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        100% {
+            opacity: 0.25;
+            transform: translateY(18px);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .listing_grid-scroll-hint {
+            right: 20px;
+            bottom: 20px;
+            width: 40px;
+            height: 64px;
+            padding: 10px;
+        }
+    }
+</style>
+
 <script src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.2/sharer.min.js"></script>
 <?php get_footer(); ?>
 <script>
@@ -616,6 +763,97 @@ if ($gallery && is_array($gallery)): ?>
             closeOther: true,
             slideSpeed: 150,
             activeIndex: 100
+        });
+
+        const fullView = document.querySelector('.listing_fullview');
+        const grid = document.querySelector('.listing_grid');
+
+        if (!fullView || !grid) {
+            return;
+        }
+
+        function getFullViewSplide() {
+            const root = document.querySelector('.listing_fullview-slide');
+            if (!root) {
+                return null;
+            }
+            return root.splide || null;
+        }
+
+        function whenFullViewSplideReady(callback, attempts = 30) {
+            const splide = getFullViewSplide();
+            if (splide) {
+                callback(splide);
+                return;
+            }
+            if (attempts > 0) {
+                setTimeout(() => whenFullViewSplideReady(callback, attempts - 1), 50);
+            }
+        }
+
+        function normalizeImageUrl(url) {
+            try {
+                const parsed = new URL(url, window.location.href);
+                return parsed.pathname;
+            } catch (e) {
+                return (url || '').split('?')[0];
+            }
+        }
+
+        function findFullViewIndexByImageSrc(src) {
+            const target = normalizeImageUrl(src);
+            const slides = document.querySelectorAll('.listing_fullview-item img');
+
+            for (let i = 0; i < slides.length; i++) {
+                if (normalizeImageUrl(slides[i].src) === target) {
+                    return i;
+                }
+            }
+
+            return 0;
+        }
+
+        function openFullViewAt(slideIndex, clickedSrc) {
+            grid.classList.remove('active');
+            fullView.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            document.body.style.height = '100vh';
+
+            const index = clickedSrc
+                ? findFullViewIndexByImageSrc(clickedSrc)
+                : slideIndex;
+
+            const navigate = () => {
+                whenFullViewSplideReady((splide) => {
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            splide.refresh();
+                            splide.go(index);
+                        });
+                    });
+                });
+            };
+
+            setTimeout(navigate, 50);
+        }
+
+        document.querySelectorAll('.listing_grid-item[data-fullview-index]').forEach((item) => {
+            const openFromGrid = () => {
+                const img = item.querySelector('img');
+                const index = parseInt(item.dataset.fullviewIndex, 10);
+
+                if (!Number.isNaN(index) && img) {
+                    openFullViewAt(index, img.currentSrc || img.src);
+                }
+            };
+
+            item.addEventListener('click', openFromGrid);
+            item.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openFromGrid();
+                }
+            });
         });
     });
 </script>

@@ -1,7 +1,7 @@
 <ul class="social">
     <?php if (!empty(get_option('linkedin'))): ?>
         <li>
-            <a href="<?php echo get_option('linkedin'); ?>" target="_blank">
+            <a href="<?php echo get_option('linkedin'); ?>" target="_blank" title="LinkedIn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 38 38" fill="none">
                     <g clip-path="url(#clip0_2705_12897)">
                         <path d="M19 37.5C29.2173 37.5 37.5 29.2173 37.5 19C37.5 8.78273 29.2173 0.5 19 0.5C8.78273 0.5 0.5 8.78273 0.5 19C0.5 29.2173 8.78273 37.5 19 37.5Z" stroke="#8C6E47" />
@@ -19,7 +19,7 @@
 
     <?php if (!empty(get_option('facebook'))): ?>
         <li>
-            <a href="<?php echo get_option('facebook'); ?>" target="_blank">
+            <a href="<?php echo get_option('facebook'); ?>" target="_blank" title="Facebook">
                 <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 38 38" fill="none">
                     <g clip-path="url(#clip0_2705_12904)">
                         <path d="M19 37.5C29.2173 37.5 37.5 29.2173 37.5 19C37.5 8.78273 29.2173 0.5 19 0.5C8.78273 0.5 0.5 8.78273 0.5 19C0.5 29.2173 8.78273 37.5 19 37.5Z" stroke="#8C6E47" />
@@ -37,7 +37,7 @@
 
     <?php if (!empty(get_option('instagram'))): ?>
         <li>
-            <a href="<?php echo get_option('instagram'); ?>" target="_blank">
+            <a href="<?php echo get_option('instagram'); ?>" target="_blank" title="Instagram">
                 <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 38 38" fill="none">
                     <g clip-path="url(#clip0_2705_12911)">
                         <path d="M19 37.5C29.2173 37.5 37.5 29.2173 37.5 19C37.5 8.78273 29.2173 0.5 19 0.5C8.78273 0.5 0.5 8.78273 0.5 19C0.5 29.2173 8.78273 37.5 19 37.5Z" stroke="#8C6E47" />
@@ -57,7 +57,7 @@
 
     <?php if (!empty(get_option('x'))): ?>
         <li>
-            <a href="<?php echo get_option('x'); ?>" target="_blank">
+            <a href="<?php echo get_option('x'); ?>" target="_blank" title="X">
                 <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 38 38" fill="none">
                     <g clip-path="url(#clip0_2705_12924)">
                         <path d="M19 37.5C29.2173 37.5 37.5 29.2173 37.5 19C37.5 8.78273 29.2173 0.5 19 0.5C8.78273 0.5 0.5 8.78273 0.5 19C0.5 29.2173 8.78273 37.5 19 37.5Z" stroke="#8C6E47" />
@@ -75,7 +75,7 @@
 
     <?php if (!empty(get_option('youtube'))): ?>
         <li>
-            <a href="<?php echo get_option('youtube'); ?>" target="_blank">
+            <a href="<?php echo get_option('youtube'); ?>" target="_blank" title="YouTube">
                 <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 38 38" fill="none">
                     <g clip-path="url(#clip0_2705_12931)">
                         <path d="M19 37.5C29.2173 37.5 37.5 29.2173 37.5 19C37.5 8.78273 29.2173 0.5 19 0.5C8.78273 0.5 0.5 8.78273 0.5 19C0.5 29.2173 8.78273 37.5 19 37.5Z" stroke="#8C6E47" />

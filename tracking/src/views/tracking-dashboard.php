@@ -58,20 +58,22 @@ function hh_tracking_dashboard()
             <table class="form-table" role="presentation">
                 <tbody>
 
-                    <tr>
-                        <th scope="row"><label for="hh_sales_manager_user_id">Sales Manager</label></th>
-                        <td>
-                            <select name="hh_sales_manager_user_id" id="hh_sales_manager_user_id" class="regular-text">
-                                <option value="0">— Select user —</option>
-                                <?php foreach (HH_TEAM_USERS as $u): ?>
-                                    <option value="<?php echo (int) $u->ID; ?>" <?php selected($current_sales_manager, (int) $u->ID); ?>>
-                                        <?php echo esc_html($u->display_name . ' (' . $u->user_login . ')'); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                            <p class="description">This user will receive all new Evaluation Requests by default.</p>
-                        </td>
-                    </tr>
+                    <?php if (NOT_APPEAR): ?>
+                        <tr>
+                            <th scope="row"><label for="hh_sales_manager_user_id">Sales Manager</label></th>
+                            <td>
+                                <select name="hh_sales_manager_user_id" id="hh_sales_manager_user_id" class="regular-text">
+                                    <option value="0">— Select user —</option>
+                                    <?php foreach (HH_TEAM_USERS as $u): ?>
+                                        <option value="<?php echo (int) $u->ID; ?>" <?php selected($current_sales_manager, (int) $u->ID); ?>>
+                                            <?php echo esc_html($u->display_name . ' (' . $u->user_login . ')'); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <p class="description">This user will receive all new Evaluation Requests by default.</p>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
 
                     <tr>
                         <th scope="row"><label for="hh_eval_form_id">Evaluation Requests (Gravity Form)</label></th>

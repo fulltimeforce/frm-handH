@@ -13,8 +13,8 @@ if ($vehicle_brand) {
     $term = get_term($vehicle_brand, 'vehicle_brand');
     if (!is_wp_error($term) && $term) {
         $title = $term->name;
-		
-		 $bannerb_url = get_field('vehicle_brand_banner', 'vehicle_brand_' . $term->term_id);
+
+        $bannerb_url = get_field('vehicle_brand_banner', 'vehicle_brand_' . $term->term_id);
     }
 }
 
@@ -25,12 +25,12 @@ get_centered_banner($bannerb_url, $title);
 $argsVehicle = [
     'post_type'      => 'vehicles',
     'posts_per_page' => 12,
-    'tax_query'      => [
+    'meta_query'     => [
         [
-            'taxonomy' => 'vehicle_brand',
-            'field'    => 'term_id',
-            'terms'    => $vehicle_brand,
-        ],
+            'key'     => 'artist_maker_brand',
+            'value'   => $vehicle_brand,
+            'compare' => '='
+        ]
     ],
 ];
 
@@ -168,12 +168,12 @@ $models = new WP_Query($argsModels);
 <?php endif; ?>
 
 <?php if (!empty(get_field('introductionm_title'))): ?>
-	<section class="vehicle_banner model_introduction">
-		<div class="vehicle_banner-container">
-			<h3><?php echo get_field('introductionm_title'); ?></h3>
-			<p><?php echo get_field('introductionm_text'); ?></p>
-		</div>
-	</section>
+    <section class="vehicle_banner model_introduction">
+        <div class="vehicle_banner-container">
+            <h3><?php echo get_field('introductionm_title'); ?></h3>
+            <p><?php echo get_field('introductionm_text'); ?></p>
+        </div>
+    </section>
 <?php endif; ?>
 
 <?php if (have_rows('frames')): ?>
@@ -218,23 +218,23 @@ $models = new WP_Query($argsModels);
 <?php endif; ?>
 
 <?php if (!empty(get_field('auctionm_title'))): ?>
-<section class="model_section_beige">
-	<div class="vehicle_banner-container">
-		<div class="model_beige_grid">
-			<h3><?php echo get_field('auctionm_title'); ?></h3>
-			<p><?php echo get_field('auctionm_text'); ?></p>
-		</div>
-		<div class="model_line"></div>
-		<div class="model_beige_content">
-			<p><?php echo get_field('auctionm_description'); ?></p>
-			<div class="auction_actions">
-				<ul>
-					<li><?php if($link = get_field('auctionm_button')) echo '<a href="'.esc_url($link['url']).'" target="'.esc_attr($link['target'] ?: '_self').'">'.esc_html($link['title']).'</a>'; ?></li>
-				</ul>
-			</div>
-		</div>
-	</div>
-</section>
+    <section class="model_section_beige">
+        <div class="vehicle_banner-container">
+            <div class="model_beige_grid">
+                <h3><?php echo get_field('auctionm_title'); ?></h3>
+                <p><?php echo get_field('auctionm_text'); ?></p>
+            </div>
+            <div class="model_line"></div>
+            <div class="model_beige_content">
+                <p><?php echo get_field('auctionm_description'); ?></p>
+                <div class="auction_actions">
+                    <ul>
+                        <li><?php if ($link = get_field('auctionm_button')) echo '<a href="' . esc_url($link['url']) . '" target="' . esc_attr($link['target'] ?: '_self') . '">' . esc_html($link['title']) . '</a>'; ?></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
 <?php endif; ?>
 
 <?php if (have_rows('squares')): ?>
@@ -257,23 +257,23 @@ $models = new WP_Query($argsModels);
 <?php endif; ?>
 
 <?php if (!empty(get_field('auctionm2_title'))): ?>
-<section class="model_section2">
-	<div class="vehicle_banner-container">
-		<div class="model_sections2_image" style="background-image:url(<?php echo get_field('auctionm2_background'); ?>)">
-			<h3><?php echo get_field('auctionm2_title'); ?></h3>
-		</div>
-		<div class="model_section2_content">
-			<div>
-				<?php echo get_field('auctionm2_text'); ?>
-			</div>
-			<div class="auction_actions">
-				<ul>
-					<li><?php if($link2 = get_field('auctionm2_button')) echo '<a href="'.esc_url($link2['url']).'" target="'.esc_attr($link2['target'] ?: '_self').'">'.esc_html($link2['title']).'</a>'; ?></li>
-				</ul>
-			</div>
-		</div>
-	</div>
-</section>
+    <section class="model_section2">
+        <div class="vehicle_banner-container">
+            <div class="model_sections2_image" style="background-image:url(<?php echo get_field('auctionm2_background'); ?>)">
+                <h3><?php echo get_field('auctionm2_title'); ?></h3>
+            </div>
+            <div class="model_section2_content">
+                <div>
+                    <?php echo get_field('auctionm2_text'); ?>
+                </div>
+                <div class="auction_actions">
+                    <ul>
+                        <li><?php if ($link2 = get_field('auctionm2_button')) echo '<a href="' . esc_url($link2['url']) . '" target="' . esc_attr($link2['target'] ?: '_self') . '">' . esc_html($link2['title']) . '</a>'; ?></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
 <?php endif; ?>
 
 <?php if (have_rows('frames_2')): ?>
@@ -508,14 +508,23 @@ $models = new WP_Query($argsModels);
 
 <section class="cta">
     <div class="cta_bg">
-        <img src="https://handh-bqha9.projectbeta.co.uk/wp-content/uploads/2025/09/cta-models.jpg" alt="Banner">
+        <img src="https://handh-s3.s3.us-west-2.amazonaws.com/uploads/2025/09/cta-models.jpg" alt="Banner">
     </div>
     <div class="container">
         <div class="cta_content">
             <h2>Trusted auctioneers of classic and collector motorcars and motorcycles since 1993</h2>
             <div class="cta_links">
-                <a href="<?php echo esc_url(home_url('contact')); ?>" alt="Contact Us Now">Contact Us Now</a>
-                <a href="<?php echo esc_url(home_url('upcoming-auctions')); ?>" alt="Upcoming Auctions">Upcoming Auctions</a>
+                <?php if (!empty(get_field('first_link'))): ?>
+                    <a href="<?php echo get_field('first_link')['url'] ?>" alt="<?php echo get_field('first_link')['title'] ?>"><?php echo get_field('first_link')['title'] ?></a>
+                <?php else: ?>
+                    <a href="<?php echo esc_url(get_permalink(48)); ?>" alt="Contact Us Now">Contact Us Now</a>
+                <?php endif; ?>
+
+                <?php if (!empty(get_field('second_link'))): ?>
+                    <a href="<?php echo get_field('second_link')['url'] ?>" alt="<?php echo get_field('second_link')['title'] ?>"><?php echo get_field('second_link')['title'] ?></a>
+                <?php else: ?>
+                    <a href="<?php echo esc_url(get_permalink(50)); ?>" alt="Upcoming Auctions">Upcoming Auctions</a>
+                <?php endif; ?>
             </div>
         </div>
     </div>

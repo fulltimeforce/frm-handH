@@ -30,6 +30,12 @@ class ConditionReportRequestRepository
         return $this->find($condition_request_id);
     }
 
+    public function getAll()
+    {
+        $query = $this->wpdb->get_results("SELECT * FROM {$this->table} ORDER BY created_at DESC");
+        return $query;
+    }
+
     public function find(int $id)
     {
         $query = $this->wpdb->prepare(
@@ -55,6 +61,7 @@ class ConditionReportRequestRepository
             $row->auction_name,
             (int) $row->lot_id,
 
+            $row->lot_name,
             $row->lot_year,
             $row->lot_make,
             $row->lot_model,
@@ -146,5 +153,50 @@ class ConditionReportRequestRepository
 
         if ($updated === false) return false;
         return $updated > 0;
+    }
+
+    public function existsByLotId(int $lotId): bool
+    {
+        if ($lotId <= 0) return false;
+
+        $sql = "SELECT id FROM {$this->table} WHERE lot_id = %d LIMIT 1";
+        $id = $this->wpdb->get_var($this->wpdb->prepare($sql, $lotId));
+
+        return !empty($id);
+    }
+
+    public function updateByLotId(int $lotId, array $data): int
+    {
+        if ($lotId <= 0) return 0;
+
+        $allowed = ['lot_year', 'lot_make', 'lot_model', 'sold', 'sold_price'];
+        $clean = [];
+
+        foreach ($allowed as $k) {
+            if (array_key_exists($k, $data)) {
+                $clean[$k] = $data[$k];
+            }
+        }
+
+        if (empty($clean)) return 0;
+
+        // updated_at si existe
+        $clean['updated_at'] = current_time('mysql');
+
+        $setParts = [];
+        $values = [];
+
+        foreach ($clean as $k => $v) {
+            $setParts[] = "{$k} = " . ($k === 'sold' ? "%d" : "%s");
+            $values[] = $v;
+        }
+
+        $sql = "UPDATE {$this->table} SET " . implode(', ', $setParts) . " WHERE lot_id = %d";
+        $values[] = $lotId;
+
+        $prepared = $this->wpdb->prepare($sql, $values);
+        $result = $this->wpdb->query($prepared);
+
+        return is_numeric($result) ? (int) $result : 0;
     }
 }

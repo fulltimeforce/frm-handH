@@ -68,27 +68,31 @@
 }
 
 .header {
-    position: fixed;
-    z-index: 100;
-    top: 0;
-    left: 0;
-    background: rgba($color: white, $alpha: 0.2);
-    backdrop-filter: blur(20px);
 
-    @media (min-width: v.$tv) {
-        padding-block: m.px-to-vw(30px);
-        padding-inline: m.px-to-vw(180px);
-    }
+	&:not(.notfixed){
+    	position: fixed;
+    	z-index: 100;
+    	top: 0;
+    	left: 0;
+    	background: rgba($color: white, $alpha: 0.2);
+    	backdrop-filter: blur(20px);
 
-    @media (max-width: v.$tv) {
-        padding-block: 20px;
-        padding-inline: 7%;
-    }
+    	@media (min-width: v.$tv) {
+        	padding-block: m.px-to-vw(30px);
+        	padding-inline: m.px-to-vw(180px);
+    	}
 
-    @include m.desktop {
-        padding-block: 15px;
-        padding-inline: 4%;
-    }
+    	@media (max-width: v.$tv) {
+        	padding-block: 20px;
+        	padding-inline: 7%;
+    	}
+
+    	@include m.desktop {
+        	padding-block: 15px;
+        	padding-inline: 4%;
+    	}
+        
+	}
 
     &.white_bg {
         background: white;

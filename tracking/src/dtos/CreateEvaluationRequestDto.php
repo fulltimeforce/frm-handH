@@ -10,6 +10,7 @@ class CreateEvaluationRequestDto extends BaseDto
     protected int $assigned_user_id;
 
     protected int $lot_id;
+    protected ?string $lot_name;
     protected ?string $lot_year;
     protected ?string $lot_make;
     protected ?string $lot_model;
@@ -19,7 +20,6 @@ class CreateEvaluationRequestDto extends BaseDto
     protected ?string $not_consigned_reason;
     protected ?int $recommended_auction_id;
 
-    protected ?int $consigned_id;
     protected ?int $sold;
     protected ?float $sold_price;
 
@@ -31,6 +31,7 @@ class CreateEvaluationRequestDto extends BaseDto
         string $status,
         int $assigned_user_id,
         int $lot_id,
+        ?string $lot_name = null,
         ?string $lot_year = null,
         ?string $lot_make = null,
         ?string $lot_model = null,
@@ -38,7 +39,6 @@ class CreateEvaluationRequestDto extends BaseDto
         ?float $lot_valuation = null,
         ?string $not_consigned_reason = null,
         ?int $recommended_auction_id = null,
-        ?int $consigned_id = null,
         ?int $sold = null,
         ?float $sold_price = null,
         ?string $updated_at = null
@@ -49,6 +49,7 @@ class CreateEvaluationRequestDto extends BaseDto
         $this->assigned_user_id = $assigned_user_id;
 
         $this->lot_id = $lot_id;
+        $this->lot_name = $lot_name;
         $this->lot_year = $lot_year;
         $this->lot_make = $lot_make;
         $this->lot_model = $lot_model;
@@ -58,7 +59,6 @@ class CreateEvaluationRequestDto extends BaseDto
         $this->not_consigned_reason = $not_consigned_reason;
         $this->recommended_auction_id = $recommended_auction_id;
 
-        $this->consigned_id = $consigned_id;
         $this->sold = $sold;
         $this->sold_price = $sold_price;
 

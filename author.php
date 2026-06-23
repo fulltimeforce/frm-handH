@@ -92,12 +92,14 @@ if ($email == 'contact@handh.com') {
                         </div>
                     <?php endif; ?>
 
-                    <div class="single_team_back">
-                        <a class="link_btn" href="<?php echo esc_url(home_url('meet-the-team')); ?>">
-                            <span>Meet The Team</span>
-                            <img src="<?php echo IMG; ?>/arrow.svg">
-                        </a>
-                    </div>
+                    <?php if(!empty(get_field('page_button'))): ?>
+                        <div class="single_team_back">
+                            <a class="link_btn" href="<?php echo get_field('page_button'); ?>">
+                                <span>Meet The Team</span>
+                                <img src="<?php echo IMG; ?>/arrow.svg">
+                            </a>
+                        </div>
+                    <?php endif; ?>
 
                     <?php if ($team_achievements && !empty($team_achievements)): ?>
                         <div class="single_team_achievements">

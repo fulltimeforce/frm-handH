@@ -10,6 +10,7 @@ get_banner('Homepage / About / FAQs', get_the_post_thumbnail_url(get_the_ID(), '
 $title = get_field('title_faq');
 $description = get_field('description_faq');
 $link = get_field('link_faq');
+$link_text = get_field('link_careers_text');
 
 ?>
 
@@ -24,10 +25,10 @@ $link = get_field('link_faq');
                     <?php echo $description; ?>
                 </div>
 
-                <?php if (!empty($link)): ?>
+                <?php if (!empty($link) && !empty($link_text)): ?>
                     <div class="actions">
-                        <a href="<?php echo $link['url']; ?>" alt="<?php echo $link['title']; ?>" class="permalink_border">
-                            <?php echo $link['title']; ?>
+                        <a href="<?php echo $link; ?>" alt="<?php echo $link_text; ?>" class="permalink_border">
+                            <?php echo $link_text; ?>
                             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
                                 <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
                             </svg>
@@ -47,7 +48,8 @@ $link = get_field('link_faq');
                         <li>
                             <div>
                                 <h3>
-                                    <?php echo str_pad($count, 2, '0', STR_PAD_LEFT) . '. ' . get_sub_field('question'); $count++; ?>
+                                    <?php echo str_pad($count, 2, '0', STR_PAD_LEFT) . '. ' . get_sub_field('question');
+                                    $count++; ?>
                                 </h3>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
                                     <path d="M0 8.99943L18 8.99943M8.99969 0L8.99969 18" stroke="#8C6E47" stroke-width="2" />

@@ -14,6 +14,7 @@ class CreateConditionReportRequestDto extends BaseDto
     protected ?string $auction_name;
     protected int $lot_id;
 
+    protected ?string $lot_name;
     protected ?string $lot_year;
     protected ?string $lot_make;
     protected ?string $lot_model;
@@ -34,6 +35,7 @@ class CreateConditionReportRequestDto extends BaseDto
         ?string $auction_name = null,
         int $lot_id = 0,
 
+        ?string $lot_name = null,
         ?string $lot_year = null,
         ?string $lot_make = null,
         ?string $lot_model = null,
@@ -53,6 +55,7 @@ class CreateConditionReportRequestDto extends BaseDto
         $this->auction_name = $auction_name;
         $this->lot_id = $lot_id;
 
+        $this->lot_name = $lot_name;
         $this->lot_year = $lot_year;
         $this->lot_make = $lot_make;
         $this->lot_model = $lot_model;

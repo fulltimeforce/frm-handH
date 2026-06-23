@@ -1,9 +1,18 @@
 <?php
+
+const HNH_MODEL_POST_TYPE = 'model'; // CPT Models (para el Post Object model_vehicle)
+
 // ============ SETTINGS (fácil de cambiar si lo necesitas) =============
 const HNH_IMPORT_POST_TYPE   = 'vehicles';
 const HNH_TAX_CATEGORY       = 'vehicle_category'; // ya no se usa en el import, pero lo dejo por si acaso
 const HNH_TAX_BRAND          = 'vehicle_brand';    // taxonomía con las "Makes"
+const HNH_MAKE_POST_TYPE     = 'make';
 const HNH_MENU_PARENT        = 'edit.php?post_type=vehicles'; // Colgar el import del menú "Vehicles"
+
+// OpenAI
+const HNH_OPENAI_API_KEY = 'OPEN_AI_API'; // mejor si lo pones en wp-config.php
+const HNH_OPENAI_MODEL   = 'gpt-4.1-mini';        // buen balance costo/calidad
+const HNH_OPENAI_ENABLE  = true;                 // apaga/enciende rápido
 
 // CPT que guarda a los miembros del equipo (para el Post Object "assigned_to" / "contact_rep")
 const HNH_TEAM_POST_TYPE     = 'team';
@@ -11,6 +20,8 @@ const HNH_TEAM_POST_TYPE     = 'team';
 // *** MODO ESPECIAL: SOLO ACTUALIZAR FECHAS POR TÍTULO ***
 const HNH_UPDATE_DATES_ONLY  = false; // ← pon true si quieres el modo solo fechas
 // ======================================================================
+
+const HNH_AI_PROMPT_VERSION = 'v3';
 
 // === Admin Page: Vehicles → Import Vehicles
 add_action('admin_menu', function () {
@@ -27,6 +38,26 @@ add_action('admin_menu', function () {
 function vehicles_import_render_page()
 {
 ?>
+    <style>
+        .hnh-import-loader {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .35);
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hnh-import-loader__box {
+            background: #fff;
+            border-radius: 10px;
+            padding: 18px 22px;
+            min-width: 260px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .2);
+        }
+    </style>
     <div class="wrap">
         <h1>Import Vehicles</h1>
         <p>Upload a <strong>.xlsx</strong> (from the CRM) or <strong>.csv</strong> (comma-separated). The first row must be the header.</p>
@@ -39,12 +70,37 @@ function vehicles_import_render_page()
             <input type="file" name="vehicles_file" accept=".xlsx,.csv" required />
             <p><button class="button button-primary">Import</button></p>
         </form>
+        <div id="hnh-import-loader" class="hnh-import-loader" style="display:none;">
+            <div class="hnh-import-loader__box">
+                <span class="spinner is-active" style="float:none; margin:0 0 12px 0;"></span>
+                <div style="font-size:14px; font-weight:600;">Importing vehicles…</div>
+                <div style="font-size:12px; opacity:.8; margin-top:6px;">Please don’t close this tab.</div>
+            </div>
+        </div>
         <?php
         if (!empty($_FILES['vehicles_file']) && isset($_POST['vehicles_import_nonce_f']) && wp_verify_nonce($_POST['vehicles_import_nonce_f'], 'vehicles_import_nonce')) {
             vehicles_handle_import($_FILES['vehicles_file']);
         }
         ?>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('.wrap form[enctype="multipart/form-data"]');
+            const loader = document.getElementById('hnh-import-loader');
+            if (!form || !loader) return;
+
+            form.addEventListener('submit', function() {
+                loader.style.display = 'flex';
+
+                // bloquea el botón para evitar doble submit
+                const btn = form.querySelector('button.button-primary');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.textContent = 'Importing...';
+                }
+            });
+        });
+    </script>
 <?php
 }
 
@@ -177,8 +233,8 @@ function vehicles_handle_import($file)
 
     $seen_stocks_in_file = [];
 
-    // caché para CPT team
-    $team_cache = [];
+    // caché para users
+    $user_cache = [];
 
     for ($i = 1; $i < count($rows); $i++) {
         $row = $rows[$i];
@@ -227,14 +283,14 @@ function vehicles_handle_import($file)
 
         if ($existing_id) {
             // ==== UPDATE EXISTENTE ====
-            $post_id = $existing_id;
+            $post_id = (int) $existing_id;
 
             wp_update_post([
                 'ID'           => $post_id,
                 'post_title'   => $title_value,
                 'post_content' => $post_content,
                 // no toco el status para no revivir borrados/trash
-            ]);
+            ], true);
 
             $updated++;
         } else {
@@ -246,32 +302,86 @@ function vehicles_handle_import($file)
                 'post_content' => $post_content,
             ], true);
 
-            if (is_wp_error($post_id)) {
+            if (is_wp_error($post_id) || !$post_id) {
                 $skipped_empty++;
                 continue;
             }
 
+            $post_id = (int) $post_id;
             $created++;
         }
 
         // ===== Extraer Registration No / Chassis No / MOT desde Description =====
-        $desc_triplet = vehicles_extract_from_description($raw_desc);
-        update_field('registration_no', $desc_triplet['registration_no'], $post_id);
-        update_field('chassis_no',      $desc_triplet['chassis_no'],      $post_id);
+        $desc_for_ai  = ($col_description !== -1) ? (string)$row[$col_description] : '';
+        $source_text  = trim($title_value . "\n\n" . $desc_for_ai);
+        $fields = vehicles_extract_fields_ai($source_text);
 
-        if (!empty($desc_triplet['mot'])) {
-            $mot_val = vehicles_validate_mot($desc_triplet['mot']);
+        $model_variant = vehicles_extract_model_and_variant_from_title($title_value);
+
+        if (empty($fields['model_name'])) {
+            $fields['model_name'] = $model_variant['model'];
+        }
+
+        if (empty($fields['variant_name'])) {
+            $fields['variant_name'] = $model_variant['variant'];
+        }
+
+        if (empty($fields['make_name'])) {
+            $fields['make_name'] = vehicles_extract_make_from_title($source_text);
+        }
+
+        // registration / chassis
+        hnh_update_acf($post_id, 'registration_no', $fields['registration_no']);
+        hnh_update_acf($post_id, 'chassis_no', $fields['chassis_no']);
+
+        // NEW: vrn/vin mirrors
+        hnh_update_acf($post_id, 'vrn', $fields['registration_no']);
+        hnh_update_acf($post_id, 'vin', $fields['chassis_no']);
+
+        // MOT (con tu validador)
+        if (!empty($fields['mot'])) {
+            $mot_val = vehicles_validate_mot($fields['mot']);
             if ($mot_val !== '') {
-                update_field('mot', $mot_val, $post_id);
+                hnh_update_acf($post_id, 'mot', $mot_val);
             }
         }
+
+        // NEW: Year (solo si es válido)
+        if (!empty($fields['year'])) {
+            hnh_update_acf($post_id, 'year_vehicle', (string)$fields['year']);
+        } else {
+            // opcional: si quieres limpiar cuando no haya año
+            // update_field('year_vehicle', '', $post_id);
+        }
+
+        // NEW: Model (Post Object -> ID)
+        if (!empty($fields['model_name'])) {
+            $model_id = vehicles_get_or_create_model_post($fields['model_name']);
+            if ($model_id) {
+                hnh_update_acf($post_id, 'model_vehicle', (int)$model_id);
+            }
+        } else {
+            // opcional: limpiar si no se detectó modelo
+            // update_field('model_vehicle', null, $post_id);
+        }
+
+        // NEW: Variant (texto simple)
+        if (!empty($fields['variant_name'])) {
+            hnh_update_acf($post_id, 'variant_name', (string)$fields['variant_name']);
+        } else {
+            // opcional: limpiar si no hay variant
+            // update_field('variant_vehicle', '', $post_id);
+        }
+
         // =====================================================================
 
         // --- ACF: Title (main) + Description ---
         update_field('title_main', $title_value, $post_id);
         if ($col_description !== -1) {
-            // guardamos el HTML / texto EXACTO del Excel en el ACF
-            update_field('description', (string)$row[$col_description], $post_id);
+            // guardamos el contenido formateado con la función
+            $desc_html = (string)$row[$col_description];
+            $desc_html = vehicles_convert_registration_block_to_ul($desc_html);
+            update_field('description', $desc_html, $post_id);
         }
 
         // --- CAMPOS ACF SEGÚN CABECERAS PRESENTES ---
@@ -289,7 +399,18 @@ function vehicles_handle_import($file)
         }
 
         if ($col_auction_number !== -1) {
-            update_field('auction_number_latest', (string)$row[$col_auction_number], $post_id);
+            $sale_number_raw = trim((string)$row[$col_auction_number]);
+
+            if ($sale_number_raw !== '') {
+                $auction_id = vehicles_get_auction_id_by_sale_number($sale_number_raw);
+
+                if ($auction_id) {
+                    // ACF Post Object → guardar ID
+                    hnh_update_acf($post_id, 'auction_number_latest', (int)$auction_id);
+                } else {
+                    update_field('auction_number_latest', null, $post_id);
+                }
+            }
         }
 
         if ($col_lot_number !== -1) {
@@ -300,13 +421,13 @@ function vehicles_handle_import($file)
             update_field('status', (string)$row[$col_status], $post_id);
         }
 
-        // --- CONTACT REP → Post Object (CPT team) ---
+        // --- CONTACT REP → USER (WP Users) ---
         if ($col_contact_rep !== -1) {
             $contact_raw = trim((string)$row[$col_contact_rep]);
             if ($contact_raw !== '') {
-                $team_id = vehicles_get_team_id_by_display($contact_raw, $team_cache);
-                if ($team_id) {
-                    update_field('contact_rep', $team_id, $post_id);
+                $user_id = vehicles_get_user_id_by_display($contact_raw, $user_cache);
+                if ($user_id) {
+                    update_field('contact_rep', (int)$user_id, $post_id);
                 }
             }
         }
@@ -315,25 +436,47 @@ function vehicles_handle_import($file)
             update_field('sold_price', (string)$row[$col_sold_price], $post_id);
         }
 
-        // --- ARTIST / MAKER / BRAND → TAXONOMY vehicle_brand + ACF (ID del término) ---
+        // --- ARTIST / MAKER / BRAND → CPT "make" + ACF (Post Object ID) ---
         if ($col_artist_brand !== -1) {
-            $brand_raw = trim((string)$row[$col_artist_brand]);
-            if ($brand_raw !== '') {
-                $brand_term_id = vehicles_get_or_create_brand_term($brand_raw);
-                if ($brand_term_id) {
-                    // Guardar ID del término en el ACF
-                    update_field('artist_maker_brand', (int)$brand_term_id, $post_id);
+            $make_raw = trim((string)$row[$col_artist_brand]);
+            if ($make_raw !== '') {
+                $make_id = vehicles_get_or_create_make_post($make_raw);
+                if ($make_id) {
+                    // ACF debe ser Post Object / Relationship que guarde el ID del post "make"
+                    update_field('artist_maker_brand', (int)$make_id, $post_id);
 
-                    // Y asignarlo como taxonomy al vehicle
-                    if (taxonomy_exists(HNH_TAX_BRAND)) {
-                        wp_set_object_terms($post_id, [(int)$brand_term_id], HNH_TAX_BRAND, false);
-                    }
+                    // (Opcional recomendado) guarda también como meta simple para queries rápidas
+                    update_post_meta($post_id, 'make_id', (int)$make_id);
                 }
             }
         }
 
+        // NEW: Make (Post Object -> ID) desde IA/título, SOLO si Excel no trae Artist/Maker/Brand
+        $excel_has_make = ($col_artist_brand !== -1) && (trim((string)$row[$col_artist_brand]) !== '');
+
+        if (!$excel_has_make && !empty($fields['make_name'])) {
+            $make_id = vehicles_get_or_create_make_post($fields['make_name']);
+            if ($make_id) {
+                hnh_update_acf($post_id, 'artist_maker_brand', (int)$make_id);
+                update_post_meta($post_id, 'make_id', (int)$make_id); // opcional
+            }
+        }
+
+        // --- CATEGORY (all levels) → TAXONOMY vehicle_category + ACF ---
         if ($col_category !== -1) {
-            update_field('category_all_levels', (string)$row[$col_category], $post_id);
+            $cat_raw = trim((string)$row[$col_category]);
+
+            // Guardas el texto en ACF como ya lo hacías
+            update_field('category_all_levels', $cat_raw, $post_id);
+
+            // Y además lo asignas como taxonomy (para que salga “marcado”)
+            if ($cat_raw !== '' && taxonomy_exists(HNH_TAX_CATEGORY)) {
+                $cat_term_id = vehicles_get_or_create_category_term($cat_raw);
+
+                if ($cat_term_id) {
+                    wp_set_object_terms($post_id, [(int)$cat_term_id], HNH_TAX_CATEGORY, false);
+                }
+            }
         }
 
         if ($col_estimate_range !== -1) {
@@ -363,13 +506,13 @@ function vehicles_handle_import($file)
         // Siempre guardamos el stock_number porque es obligatorio
         update_field('stock_number', $stock_value, $post_id);
 
-        // --- ASSIGNED TO → Post Object (CPT team) ---
+        // --- ASSIGNED TO → USER (WP Users) ---
         if ($col_assigned_to !== -1) {
             $assigned_raw = trim((string)$row[$col_assigned_to]);
             if ($assigned_raw !== '') {
-                $team_id = vehicles_get_team_id_by_display($assigned_raw, $team_cache);
-                if ($team_id) {
-                    update_field('assigned_to', $team_id, $post_id);
+                $user_id = vehicles_get_user_id_by_display($assigned_raw, $user_cache);
+                if ($user_id) {
+                    update_field('assigned_to', (int)$user_id, $post_id);
                 }
             }
         }
@@ -383,6 +526,20 @@ function vehicles_handle_import($file)
                 update_field('image_url_main_image', $img_url, $post_id);
             }
         }
+
+        clean_post_cache($post_id);
+        wp_cache_delete($post_id, 'post_meta');
+        update_postmeta_cache([$post_id]);
+
+        // Opcional: si ACF tiene cache de valores en tu versión
+        if (function_exists('acf_flush_value_cache')) {
+            acf_flush_value_cache($post_id);
+        }
+
+        // Sync wp_vehicles_search tras guardar todos los campos ACF (save_post corre antes en wp_insert_post)
+        if (class_exists('Vehicles_Search_Sync')) {
+            Vehicles_Search_Sync::force_sync($post_id, 'import');
+        }
     }
 
     echo '<div class="notice notice-success"><p>'
@@ -394,6 +551,81 @@ function vehicles_handle_import($file)
         . '| Skipped (no stock number): ' . intval($skipped_no_stock) . ' '
         . '| Skipped (no title): ' . intval($skipped_no_title)
         . '</p></div>';
+}
+
+/**
+ * Devuelve el ID del CPT "auction" cuyo ACF sale_number coincide.
+ * Retorna 0 si no encuentra.
+ */
+function vehicles_get_auction_id_by_sale_number(string $sale_number): int
+{
+    $sale_number = trim($sale_number);
+    if ($sale_number === '') return 0;
+
+    static $cache = [];
+
+    if (isset($cache[$sale_number])) {
+        return (int)$cache[$sale_number];
+    }
+
+    $q = new WP_Query([
+        'post_type'      => 'auction',
+        'post_status'    => 'any',
+        'posts_per_page' => 1,
+        'fields'         => 'ids',
+        'meta_query'     => [
+            [
+                'key'   => 'sale_number', // ACF field name
+                'value' => $sale_number,
+                'compare' => '=',
+            ],
+        ],
+        'no_found_rows'  => true,
+    ]);
+
+    if (!empty($q->posts)) {
+        return $cache[$sale_number] = (int)$q->posts[0];
+    }
+
+    return $cache[$sale_number] = 0;
+}
+
+function vehicles_extract_make_from_title(string $source_text): string
+{
+    // Intenta usar la PRIMERA línea como título (porque tú armaste "title \n\n desc")
+    $lines = preg_split("~\R~u", trim($source_text));
+    $title = trim((string)($lines[0] ?? ''));
+    if ($title === '') return '';
+
+    // Quita año inicial
+    $t = preg_replace('~^\s*(18|19|20)\d{2}\s+~', '', $title);
+    $t = trim($t);
+    if ($t === '') return '';
+
+    // Makes de 2 palabras (ajusta a tu data)
+    $two_word_makes = [
+        'aston martin',
+        'alfa romeo',
+        'land rover',
+        'rolls royce',
+        'mercedes benz',
+        'mercedes-benz',
+        'mini cooper',
+    ];
+
+    $lower = strtolower($t);
+    foreach ($two_word_makes as $mk) {
+        if (strpos($lower, $mk . ' ') === 0) {
+            return ucwords($mk); // "Aston Martin"
+        }
+    }
+
+    // Fallback: primera palabra
+    if (preg_match('~^([^\s]+)~', $t, $m)) {
+        return trim($m[1]);
+    }
+
+    return '';
 }
 
 /**
@@ -733,6 +965,56 @@ function vehicles_get_or_create_brand_term($label)
 }
 
 /**
+ * Crea o devuelve un post en el CPT "make" usando el nombre EXACTO.
+ * Devuelve 0 si falla.
+ */
+function vehicles_get_or_create_make_post($label)
+{
+    $name = trim((string)$label);
+    if ($name === '') return 0;
+
+    $pt = defined('HNH_MAKE_POST_TYPE') ? HNH_MAKE_POST_TYPE : 'make';
+
+    static $cache = [];
+    $key = strtolower($name);
+    if (isset($cache[$key])) return (int)$cache[$key];
+
+    // 1) Buscar por título exacto (case-insensitive) dentro del CPT make
+    $existing = get_page_by_title($name, OBJECT, $pt);
+    if ($existing && !is_wp_error($existing)) {
+        return $cache[$key] = (int)$existing->ID;
+    }
+
+    // 2) Buscar por slug
+    $slug = sanitize_title($name);
+    $q = new WP_Query([
+        'post_type'      => $pt,
+        'name'           => $slug,
+        'post_status'    => 'any',
+        'posts_per_page' => 1,
+        'fields'         => 'ids',
+        'no_found_rows'  => true,
+    ]);
+    if (!empty($q->posts)) {
+        return $cache[$key] = (int)$q->posts[0];
+    }
+
+    // 3) Crear el make
+    $new_id = wp_insert_post([
+        'post_type'   => $pt,
+        'post_status' => 'publish',
+        'post_title'  => $name,
+        'post_name'   => $slug,
+    ], true);
+
+    if (is_wp_error($new_id) || !$new_id) {
+        return $cache[$key] = 0;
+    }
+
+    return $cache[$key] = (int)$new_id;
+}
+
+/**
  * XLSX reader (preserves gaps)
  */
 function vehicles_include_simplexlsx()
@@ -839,105 +1121,383 @@ function vehicles_include_simplexlsx()
 }
 
 /**
+ * Extrae: registration_no, chassis_no, mot, year, model_name
+ * - Primero intenta regex (barato) para year + los campos clásicos.
+ * - Si IA está activa, la usa como mejora/fallback para year/model.
+ */
+function vehicles_extract_fields_ai(string $source_text): array
+{
+    $source_text = trim($source_text);
+
+    // Fallback “barato”: usa tu extractor actual (reg/chassis/mot) sobre el texto
+    $fallback_triplet = vehicles_extract_from_description($source_text);
+
+    // Año por regex primero
+    $year = vehicles_extract_year_from_text($source_text);
+
+    $make_guess = vehicles_extract_make_from_title($source_text);
+
+    $fallback = [
+        'registration_no' => $fallback_triplet['registration_no'] ?? '',
+        'chassis_no'      => $fallback_triplet['chassis_no'] ?? '',
+        'mot'             => $fallback_triplet['mot'] ?? '',
+        'year'            => $year,        // puede ser '' si no hay
+        'model_name'      => '',           // por regex no lo sacamos
+        'variant_name'    => '',
+        'make_name'          => $make_guess
+    ];
+
+    // Si IA apagada o sin API key -> devuelve fallback
+    if (!defined('HNH_OPENAI_ENABLE') || !HNH_OPENAI_ENABLE) return $fallback;
+    $apiKey = defined('HNH_OPENAI_API_KEY') ? HNH_OPENAI_API_KEY : '';
+    if (!$apiKey) return $fallback;
+    if ($source_text === '') return $fallback;
+
+    // Cache por hash (incluye year/model)
+    $hash = md5(HNH_AI_PROMPT_VERSION . '|' . $source_text);
+    $cache_key = 'veh_ai_fields_' . $hash;
+
+    $cached = get_transient($cache_key);
+    if (
+        is_array($cached)
+        && array_key_exists('registration_no', $cached)
+        && array_key_exists('chassis_no', $cached)
+        && array_key_exists('mot', $cached)
+        && array_key_exists('year', $cached)
+        && array_key_exists('model_name', $cached)
+        && array_key_exists('variant_name', $cached)
+        && array_key_exists('make_name', $cached)
+    ) {
+        // valida year por si acaso
+        $cached['year'] = vehicles_validate_year($cached['year']);
+        return $cached;
+    }
+
+    $result = vehicles_openai_extract_fields($source_text, $apiKey);
+    if (!is_array($result)) return $fallback;
+
+    $out = [
+        'registration_no' => trim((string)($result['registration_no'] ?? '')),
+        'chassis_no'      => trim((string)($result['chassis_no'] ?? '')),
+        'mot'             => trim((string)($result['mot'] ?? '')),
+        'year'            => trim((string)($result['year'] ?? '')),
+        'model_name'      => trim((string)($result['model_name'] ?? '')),
+        'variant_name'    => trim((string)($result['variant_name'] ?? '')),
+        'make_name'       => trim((string)($result['make_name'] ?? '')),
+    ];
+
+    // Si IA no devolvió nada útil, fallback
+    $all_empty = ($out['registration_no'] === '' && $out['chassis_no'] === '' && $out['mot'] === '' && $out['year'] === '' && $out['model_name'] === '' && $out['variant_name'] === '' && $out['make_name'] === '');
+    if ($all_empty) return $fallback;
+
+    // Normalizaciones/validaciones
+    $out['year'] = vehicles_validate_year($out['year']); // '' si no es válido
+
+    // Si regex ya encontró año y la IA devolvió otro inválido o vacío, conserva el de regex
+    if ($fallback['year'] !== '' && $out['year'] === '') {
+        $out['year'] = $fallback['year'];
+    }
+
+    // Si IA no encuentra reg/chassis/mot, conserva fallback
+    if ($out['registration_no'] === '') $out['registration_no'] = $fallback['registration_no'];
+    if ($out['chassis_no'] === '')      $out['chassis_no']      = $fallback['chassis_no'];
+    if ($out['mot'] === '')             $out['mot']             = $fallback['mot'];
+    if ($out['make_name'] === '')         $out['make_name']         = $fallback['make_name'];
+    if ($out['variant_name'] === '') $out['variant_name'] = $fallback['variant_name'];
+
+    set_transient($cache_key, $out, 30 * DAY_IN_SECONDS);
+
+    return $out;
+}
+
+function vehicles_extract_year_from_text(string $text): string
+{
+    $text = trim($text);
+    if ($text === '') return '';
+
+    // Busca años de 4 dígitos (evita 192 / 202 / 3)
+    if (preg_match_all('~\b(18\d{2}|19\d{2}|20\d{2}|2100)\b~', $text, $m)) {
+        // Si hay varios, normalmente el primero del título/desc suele ser el año del vehículo.
+        foreach ($m[1] as $candidate) {
+            $valid = vehicles_validate_year($candidate);
+            if ($valid !== '') return $valid;
+        }
+    }
+    return '';
+}
+
+function vehicles_validate_year($raw): string
+{
+    $s = trim((string)$raw);
+    if ($s === '') return '';
+
+    // solo 4 dígitos
+    if (!preg_match('~^\d{4}$~', $s)) return '';
+
+    $y = (int)$s;
+
+    // rango razonable de “año de vehículo”
+    // (primer coche ~1886; ajusta si quieres)
+    if ($y < 1800 || $y > 2100) return '';
+
+    return (string)$y;
+}
+
+function vehicles_openai_extract_fields(string $sourceText, string $apiKey): ?array
+{
+    $model = defined('HNH_OPENAI_MODEL') ? HNH_OPENAI_MODEL : 'gpt-4.1-mini';
+
+    $prompt = "Extract these fields from the vehicle TEXT. Return ONLY valid JSON with keys:
+registration_no, chassis_no, mot, year, make_name, model_name, variant_name.
+
+IMPORTANT CONTEXT:
+The input TEXT contains the vehicle Title first, followed by the Description (HTML).
+
+Rules:
+- If a field is not present, return an empty string.
+- registration_no: value after labels like 'Registration No', 'Registration Number', 'VRN'.
+- chassis_no: value after labels like 'Chassis No', 'Chassis Number', OR 'Frame No', OR 'VIN'. If multiple identifiers exist, prefer the one that represents the chassis identifier.
+- mot: return either 'Exempt' or 'Month YYYY' (e.g., 'September 2027') if possible; otherwise return an empty string.
+- year: must be a 4-digit year such as 1954, 2007, or 2019. Reject numbers with 1–3 digits (e.g., 192, 202, 3) and return an empty string if not a real year.
+
+- make_name:
+  - PRIMARY SOURCE: the vehicle Title.
+  - The Title usually follows the structure: \"{YEAR} {MAKE} {MODEL}\".
+  - To extract the make_name from the title:
+    1) Remove the leading 4-digit year.
+    2) The next word(s) represent the make/brand.
+  - IMPORTANT: some makes are 2 words (examples: \"Aston Martin\", \"Alfa Romeo\", \"Land Rover\", \"Rolls Royce\", \"Mercedes Benz\", \"Mercedes-Benz\").
+  - If the make is clearly present in the Description as a brand/make, you may use it as SECONDARY SOURCE.
+  - Do NOT guess or invent a make. If unclear, return empty string.
+
+- model_name:
+  - PRIMARY SOURCE: the vehicle Title.
+  - The Title usually follows the structure: \"{YEAR} {MAKE} {MODEL} {VARIANT}\".
+
+  STEPS TO DETERMINE model_name:
+  1) Remove the leading 4-digit year.
+  2) Remove the make/brand (which may consist of one or two words).
+  3) From the remaining text, identify ONLY the core model designation.
+
+  The model designation is usually a short identifier such as:
+  \"DB6\", \"XK120\", \"VBB1\", \"Li150\", \"450\", \"911\", \"E-Type\", or a short numeric combination like \"Speed 20\".
+
+  IMPORTANT RULES:
+  - model_name MUST be the shortest model identifier possible.
+  - model_name MUST NOT include trim, series, coachbuilder, or body style.
+  - Words such as \"Series\", \"Tourer\", \"Spider\", \"Coupe\", \"GT\", \"Scrambler\", \"Vanden\", \"Plas\", etc. are NOT part of the model and belong to the variant.
+  - model_name should normally be 1–2 tokens (e.g. \"450\", \"DB6\", \"Speed 20\", \"Li150\").
+
+  Examples:
+  \"1965 Lambretta Li150 Series 3\" → model_name = \"Li150\"
+  \"1934 Alvis Speed 20 SC Vanden Plas Tourer\" → model_name = \"Speed 20\"
+  \"1970 Ducati 450 Scrambler\" → model_name = \"450\"
+
+- variant_name:
+  - PRIMARY SOURCE: the vehicle Title.
+
+  STEPS TO DETERMINE variant_name:
+  1) Extract the model_name first.
+  2) Remove the year, make, and model_name from the Title.
+  3) The remaining words are the variant_name.
+
+  Examples:
+  \"1965 Lambretta Li150 Series 3\"
+  → model_name = \"Li150\"
+  → variant_name = \"Series 3\"
+
+  \"1934 Alvis Speed 20 SC Vanden Plas Tourer\"
+  → model_name = \"Speed 20\"
+  → variant_name = \"SC Vanden Plas Tourer\"
+
+  \"1970 Ducati 450 Scrambler\"
+  → model_name = \"450\"
+  → variant_name = \"Scrambler\"
+
+  If nothing remains after removing the model_name, return an empty string.
+
+  IMPORTANT:
+  - variant_name MUST NOT contain the model_name.
+  - variant_name MUST NOT repeat the model_name.
+  - If the remaining text equals model_name, return an empty string.
+
+- Return JSON ONLY. No extra keys, no markdown, no explanation.
+
+TEXT:
+" . $sourceText;
+
+    $body = [
+        'model' => $model,
+        'input' => $prompt,
+    ];
+
+    $res = wp_remote_post('https://api.openai.com/v1/responses', [
+        'timeout' => 60,
+        'headers' => [
+            'Content-Type'  => 'application/json',
+            'Authorization' => 'Bearer ' . $apiKey,
+        ],
+        'body' => wp_json_encode($body),
+    ]);
+
+    if (is_wp_error($res)) return null;
+
+    $code = wp_remote_retrieve_response_code($res);
+    $raw  = wp_remote_retrieve_body($res);
+    if ($code < 200 || $code >= 300 || !$raw) return null;
+
+    $json = json_decode($raw, true);
+    if (!is_array($json)) return null;
+
+    $text = '';
+    if (!empty($json['output_text']) && is_string($json['output_text'])) {
+        $text = $json['output_text'];
+    } elseif (!empty($json['output']) && is_array($json['output'])) {
+        foreach ($json['output'] as $item) {
+            if (!empty($item['content']) && is_array($item['content'])) {
+                foreach ($item['content'] as $c) {
+                    if (($c['type'] ?? '') === 'output_text' && !empty($c['text'])) {
+                        $text .= $c['text'];
+                    }
+                }
+            }
+        }
+    }
+
+    $text = trim($text);
+    if ($text === '') return null;
+
+    error_log('[VEHICLES AI RAW TEXT] ' . $text);
+
+    $text = vehicles_extract_json_object($text);
+    if ($text === '') return null;
+
+    $data = json_decode($text, true);
+    if (!is_array($data)) return null;
+
+    return $data;
+}
+
+function vehicles_get_or_create_model_post(string $label): int
+{
+    $name = trim($label);
+    if ($name === '') return 0;
+
+    $pt = defined('HNH_MODEL_POST_TYPE') ? HNH_MODEL_POST_TYPE : 'model';
+
+    static $cache = [];
+    $key = strtolower($name);
+    if (isset($cache[$key])) return (int)$cache[$key];
+
+    // 1) Buscar por título exacto
+    $existing = get_page_by_title($name, OBJECT, $pt);
+    if ($existing && !is_wp_error($existing)) {
+        return $cache[$key] = (int)$existing->ID;
+    }
+
+    // 2) Buscar por slug
+    $slug = sanitize_title($name);
+    $q = new WP_Query([
+        'post_type'      => $pt,
+        'name'           => $slug,
+        'post_status'    => 'any',
+        'posts_per_page' => 1,
+        'fields'         => 'ids',
+        'no_found_rows'  => true,
+    ]);
+    if (!empty($q->posts)) {
+        return $cache[$key] = (int)$q->posts[0];
+    }
+
+    // 3) Crear
+    $new_id = wp_insert_post([
+        'post_type'   => $pt,
+        'post_status' => 'publish',
+        'post_title'  => $name,
+        'post_name'   => $slug,
+    ], true);
+
+    if (is_wp_error($new_id) || !$new_id) {
+        return $cache[$key] = 0;
+    }
+
+    return $cache[$key] = (int)$new_id;
+}
+
+function hnh_update_acf($post_id, $field_name, $value)
+{
+    if (!function_exists('acf_get_field')) {
+        // si ACF no está cargado por alguna razón
+        update_post_meta($post_id, $field_name, $value);
+        return;
+    }
+
+    // intenta obtener el field object (así consigues el field_key)
+    $field = acf_get_field($field_name);
+
+    if ($field && !empty($field['key'])) {
+        // usa field key (más seguro)
+        update_field($field['key'], $value, $post_id);
+    } else {
+        // fallback
+        update_field($field_name, $value, $post_id);
+    }
+}
+
+/**
  * Pretty-format CRM raw description into HTML for WP editor (bold labels + bullets → list + paragraphs).
  */
 function vehicles_format_description($raw)
 {
     $s = trim((string)$raw);
     if ($s === '') return '';
+
+    // Normaliza saltos de línea
     $s = str_replace(["\r\n", "\r"], "\n", $s);
 
+    // Lista de etiquetas que queremos resaltar
     $labels = ['Registration No', 'Frame No', 'Chassis No', 'Engine No', 'MOT', 'VIN', 'Mileage', 'Color', 'Colour'];
+
+    // Resalta etiquetas con <strong>
     foreach ($labels as $label) {
         $pattern = '~(?<=^|\n|\A)(' . preg_quote($label, '~') . '):\s*~i';
         $s = preg_replace($pattern, '<strong>$1:</strong> ', $s);
     }
 
-    $parts = preg_split('~\s*•\s*~u', $s, -1, PREG_SPLIT_NO_EMPTY);
-    if ($parts && count($parts) > 1) {
-        $intro = trim(array_shift($parts));
-        $intro = preg_replace("~\n{2,}~", "\n\n", $intro);
-        $intro_html = '';
-        foreach (preg_split("~\n{2,}~", $intro) as $para) {
-            $intro_html .= '<p>' . nl2br(esc_html(trim($para))) . '</p>';
+    // Separar por saltos de línea
+    $lines = preg_split("~\n~", $s);
+
+    $ul_lines = [];
+    $p_lines  = [];
+
+    foreach ($lines as $line) {
+        $line = trim($line);
+        if ($line === '') continue;
+
+        // Si la línea empieza con alguna de las etiquetas principales, va a <li>
+        $found_label = false;
+        foreach (['Registration No', 'Chassis No', 'MOT'] as $main_label) {
+            if (stripos($line, $main_label . ':') === 0) {
+                $ul_lines[] = '<li>' . $line . '</li>';
+                $found_label = true;
+                break;
+            }
         }
-        $lis = '';
-        foreach ($parts as $item) {
-            $item = trim($item);
-            if ($item === '') continue;
-            $lis .= '<li>' . esc_html($item) . '</li>';
+
+        if (!$found_label) {
+            $p_lines[] = '<p>' . nl2br(esc_html($line)) . '</p>';
         }
-        if ($lis !== '') return $intro_html . '<ul>' . $lis . '</ul>';
-        return $intro_html;
     }
 
-    $s = preg_replace("~[ \t]+~", ' ', $s);
-    $s = preg_replace("~\n{3,}~", "\n\n", $s);
     $html = '';
-    foreach (preg_split("~\n{2,}~", $s) as $para) {
-        $para = trim($para);
-        if ($para === '') continue;
-        $html .= '<p>' . nl2br(esc_html($para)) . '</p>';
+    if (!empty($p_lines)) {
+        $html .= implode("\n", $p_lines);
     }
+    if (!empty($ul_lines)) {
+        $html .= "\n<ul>\n" . implode("\n", $ul_lines) . "\n</ul>";
+    }
+
     return $html;
-}
-
-/**
- * Extrae Registration No / Chassis No / MOT desde el HTML/texto de la descripción.
- */
-function vehicles_extract_from_description($html)
-{
-    // Normaliza: <br> -> saltos de línea, elimina etiquetas, decodifica entidades
-    $text = (string) $html;
-    $text = preg_replace('~<br\s*/?>~i', "\n", $text);
-    $text = wp_strip_all_tags($text);
-    $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5);
-    $text = trim(preg_replace("/[ \t\x{00A0}]+/u", ' ', $text)); // colapsa espacios (incluye NBSP)
-
-    $out = [
-        'registration_no' => '',
-        'chassis_no'      => '',
-        'mot'             => '',
-    ];
-
-    // Captura hasta fin de línea
-    $patterns = [
-        'registration_no' => '~\bRegistration\s*(?:No\.?|Number)?\s*:\s*([^\r\n]+)~i',
-        'chassis_no'      => '~\bChassis\s*(?:No\.?|Number)?\s*:\s*([^\r\n]+)~i',
-    ];
-
-    foreach ($patterns as $key => $regex) {
-        if (preg_match($regex, $text, $m)) {
-            $val = trim($m[1]);
-            $val = preg_split('~\s*(?:Registration\s*(?:No\.?|Number)?|Chassis\s*(?:No\.?|Number)?|MOT(?:\s*Expiry(?:\s*Date)?)?)\s*:~i', $val, 2)[0];
-            $out[$key] = trim($val, " \t\n\r\0\x0B\xC2\xA0");
-        }
-    }
-
-    // --- MOT: prioriza Expiry Date -> Expiry -> MOT
-    $mot_val = '';
-    if (preg_match('~\bMOT\s*Expiry\s*Date\s*:\s*([^\r\n]+)~i', $text, $m1)) {
-        $mot_val = trim($m1[1]);
-    } elseif (preg_match('~\bMOT\s*Expiry\s*:\s*([^\r\n]+)~i', $text, $m2)) {
-        $mot_val = trim($m2[1]);
-    } elseif (preg_match('~\bMOT\s*:\s*([^\r\n]+)~i', $text, $m3)) {
-        $mot_val = trim($m3[1]);
-    }
-
-    if ($mot_val !== '') {
-        $mot_val = preg_split('~\s*(?:Registration\s*(?:No\.?|Number)?|Chassis\s*(?:No\.?|Number)?|MOT(?:\s*Expiry(?:\s*Date)?)?)\s*:~i', $mot_val, 2)[0];
-        $mot_val = trim($mot_val, " \t\n\r\0\x0B\xC2\xA0");
-
-        // valida/normaliza (Exempt o Month YYYY)
-        if (function_exists('vehicles_validate_mot')) {
-            $mot_val = vehicles_validate_mot($mot_val);
-        } else {
-            $mot_val = preg_match('~^exempt$~i', $mot_val) ? 'Exempt' : '';
-        }
-        $out['mot'] = $mot_val;
-    }
-
-    return $out;
 }
 
 /**
@@ -1042,4 +1602,406 @@ function vehicles_set_featured_image_from_url($post_id, $url)
     }
     set_post_thumbnail($post_id, $att_id);
     return true;
+}
+
+/**
+ * Busca un usuario por el texto del Excel.
+ * Devuelve user_id o 0 si no encuentra.
+ *
+ * Orden:
+ * 1) display_name exacto (case-insensitive)
+ * 2) first_name + last_name exacto
+ * 3) búsqueda flexible por display_name/user_login/user_email
+ */
+function vehicles_get_user_id_by_display($raw, array &$cache = [])
+{
+    $name = vehicles_normalize_person_name($raw);
+    if ($name === '') return 0;
+
+    $key = strtolower($name);
+    if (isset($cache[$key])) return (int)$cache[$key];
+
+    // 1) display_name exacto
+    $users = get_users([
+        'search'         => $name,
+        'search_columns' => ['display_name'],
+        'number'         => 20,
+        'fields'         => ['ID', 'display_name'],
+    ]);
+
+    foreach ($users as $u) {
+        if (strcasecmp((string)$u->display_name, $name) === 0) {
+            return $cache[$key] = (int)$u->ID;
+        }
+    }
+
+    // 2) first_name + last_name exacto (ok si tienes pocos users)
+    $users = get_users([
+        'number' => 500,
+        'fields' => ['ID'],
+    ]);
+
+    foreach ($users as $u) {
+        $first = trim((string)get_user_meta($u->ID, 'first_name', true));
+        $last  = trim((string)get_user_meta($u->ID, 'last_name', true));
+        $full  = trim($first . ' ' . $last);
+
+        if ($full !== '' && strcasecmp($full, $name) === 0) {
+            return $cache[$key] = (int)$u->ID;
+        }
+    }
+
+    // 3) búsqueda flexible
+    $users = get_users([
+        'search'         => '*' . $name . '*',
+        'search_columns' => ['display_name', 'user_login', 'user_email'],
+        'number'         => 1,
+        'fields'         => ['ID'],
+    ]);
+
+    if (!empty($users)) {
+        return $cache[$key] = (int)$users[0]->ID;
+    }
+
+    return $cache[$key] = 0;
+}
+
+/**
+ * Crea o devuelve un término en la taxonomía vehicle_category,
+ * usando el nombre que viene del Excel.
+ * Si viene tipo "Parent > Child > Cars", tomará el ÚLTIMO nivel ("Cars").
+ * Devuelve 0 si algo falla.
+ */
+function vehicles_get_or_create_category_term($label)
+{
+    $name = trim((string)$label);
+    if ($name === '' || !taxonomy_exists(HNH_TAX_CATEGORY)) return 0;
+
+    // Si viene con niveles: "A > B > C", nos quedamos con el último
+    if (strpos($name, '>') !== false) {
+        $parts = array_map('trim', explode('>', $name));
+        $name  = trim(end($parts));
+    }
+
+    static $cache = [];
+    $key = strtolower($name);
+    if (isset($cache[$key])) return (int)$cache[$key];
+
+    // 1) Buscar por nombre exacto
+    $term = get_term_by('name', $name, HNH_TAX_CATEGORY);
+    if ($term && !is_wp_error($term)) {
+        return $cache[$key] = (int)$term->term_id;
+    }
+
+    // 2) Crear nuevo término
+    $res = wp_insert_term($name, HNH_TAX_CATEGORY, [
+        'slug' => sanitize_title($name),
+    ]);
+
+    if (!is_wp_error($res) && !empty($res['term_id'])) {
+        return $cache[$key] = (int)$res['term_id'];
+    }
+
+    // 3) Fallback por slug si ya existía
+    $term = get_term_by('slug', sanitize_title($name), HNH_TAX_CATEGORY);
+    if ($term && !is_wp_error($term)) {
+        return $cache[$key] = (int)$term->term_id;
+    }
+
+    return 0;
+}
+
+/**
+ * Extrae Registration No / Chassis No / MOT desde el HTML/texto de la descripción.
+ */
+function vehicles_extract_from_description($html)
+{
+    // Normaliza: <br> -> saltos de línea, elimina etiquetas, decodifica entidades
+    $text = (string) $html;
+    $text = preg_replace('~<br\s*/?>~i', "\n", $text);
+    $text = wp_strip_all_tags($text);
+    $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5);
+    $text = trim(preg_replace("/[ \t\x{00A0}]+/u", ' ', $text)); // colapsa espacios (incluye NBSP)
+
+    $out = [
+        'registration_no' => '',
+        'chassis_no'      => '',
+        'mot'             => '',
+    ];
+
+    // Captura hasta fin de línea
+    $patterns = [
+        'registration_no' => '~\bRegistration\s*(?:No\.?|Number)?\s*:\s*([^\r\n]+)~i',
+        'chassis_no'      => '~\b(?:Chassis|Frame)\s*(?:No\.?|Number)?\s*:\s*([^\r\n]+)~i',
+    ];
+
+    foreach ($patterns as $key => $regex) {
+        if (preg_match($regex, $text, $m)) {
+            $val = trim($m[1]);
+            $val = preg_split('~\s*(?:Registration\s*(?:No\.?|Number)?|Chassis\s*(?:No\.?|Number)?|MOT(?:\s*Expiry(?:\s*Date)?)?)\s*:~i', $val, 2)[0];
+            $out[$key] = trim($val, " \t\n\r\0\x0B\xC2\xA0");
+        }
+    }
+
+    // --- MOT: prioriza Expiry Date -> Expiry -> MOT
+    $mot_val = '';
+    if (preg_match('~\bMOT\s*Expiry\s*Date\s*:\s*([^\r\n]+)~i', $text, $m1)) {
+        $mot_val = trim($m1[1]);
+    } elseif (preg_match('~\bMOT\s*Expiry\s*:\s*([^\r\n]+)~i', $text, $m2)) {
+        $mot_val = trim($m2[1]);
+    } elseif (preg_match('~\bMOT\s*:\s*([^\r\n]+)~i', $text, $m3)) {
+        $mot_val = trim($m3[1]);
+    }
+
+    if ($mot_val !== '') {
+        $mot_val = preg_split('~\s*(?:Registration\s*(?:No\.?|Number)?|Chassis\s*(?:No\.?|Number)?|MOT(?:\s*Expiry(?:\s*Date)?)?)\s*:~i', $mot_val, 2)[0];
+        $mot_val = trim($mot_val, " \t\n\r\0\x0B\xC2\xA0");
+
+        // valida/normaliza (Exempt o Month YYYY)
+        if (function_exists('vehicles_validate_mot')) {
+            $mot_val = vehicles_validate_mot($mot_val);
+        } else {
+            $mot_val = preg_match('~^exempt$~i', $mot_val) ? 'Exempt' : '';
+        }
+        $out['mot'] = $mot_val;
+    }
+
+    return $out;
+}
+
+function vehicles_extract_from_description_ai($raw_desc)
+{
+    $fallback = vehicles_extract_from_description($raw_desc);
+
+    if (!defined('HNH_OPENAI_ENABLE') || !HNH_OPENAI_ENABLE) {
+        return $fallback;
+    }
+
+    $apiKey = defined('HNH_OPENAI_API_KEY') ? HNH_OPENAI_API_KEY : '';
+    if (!$apiKey) {
+        return $fallback;
+    }
+
+    $text = trim((string)$raw_desc);
+    if ($text === '') return $fallback;
+
+    // Cache por hash del texto (para no pagar varias veces)
+    $hash = md5($text);
+    $cache_key = 'veh_ai_desc_' . $hash;
+    $cached = get_transient($cache_key);
+    if (is_array($cached) && isset($cached['mot'], $cached['registration_no'], $cached['chassis_no'])) {
+        return $cached;
+    }
+
+    $result = vehicles_openai_extract_triplet($text, $apiKey);
+
+    // Validación mínima del resultado
+    if (!is_array($result)) {
+        return $fallback;
+    }
+
+    $out = [
+        'registration_no' => isset($result['registration_no']) ? trim((string)$result['registration_no']) : '',
+        'chassis_no'      => isset($result['chassis_no']) ? trim((string)$result['chassis_no']) : '',
+        'mot'             => isset($result['mot']) ? trim((string)$result['mot']) : '',
+    ];
+
+    // Si IA devolvió TODO vacío, no sirve
+    if ($out['registration_no'] === '' && $out['chassis_no'] === '' && $out['mot'] === '') {
+        return $fallback;
+    }
+
+    // Guarda cache 30 días (ajústalo)
+    set_transient($cache_key, $out, 30 * DAY_IN_SECONDS);
+
+    return $out;
+}
+
+function vehicles_extract_model_and_variant_from_title(string $title): array
+{
+    $t = trim(wp_strip_all_tags($title));
+    if ($t === '') {
+        return ['model' => '', 'variant' => ''];
+    }
+
+    // quitar año
+    $t = preg_replace('~^\s*(18|19|20)\d{2}\s+~', '', $t);
+    $t = trim($t);
+
+    // quitar marca (primera palabra)
+    $t = preg_replace('~^[^\s]+\s+~', '', $t);
+    $t = trim($t);
+
+    if ($t === '') {
+        return ['model' => '', 'variant' => ''];
+    }
+
+    $tokens = preg_split('/\s+/', $t);
+
+    $model = '';
+    $variant = '';
+
+    // Caso: Mk VI
+    if (isset($tokens[0], $tokens[1]) && strtolower($tokens[0]) === 'mk') {
+        $model = $tokens[0] . ' ' . $tokens[1];
+        $variant = implode(' ', array_slice($tokens, 2));
+    }
+
+    // Caso: Speed 20
+    elseif (isset($tokens[1]) && is_numeric($tokens[1])) {
+        $model = $tokens[0] . ' ' . $tokens[1];
+        $variant = implode(' ', array_slice($tokens, 2));
+    }
+
+    // Caso: RMB 2½ Litres
+    elseif (isset($tokens[1]) && preg_match('/litre|liter/i', $tokens[2] ?? '')) {
+        $model = $tokens[0];
+        $variant = implode(' ', array_slice($tokens, 1));
+    }
+
+    // Caso general
+    else {
+        $model = $tokens[0];
+        $variant = implode(' ', array_slice($tokens, 1));
+    }
+
+    return [
+        'model' => trim($model),
+        'variant' => trim($variant)
+    ];
+}
+
+function vehicles_openai_extract_triplet($description, $apiKey)
+{
+    $model = defined('HNH_OPENAI_MODEL') ? HNH_OPENAI_MODEL : 'gpt-4.1-mini';
+
+    $prompt = "Extract these fields from the vehicle description. Return ONLY valid JSON with keys:
+registration_no, chassis_no, mot.
+
+Rules:
+- If a field is not present, return an empty string.
+- registration_no: value after labels like 'Registration No', 'Registration Number'.
+- chassis_no: value after labels like 'Chassis No', 'Chassis Number', OR 'Frame No', 'Frame Number'. If both Chassis and Frame exist, prefer Chassis.
+- mot: return either 'Exempt' or 'Month YYYY' (e.g., 'September 2027') if possible; otherwise empty string.
+- Do not include any extra keys, text, markdown, or explanation.
+
+DESCRIPTION:
+" . $description;
+
+    $body = [
+        'model' => $model,
+        'input' => $prompt,
+    ];
+
+    $res = wp_remote_post('https://api.openai.com/v1/responses', [
+        'timeout' => 60,
+        'headers' => [
+            'Content-Type'  => 'application/json',
+            'Authorization' => 'Bearer ' . $apiKey,
+        ],
+        'body' => wp_json_encode($body),
+    ]);
+
+    if (is_wp_error($res)) {
+        return null;
+    }
+
+    $code = wp_remote_retrieve_response_code($res);
+    $raw  = wp_remote_retrieve_body($res);
+
+    if ($code < 200 || $code >= 300 || !$raw) {
+        return null;
+    }
+
+    $json = json_decode($raw, true);
+    if (!is_array($json)) return null;
+
+    // Respuestas típicas: output_text o contenido estructurado.
+    // Intentamos extraer "output_text" si existe; si no, buscamos texto en output[...]
+    $text = '';
+    if (!empty($json['output_text']) && is_string($json['output_text'])) {
+        $text = $json['output_text'];
+    } elseif (!empty($json['output']) && is_array($json['output'])) {
+        // Fallback: recorre bloques
+        foreach ($json['output'] as $item) {
+            if (!empty($item['content']) && is_array($item['content'])) {
+                foreach ($item['content'] as $c) {
+                    if (($c['type'] ?? '') === 'output_text' && !empty($c['text'])) {
+                        $text .= $c['text'];
+                    }
+                }
+            }
+        }
+    }
+
+    $text = trim($text);
+    if ($text === '') return null;
+
+    // El modelo debe retornar JSON puro, pero por seguridad:
+    $text = vehicles_extract_json_object($text);
+    if ($text === '') return null;
+
+    $data = json_decode($text, true);
+    if (!is_array($data)) return null;
+
+    return $data;
+}
+
+function vehicles_extract_json_object($s)
+{
+    $s = trim((string)$s);
+    if ($s === '') return '';
+
+    // Si ya es JSON
+    if ($s[0] === '{') return $s;
+
+    // Busca el primer { y el último }
+    $start = strpos($s, '{');
+    $end   = strrpos($s, '}');
+    if ($start === false || $end === false || $end <= $start) return '';
+
+    return substr($s, $start, $end - $start + 1);
+}
+
+function vehicles_format_reg_chassis_mot($html) {
+    if (preg_match_all('~<p>(.*?)</p>~i', $html, $matches)) {
+        foreach ($matches[1] as $idx => $content) {
+            if (preg_match('~\b(Registration No|Chassis No|MOT)\b~i', $content)) {
+                $lines = preg_split('~<br\s*/?>~i', $content);
+                $lis = '';
+                foreach ($lines as $line) {
+                    $line = trim($line);
+                    if ($line !== '') $lis .= '<li>' . $line . '</li>';
+                }
+                if ($lis !== '') {
+                    $html = str_replace($matches[0][$idx], '<ul>' . $lis . '</ul>', $html);
+                }
+            }
+        }
+    }
+    return $html;
+}
+
+function vehicles_convert_registration_block_to_ul(string $html): string {
+    if (preg_match('/<p>(.*?)<\/p>/is', $html, $matches)) {
+        $p_content = $matches[1];
+
+        if (stripos($p_content, 'Registration') !== false 
+            || stripos($p_content, 'Chassis') !== false 
+            || stripos($p_content, 'MOT') !== false) {
+
+            $lines = preg_split('/<br\s*\/?>/i', $p_content, -1, PREG_SPLIT_NO_EMPTY);
+            $lines = array_map('trim', $lines);
+            if (empty($lines)) return $html;
+
+            $ul = "<ul>\n";
+            foreach ($lines as $line) {
+                $ul .= "<li>$line</li>\n";
+            }
+            $ul .= "</ul>";
+
+            return str_replace($matches[0], $ul, $html);
+        }
+    }
+    return $html;
 }

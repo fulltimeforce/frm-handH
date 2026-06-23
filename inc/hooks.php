@@ -57,3 +57,41 @@ add_filter( 'woocommerce_form_field', function( $field, $key, $args, $value ) {
     $field = str_replace('&nbsp;<span class="required"', '<span class="required"', $field);
     return $field;
 }, 10, 4 );
+
+
+/**
+ * Limita la búsqueda a post_title cuando la query tenga el flag 'hnh_title_only'.
+ */
+if (!function_exists('hnh_search_only_in_title')) {
+    function hnh_search_only_in_title(
+        $search,
+        \WP_Query $q
+    ) {
+        global $wpdb;
+
+        // Solo actuar si nos pasan el flag y hay término de búsqueda
+        if (!$q->get('hnh_title_only') || !$q->is_search() && $q->get('s') === '') {
+            return $search;
+        }
+
+        $s = trim($q->get('s'));
+        if ($s === '') {
+            return $search;
+        }
+
+        // Divide en palabras y exige que TODAS estén en el título (AND)
+        $terms = preg_split('/\s+/', $s);
+        $pieces = [];
+        foreach ($terms as $term) {
+            $like = '%' . $wpdb->esc_like($term) . '%';
+            $pieces[] = $wpdb->prepare("{$wpdb->posts}.post_title LIKE %s", $like);
+        }
+
+        if ($pieces) {
+            // Reemplaza la búsqueda por defecto
+            $search = ' AND (' . implode(' AND ', $pieces) . ') ';
+        }
+
+        return $search;
+    }
+}

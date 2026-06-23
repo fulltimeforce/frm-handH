@@ -26,39 +26,46 @@
                 </div>
                 <div class="footer_east">
                     <b>H&H Classics is proud to support</b>
-                    <img src="<?php echo IMG; ?>/logo-east.svg" class="w-100" alt="logo">
+                    <img src="<?php echo IMG; ?>/logo-east.svg" class="w-100" alt="logo" title="East Cheshire Hospice">
                 </div>
             </div>
             <div class="footer_col">
                 <div class="footer_row">
                     <div class="footer_nav">
                         <p class="footer_nav-head">Auctions</p>
-                        <div class="footer_nav-list">
-                            <?php if (NOT_APPEAR): ?>
-                                <a href="https://issuu.com/handhclassicsadmin/docs/h_h-2025-auction-calendar" alt="Auction Calendar">Auction Calendar</a>
-                            <?php else: ?>
-                                
-                            <?php endif; ?>
-
-                            <a href="<?php echo esc_url(home_url('auction-results')) ?>">Auction Results</a>
-                            <a href="<?php echo esc_url(home_url('get-a-valuation')) ?>">Enter Your Classic</a>
-                            <!--<a target="_blank" href="https://issuu.com/handhclassics/docs/handh-welcome-booklet-20231215?fr=sYjkxNTYzMTE1NDY" target="_blank">H&H Welcome Pack</a>-->
-                        </div>
+                        <?php
+                        wp_nav_menu([
+                            'theme_location' => 'footer-auctions-menu',
+                            'container'      => false,
+                            'depth'          => 1,
+                            'walker'         => new Footer_Links_Walker(),
+                            'items_wrap'     => '<div class="footer_nav-list">%3$s</div>',
+                        ]);
+                        ?>
                     </div>
                     <div class="footer_nav">
                         <p class="footer_nav-head">Private Sales</p>
-                        <div class="footer_nav-list">
-                            <a href="<?php echo esc_url(home_url('vehicles-for-sale')) ?>">Vehicles For Sale</a>
-                            <a href="<?php echo esc_url(home_url('vehicles-wanted')) ?>">Vehicles Wanted</a>
-                            <a href="<?php echo esc_url(home_url('our-showroom')) ?>">Our Showroom</a>
-                        </div>
+                        <?php
+                        wp_nav_menu([
+                            'theme_location' => 'footer-private-sales-menu',
+                            'container'      => false,
+                            'depth'          => 1,
+                            'walker'         => new Footer_Links_Walker(),
+                            'items_wrap'     => '<div class="footer_nav-list">%3$s</div>',
+                        ]);
+                        ?>
                     </div>
                     <div class="footer_nav">
                         <p class="footer_nav-head">Account & Bidding</p>
-                        <div class="footer_nav-list">
-                            <a href="https://www.handh.co.uk/account/register/" alt="Register / Sign In">Register / Sign In</a>
-                            <a href="https://handh-bqha9.projectbeta.co.uk/telephone-bid/">Telephone Bid Form</a>
-                        </div>
+                        <?php
+                        wp_nav_menu([
+                            'theme_location' => 'footer-account-bidding-menu',
+                            'container'      => false,
+                            'depth'          => 1,
+                            'walker'         => new Footer_Links_Walker(),
+                            'items_wrap'     => '<div class="footer_nav-list">%3$s</div>',
+                        ]);
+                        ?>
                     </div>
                 </div>
                 <div class="footer_bottom">
@@ -70,17 +77,16 @@
                         </div>
                     </div>
                     <div class="footer_award">
-                        <img src="<?php echo IMG; ?>/award.svg" class="w-100" alt="award">
+                        <img src="<?php echo IMG; ?>/award.svg" class="w-100" alt="award" title="Quality Business Awards">
                         <?php get_template_part('inc/sections/social-list-links'); ?>
-                        <div class="links">
-                            <a href="<?php echo esc_url(home_url('news-and-insights')); ?>">News</a>
-                            <p>|</p>
-                            <a href="<?php echo esc_url(home_url('about-us')); ?>">About</a>
-                            <p>|</p>
-                            <a href="<?php echo esc_url(home_url('frequently-asked-questions')); ?>">FAQs</a>
-                            <p>|</p>
-                            <a href="<?php echo esc_url(home_url('contact')); ?>">Contact</a>
-                        </div>
+                        <?php
+                        wp_nav_menu([
+                            'theme_location' => 'footer-bold',
+                            'container'      => false,
+                            'items_wrap'     => '<div class="links">%3$s</div>', // envuelve todo
+                            'walker'         => new Footer_Bold_Links_Walker(),
+                        ]);
+                        ?>
                     </div>
                 </div>
             </div>
@@ -88,7 +94,16 @@
         <div class="footer_credits">
             <p>© <?php echo date('Y'); ?> H&H Classic Auctions Ltd. All Rights Reserved.</p>
             <div>
-                <p><a href="<?php echo esc_url(home_url('terms-conditions')); ?>">Terms and Conditions</a> | <a href="<?php echo esc_url(home_url('privacy-policy')); ?>">Privacy Policy</a> | <a href="<?php echo esc_url(home_url('cookies-policy')); ?>">Cookies Policy</a></p>
+                <p>
+                    <?php
+                    wp_nav_menu([
+                        'theme_location' => 'footer-terms',
+                        'container'      => false,
+                        'items_wrap'     => '%3$s', // 🔑 elimina el <ul>
+                        'walker'         => new Footer_Terms_Walker(),
+                    ]);
+                    ?>
+                </p>
             </div>
         </div>
     </div>

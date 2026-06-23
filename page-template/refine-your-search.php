@@ -11,239 +11,44 @@ get_banner(
     'Refine Your Search'
 );
 
-// ===== Opciones seguras =====
-$defaults = [
-    // 'min_year'  => 1920,
-    'post_type' => 'vehicles',
-];
-$opt = $defaults;
-
 // ===== Paginación y per page =====
-$pgn   = isset($_GET['pgn']) ? max(1, (int) $_GET['pgn']) : 1;
-$ppp   = isset($_GET['posts_per_page']) ? max(1, (int)$_GET['posts_per_page']) : 6;
+$pgn = isset($_GET['pgn']) ? max(1, (int) $_GET['pgn']) : 1;
+$ppp = isset($_GET['posts_per_page']) ? max(1, (int) $_GET['posts_per_page']) : 48;
 
 // ===== GET params =====
-$q               = isset($_GET['search_vehicle'])     ? sanitize_text_field($_GET['search_vehicle'])     : '';
-$year_from_param = isset($_GET['year_from'])          ? sanitize_text_field($_GET['year_from'])          : '';
-$year_to_param   = isset($_GET['year_to'])            ? sanitize_text_field($_GET['year_to'])            : '';
-$brand_slug      = isset($_GET['vehicle_brand'])      ? sanitize_text_field($_GET['vehicle_brand'])      : '';
-$cat_slug        = isset($_GET['vehicle_categories']) ? sanitize_text_field($_GET['vehicle_categories']) : '';
-$lots_raw        = isset($_GET['lots'])               ? strtolower(sanitize_text_field($_GET['lots']))   : 'current';
-$lots            = in_array($lots_raw, ['current', 'past'], true) ? $lots_raw : 'current';
-$order_by        = isset($_GET['order_by']) ? sanitize_text_field($_GET['order_by']) : 'lot';
+$q        = isset($_GET['search_vehicle']) ? sanitize_text_field($_GET['search_vehicle']) : '';
+$cat_id = isset($_GET['vehicle_categories']) ? (int) $_GET['vehicle_categories'] : 0;
 
-// Campo meta de fecha/hora a comparar (ajusta si tu clave es otra)
-$auction_date_meta = 'auction_date_latest';
+$lots_raw = isset($_GET['lots']) ? strtolower(sanitize_text_field($_GET['lots'])) : 'current';
+$lots     = in_array($lots_raw, ['current', 'past'], true) ? $lots_raw : 'current';
 
-// Hora “ahora” en el timezone de WP, al minuto (para coincidir con tu formato YYYY-mm-dd HH:ii)
-$now_minute = date_i18n('Y-m-d H:i', current_time('timestamp'));
-
-// ===== Meta query =====
-$meta_query = ['relation' => 'AND'];
-
-// Filtro CURRENT/PAST por fecha del meta $auction_date_meta (comparación lexicográfica segura)
-if ($lots === 'current') {
-    $meta_query[] = [
-        'relation' => 'OR',
-        [
-            'key'     => $auction_date_meta,
-            'value'   => $now_minute,
-            'compare' => '>=',
-            'type'    => 'CHAR',
-        ],
-        [
-            'key'     => $auction_date_meta,
-            'compare' => 'NOT EXISTS',
-        ],
-        [
-            'key'     => $auction_date_meta,
-            'value'   => '',
-            'compare' => '=',
-        ],
-    ];
-} else { // past
-    $meta_query[] = [
-        'relation' => 'OR',
-        [
-            'key'     => $auction_date_meta,
-            'value'   => $now_minute,
-            'compare' => '<',
-            'type'    => 'CHAR',
-        ],
-        [
-            'key'     => $auction_date_meta,
-            'compare' => 'NOT EXISTS',
-        ],
-        [
-            'key'     => $auction_date_meta,
-            'value'   => '',
-            'compare' => '=',
-        ],
-    ];
-}
-
-// Rango por año sobre el mismo meta (coherencia)
-/*$year_from = (ctype_digit($year_from_param) ? (int)$year_from_param : null);
-$year_to   = (ctype_digit($year_to_param)   ? (int)$year_to_param   : null);
-
-if ($year_from && $year_to) {
-    if ($year_from > $year_to) {
-        [$year_from, $year_to] = [$year_to, $year_from];
-    }
-    $start_dt = sprintf('%04d-01-01 00:00', $year_from);
-    $end_dt   = sprintf('%04d-12-31 23:59', $year_to);
-    $meta_query[] = [
-        'key'     => $auction_date_meta,
-        'value'   => [$start_dt, $end_dt],
-        'compare' => 'BETWEEN',
-        'type'    => 'CHAR',
-    ];
-} elseif ($year_from) {
-    $start_dt = sprintf('%04d-01-01 00:00', $year_from);
-    $meta_query[] = [
-        'key'     => $auction_date_meta,
-        'value'   => $start_dt,
-        'compare' => '>=',
-        'type'    => 'CHAR',
-    ];
-} elseif ($year_to) {
-    $end_dt = sprintf('%04d-12-31 23:59', $year_to);
-    $meta_query[] = [
-        'key'     => $auction_date_meta,
-        'value'   => $end_dt,
-        'compare' => '<=',
-        'type'    => 'CHAR',
-    ];
-}*/
-
-// Solo con thumbnail
-/*$meta_query[] = [
-    'key'     => '_thumbnail_id',
-    'compare' => 'EXISTS',
-];*/
-
-// ===== Tax query =====
-$tax_query = [];
-if ($brand_slug !== '') {
-    $tax_query[] = [
-        'taxonomy' => 'vehicle_brand',
-        'field'    => 'slug',
-        'terms'    => [$brand_slug],
-    ];
-}
-if ($cat_slug !== '') {
-    $tax_query[] = [
-        'taxonomy' => 'vehicle_category',
-        'field'    => 'slug',
-        'terms'    => [$cat_slug],
-    ];
-}
-
-// ===== Query base =====
-// Orden lógico por fecha: actuales ASC (la más próxima primero), pasados DESC (lo más reciente primero)
-$order_dir = ($lots === 'current') ? 'ASC' : 'DESC';
-
-$argsVehicle = [
-    'post_type'      => $opt['post_type'],
-    'posts_per_page' => $ppp,
-    'paged'          => $pgn,
-    'meta_query'     => $meta_query,
-    'meta_key'       => $auction_date_meta,
-    'orderby'        => 'meta_value',
-    'order'          => $order_dir,
-    'meta_type'      => 'CHAR', // formateo YYYY-mm-dd HH:ii
-];
-
-if ($q !== '') {
-    $argsVehicle['s'] = $q;
-    $argsVehicle['hnh_title_only'] = 1;
-}
-if (!empty($tax_query)) {
-    $argsVehicle['tax_query'] = $tax_query;
-}
-
-// ===== Orden dinámico según order_by =====
-switch ($order_by) {
-    case 'lot':
-        // Solo con número de lote y orden numérico
-        $meta_query[] = [
-            'key'     => 'lot_number_latest',
-            'compare' => 'EXISTS',
-        ];
-        $argsVehicle['meta_query'] = $meta_query;
-
-        $argsVehicle['meta_key'] = 'lot_number_latest';
-        $argsVehicle['orderby']  = 'meta_value_num';
-        $argsVehicle['order']    = 'ASC'; // cambia a DESC si lo prefieres
-        unset($argsVehicle['meta_type']);
-        break;
-
-    case 'low-to-high':
-        // Precio estimado bajo (ASC) – numérico
-        $meta_query[] = [
-            'key'     => 'estimate_low',
-            'compare' => 'EXISTS',
-        ];
-        $argsVehicle['meta_query'] = $meta_query;
-
-        $argsVehicle['meta_key'] = 'estimate_low';
-        $argsVehicle['orderby']  = 'meta_value_num';
-        $argsVehicle['order']    = 'ASC';
-        unset($argsVehicle['meta_type']);
-        break;
-
-    case 'high-to-low':
-        // Precio estimado bajo (DESC) – numérico
-        $meta_query[] = [
-            'key'     => 'estimate_low',
-            'compare' => 'EXISTS',
-        ];
-        $argsVehicle['meta_query'] = $meta_query;
-
-        $argsVehicle['meta_key'] = 'estimate_low';
-        $argsVehicle['orderby']  = 'meta_value_num';
-        $argsVehicle['order']    = 'DESC';
-        unset($argsVehicle['meta_type']);
-        break;
-
-    case 'oldest':
-        // Fecha más antigua primero (string "Y-m-d H:i")
-        $argsVehicle['meta_key']  = $auction_date_meta;
-        $argsVehicle['orderby']   = 'meta_value';
-        $argsVehicle['order']     = 'ASC';
-        $argsVehicle['meta_type'] = 'CHAR';
-        break;
-
-    case 'newest':
-        // Fecha más reciente primero
-        $argsVehicle['meta_key']  = $auction_date_meta;
-        $argsVehicle['orderby']   = 'meta_value';
-        $argsVehicle['order']     = 'DESC';
-        $argsVehicle['meta_type'] = 'CHAR';
-        break;
-
-    default:
-        // Deja la orden base por fecha según CURRENT/PAST
-        break;
-}
-
-// Antes de crear la query
-add_filter('posts_search', 'hnh_search_only_in_title', 10, 2);
-
-$vehicles = new WP_Query($argsVehicle);
-
-// Después de crearla (o inmediatamente tras usarla)
-remove_filter('posts_search', 'hnh_search_only_in_title', 10);
-
-
-// Years (para selects)
-$yf_sel  = $year_from_param;
-$yt_sel  = $year_to_param;
-$minYear = (int)$opt['min_year'];
-$maxYear = (int)date('Y');
+$order_by = isset($_GET['order_by']) ? sanitize_text_field($_GET['order_by']) : 'lot';
+$make_id  = isset($_GET['make_id']) ? (int) $_GET['make_id'] : 0;
 
 $page_url = get_permalink(get_queried_object_id());
 $base_url = $page_url;
+
+// ===== Repo query =====
+if (!class_exists('VehiclesSearchRepository')) {
+    require_once get_template_directory() . '/VehiclesSearchRepository.php';
+}
+
+global $wpdb;
+$repo = new VehiclesSearchRepository($wpdb);
+
+$result = $repo->search([
+    'q'        => $q,
+    'lots'     => $lots,
+    'order_by' => $order_by,
+    'make_id'  => $make_id,
+    'category_id' => $cat_id,
+    'per_page' => $ppp,
+    'page'     => $pgn,
+]);
+
+$rows      = $result['items'];
+$total     = (int) $result['total'];
+$max_pages = (int) max(1, (int) ceil($total / $ppp));
 
 ?>
 
@@ -252,20 +57,11 @@ $base_url = $page_url;
         <form class="auction_result-filter" method="get" action="<?php echo esc_url($base_url); ?>">
             <input type="hidden" name="pgn" value="1">
             <input type="hidden" name="lots" value="<?php echo esc_attr($lots); ?>">
-            <input type="hidden" name="order_by" value="<?php echo esc_attr($order_by); ?>">
 
             <div class="auction_result-filter-search">
                 <input type="search" name="search_vehicle" placeholder="Search for..." value="<?php echo esc_attr($q); ?>">
                 <button type="submit">Go</button>
             </div>
-
-            <?php if (NOT_APPEAR): ?>
-                <div class="auction_result-filter-select">
-                    <select name="search_mode">
-                        <option value=""><?php esc_html_e('Search all words any order'); ?></option>
-                    </select>
-                </div>
-            <?php endif; ?>
 
             <div class="auction_result-filter-select">
                 <select name="order_by" onchange="this.form.submit()">
@@ -273,16 +69,13 @@ $base_url = $page_url;
                     <option value="lot" <?php selected($order_by, 'lot');          ?>><?php esc_html_e('Sort by lot number'); ?></option>
                     <option value="low-to-high" <?php selected($order_by, 'low-to-high');  ?>><?php esc_html_e('Estimate/Price - Low to High'); ?></option>
                     <option value="high-to-low" <?php selected($order_by, 'high-to-low');  ?>><?php esc_html_e('Estimate/Price - High to Low'); ?></option>
-                    <?php if (NOT_APPEAR): ?>
-                        <option value="oldest" <?php selected($order_by, 'oldest');       ?>><?php esc_html_e('Date - Oldest first'); ?></option>
-                        <option value="newest" <?php selected($order_by, 'newest');       ?>><?php esc_html_e('Date - Newest first'); ?></option>
-                    <?php endif; ?>
                 </select>
             </div>
 
             <div class="auction_result-filter-select">
                 <select name="vehicle_categories" onchange="this.form.submit()">
                     <option value=""><?php esc_html_e('Main Categories'); ?></option>
+
                     <?php
                     $cats = get_terms([
                         'taxonomy'   => 'vehicle_category',
@@ -291,54 +84,44 @@ $base_url = $page_url;
                         'orderby'    => 'name',
                         'order'      => 'ASC',
                     ]);
+
                     if (!is_wp_error($cats) && $cats):
                         foreach ($cats as $t): ?>
-                            <option value="<?php echo esc_attr($t->slug); ?>" <?php selected($cat_slug, $t->slug); ?>>
+                            <option
+                                value="<?php echo esc_attr($t->term_id); ?>"
+                                <?php selected((int)$cat_id, (int)$t->term_id); ?>>
                                 <?php echo esc_html($t->name); ?>
                             </option>
-                    <?php endforeach;
-                    endif; ?>
+                    <?php
+                        endforeach;
+                    endif;
+                    ?>
                 </select>
             </div>
 
             <div class="auction_result-filter-select">
                 <?php
-                $brands = get_terms([
-                    'taxonomy'   => 'vehicle_brand',
-                    'hide_empty' => true,
-                    'orderby'    => 'name',
-                    'order'      => 'ASC',
+                $makes = get_posts([
+                    'post_type'      => 'make',
+                    'post_status'    => 'publish',
+                    'posts_per_page' => -1,
+                    'orderby'        => 'title',
+                    'order'          => 'ASC',
+                    'fields'         => 'ids',
                 ]);
                 ?>
-                <select name="vehicle_brand" onchange="this.form.submit()">
-                    <option value=""><?php esc_html_e('Artist/Maker/Brand'); ?></option>
-                    <?php if (!is_wp_error($brands) && $brands): ?>
-                        <?php foreach ($brands as $term): ?>
-                            <option value="<?php echo esc_attr($term->slug); ?>" <?php selected($brand_slug, $term->slug); ?>>
-                                <?php echo esc_html($term->name); ?>
+                <select name="make_id" onchange="this.form.submit()">
+                    <option value=""><?php esc_html_e('Artist / Maker / Brand'); ?></option>
+
+                    <?php if ($makes): ?>
+                        <?php foreach ($makes as $mid): ?>
+                            <option value="<?php echo esc_attr($mid); ?>" <?php selected($make_id, (int)$mid); ?>>
+                                <?php echo esc_html(get_the_title($mid)); ?>
                             </option>
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </select>
             </div>
-
-            <?php if (NOT_APPEAR): ?>
-                <div class="auction_result-filter-year">
-                    <select name="year_from" onchange="this.form.submit()">
-                        <option value=""><?php esc_html_e('From'); ?></option>
-                        <?php for ($y = $minYear; $y <= $maxYear; $y++): ?>
-                            <option value="<?php echo $y; ?>" <?php selected($yf_sel, (string)$y); ?>><?php echo $y; ?></option>
-                        <?php endfor; ?>
-                    </select>
-                    <p><?php esc_html_e('To'); ?></p>
-                    <select name="year_to" onchange="this.form.submit()">
-                        <option value=""><?php esc_html_e('To'); ?></option>
-                        <?php for ($y = $minYear; $y <= $maxYear; $y++): ?>
-                            <option value="<?php echo $y; ?>" <?php selected($yt_sel, (string)$y); ?>><?php echo $y; ?></option>
-                        <?php endfor; ?>
-                    </select>
-                </div>
-            <?php endif; ?>
 
         </form>
     </div>
@@ -359,13 +142,18 @@ $base_url = $page_url;
                         <input type="hidden" name="lots" value="<?php echo esc_attr($lots); ?>">
                         <input type="hidden" name="order_by" value="<?php echo esc_attr($order_by); ?>">
 
+                        <input type="hidden" name="search_vehicle" value="<?php echo esc_attr($q); ?>">
+                        <input type="hidden" name="make_id" value="<?php echo esc_attr($make_id); ?>">
+                        <input type="hidden" name="vehicle_categories" value="<?php echo esc_attr($cat_slug); ?>">
+
                         <div class="auction_result-filter-page">
                             <p>
                                 <?php esc_html_e('Showing'); ?>
                                 <select id="blog-perpage" class="blog_section-filter-page" name="posts_per_page" onchange="this.form.submit()">
-                                    <option value="6" <?php selected((int)$ppp, 6);  ?>>6</option>
                                     <option value="12" <?php selected((int)$ppp, 12); ?>>12</option>
                                     <option value="24" <?php selected((int)$ppp, 24); ?>>24</option>
+                                    <option value="48" <?php selected((int)$ppp, 48); ?>>48</option>
+                                    <option value="96" <?php selected((int)$ppp, 96); ?>>96</option>
                                 </select>
                                 <?php esc_html_e('Per Page'); ?>
                             </p>
@@ -386,57 +174,53 @@ $base_url = $page_url;
                 </div>
             </div>
             <div class="refine_vehicles-spacing">
-                <?php if ($vehicles->have_posts()): ?>
+
+
+                <?php if (!empty($rows)): ?>
                     <!-- GRID -->
                     <div class="refine_cards refine_grid">
-                        <?php while ($vehicles->have_posts()) : $vehicles->the_post(); ?>
-                            <?php hnh_render_vehicle_card(get_the_ID()); ?>
-                        <?php endwhile; ?>
+                        <?php foreach ($rows as $r): ?>
+                            <?php hnh_render_vehicle_card((int)$r['vehicle_id']); ?>
+                        <?php endforeach; ?>
                     </div>
-
-                    <?php $vehicles->rewind_posts(); ?>
 
                     <!-- LIST -->
                     <div class="refine_cards refine_list">
-                        <?php while ($vehicles->have_posts()) : $vehicles->the_post(); ?>
-                            <?php hnh_render_vehicle_item(get_the_ID()); ?>
-                        <?php endwhile; ?>
+                        <?php foreach ($rows as $r): ?>
+                            <?php hnh_render_vehicle_item((int)$r['vehicle_id']); ?>
+                        <?php endforeach; ?>
                     </div>
 
                     <?php
-                    // === Paginación ===
                     $pagination = paginate_links([
-                        'base'    => esc_url_raw(add_query_arg('pgn', '%#%', $page_url)),
-                        'format'  => '',
-                        'current' => $pgn,
-                        'total'   => (int) $vehicles->max_num_pages,
-                        'mid_size' => 2,
+                        'base'      => esc_url_raw(add_query_arg('pgn', '%#%', $page_url)),
+                        'format'    => '',
+                        'current'   => $pgn,
+                        'total'     => $max_pages,
+                        'mid_size'  => 2,
                         'prev_text' => '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="14" viewBox="0 0 19 14" fill="none"><path d="M19 7L1.00049 7M1.00049 7L7.00049 13M1.00049 7L7.0005 0.999999" stroke="#8C6E47"/></svg>',
                         'next_text' => '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="14" viewBox="0 0 19 14" fill="none"><path d="M-7.15494e-08 7L17.9995 7M17.9995 7L11.9995 1M17.9995 7L11.9995 13" stroke="#8C6E47"/></svg>',
                         'add_args'  => array_filter([
                             'lots'               => $lots,
                             'search_vehicle'     => $q,
-                            'vehicle_brand'      => $brand_slug,
-                            'vehicle_categories' => $cat_slug,
-                            'order_by'           => $_GET['order_by'] ?? '',
-                            'year_from'          => $year_from_param,
-                            'year_to'            => $year_to_param,
+                            'order_by'           => $order_by,
+                            'make_id'            => $make_id,
+                            'vehicle_categories' => $cat_slug, // lo dejamos en la URL, pero aún no filtra en SQL
                             'posts_per_page'     => $ppp,
-                        ], static fn($v) => $v !== '' && $v !== null),
+                        ], static fn($v) => $v !== '' && $v !== null && $v !== 0),
                     ]);
 
                     if ($pagination) {
                         echo '<div class="auction_result-pagination">' . $pagination . '</div>';
                     }
-
-                    wp_reset_postdata();
                     ?>
-
                 <?php else: ?>
                     <div class="no-one">
                         <p><?php esc_html_e('No results found'); ?></p>
                     </div>
                 <?php endif; ?>
+
+
             </div>
         </div>
 

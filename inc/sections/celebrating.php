@@ -3,7 +3,9 @@
 $auction_subtitle = get_field('auction_subtitle');
 $auction_title = get_field('auction_title');
 $auction_text = get_field('auction_text');
+
 $auction_button = get_field('auction_button');
+$auction_button_text = get_field('auction_button_text');
 ?>
 <section class="celebrating">
     <div class="celebrating_container">
@@ -29,9 +31,9 @@ $auction_button = get_field('auction_button');
                 <?php if ($auction_text): ?>
                     <p><?php echo $auction_text; ?></p>
                 <?php endif; ?>
-                <?php if ($auction_button): ?>
-                    <a href="<?php echo esc_url($auction_button['url']); ?>" class="permalink_border">
-                        <?php echo ($auction_button['title']); ?>
+                <?php if ($auction_button && !empty($auction_button_text)): ?>
+                    <a href="<?php echo $auction_button; ?>" class="permalink_border" title="<?php echo $auction_button_text; ?>" alt="<?php echo $auction_button_text; ?>">
+                        <?php echo $auction_button_text; ?>
                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
                             <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
                         </svg>
@@ -40,10 +42,10 @@ $auction_button = get_field('auction_button');
             </div>
             <div class="celebrating_info-thumb">
                 <div class="image">
-                    <?php if ($auction_button): ?>
-                        <a href="<?php echo esc_url($auction_button['url']); ?>" class="permalink">Learn More</a>
-                        <img src="<?php echo IMG; ?>/vector3.svg" class="image-vector" alt="vector">
-                        <img src="<?php echo IMG; ?>/3.jpg" class="image-thumb" alt="icon">
+                    <?php if ($auction_button && !empty($auction_button_text)): ?>
+                        <a href="<?php echo esc_url($auction_button); ?>" class="permalink" title="Learn More" alt="Learn More">Learn More</a>
+                        <img src="<?php echo IMG; ?>/vector3.svg" class="image-vector" alt="vector" title="Vector">
+                        <img src="<?php echo IMG; ?>/3.jpg" class="image-thumb" alt="icon" title="Icon">
                     <?php endif; ?>
                 </div>
             </div>
@@ -65,24 +67,24 @@ $auction_button = get_field('auction_button');
         <div class="celebrating-images">
             <div class="image">
                 <?php if ($link1 = get_field('section_link1')): ?>
-                    <a href="<?php echo esc_url($link1['url']); ?>" class="permalink">Learn More</a>
+                    <a href="<?php echo esc_url($link1); ?>" class="permalink" title="Learn More">Learn More</a>
                 <?php endif; ?>
                 <?php if ($icon1 = get_field('section_icon1')): ?>
-                    <img src="<?php echo $icon1; ?>" alt="icon" class="image-vector">
+                    <img src="<?php echo $icon1; ?>" alt="icon" class="image-vector" title="Vector" alt="Vector">
                 <?php endif; ?>
                 <?php if ($image1 = get_field('section_image1')): ?>
-                    <img src="<?php echo $image1; ?>" alt="image" class="image-thumb">
+                    <img src="<?php echo $image1; ?>" alt="image" class="image-thumb" title="Thumb" alt="Thumb">
                 <?php endif; ?>
             </div>
             <div class="image">
                 <?php if ($link2 = get_field('section_link2')): ?>
-                    <a href="<?php echo esc_url($link2['url']); ?>" class="permalink">Learn More</a>
+                    <a href="<?php echo esc_url($link2); ?>" class="permalink" title="Learn More">Learn More</a>
                 <?php endif; ?>
                 <?php if ($icon2 = get_field('section_icon2')): ?>
-                    <img src="<?php echo $icon2; ?>" alt="icon" class="image-vector">
+                    <img src="<?php echo $icon2; ?>" alt="icon" class="image-vector" title="Vector" alt="Vector">
                 <?php endif; ?>
                 <?php if ($image2 = get_field('section_image2')): ?>
-                    <img src="<?php echo $image2; ?>" alt="image" class="image-thumb">
+                    <img src="<?php echo $image2; ?>" alt="image" class="image-thumb" title="Thumb" alt="Thumb">
                 <?php endif; ?>
             </div>
         </div>

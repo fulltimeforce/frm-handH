@@ -554,3 +554,186 @@ img {
         opacity: .6 !important;
     }
 }
+
+/* JC */
+.listing_info-bid div:last-of-type .p17.only-text{
+    font-size: 1.875vw;
+    color: #8c6e47;
+    font-weight: 500;
+}
+@media (max-width: 1420px) {
+    .listing_info-bid div:last-of-type .p17.only-text {
+        font-size: 36px;
+    }
+}
+.vehicle_card-info h4 span.only-text {
+    font-size: inherit !important;
+    color: #8c6e47;
+    font-weight: 500;
+    font-family: GothamMedium;
+}
+
+.faq_list .description iframe, .opportunities_dropdown .description iframe{
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 16/9;
+}
+
+
+
+/* SINGLE vehicles */
+@media (min-width: 1024px) {
+  .single-vehicles #listingTab.accordionjs .acc_content {
+    display: block !important;
+    height: 80px !important;
+  }
+
+  .single-vehicles
+    #listingTab.accordionjs
+    .acc_section.acc_active
+    .acc_content {
+    height: auto !important;
+  }
+}
+@media (max-width: 767px) {
+  .single-vehicles #listingTab.accordionjs .acc_content {
+    display: block !important;
+  }
+}
+
+/*===============Our Services===============*/
+/* width: calc(320 / 1920 * 100vw); */
+.page-template-our-services .request_quote h3 {
+  font-weight: 300;
+}
+.page-template-our-services .required-asterisk {
+  color: #f00;
+}
+@media (min-width: 1420px) {
+	.vehicle_card .vehicle_card-price{
+    	min-height: 4.167vw;
+		display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+    }
+    .refine_vehicles .vehicle_card h3{
+    	min-height: 2.875vw;
+    }
+  .page-template-our-services .required-fields-note {
+    font-size: calc(14 / 1920 * 100vw);
+    letter-spacing: calc(1.4 / 1920 * 100vw);
+    margin-bottom: calc(32 / 1920 * 100vw);
+  }
+}
+.page-template-our-services .required-fields-note {
+  color: #000;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: GothamMedium !important;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  letter-spacing: 1.4px;
+  opacity: 0.6;
+  margin-bottom: 32px;
+}
+
+.page-template-our-services .request_quote div:has(> .gsection_title) {
+  padding-top: 16px;
+}
+.page-template-our-services .request_quote div:has(> .gsection_title) + div {
+  padding-top: 24px;
+}
+.page-template-our-services
+  .request_quote
+  div:has(> .gsection_title)
+  + div
+  + div {
+  padding-top: 24px;
+}
+
+.page-template-our-services .request_quote div:has(> button[type="submit"]) {
+  padding-top: 24px !important;
+}
+
+/* width: calc(320 / 1920 * 100vw); */
+@media (min-width: 767px) {
+  .page-template-our-services .request_quote div:has(> .gsection_title) {
+    /* padding-top: 16px; */
+    padding-top: calc(16 / 1920 * 100vw);
+  }
+  .page-template-our-services .request_quote div:has(> .gsection_title) + div {
+    /* padding-top: 24px; */
+    padding-top: calc(24 / 1920 * 100vw);
+  }
+  .page-template-our-services
+    .request_quote
+    div:has(> .gsection_title)
+    + div
+    + div {
+    /* padding-top: 24px; */
+    padding-top: calc(24 / 1920 * 100vw);
+  }
+
+  .page-template-our-services .request_quote div:has(> button[type="submit"]) {
+    /* padding-top: 24px !important; */
+    padding-top: calc(24 / 1920 * 100vw) !important;
+  }
+}
+
+.car_card-info h3, .vehicle_card-info h3{
+    -webkit-line-clamp: 2;
+}
+
+@media (min-width: 1420px) {
+	.car_card-info h3, .vehicle_card-info h3{
+    	min-height: 2.875vw;
+    }
+}
+
+@media (max-width: 1420px) {
+	.vehicle_card .vehicle_card-price{
+    	min-height: 78.8px;
+		display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+    }
+    .car_card-info h3, .vehicle_card-info h3, .refine_vehicles .vehicle_card h3{
+    	min-height: 42.4px;
+    }
+}
+
+@media (max-width: 1420px) and (min-width: 1200px) {
+	.featured_articles-body{
+		grid-template-columns: 360px 1fr 1fr 1fr !important;
+	}
+	.featured_articles .new.big .new_content{
+		height: 260px !important;
+	}
+	.featured_articles .new.big .new_image{
+		height: 390px !important;
+	}
+	.featured_articles .new.big .new_image a{
+		display: block !important;
+		height: 100% !important;
+	}
+	.featured_articles .new.big .new_image img{
+		height: 100% !important;
+	}
+	.featured_articles .new.medium .new_content{
+		height: 190px !important;
+	}
+	.featured_articles .new.small{
+		height: 142px !important;
+	}
+	.featured_articles .new:not(.big) h3{
+		font-size: 12px !important;
+	}
+}
+
+@media (max-width: 1420px) and (min-width: 1024px) {
+	.footer_suscription-form form .gform-footer{
+		bottom: 40px !important;
+	}
+}
