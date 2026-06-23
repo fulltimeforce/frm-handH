@@ -806,3 +806,29 @@ img {
         max-width: 100vw;
     }
 }
+
+/* Events slider: three square cards on desktop. */
+.events .events_slide-item {
+    aspect-ratio: 1 / 1;
+    margin: 0;
+    padding: 0;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.events .events_slide-item::before {
+    display: none;
+}
+
+.events .events_slide .splide__slide {
+    border: 0;
+}
+
+.events .events_slide-info {
+    min-height: 100%;
+}
+
+.events .events_slide:not(.is-overflow) .splide__pagination {
+    display: none !important;
+}

@@ -52,6 +52,14 @@ function enqueue_base_assets(): void
     THEME_VERSION,
     true
   );
+
+  wp_enqueue_script(
+    'events-slider-js',
+    get_template_directory_uri() . '/public/js/pages/events/index.js',
+    ['main-js'],
+    filemtime(get_template_directory() . '/public/js/pages/events/index.js'),
+    true
+  );
 }
 
 function enqueue_accordion_assets(): void
