@@ -758,3 +758,51 @@ img {
         grid-template-columns: 1fr;
     }
 }
+
+/* Upcoming auctions: dark overlay behind the "Lots Live" label on inactive cards. */
+.upcoming .vehicle:not(.active) .vehicle_bg::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: min(100%, 18.75vw);
+    background: rgba(0, 0, 0, 0.32);
+    pointer-events: none;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+@media (max-width: 1420px) {
+    .upcoming .vehicle:not(.active) .vehicle_bg::after {
+        height: min(100%, 360px);
+    }
+}
+
+/* Upcoming auctions: lighter full-image overlay on the expanded card. */
+.upcoming .vehicle.active .vehicle_bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.13);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.listing_fullview-content {
+    background: rgb(0 0 0 / 91%);
+}
+
+.listing_fullview .splide__slide {
+    text-align: center;
+}
+
+.listing_fullview-content img {
+    width: auto;
+}
+
+@media (max-width: 768px){
+    .listing_fullview .splide__slide img {
+        max-width: 100vw;
+    }
+}

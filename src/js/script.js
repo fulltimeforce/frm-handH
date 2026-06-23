@@ -616,12 +616,14 @@ import "@splidejs/splide/css";
             const openFullView = () => {
                 fullView.classList.add("active");
                 document.body.style.overflow = "hidden";
+                document.documentElement.style.overflow = "hidden";
                 document.body.style.height = "100vh";
             };
 
             // Función para cerrar
             const closeFullView = () => {
                 fullView.classList.remove("active");
+                document.documentElement.style.overflow = "";
                 document.body.style.overflow = "";
                 document.body.style.height = "auto";
             };
@@ -687,6 +689,7 @@ import "@splidejs/splide/css";
             grid.classList.add("active");
             document.body.style.overflow = "hidden";
             document.body.style.height = "100vh";
+            grid.scrollTo(0, 0);
         };
 
         // Función para cerrar

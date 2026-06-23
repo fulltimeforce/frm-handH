@@ -58,5 +58,117 @@ if ($gallery && is_array($gallery)):
             </div>
         </div>
     <?php endif; ?>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const track = document.querySelector("#splide02 .splide__track");
+
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let scale = 1;
+
+    const getActiveImg = () =>
+        document.querySelector("#splide02 .splide__slide.is-active img");
+
+    const reset = () => {
+        const img = getActiveImg();
+        if (!img) return;
+
+        scale = 1;
+        currentX = 0;
+        currentY = 0;
+
+        img.dataset.scale = 1;
+        img.style.transform = "scale(1) translate(0px, 0px)";
+    };
+
+    document.querySelector("#splide02").addEventListener("wheel", (e) => {
+        const img = getActiveImg();
+        if (!img) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        scale += e.deltaY < 0 ? 0.1 : -0.1;
+        scale = Math.min(Math.max(scale, 1), 3);
+
+        img.dataset.scale = scale;
+
+        apply(img);
+    }, { passive: false });
+
+    track.addEventListener("mousedown", (e) => {
+        const img = getActiveImg();
+        if (!img) return;
+
+        if (scale <= 1) return;
+
+        isDragging = true;
+
+        startX = e.clientX - currentX;
+        startY = e.clientY - currentY;
+    });
+
+    document.addEventListener("mousemove", (e) => {
+        const img = getActiveImg();
+        if (!img || !isDragging) return;
+
+        currentX = e.clientX - startX;
+        currentY = e.clientY - startY;
+
+        apply(img);
+    });
+
+    document.addEventListener("mouseup", () => {
+        isDragging = false;
+    });
+
+    function apply(img) {
+        img.style.transform = `translate(${currentX}px, ${currentY}px) scale(${scale})`;
+        img.style.transformOrigin = "center center";
+        img.style.cursor = scale > 1 ? "grab" : "zoom-in";
+    }
+
+    document.querySelector("#splide02").addEventListener("click", () => {
+        reset();
+    });
+
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const gridItems = document.querySelectorAll(".listing_grid-item");
+    const closeBtn = document.querySelector(".listing_grid-close");
+    const thumbnailPosts = document.querySelectorAll(".thumbnail-post");
+
+    gridItems.forEach((item) => {
+        item.addEventListener("click", () => {
+            const idx = Number(item.dataset.fullviewIndex);
+            if (Number.isNaN(idx)) return;
+
+            if (closeBtn) closeBtn.click();
+
+            if (thumbnailPosts && thumbnailPosts[idx]) {
+                thumbnailPosts[idx].click();
+            } else {
+                const viewer = document.querySelector(".listing_fullview");
+                viewer?.classList.add("active");
+                document.body.style.overflow = "hidden";
+            }
+
+            setTimeout(() => {
+                if (window.splide02) {
+                    window.splide02.go(idx);
+                } else {
+                    console.error("Error: window.splide02 no está disponible. Asegúrate de haber guardado los cambios en el min.js");
+                }
+            }, 100);
+        });
+    });
+});
+</script>
 
 <?php endif; ?>
