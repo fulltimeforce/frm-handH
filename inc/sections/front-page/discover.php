@@ -11,8 +11,6 @@ $args_1 = [
       'compare' => '=',
     ]
   ],
-//  'orderby' => 'meta_value',
-//  'order' => 'DESC',
   'meta_type' => 'DATETIME',
 ];
 $q1 = new WP_Query($args_1);
