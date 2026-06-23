@@ -736,4 +736,25 @@ img {
 	.footer_suscription-form form .gform-footer{
 		bottom: 40px !important;
 	}
+	.specialist_page .specialist_content h2,.specialist_page .specialist_content .specialist_text.text{
+		width: 50% ;
+	}
+}
+
+.specialist_item_wrapper .specialist_item_body .specialist_item_card_header {
+    flex-wrap: nowrap;
+}
+
+@media(min-width: 1200px) {
+	 .single_team_page_wrapper {
+        padding-top: 8.3333333333vw;
+    }
+	.single_team_page .single_team_image {
+		height: auto;
+	}
+}
+@media(min-width: 1024px) {
+    .single_team.auction {
+        grid-template-columns: 1fr;
+    }
 }
