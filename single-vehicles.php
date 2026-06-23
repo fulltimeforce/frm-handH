@@ -657,7 +657,9 @@ if ($nav_query_args && $auction_permalink) {
         <?php endif; ?>
 
         <?php
-        $vehicle_notes = get_field('footnote');
+        $vehicle_notes = function_exists('hnh_get_global_vehicle_footnote')
+            ? hnh_get_global_vehicle_footnote(get_the_ID())
+            : get_field('footnote');
         if ($vehicle_notes): ?>
             <div class="listing_info-notes">
                 <div class="listing_info-notes-head">

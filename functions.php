@@ -50,6 +50,7 @@ require_once get_template_directory() . '/inc/modules/vehicles/quick_edit.php';
 require_once get_template_directory() . '/inc/modules/vehicles/admin-bulk-edit.php';
 require_once get_template_directory() . '/inc/modules/vehicles/import.php';
 require_once get_template_directory() . '/inc/modules/vehicles/structure.php';
+require_once get_template_directory() . '/inc/modules/vehicles/footnote.php';
 require_once get_template_directory() . '/inc/modules/vehicles/admin-columns.php';
 require_once get_template_directory() . '/inc/modules/vehicles/admin-scripts.php';
 require_once get_template_directory() . '/inc/modules/vehicles/admin-gallery.php';
