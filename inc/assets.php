@@ -2,6 +2,12 @@
 if (!defined('ABSPATH')) {
   exit;
 }
+
+// Set to true to display three square event cards on desktop.
+if (!defined('HNH_EVENTS_THREE_SLIDES')) {
+  define('HNH_EVENTS_THREE_SLIDES', false);
+}
+
 add_action('wp_enqueue_scripts', 'enqueue_assets');
 // add_filter('script_loader_tag', 'script_as_module', 10, 3);
 function enqueue_assets(): void
@@ -53,13 +59,15 @@ function enqueue_base_assets(): void
     true
   );
 
-  wp_enqueue_script(
-    'events-slider-js',
-    get_template_directory_uri() . '/public/js/pages/events/index.js',
-    ['main-js'],
-    filemtime(get_template_directory() . '/public/js/pages/events/index.js'),
-    true
-  );
+  if (HNH_EVENTS_THREE_SLIDES) {
+    wp_enqueue_script(
+      'events-slider-js',
+      get_template_directory_uri() . '/public/js/pages/events/index.js',
+      ['main-js'],
+      filemtime(get_template_directory() . '/public/js/pages/events/index.js'),
+      true
+    );
+  }
 }
 
 function enqueue_accordion_assets(): void

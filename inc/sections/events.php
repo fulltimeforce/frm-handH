@@ -1,4 +1,4 @@
-<section class="events">
+<section class="events<?php echo defined('HNH_EVENTS_THREE_SLIDES') && HNH_EVENTS_THREE_SLIDES ? ' events--three-slides' : ''; ?>">
     <div class="container">
         <div class="featured_articles_head title_watermark">
             <div class="watermark">

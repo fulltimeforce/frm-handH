@@ -808,7 +808,14 @@ img {
 }
 
 /* Events slider: three square cards on desktop. */
-.events .events_slide-item {
+.events:not(.events--three-slides) .events_slide-item {
+    min-height: clamp(360px, 31vw, 520px);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.events.events--three-slides .events_slide-item {
     aspect-ratio: 1 / 1;
     margin: 0;
     padding: 0;
@@ -817,21 +824,68 @@ img {
     background-size: cover;
 }
 
-.events .events_slide-item::before {
+.events.events--three-slides .events_slide-item::before {
     display: none;
 }
 
-.events .events_slide .splide__slide {
+.events.events--three-slides .events_slide .splide__slide {
     border: 0;
 }
 
-.events .events_slide-info {
+.events.events--three-slides .events_slide-info {
     min-height: 100%;
 }
 
-.events .events_slide:not(.is-overflow) .splide__pagination {
+.events.events--three-slides .events_slide:not(.is-overflow) .splide__pagination {
     display: none !important;
 }
 .listing_fullview-button {
     display: none;
+}
+
+/*  */
+.events .events_slide-item:before{
+  background: rgba(0, 0, 0, .15);
+}
+
+/* Events slider: position the CTA lower when the card only contains a button. */
+.events .events_slide-item:has(.events_slide-info:not(:has(> p))) {
+    position: relative;
+}
+
+.events .events_slide-info:not(:has(> p)) {
+    position: static;
+}
+
+.events .events_slide-info:not(:has(> p)) > div {
+    position: absolute;
+    right: 0;
+    bottom: clamp(20px, 3.5vw, 55px);
+    left: 0;
+    width: 100%;
+    padding: 0;
+    justify-content: center;
+    pointer-events: auto;
+    z-index: 3;
+}
+
+.events .events_slide-info:not(:has(> p)) > div a {
+    position: relative;
+    pointer-events: auto;
+    z-index: 4;
+}
+
+/* Events slider: slightly smaller CTA button. */
+.events .events_slide-info div a {
+    width: 160px;
+    height: 36px;
+    font-size: 11px;
+}
+
+@media (min-width: 1420px) {
+    .events .events_slide-info div a {
+        width: 10.625vw;
+        height: 2.2916666667vw;
+        font-size: 0.7291666667vw;
+    }
 }
