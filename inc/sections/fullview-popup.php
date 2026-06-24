@@ -47,9 +47,14 @@ if ($gallery && is_array($gallery)):
                 <div class="listing_fullview-slide splide">
                     <div class="splide__track">
                         <ul class="splide__list">
-                            <?php foreach ($imgs as $img): ?>
+                            <?php foreach ($imgs as $n => $img): ?>
                                 <li class="splide__slide listing_fullview-item">
-                                    <img class="wh-100" src="<?php echo esc_url($img['url']); ?>" alt="<?php echo esc_attr($img['alt'] ?: 'Vehicle Image'); ?>">
+                                    <img
+                                        class="wh-100"
+                                        src="<?php echo esc_url($img['url']); ?>"
+                                        data-index="<?php echo $n; ?>"
+                                        alt="<?php echo esc_attr($img['alt'] ?: 'Vehicle Image'); ?>"
+                                    >
                                 </li>
                             <?php endforeach; ?>
                         </ul>
@@ -59,21 +64,87 @@ if ($gallery && is_array($gallery)):
         </div>
     <?php endif; ?>
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+(function () {
+    const fullView = document.querySelector('.listing_fullview');
 
-    const track = document.querySelector("#splide02 .splide__track");
+    function waitForSplide(callback) {
+        const interval = setInterval(() => {
+            if (window.splide02 && window.splide02.Components) {
+                clearInterval(interval);
+                callback();
+            }
+        }, 50);
+    }
 
+    function syncAll(index) {
+        const thumbnail = document.querySelector(".thumbnail-post");
+        const slide = window.splide02.Components.Slides.getAt(index);
+        const img = slide?.slide.querySelector("img");
+
+        if (!img || !thumbnail) return;
+
+        thumbnail.src = img.src;
+        thumbnail.dataset.index = index;
+
+        if (window.splide01) {
+            window.splide01.go(index);
+            setTimeout(() => {
+                window.splide01.go(index);
+            }, 0);
+        }
+    }
+
+    function syncToMainImage() {
+        const mainImg = document.querySelector(".thumbnail-post");
+        const index = parseInt(mainImg?.dataset.index || 0, 10);
+
+        if (!window.splide02) return;
+
+        window.splide02.go(index - 1);
+    }
+
+    if (fullView) {
+        const observer = new MutationObserver(() => {
+            if (fullView.classList.contains('active')) {
+                setTimeout(syncToMainImage, 120);
+            }
+        });
+
+        observer.observe(fullView, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+    }
+
+    waitForSplide(() => {
+        window.splide02.on('moved', (newIndex) => {
+            reset();
+            syncAll(newIndex);
+        });
+    });
+
+    let scale = 1;
+    let currentX = 0;
+    let currentY = 0;
     let isDragging = false;
     let startX = 0;
     let startY = 0;
-    let currentX = 0;
-    let currentY = 0;
-    let scale = 1;
 
-    const getActiveImg = () =>
-        document.querySelector("#splide02 .splide__slide.is-active img");
+    const track = document.querySelector("#splide02 .splide__track");
 
-    const reset = () => {
+    const getActiveImg = () => {
+        const index = window.splide02?.index;
+        const slide = window.splide02?.Components.Slides.getAt(index);
+        return slide?.slide.querySelector("img");
+    };
+
+    function apply(img) {
+        img.style.transform = `translate(${currentX}px, ${currentY}px) scale(${scale})`;
+        img.style.transformOrigin = "center center";
+        img.style.cursor = scale > 1 ? "grab" : "zoom-in";
+    }
+
+    function reset() {
         const img = getActiveImg();
         if (!img) return;
 
@@ -81,33 +152,26 @@ document.addEventListener("DOMContentLoaded", () => {
         currentX = 0;
         currentY = 0;
 
-        img.dataset.scale = 1;
-        img.style.transform = "scale(1) translate(0px, 0px)";
-    };
+        img.style.transform = "translate(0px, 0px) scale(1)";
+    }
 
-    document.querySelector("#splide02").addEventListener("wheel", (e) => {
+    document.addEventListener("wheel", (e) => {
         const img = getActiveImg();
-        if (!img) return;
+        if (!img || !fullView?.classList.contains('active')) return;
 
         e.preventDefault();
-        e.stopPropagation();
 
         scale += e.deltaY < 0 ? 0.1 : -0.1;
         scale = Math.min(Math.max(scale, 1), 3);
 
-        img.dataset.scale = scale;
-
         apply(img);
     }, { passive: false });
 
-    track.addEventListener("mousedown", (e) => {
+    track?.addEventListener("mousedown", (e) => {
         const img = getActiveImg();
-        if (!img) return;
-
-        if (scale <= 1) return;
+        if (!img || scale <= 1) return;
 
         isDragging = true;
-
         startX = e.clientX - currentX;
         startY = e.clientY - currentY;
     });
@@ -126,49 +190,24 @@ document.addEventListener("DOMContentLoaded", () => {
         isDragging = false;
     });
 
-    function apply(img) {
-        img.style.transform = `translate(${currentX}px, ${currentY}px) scale(${scale})`;
-        img.style.transformOrigin = "center center";
-        img.style.cursor = scale > 1 ? "grab" : "zoom-in";
-    }
+    window.addEventListener("keydown", (e) => {
 
-    document.querySelector("#splide02").addEventListener("click", () => {
-        reset();
+        if (!window.splide02) return;
+
+        if (e.key === "ArrowRight") {
+            e.preventDefault();
+            reset();
+            window.splide02.go(">");
+        }
+
+        if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            reset();
+            window.splide02.go("<");
+        }
     });
 
-});
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const gridItems = document.querySelectorAll(".listing_grid-item");
-    const closeBtn = document.querySelector(".listing_grid-close");
-    const thumbnailPosts = document.querySelectorAll(".thumbnail-post");
-
-    gridItems.forEach((item) => {
-        item.addEventListener("click", () => {
-            const idx = Number(item.dataset.fullviewIndex);
-            if (Number.isNaN(idx)) return;
-
-            if (closeBtn) closeBtn.click();
-
-            if (thumbnailPosts && thumbnailPosts[idx]) {
-                thumbnailPosts[idx].click();
-            } else {
-                const viewer = document.querySelector(".listing_fullview");
-                viewer?.classList.add("active");
-                document.body.style.overflow = "hidden";
-            }
-
-            setTimeout(() => {
-                if (window.splide02) {
-                    window.splide02.go(idx);
-                } else {
-                    console.error("Error: window.splide02 no está disponible. Asegúrate de haber guardado los cambios en el min.js");
-                }
-            }, 100);
-        });
-    });
-});
+})();
 </script>
 
 <?php endif; ?>

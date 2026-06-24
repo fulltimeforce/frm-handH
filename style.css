@@ -832,3 +832,6 @@ img {
 .events .events_slide:not(.is-overflow) .splide__pagination {
     display: none !important;
 }
+.listing_fullview-button {
+    display: none;
+}

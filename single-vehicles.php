@@ -260,10 +260,10 @@ if ($nav_query_args && $auction_permalink) {
                 </div>
 
                 <div class="listing_images-main">
-                    <img style="pointer-events: all;" class="wh-100 thumbnail-post" src="<?php echo esc_url($first['url']); ?>" alt="<?php echo esc_attr($first['alt'] ?: 'vehicle'); ?>">
+                    <img style="pointer-events: all;" data-index="0" class="wh-100 thumbnail-post" src="<?php echo esc_url($first['url']); ?>" alt="<?php echo esc_attr($first['alt'] ?: 'vehicle'); ?>">
                     <div id="openFullView" class="listing_images-counter p18" data-total="<?php echo $total; ?>">1/<?php echo $total; ?></div>
-                    <div id="openGrid" class="listing_images-grid">
-                        <img src="<?php echo IMG; ?>/grid-icon.svg" alt="icon">
+                    <div style="pointer-events: none;" id="openGrid" class="listing_images-grid">
+                        <img src="<?php echo IMG; ?>/zoom-icon.svg" alt="icon">
                     </div>
                 </div>
 
