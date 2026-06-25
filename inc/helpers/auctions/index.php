@@ -126,3 +126,104 @@ function hnh_get_past_auctions_query(array $filters = [], array $overrides = [])
 
   return new WP_Query(wp_parse_args($overrides, $defaults));
 }
+
+
+function hnh_cleanup_old_runs_by_age(int $minutes = 0): void
+{
+    if (!function_exists('wp_upload_dir')) {
+        return;
+    }
+
+    $uploads = wp_upload_dir();
+
+    $base = trailingslashit($uploads['basedir']) . 'hnh-bulk-images';
+
+    if (!is_dir($base)) {
+        return;
+    }
+
+    $limit = time() - ($minutes * 60);
+
+    $items = scandir($base);
+    if (!$items) {
+        return;
+    }
+
+    foreach ($items as $item) {
+
+        if ($item === '.' || $item === '..') {
+            continue;
+        }
+
+        if (strpos($item, 'run-') !== 0) {
+            continue;
+        }
+
+        $path = $base . '/' . $item;
+
+        if (!is_dir($path)) {
+            continue;
+        }
+
+        $modified = filemtime($path);
+        if (!$modified) {
+            continue;
+        }
+
+        if ($modified < $limit) {
+            hnh_delete_directory_recursive($path);
+        }
+    }
+}
+
+function hnh_delete_directory_recursive(string $dir): void
+{
+    if (realpath($dir) === false) {
+        return;
+    }
+
+    $uploads = wp_upload_dir();
+    $base = realpath(trailingslashit($uploads['basedir']) . 'hnh-bulk-images');
+
+    $real = realpath($dir);
+
+    if (!$real || $real === $base) {
+        return;
+    }
+
+    if (!str_starts_with($real, $base)) {
+        return;
+    }
+
+    if (!is_dir($real)) {
+        return;
+    }
+
+    $items = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($real, FilesystemIterator::SKIP_DOTS),
+        RecursiveIteratorIterator::CHILD_FIRST
+    );
+
+    foreach ($items as $item) {
+        if ($item->isDir()) {
+            @rmdir($item->getRealPath());
+        } else {
+            @unlink($item->getRealPath());
+        }
+    }
+
+    @rmdir($real);
+}
+
+add_action('admin_init', function () {
+
+    if (
+        !isset($_GET['post_type'], $_GET['page']) ||
+        $_GET['post_type'] !== 'auction' ||
+        $_GET['page'] !== 'hnh-bulk-images'
+    ) {
+        return;
+    }
+
+    hnh_cleanup_old_runs_by_age(1440); // 24h
+});

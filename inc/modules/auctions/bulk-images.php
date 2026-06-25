@@ -687,7 +687,7 @@ final class HNH_Bulk_Images
     {
         check_admin_referer('hnh_bulk_images_upload');
 
-        if (!isset($_FILES['chunk']['tmp_name'])) {
+        if (empty($_FILES['chunk']['tmp_name'])) {
             self::jsonError('no_chunk', 'No chunk received');
         }
 
@@ -697,6 +697,10 @@ final class HNH_Bulk_Images
 
         if (!$run_dir) {
             self::jsonError('invalid_run_dir', 'Invalid run dir');
+        }
+
+        if ($chunk_size <= 0) {
+            self::jsonError('invalid_chunk', 'Invalid chunk size');
         }
 
         $uploads = wp_upload_dir();
@@ -709,27 +713,53 @@ final class HNH_Bulk_Images
         $zip_path = trailingslashit($run_dir_path) . 'upload.zip';
         $offset = $chunk_index * $chunk_size;
 
-        $in = fopen($_FILES['chunk']['tmp_name'], 'rb');
-        $out = fopen($zip_path, 'c+b');
+        $in = null;
+        $out = null;
 
-        if (!$in || !$out) {
-            self::jsonError('stream_error', 'Cannot open file streams');
+        try {
+
+            $in = fopen($_FILES['chunk']['tmp_name'], 'rb');
+            if (!$in) {
+                throw new \Exception('Cannot open uploaded chunk');
+            }
+
+            $out = fopen($zip_path, 'c+b');
+            if (!$out) {
+                throw new \Exception('Cannot open target zip file');
+            }
+
+            if ($offset > 0) {
+                fseek($out, $offset);
+            }
+
+            while (!feof($in)) {
+                $buffer = fread($in, 1024 * 1024);
+                if ($buffer === false) {
+                    throw new \Exception('Error reading chunk stream');
+                }
+                fwrite($out, $buffer);
+            }
+
+            fflush($out);
+            clearstatcache();
+
+            wp_send_json_success([
+                'written_size' => file_exists($zip_path) ? filesize($zip_path) : 0,
+                'chunk_index'  => $chunk_index,
+            ]);
+
+        } catch (\Throwable $e) {
+
+            if (file_exists($zip_path) && filesize($zip_path) === 0) {
+                @unlink($zip_path);
+            }
+
+            self::jsonError('chunk_failed', $e->getMessage());
+
+        } finally {
+            if (is_resource($in)) fclose($in);
+            if (is_resource($out)) fclose($out);
         }
-
-        fseek($out, $offset);
-
-        while ($buff = fread($in, 1048576)) {
-            fwrite($out, $buff);
-        }
-
-        fclose($in);
-        fclose($out);
-        clearstatcache();
-
-        wp_send_json_success([
-            'written_size' => file_exists($zip_path) ? filesize($zip_path) : 0,
-            'chunk_index'  => $chunk_index,
-        ]);
     }
 
     public static function finalizeChunks(): void
@@ -770,69 +800,86 @@ final class HNH_Bulk_Images
         }
 
         $report = self::emptyReport();
-        $uploads = wp_upload_dir();
-        $report['debug']['uploads_basedir'] = $uploads['basedir'];
-        $report['debug']['run_dir'] = $ctx['run_dir_path'];
 
-        $extracted = self::buildZipManifest($ctx['zip_path'], $report);
-        if (!$extracted['ok']) {
-            self::jsonError('zip_open_failed', $extracted['message'] ?? 'Cannot open ZIP');
-        }
+        try {
 
-        $auction_debug = [];
-        $vehicles_map = self::getVehiclesMapForAuction($auction_id, $auction_debug);
-        $report['debug'] = array_merge($report['debug'], $auction_debug);
+            $uploads = wp_upload_dir();
+            $report['debug']['uploads_basedir'] = $uploads['basedir'];
+            $report['debug']['run_dir'] = $ctx['run_dir_path'];
 
-        $lot_keys = array_keys($extracted['vehicle_images']);
-        sort($lot_keys, SORT_NATURAL);
+            $extracted = self::buildZipManifest($ctx['zip_path'], $report);
+            if (!$extracted['ok']) {
+                throw new \Exception($extracted['message'] ?? 'Cannot open ZIP');
+            }
 
-        $report['debug']['lots_in_zip'] = array_map(
-            static fn($k) => $extracted['vehicle_images'][$k]['label'] ?? $k,
-            $lot_keys
-        );
+            $auction_debug = [];
+            $vehicles_map = self::getVehiclesMapForAuction($auction_id, $auction_debug);
+            $report['debug'] = array_merge($report['debug'], $auction_debug);
 
-        if (empty($vehicles_map)) {
-            $report['messages'][] = [
-                'type' => 'warn',
-                'text' => 'No vehicles matched this auction. Check <code>' . esc_html(self::META_AUCTION) . '</code> on a vehicle (auction ID or sale number).',
+            $lot_keys = array_keys($extracted['vehicle_images']);
+            sort($lot_keys, SORT_NATURAL);
+
+            $report['debug']['lots_in_zip'] = array_map(
+                static fn($k) => $extracted['vehicle_images'][$k]['label'] ?? $k,
+                $lot_keys
+            );
+
+            if (empty($vehicles_map)) {
+                $report['messages'][] = [
+                    'type' => 'warn',
+                    'text' => 'No vehicles matched this auction. Check <code>' . esc_html(self::META_AUCTION) . '</code> on a vehicle (auction ID or sale number).',
+                ];
+            }
+
+            $sale_number = function_exists('get_field') ? get_field('sale_number', $auction_id) : '';
+
+            $job = [
+                'run_dir'              => $run_dir,
+                'run_dir_path'         => $ctx['run_dir_path'],
+                'zip_path'             => $ctx['zip_path'],
+                'auction_id'           => $auction_id,
+                'sale_number'          => $sale_number,
+                'vehicle_images'       => $extracted['vehicle_images'],
+                'lot_keys'             => $lot_keys,
+                'lot_index'            => 0,
+                'image_index'          => 0,
+                'pending_attachments'  => [],
+                'vehicles_map'         => $vehicles_map,
+                'report'               => $report,
             ];
+
+            if (!self::saveJob($run_dir, $job)) {
+                throw new \Exception('Could not save processing job to disk.');
+            }
+
+            $matched = count($vehicles_map);
+
+            wp_send_json_success([
+                'total_lots'       => count($lot_keys),
+                'files_found'      => (int) $report['files_found'],
+                'vehicles_matched' => $matched,
+                'status_message'   => sprintf(
+                    'ZIP ready: %d image(s) in %d lot(s). %d vehicle(s) linked to this auction.',
+                    (int) $report['files_found'],
+                    count($lot_keys),
+                    $matched
+                ),
+            ]);
+
+        } catch (\Throwable $e) {
+
+            try {
+                $ctx = self::resolveRunContext($run_dir);
+                if ($ctx && !empty($ctx['run_dir_path']) && is_dir($ctx['run_dir_path'])) {
+                    self::deleteRunDir($ctx['run_dir_path']);
+                }
+                self::deleteJob($run_dir);
+            } catch (\Throwable $cleanupError) {
+                error_log('[prepareJob cleanup failed] ' . $cleanupError->getMessage());
+            }
+
+            self::jsonError('prepare_failed', $e->getMessage());
         }
-
-        $sale_number = function_exists('get_field') ? get_field('sale_number', $auction_id) : '';
-
-        $job = [
-            'run_dir'              => $run_dir,
-            'run_dir_path'         => $ctx['run_dir_path'],
-            'zip_path'             => $ctx['zip_path'],
-            'auction_id'           => $auction_id,
-            'sale_number'          => $sale_number,
-            'vehicle_images'       => $extracted['vehicle_images'],
-            'lot_keys'             => $lot_keys,
-            'lot_index'            => 0,
-            'image_index'          => 0,
-            'pending_attachments'  => [],
-            'vehicles_map'         => $vehicles_map,
-            'report'               => $report,
-        ];
-
-        if (!self::saveJob($run_dir, $job)) {
-            self::jsonError('job_save_failed', 'Could not save processing job to disk.');
-        }
-
-        $matched = count($vehicles_map);
-        $status = sprintf(
-            'ZIP ready: %d image(s) in %d lot(s). %d vehicle(s) linked to this auction.',
-            (int) $report['files_found'],
-            count($lot_keys),
-            $matched
-        );
-
-        wp_send_json_success([
-            'total_lots'       => count($lot_keys),
-            'files_found'      => (int) $report['files_found'],
-            'vehicles_matched' => $matched,
-            'status_message'   => $status,
-        ]);
     }
 
     public static function processBatch(): void
@@ -840,8 +887,35 @@ final class HNH_Bulk_Images
         self::raiseLimits();
         check_admin_referer('hnh_bulk_images_upload');
 
+        $run_dir = sanitize_text_field($_POST['chunk_run_dir'] ?? '');
+
         try {
             self::processBatchInner();
+        } catch (\Throwable $e) {
+
+            try {
+                if ($run_dir) {
+                    $ctx = self::resolveRunContext($run_dir);
+
+                    if ($ctx && !empty($ctx['run_dir_path'])) {
+                        self::deleteRunDir($ctx['run_dir_path']);
+                        self::deleteJob($run_dir);
+                    } else {
+                        $uploads = wp_upload_dir();
+                        $fallback = trailingslashit($uploads['basedir'])
+                            . self::WORKING_SUBDIR
+                            . '/' . sanitize_file_name($run_dir);
+
+                        if (is_dir($fallback)) {
+                            self::deleteRunDir($fallback);
+                        }
+                    }
+                }
+            } catch (\Throwable $cleanupError) {
+                error_log('Cleanup failed: ' . $cleanupError->getMessage());
+            }
+
+            throw $e;
         } finally {
             self::resetS3Client();
         }
@@ -1330,6 +1404,15 @@ final class HNH_Bulk_Images
 
     private static function jsonError(string $code, string $message, $detail = null): void
     {
+        $run_dir = sanitize_text_field($_POST['chunk_run_dir'] ?? '');
+
+        if ($run_dir) {
+            $ctx = self::resolveRunContext($run_dir);
+            if ($ctx && !empty($ctx['run_dir_path']) && is_dir($ctx['run_dir_path'])) {
+                self::deleteRunDir($ctx['run_dir_path']);
+            }
+        }
+
         $payload = [
             'code'    => $code,
             'message' => $message,
@@ -1537,6 +1620,9 @@ final class HNH_Bulk_Images
         } catch (\Throwable $e) {
             error_log('[HNH Bulk Images] S3 upload failed for attachment ' . $attach_id . ': ' . $e->getMessage());
             wp_delete_attachment($attach_id, true);
+            if (file_exists($path)) {
+                unlink($path);
+            }
             return null;
         }
 
