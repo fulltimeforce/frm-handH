@@ -960,3 +960,28 @@ img {
 .single-venue.postid-288340 .cta {
   display: none !important;
 }
+
+/* Venue slider event date: match the carousel title typography without its top spacing. */
+.pavilion_page .custom-carousel .slider_event_date {
+  font-family: GothamMedium;
+  font-weight: 500;
+  letter-spacing: 6%;
+  line-height: 140%;
+  margin-top: 16px;
+  margin-bottom: 0;
+  text-align: center;
+  font-size: 24px;
+}
+
+@media (min-width: 1420px) {
+  .pavilion_page .custom-carousel .slider_event_date {
+    margin-top: 0.8333333333vw;
+    font-size: 1.25vw;
+  }
+}
+
+@media (max-width: 768px) {
+  .pavilion_page .custom-carousel .slider_event_date {
+    font-size: 20px;
+  }
+}

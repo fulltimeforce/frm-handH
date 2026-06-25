@@ -58,8 +58,13 @@ get_banner('Homepage / Classic Auctions / ' . $title, esc_url($bg_image), $title
 
             <?php
             $slider_subtitle = get_field('slider_subtitle');
+            $slider_event_date = get_field('slider_event_date');
             if ($slider_subtitle): ?>
-                <h2><?php echo esc_html($slider_subtitle); ?></h2>
+                <h2><?= esc_html($slider_subtitle); ?></h2>
+            <?php endif; ?>
+            <?php
+            if ($slider_event_date): ?>
+                <p class="slider_event_date"><?= esc_html($slider_event_date); ?></p>
             <?php endif; ?>
         </section>
     </div>
