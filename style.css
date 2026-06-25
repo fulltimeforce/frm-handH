@@ -992,3 +992,33 @@ img {
     max-width: 16.1473880597vw !important;
   }
 }
+
+
+/* AQUI */
+@media (min-width: 1420px) {
+  .single_venue_info .how_to_get-row .content .event-main-info {
+    margin-bottom: calc(28 / 1920 * 100vw);
+  }
+
+  .single_venue_info .how_to_get-row .content .event-details-list {
+    margin-bottom: calc(36 / 1920 * 100vw);
+    line-height: calc(34 / 1920 * 100vw) !important;
+  }
+}
+
+@media (max-width: 1420px) {
+  .single_venue_info .how_to_get-row .content .event-main-info {
+    margin-bottom: 28px;
+  }
+
+  .single_venue_info .how_to_get-row .content .event-details-list {
+    margin-bottom: 36px;
+    line-height: 28px !important;
+  }
+}
+
+
+/*HOME events*/
+.events .splide__list .splide__slide:nth-of-type(1) .events_slide-item{
+    background-position: center calc(50% + 10px);
+}
