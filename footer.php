@@ -12,11 +12,13 @@
                     <div class="footer_nav-body">
                         <div>
                             <b>Address:</b>
-                            <p>Sterling House Maple Court, Tankersley S75 3DP</p>
+                            <!-- <p>Sterling House Maple Court, Tankersley S75 3DP</p> -->
+                             <p>Cinnamon House, Cinnamon Park Warrington, Cheshire WA2 0XP</p>
                         </div>
                         <div>
                             <b>Email:</b>
-                            <a href="mailto:sales@handh.co.uk">sales@handh.co.uk</a>
+                            <!-- <a href="mailto:sales@handh.co.uk">sales@handh.co.uk</a> -->
+                             <a href="mailto:info@handh.co.uk">info@handh.co.uk</a>
                         </div>
                         <div>
                             <b>Phone:</b>

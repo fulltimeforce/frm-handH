@@ -985,3 +985,10 @@ img {
     font-size: 20px;
   }
 }
+
+/* FOOTER */
+@media (min-width: 1420px) {
+  .footer_nav-body div:nth-of-type(1) {
+    max-width: 16.1473880597vw !important;
+  }
+}
