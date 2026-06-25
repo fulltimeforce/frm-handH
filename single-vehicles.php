@@ -773,11 +773,7 @@ if ($nav_query_args && $auction_permalink) {
         }
 
         function getFullViewSplide() {
-            const root = document.querySelector('.listing_fullview-slide');
-            if (!root) {
-                return null;
-            }
-            return root.splide || null;
+            return window.hnhFullViewSplide || null;
         }
 
         function whenFullViewSplideReady(callback, attempts = 30) {
@@ -814,27 +810,21 @@ if ($nav_query_args && $auction_permalink) {
         }
 
         function openFullViewAt(slideIndex, clickedSrc) {
-            grid.classList.remove('active');
-            fullView.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            document.body.style.height = '100vh';
-
             const index = clickedSrc
                 ? findFullViewIndexByImageSrc(clickedSrc)
                 : slideIndex;
 
-            const navigate = () => {
-                whenFullViewSplideReady((splide) => {
-                    requestAnimationFrame(() => {
-                        requestAnimationFrame(() => {
-                            splide.refresh();
-                            splide.go(index);
-                        });
-                    });
-                });
-            };
+            whenFullViewSplideReady((splide) => {
+                grid.classList.remove('active');
+                fullView.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                document.body.style.height = '100vh';
 
-            setTimeout(navigate, 50);
+                const speed = splide.options.speed;
+                splide.options.speed = 0;
+                splide.go(index);
+                splide.options.speed = speed;
+            });
         }
 
         document.querySelectorAll('.listing_grid-item[data-fullview-index]').forEach((item) => {

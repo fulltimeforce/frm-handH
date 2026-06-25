@@ -66,10 +66,12 @@ if ($gallery && is_array($gallery)):
 <script>
 (function () {
     const fullView = document.querySelector('.listing_fullview');
+    const getFullViewSplide = () => window.hnhFullViewSplide;
+    const getMainGallerySplide = () => window.hnhMainGallerySplide;
 
     function waitForSplide(callback) {
         const interval = setInterval(() => {
-            if (window.splide02 && window.splide02.Components) {
+            if (getFullViewSplide()?.Components) {
                 clearInterval(interval);
                 callback();
             }
@@ -78,7 +80,8 @@ if ($gallery && is_array($gallery)):
 
     function syncAll(index) {
         const thumbnail = document.querySelector(".thumbnail-post");
-        const slide = window.splide02.Components.Slides.getAt(index);
+        const fullViewSplide = getFullViewSplide();
+        const slide = fullViewSplide?.Components.Slides.getAt(index);
         const img = slide?.slide.querySelector("img");
 
         if (!img || !thumbnail) return;
@@ -86,38 +89,12 @@ if ($gallery && is_array($gallery)):
         thumbnail.src = img.src;
         thumbnail.dataset.index = index;
 
-        if (window.splide01) {
-            window.splide01.go(index);
-            setTimeout(() => {
-                window.splide01.go(index);
-            }, 0);
-        }
-    }
-
-    function syncToMainImage() {
-        const mainImg = document.querySelector(".thumbnail-post");
-        const index = parseInt(mainImg?.dataset.index || 0, 10);
-
-        if (!window.splide02) return;
-
-        window.splide02.go(index - 1);
-    }
-
-    if (fullView) {
-        const observer = new MutationObserver(() => {
-            if (fullView.classList.contains('active')) {
-                setTimeout(syncToMainImage, 120);
-            }
-        });
-
-        observer.observe(fullView, {
-            attributes: true,
-            attributeFilter: ['class']
-        });
+        // The vertical loop starts at position 1, so its position is offset by one.
+        getMainGallerySplide()?.go(index + 1);
     }
 
     waitForSplide(() => {
-        window.splide02.on('moved', (newIndex) => {
+        getFullViewSplide().on('moved', (newIndex) => {
             reset();
             syncAll(newIndex);
         });
@@ -130,11 +107,12 @@ if ($gallery && is_array($gallery)):
     let startX = 0;
     let startY = 0;
 
-    const track = document.querySelector("#splide02 .splide__track");
+    const track = document.querySelector(".listing_fullview-slide .splide__track");
 
     const getActiveImg = () => {
-        const index = window.splide02?.index;
-        const slide = window.splide02?.Components.Slides.getAt(index);
+        const fullViewSplide = getFullViewSplide();
+        const index = fullViewSplide?.index;
+        const slide = fullViewSplide?.Components.Slides.getAt(index);
         return slide?.slide.querySelector("img");
     };
 
@@ -192,18 +170,19 @@ if ($gallery && is_array($gallery)):
 
     window.addEventListener("keydown", (e) => {
 
-        if (!window.splide02) return;
+        const fullViewSplide = getFullViewSplide();
+        if (!fullViewSplide) return;
 
         if (e.key === "ArrowRight") {
             e.preventDefault();
             reset();
-            window.splide02.go(">");
+            fullViewSplide.go(">");
         }
 
         if (e.key === "ArrowLeft") {
             e.preventDefault();
             reset();
-            window.splide02.go("<");
+            fullViewSplide.go("<");
         }
     });
 

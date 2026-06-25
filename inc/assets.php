@@ -46,7 +46,7 @@ function enqueue_base_assets(): void
     'main-js',
     get_template_directory_uri() . '/public/js/main.min.js',
     [],
-    THEME_VERSION,
+    filemtime(get_template_directory() . '/public/js/main.min.js'),
     true
   );
 
