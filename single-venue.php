@@ -59,12 +59,17 @@ get_banner('Homepage / Classic Auctions / ' . $title, esc_url($bg_image), $title
             <?php
             $slider_subtitle = get_field('slider_subtitle');
             $slider_event_date = get_field('slider_event_date');
+            $slider_description = get_field('slider_description');
             if ($slider_subtitle): ?>
                 <h2><?= esc_html($slider_subtitle); ?></h2>
             <?php endif; ?>
             <?php
             if ($slider_event_date): ?>
                 <p class="slider_event_date"><?= esc_html($slider_event_date); ?></p>
+            <?php endif; ?>
+            <?php
+            if ($slider_description): ?>
+                <div class="slider_event_date slider_event_date--description"><?= wp_kses_post($slider_description); ?></div>
             <?php endif; ?>
         </section>
     </div>

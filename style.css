@@ -972,11 +972,18 @@ img {
   text-align: center;
   font-size: 24px;
 }
+.pavilion_page .custom-carousel .slider_event_date--description{
+  font-size: 20px;
+}
 
 @media (min-width: 1420px) {
   .pavilion_page .custom-carousel .slider_event_date {
     margin-top: 0.8333333333vw;
     font-size: 1.25vw;
+  }
+
+  .pavilion_page .custom-carousel .slider_event_date--description{
+    font-size: 1.04vw;
   }
 }
 
