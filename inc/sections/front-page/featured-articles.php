@@ -48,7 +48,8 @@
 
                     echo wp_get_attachment_image(
                       $thumb_id,
-                      'medium',
+                      // 'medium',
+                      $size_class === 'big' ? 'large' : 'medium',
                       false,
                       [
                         'alt'   => esc_attr($title),
