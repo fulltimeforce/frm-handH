@@ -104,7 +104,7 @@ function hnh_custom_submit_button(
 
     $id = $mId[1] ?? '';
     $class = $mClass[1] ?? 'gform_button button';
-    $onclick = isset($mOnclick[1]) ? ' onclick="' . esc_attr($mOnclick[1]) . '"' : '';
+    $onclick = hnh_gform_submit_onclick($mOnclick[1] ?? '');
     $label = $mValue[1] ?? __('Submit', 'gravityforms');
 
     // SVG (hereda color del texto)
@@ -131,7 +131,7 @@ function hnh_custom_submit_button(
 
     $id = $mId[1] ?? '';
     $class = $mClass[1] ?? 'gform_button button';
-    $onclick = isset($mOnclick[1]) ? ' onclick="' . esc_attr($mOnclick[1]) . '"' : '';
+    $onclick = hnh_gform_submit_onclick($mOnclick[1] ?? '');
     $label = $mValue[1] ?? __('Submit', 'gravityforms');
 
     // SVG (hereda color del texto)
@@ -153,6 +153,20 @@ function hnh_custom_submit_button(
   return $button_html;
 }
 
+function hnh_gform_submit_onclick(string $original_onclick = ''): string
+{
+  $handler = 'if(window.gform&&window.gform.submission){window.gform.submission.handleButtonClick(this);}';
+  $onclick = trim($original_onclick);
+
+  if ($onclick === '') {
+    $onclick = $handler;
+  } elseif (strpos($onclick, 'window.gform.submission.handleButtonClick') === false) {
+    $onclick = rtrim($onclick, ';') . ';' . $handler;
+  }
+
+  return ' onclick="' . esc_attr($onclick) . '"';
+}
+
 function hnh_wrap_file_upload(
   $content,
   $field,
@@ -166,6 +180,7 @@ function hnh_wrap_file_upload(
       '<img src="' . IMG . '/upload.png">
             <p>Drag and drop files here to upload, or click to select.</p>
             <span class="browse_file">Browse File</span>
+            <span class="file_upload_status" aria-live="polite"></span>
         </div>';
   }
   return $content;
@@ -184,6 +199,7 @@ function hnh_wrap_gform_fileupload_field(
       '<img src="' . IMG . '/upload.png">
             <p>Drag and drop files here to upload, or click to select.</p>
             <span class="browse_file">Browse File</span>
+            <span class="file_upload_status" aria-live="polite"></span>
         </div>';
   }
   return $content;

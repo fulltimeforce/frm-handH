@@ -1,2 +1,215 @@
-(()=>{"use strict";const e=()=>{const e=document.querySelectorAll(".pin"),t=document.querySelector(".interactive_map");e.length&&t&&e.forEach((function(e){e.addEventListener("click",(function(o){o.preventDefault(),console.log(e);const n=this.getAttribute("data-pin-id");n&&t.setAttribute("data-state",n)}))}))};document.addEventListener("DOMContentLoaded",()=>{console.log("Custom JS module loaded."),(()=>{const e=document.querySelector(".video");e&&e.addEventListener("click",(function(){const t=e.getAttribute("data-state"),o=e.querySelector("video");o&&("1"===t?(e.setAttribute("data-state","2"),o.play()):(e.setAttribute("data-state","1"),o.pause(),o.muted=!1))}))})(),e(),document.addEventListener("change",(function(e){if(console.log("Change event detected:",e.target),e.target&&"blog-perpage"===e.target.id){const t=new URL(window.location.href);t.searchParams.set("posts_per_page",e.target.value),t.searchParams.delete("paged"),t.searchParams.delete("page"),window.location.href=t.toString()}})),document.querySelectorAll(".submenu_dropdown-item > button").forEach(e=>{e.addEventListener("click",(function(){const e=this.closest(".submenu_dropdown-item");document.querySelectorAll(".submenu_dropdown-item.active").forEach(t=>{t!==e&&t.classList.remove("active")}),e.classList.toggle("active")}))}),document.addEventListener("click",(function(e){e.target.closest(".submenu_dropdown-item")||document.querySelectorAll(".submenu_dropdown-item.active").forEach(e=>{e.classList.remove("active")})})),(()=>{const e=document.querySelector("#my-accordion");e&&e.accordionjs({closeAble:!0,closeOther:!0,slideSpeed:150,activeIndex:100})})()})})();
-//# sourceMappingURL=custom.js.map
+(() => {
+  'use strict';
+
+  const bindInteractiveMap = () => {
+    const pins = document.querySelectorAll('.pin');
+    const interactiveMap = document.querySelector('.interactive_map');
+
+    if (!pins.length || !interactiveMap) {
+      return;
+    }
+
+    pins.forEach((pin) => {
+      pin.addEventListener('click', function (event) {
+        event.preventDefault();
+
+        const pinId = this.getAttribute('data-pin-id');
+        if (pinId) {
+          interactiveMap.setAttribute('data-state', pinId);
+        }
+      });
+    });
+  };
+
+  const bindVideo = () => {
+    const videoWrap = document.querySelector('.video');
+
+    if (!videoWrap) {
+      return;
+    }
+
+    videoWrap.addEventListener('click', function () {
+      const state = videoWrap.getAttribute('data-state');
+      const video = videoWrap.querySelector('video');
+
+      if (!video) {
+        return;
+      }
+
+      if (state === '1') {
+        videoWrap.setAttribute('data-state', '2');
+        video.play();
+      } else {
+        videoWrap.setAttribute('data-state', '1');
+        video.pause();
+        video.muted = false;
+      }
+    });
+  };
+
+  const bindBlogPerPage = () => {
+    document.addEventListener('change', (event) => {
+      if (!event.target || event.target.id !== 'blog-perpage') {
+        return;
+      }
+
+      const url = new URL(window.location.href);
+      url.searchParams.set('posts_per_page', event.target.value);
+      url.searchParams.delete('paged');
+      url.searchParams.delete('page');
+      window.location.href = url.toString();
+    });
+  };
+
+  const getFileStatusText = (input) => {
+    if (!input.files || input.files.length === 0) {
+      return '';
+    }
+
+    if (input.files.length === 1) {
+      return input.files[0].name;
+    }
+
+    return `${input.files.length} files selected.`;
+  };
+
+  const updateFileUploadStatus = (input) => {
+    const wrap = input.closest('.my-filewrap');
+    if (!wrap) {
+      return;
+    }
+
+    const status = wrap.querySelector('.file_upload_status');
+    const browseButton = wrap.querySelector('.browse_file');
+    if (!status) {
+      return;
+    }
+
+    const hasFiles = !!input.files && input.files.length > 0;
+    status.textContent = getFileStatusText(input);
+    wrap.classList.toggle('has-file', hasFiles);
+
+    if (browseButton) {
+      browseButton.textContent = hasFiles ? 'Change File' : 'Browse File';
+    }
+  };
+
+  const bindFileUploadStatus = () => {
+    document.querySelectorAll('.my-filewrap input[type="file"]').forEach((input) => {
+      if (input.dataset.fileUploadStatusBound === 'true') {
+        updateFileUploadStatus(input);
+        return;
+      }
+
+      input.dataset.fileUploadStatusBound = 'true';
+      updateFileUploadStatus(input);
+      input.addEventListener('change', () => updateFileUploadStatus(input));
+    });
+  };
+
+  const bindGravityFormsRenderEvents = () => {
+    document.addEventListener('gform_post_render', () => {
+      bindFileUploadStatus();
+      clearSubmitLoading();
+    });
+    document.addEventListener('gform/postRender', () => {
+      bindFileUploadStatus();
+      clearSubmitLoading();
+    });
+
+    if (window.jQuery) {
+      window.jQuery(document).on('gform_post_render', () => {
+        bindFileUploadStatus();
+        clearSubmitLoading();
+      });
+    }
+  };
+
+  const setSubmitLoading = (button) => {
+    if (!button || button.classList.contains('is-loading')) {
+      return;
+    }
+
+    button.dataset.submitText = button.textContent.trim();
+    button.classList.add('is-loading');
+    button.setAttribute('aria-busy', 'true');
+  };
+
+  const clearSubmitLoading = () => {
+    document.querySelectorAll('.custom-submit.is-loading').forEach((button) => {
+      button.classList.remove('is-loading');
+      button.removeAttribute('aria-busy');
+      delete button.dataset.submitText;
+    });
+  };
+
+  const bindSubmitLoading = () => {
+    document.addEventListener('click', (event) => {
+      const button = event.target.closest('.custom-submit');
+
+      if (button) {
+        setSubmitLoading(button);
+      }
+    });
+
+    document.addEventListener('submit', (event) => {
+      const button = event.target.querySelector('.custom-submit');
+
+      if (button) {
+        setSubmitLoading(button);
+      }
+    });
+  };
+
+  const bindSubmenus = () => {
+    document.querySelectorAll('.submenu_dropdown-item > button').forEach((button) => {
+      button.addEventListener('click', function () {
+        const currentItem = this.closest('.submenu_dropdown-item');
+
+        document.querySelectorAll('.submenu_dropdown-item.active').forEach((item) => {
+          if (item !== currentItem) {
+            item.classList.remove('active');
+          }
+        });
+
+        if (currentItem) {
+          currentItem.classList.toggle('active');
+        }
+      });
+    });
+
+    document.addEventListener('click', (event) => {
+      if (event.target.closest('.submenu_dropdown-item')) {
+        return;
+      }
+
+      document.querySelectorAll('.submenu_dropdown-item.active').forEach((item) => {
+        item.classList.remove('active');
+      });
+    });
+  };
+
+  const bindAccordion = () => {
+    const accordion = document.querySelector('#my-accordion');
+
+    if (accordion && typeof accordion.accordionjs === 'function') {
+      accordion.accordionjs({
+        closeAble: true,
+        closeOther: true,
+        slideSpeed: 150,
+        activeIndex: 100,
+      });
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    bindVideo();
+    bindInteractiveMap();
+    bindBlogPerPage();
+    bindFileUploadStatus();
+    bindGravityFormsRenderEvents();
+    bindSubmitLoading();
+    bindSubmenus();
+    bindAccordion();
+  });
+})();

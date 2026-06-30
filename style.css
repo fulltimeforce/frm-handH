@@ -495,6 +495,38 @@ img {
   color: #ffffff !important;
 }
 
+.custom-submit.is-loading {
+  opacity: 0.85;
+  pointer-events: none;
+  position: relative;
+}
+
+.custom-submit.is-loading img {
+  opacity: 0;
+}
+
+.custom-submit.is-loading::before {
+  animation: hnh-submit-spin 0.8s linear infinite;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  content: "";
+  display: inline-block;
+  height: 1em;
+  margin-right: 0.55em;
+  width: 1em;
+}
+
+.custom-submit.is-loading::before {
+  color: #ffffff;
+}
+
+@keyframes hnh-submit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .gform-theme--framework
   .gfield:where(.gfield--type-fileupload, .gfield--input-type-fileupload)
   .ginput_preview
@@ -508,6 +540,85 @@ img {
 .gfield_validation_message {
   font-family: GothamLight !important;
   font-weight: 300 !important;
+}
+
+#field_11_21 .my-filewrap,
+#field_10_21 .my-filewrap,
+#field_8_21 .my-filewrap,
+#field_3_8 .my-filewrap,
+#field_4_8 .my-filewrap {
+  align-items: center !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+}
+
+@media (min-width: 1420px) {
+  #field_11_21 .my-filewrap,
+  #field_10_21 .my-filewrap,
+  #field_8_21 .my-filewrap,
+  #field_3_8 .my-filewrap,
+  #field_4_8 .my-filewrap {
+    gap: 1.25vw !important;
+  }
+}
+
+@media (max-width: 1420px) {
+  #field_11_21 .my-filewrap,
+  #field_10_21 .my-filewrap,
+  #field_8_21 .my-filewrap,
+  #field_3_8 .my-filewrap,
+  #field_4_8 .my-filewrap {
+    gap: 14px !important;
+  }
+}
+
+#field_11_21 .my-filewrap .file_upload_status,
+#field_10_21 .my-filewrap .file_upload_status,
+#field_8_21 .my-filewrap .file_upload_status,
+#field_3_8 .my-filewrap .file_upload_status,
+#field_4_8 .my-filewrap .file_upload_status {
+  color: #000000;
+  display: none;
+  font-family: GothamMedium;
+  font-weight: 300;
+  line-height: 1.2;
+  max-width: 363px;
+  overflow: hidden;
+  pointer-events: none;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}
+
+#field_11_21 .my-filewrap.has-file .file_upload_status,
+#field_10_21 .my-filewrap.has-file .file_upload_status,
+#field_8_21 .my-filewrap.has-file .file_upload_status,
+#field_3_8 .my-filewrap.has-file .file_upload_status,
+#field_4_8 .my-filewrap.has-file .file_upload_status {
+  display: block;
+}
+
+@media (min-width: 1420px) {
+  #field_11_21 .my-filewrap .file_upload_status,
+  #field_10_21 .my-filewrap .file_upload_status,
+  #field_8_21 .my-filewrap .file_upload_status,
+  #field_3_8 .my-filewrap .file_upload_status,
+  #field_4_8 .my-filewrap .file_upload_status {
+    font-size: 0.8333333333vw;
+    max-width: 25.625vw;
+  }
+}
+
+@media (max-width: 1420px) {
+  #field_11_21 .my-filewrap .file_upload_status,
+  #field_10_21 .my-filewrap .file_upload_status,
+  #field_8_21 .my-filewrap .file_upload_status,
+  #field_3_8 .my-filewrap .file_upload_status,
+  #field_4_8 .my-filewrap .file_upload_status {
+    font-size: 13px;
+  }
 }
 
 .gform_validation_errors h2 {
@@ -1028,4 +1139,19 @@ img {
 /*HOME events*/
 .events .splide__list .splide__slide:nth-of-type(1) .events_slide-item{
     background-position: center calc(50% + 10px);
+}
+
+
+
+/*  */
+body.single-auction .vehicle_card{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+body.single-auction .vehicle_card-image {
+  flex: 0 0 auto !important;
+}
+body.single-auction .vehicle_card-info {
+  flex: 1 1 auto !important;
 }
