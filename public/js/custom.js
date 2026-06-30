@@ -81,13 +81,34 @@
 
     const status = wrap.querySelector('.file_upload_status');
     const browseButton = wrap.querySelector('.browse_file');
+    const preview = wrap.querySelector('.file_upload_preview');
     if (!status) {
       return;
     }
 
     const hasFiles = !!input.files && input.files.length > 0;
+    const selectedFile = hasFiles ? input.files[0] : null;
+
+    if (preview) {
+      if (preview.dataset.previewUrl) {
+        URL.revokeObjectURL(preview.dataset.previewUrl);
+        delete preview.dataset.previewUrl;
+      }
+
+      if (selectedFile && selectedFile.type && selectedFile.type.startsWith('image/')) {
+        const previewUrl = URL.createObjectURL(selectedFile);
+        preview.src = previewUrl;
+        preview.dataset.previewUrl = previewUrl;
+        preview.removeAttribute('hidden');
+      } else {
+        preview.removeAttribute('src');
+        preview.setAttribute('hidden', '');
+      }
+    }
+
     status.textContent = getFileStatusText(input);
     wrap.classList.toggle('has-file', hasFiles);
+    wrap.classList.toggle('has-image-preview', !!(selectedFile && selectedFile.type && selectedFile.type.startsWith('image/')));
 
     if (browseButton) {
       browseButton.textContent = hasFiles ? 'Change File' : 'Browse File';

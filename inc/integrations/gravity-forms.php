@@ -180,7 +180,10 @@ function hnh_wrap_file_upload(
       '<img src="' . IMG . '/upload.png">
             <p>Drag and drop files here to upload, or click to select.</p>
             <span class="browse_file">Browse File</span>
-            <span class="file_upload_status" aria-live="polite"></span>
+            <span class="file_upload_feedback" aria-live="polite">
+              <img class="file_upload_preview" alt="" loading="lazy">
+              <span class="file_upload_status"></span>
+            </span>
         </div>';
   }
   return $content;
@@ -199,7 +202,10 @@ function hnh_wrap_gform_fileupload_field(
       '<img src="' . IMG . '/upload.png">
             <p>Drag and drop files here to upload, or click to select.</p>
             <span class="browse_file">Browse File</span>
-            <span class="file_upload_status" aria-live="polite"></span>
+            <span class="file_upload_feedback" aria-live="polite">
+              <img class="file_upload_preview" alt="" loading="lazy">
+              <span class="file_upload_status"></span>
+            </span>
         </div>';
   }
   return $content;

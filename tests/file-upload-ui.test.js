@@ -12,6 +12,11 @@ assert(
 );
 
 assert(
+  gravityForms.includes('file_upload_feedback') && gravityForms.includes('file_upload_preview'),
+  'custom Gravity Forms file upload wrapper should include grouped preview feedback'
+);
+
+assert(
   !gravityForms.includes('No file selected.'),
   'custom Gravity Forms file upload wrapper should not render an initial no-file message'
 );
@@ -37,6 +42,16 @@ assert(
 );
 
 assert(
+  customJs.includes('URL.createObjectURL') && customJs.includes('file_upload_preview'),
+  'custom JavaScript should show a thumbnail preview for selected image files'
+);
+
+assert(
   fs.readFileSync(path.join(root, 'style.css'), 'utf8').includes('.custom-submit.is-loading'),
   'theme stylesheet should style loading custom submit buttons'
+);
+
+assert(
+  fs.readFileSync(path.join(root, 'style.css'), 'utf8').includes('flex-wrap: nowrap !important'),
+  'file upload wrapper should prevent column wrapping when preview feedback is visible'
 );
