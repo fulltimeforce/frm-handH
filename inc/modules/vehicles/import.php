@@ -1688,27 +1688,79 @@ function vehicles_get_user_id_by_display($raw, array &$cache = [])
 }
 
 /**
- * Hardcoded aliases for vehicle_category terms that may arrive with different labels in Excel.
+ * Normalizes vehicle category labels for fuzzy matching (spaces, hyphens, case).
+ */
+function vehicles_normalize_category_label($label)
+{
+    return strtolower(preg_replace('/[\s\-_]+/', '', trim((string) $label)));
+}
+
+/**
+ * @return array<string, int>
+ */
+function &vehicles_normalized_category_terms_map()
+{
+    static $terms_by_normalized = null;
+
+    if ($terms_by_normalized !== null) {
+        return $terms_by_normalized;
+    }
+
+    $terms_by_normalized = [];
+
+    if (taxonomy_exists(HNH_TAX_CATEGORY)) {
+        $terms = get_terms([
+            'taxonomy'   => HNH_TAX_CATEGORY,
+            'hide_empty' => false,
+        ]);
+
+        if (!is_wp_error($terms) && is_array($terms)) {
+            foreach ($terms as $term) {
+                $normalized = vehicles_normalize_category_label($term->name);
+                if ($normalized !== '') {
+                    $terms_by_normalized[$normalized] = (int) $term->term_id;
+                }
+            }
+        }
+    }
+
+    return $terms_by_normalized;
+}
+
+/**
+ * Finds an existing vehicle_category term by normalized name.
+ * e.g. "Commercial Vehicles" matches "CommercialVehicles".
  * Returns term_id or 0.
  */
-function vehicles_resolve_hardcoded_category_term_id($name)
+function vehicles_find_category_term_by_normalized_name($name)
 {
-    $normalized = strtolower(preg_replace('/[\s\-_]+/', '', trim((string) $name)));
-
-    $slug_by_normalized = [
-        'registrationnumbers' => 'registration-numbers',
-    ];
-
-    if (!isset($slug_by_normalized[$normalized]) || !taxonomy_exists(HNH_TAX_CATEGORY)) {
+    if (!taxonomy_exists(HNH_TAX_CATEGORY)) {
         return 0;
     }
 
-    $term = get_term_by('slug', $slug_by_normalized[$normalized], HNH_TAX_CATEGORY);
-    if ($term && !is_wp_error($term)) {
-        return (int) $term->term_id;
+    $terms_by_normalized = &vehicles_normalized_category_terms_map();
+    $key = vehicles_normalize_category_label($name);
+
+    if ($key === '') {
+        return 0;
     }
 
-    return 0;
+    return $terms_by_normalized[$key] ?? 0;
+}
+
+function vehicles_register_normalized_category_term($name, $term_id)
+{
+    $term_id = (int) $term_id;
+    if ($term_id <= 0) {
+        return;
+    }
+
+    $terms_by_normalized = &vehicles_normalized_category_terms_map();
+    $key = vehicles_normalize_category_label($name);
+
+    if ($key !== '') {
+        $terms_by_normalized[$key] = $term_id;
+    }
 }
 
 /**
@@ -1732,27 +1784,36 @@ function vehicles_get_or_create_category_term($label)
     $key = strtolower($name);
     if (isset($cache[$key])) return (int)$cache[$key];
 
-    $hardcoded_term_id = vehicles_resolve_hardcoded_category_term_id($name);
-    if ($hardcoded_term_id) {
-        return $cache[$key] = $hardcoded_term_id;
-    }
-
     // 1) Buscar por nombre exacto
     $term = get_term_by('name', $name, HNH_TAX_CATEGORY);
     if ($term && !is_wp_error($term)) {
         return $cache[$key] = (int)$term->term_id;
     }
 
-    // 2) Crear nuevo término
+    // 2) Buscar por nombre normalizado (espacios/guiones/case)
+    $normalized_term_id = vehicles_find_category_term_by_normalized_name($name);
+    if ($normalized_term_id) {
+        return $cache[$key] = $normalized_term_id;
+    }
+
+    // 3) Fallback por slug antes de crear
+    $term = get_term_by('slug', sanitize_title($name), HNH_TAX_CATEGORY);
+    if ($term && !is_wp_error($term)) {
+        return $cache[$key] = (int)$term->term_id;
+    }
+
+    // 4) Crear nuevo término
     $res = wp_insert_term($name, HNH_TAX_CATEGORY, [
         'slug' => sanitize_title($name),
     ]);
 
     if (!is_wp_error($res) && !empty($res['term_id'])) {
-        return $cache[$key] = (int)$res['term_id'];
+        $term_id = (int) $res['term_id'];
+        vehicles_register_normalized_category_term($name, $term_id);
+        return $cache[$key] = $term_id;
     }
 
-    // 3) Fallback por slug si ya existía
+    // 5) Fallback por slug si wp_insert_term falló por duplicado
     $term = get_term_by('slug', sanitize_title($name), HNH_TAX_CATEGORY);
     if ($term && !is_wp_error($term)) {
         return $cache[$key] = (int)$term->term_id;

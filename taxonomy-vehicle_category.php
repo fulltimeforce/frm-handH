@@ -2,8 +2,16 @@
 
 get_header();
 
-$term  = get_queried_object();
-$title = $term instanceof WP_Term ? $term->name : get_the_title();
+$term = get_queried_object();
+
+$banner_title = $term instanceof WP_Term
+    ? get_field('banner_title_vehicle_section', 'vehicle_category_' . $term->term_id)
+    : '';
+
+$title = !empty($banner_title)
+    ? $banner_title
+    : ($term instanceof WP_Term ? $term->name : get_the_title());
+
 
 get_centered_banner('', $title);
 
