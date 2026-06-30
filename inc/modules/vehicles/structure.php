@@ -199,7 +199,7 @@ function hnh_render_vehicle_item($vehicle_id, $args = [])
 
                     if ($low > 0 || $high > 0) : ?>
                         <div>
-                            <p>Price</p>
+                            <p>Estimate</p>
                             <p class="gold-text">
                                 <?php
                                 if ($low > 0 && $high > 0) {
@@ -442,7 +442,7 @@ function hnh_render_vehicle_card($vehicle_id, $args = [], $format = 1)
                 <?php if (!$sold_price): ?>
                     <?php if ($estimate_html): ?>
                         <h4>
-                            <span><?php esc_html_e('Price'); ?></span>
+                            <span><?php esc_html_e('Estimate'); ?></span>
                             <?php echo $estimate_html; ?>
                         </h4>
                     <?php else: ?>

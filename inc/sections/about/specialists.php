@@ -33,35 +33,46 @@ $s_text = get_field('specialists_btn_text');
                 <div class="splide__track">
                     <ul class="splide__list">
                         <?php
-                        $args = array(
-                            'post_type'      => 'team',
-                            'posts_per_page' => -1,
-                            'orderby'        => 'menu_order',
-                            'order'          => 'ASC'
-                        );
-                        $team_query = new WP_Query($args);
+                        $members = get_users([
+                            'orderby' => 'user_order',
+                            'order'   => 'ASC',
+                            'meta_query' => [
+                                [
+                                    'key'   => 'show_in_meet_the_team_page',
+                                    'value' => '1',
+                                ]
+                            ],
+                        ]);
 
-                        if ($team_query->have_posts()):
-                            while ($team_query->have_posts()): $team_query->the_post();
-                                $job_position = get_field('job_position');
-                                $team_email   = get_field('team_email');
-                                $team_phone   = get_field('team_phone');
-                                $content      = get_the_content();
-                                $image        = get_the_post_thumbnail_url(get_the_ID(), 'medium_large');
+                        if (! empty($members)):
+                            foreach ($members as $member):
+
+                                $job_position = get_field('job_position', 'user_' . $member->ID);
+                                $team_email = $member->user_email;
+                                $team_phone   = get_field('team_phone',   'user_' . $member->ID);
+                                $image   = get_field('thumbnail_member', 'user_' . $member->ID);
+                                $profile_url  = get_author_posts_url($member->ID);
+
+                                $image_url = '';
+                                if (is_array($image) && !empty($image['url'])) {
+                                    $image_url = (string) $image['url'];
+                                } elseif (is_string($image) && filter_var($image, FILTER_VALIDATE_URL)) {
+                                    $image_url = $image;
+                                }
                         ?>
                                 <li class="splide__slide">
                                     <div class="specialist_card">
                                         <div class="specialist_card-front">
                                             <div class="specialist_card-image">
-                                                <?php if ($image): ?>
-                                                    <img src="<?php echo esc_url($image); ?>" alt="<?php the_title_attribute(); ?>">
+                                                <?php if ($image_url): ?>
+                                                    <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_html($member->display_name); ?>">
                                                 <?php else: ?>
-                                                    <img src="<?php echo IMG; ?>/member.png" alt="<?php the_title_attribute(); ?>">
+                                                    <img src="<?php echo IMG; ?>/member.png" alt="<?php echo esc_html($member->display_name); ?>">
                                                 <?php endif; ?>
                                             </div>
                                             <div class="specialist_card-info specialist_card-toggle">
                                                 <div>
-                                                    <p><?php the_title(); ?></p>
+                                                    <p><?php echo esc_html($member->display_name); ?></p>
                                                     <?php if ($job_position): ?>
                                                         <span><?php echo esc_html($job_position); ?></span>
                                                     <?php endif; ?>
@@ -78,7 +89,7 @@ $s_text = get_field('specialists_btn_text');
                                         <div class="specialist_card-back">
                                             <div class="specialist_card-toggle">
                                                 <div>
-                                                    <p><?php the_title(); ?></p>
+                                                    <p><?php echo esc_html($member->display_name); ?></p>
                                                     <?php if ($job_position): ?>
                                                         <span><?php echo esc_html($job_position); ?></span>
                                                     <?php endif; ?>
@@ -99,33 +110,19 @@ $s_text = get_field('specialists_btn_text');
                                                         <li>Tel: <a href="tel:<?php echo preg_replace('/\D+/', '', $team_phone); ?>"><?php echo esc_html($team_phone); ?></a></li>
                                                     <?php endif; ?>
                                                 </ul>
-                                                <?php if ($content): ?>
-                                                    <p>
-                                                        <?php
-                                                        $clean = preg_replace('/<\/(h3|p)>/i', '<br><br>', $content);
-                                                        $clean = strip_tags($clean, '<br>');
-                                                        $clean = preg_replace('/(<br>\s*)+/', '<br><br>', $clean);
-                                                        $pos = strpos($clean, '<br><br>', strpos($clean, '<br><br>') + 1);
-                                                        if ($pos !== false && $pos <= 342) {
-                                                            $excerpt = substr($clean, 0, $pos);
-                                                        } else {
-                                                            $excerpt = mb_substr($clean, 0, 342);
-                                                            if (mb_strlen(strip_tags($clean)) > 342 && mb_substr(trim($excerpt), -1) !== '.') {
-                                                                $excerpt .= '...';
-                                                            }
-                                                        }
-                                                        echo $excerpt;
-                                                        ?>
-                                                    </p>
-                                                <?php endif; ?>
+                                                <?php
+                                                $bio = get_field('description_member', 'user_' . $member->ID);
+                                                if ($bio) {
+                                                    echo '<p>' . esc_html(wp_strip_all_tags($bio)) . '</p>';
+                                                }
+                                                ?>
                                             </div>
-                                            <a href="<?php the_permalink(); ?>">Read More</a>
+                                            <a href="<?php echo esc_url($profile_url); ?>">Read More</a>
                                         </div>
                                     </div>
                                 </li>
                         <?php
-                            endwhile;
-                            wp_reset_postdata();
+                            endforeach;
                         endif;
                         ?>
                     </ul>
@@ -137,16 +134,19 @@ $s_text = get_field('specialists_btn_text');
     <div class="meet_our_specialist-foot">
         <?php if (!empty($s_title)): ?>
             <div class="meet_our_specialist-title">
-                <h2><?php echo $s_title; ?></h2>
+                <h2><?php echo esc_html($s_title); ?></h2>
             </div>
         <?php endif; ?>
         <?php if (!empty($stext)): ?>
             <div class="meet_our_specialist-content">
                 <?php echo $stext; ?>
 
-                <?php if (!empty($s_link) && !empty($s_text)): ?>
-                    <a href="<?php echo $s_link; ?>" class="permalink_border">
-                        <?php echo $s_text; ?>
+                <?php
+                $s_link_url = is_array($s_link) ? ($s_link['url'] ?? '') : (string) $s_link;
+                if (!empty($s_link_url) && !empty($s_text)):
+                ?>
+                    <a href="<?php echo esc_url($s_link_url); ?>" class="permalink_border">
+                        <?php echo esc_html($s_text); ?>
                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none">
                             <path d="M0 7H24M24 7L18 1M24 7L18 13" stroke="#8C6E47" />
                         </svg>

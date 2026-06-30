@@ -81,8 +81,7 @@ $successes_text = get_field('success_text');
                           <div class="car_card-price">
                             <h4>
                               <span>Sold for</span>
-                              £
-                              <?php echo get_sub_field('sold_for'); ?>
+                              £<?php echo get_sub_field('sold_for'); ?>
                             </h4>
                             <p>(including buyers premium)</p>
                           </div>
@@ -151,8 +150,7 @@ $successes_text = get_field('success_text');
                           <div class="car_card-price">
                             <h4>
                               <span>Sold for</span>
-                              £
-                              <?php echo get_sub_field('sold_for'); ?>
+                              £<?php echo get_sub_field('sold_for'); ?>
                             </h4>
                             <p>(including buyers premium)</p>
                           </div>

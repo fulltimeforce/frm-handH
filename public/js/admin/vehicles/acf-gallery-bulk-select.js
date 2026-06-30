@@ -13,7 +13,7 @@
     if (document.getElementById(STYLE_ID)) return;
 
     const checkIconUrl =
-      "https://handh-bqha9.projectbeta.co.uk/wp-content/uploads/2026/02/icon-check-admin.png";
+      "https://www.handh.co.uk/wp-content/uploads/2026/02/icon-check-admin.png";
 
     const style = document.createElement("style");
     style.id = STYLE_ID;
