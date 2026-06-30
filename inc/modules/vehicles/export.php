@@ -14,6 +14,9 @@ if (!defined('ABSPATH')) {
  * Export XLSX:
  *  - Chunk download via hidden form + iframe target + cookie handshake
  *
+ * Export URLs XLSX (hidden):
+ *  - All published vehicles, 2 columns (permalink + lot_link), batched in memory
+ *
  * Export Images ZIP:
  *  - Select ONE auction
  *  - Optional Lot range filter (supports: 2,3,15-20)
@@ -51,6 +54,7 @@ final class Vehicles_Export_Module
     {
         add_action('admin_menu', [__CLASS__, 'register_menu']);
         add_action('admin_init', [__CLASS__, 'maybe_handle_export']);        // XLSX
+        add_action('admin_init', [__CLASS__, 'maybe_handle_urls_export']); // URLs XLSX (all vehicles)
         add_action('admin_init', [__CLASS__, 'maybe_handle_images_export']); // ZIP
 
         // AJAX
@@ -89,6 +93,24 @@ final class Vehicles_Export_Module
         check_admin_referer(self::NONCE_ACTION, self::NONCE_FIELD);
 
         self::handle_export();
+    }
+
+    // -------------------------
+    // URLs XLSX handler (all published vehicles)
+    // -------------------------
+    public static function maybe_handle_urls_export(): void
+    {
+        if (!is_admin()) return;
+        if (!current_user_can(self::CAPABILITY)) return;
+
+        $page = isset($_GET['page']) ? sanitize_key($_GET['page']) : '';
+        if (self::MENU_SLUG !== $page) return;
+
+        if (empty($_POST['vehicles_export_urls'])) return;
+
+        check_admin_referer(self::NONCE_ACTION, self::NONCE_FIELD);
+
+        self::handle_urls_export();
     }
 
     // -------------------------
@@ -467,6 +489,12 @@ final class Vehicles_Export_Module
                             <div class="vehx-results" id="vehx-results">
                                 <h3 style="margin: 0 0 6px;">Download Chunk #:</h3>
                                 <div class="vehx-chunks" id="vehx-chunk-buttons"></div>
+                                <button type="button"
+                                    id="vehx-export-all-urls-btn"
+                                    class="button"
+                                    style="display:none;">
+                                    Export All URLs
+                                </button>
                             </div>
                         </div>
 
@@ -481,6 +509,12 @@ final class Vehicles_Export_Module
                                 <!-- dates payload (only used for dates mode) -->
                                 <input type="hidden" name="vehicles_export_date_start" id="vehx-date-start-hidden" value="">
                                 <input type="hidden" name="vehicles_export_date_end" id="vehx-date-end-hidden" value="">
+                            </form>
+
+                            <!-- URLs XLSX form (all published vehicles) -->
+                            <form method="post" action="" id="vehx-urls-export-form" target="vehx-download-frame" style="display:none;">
+                                <?php wp_nonce_field(self::NONCE_ACTION, self::NONCE_FIELD); ?>
+                                <input type="hidden" name="vehicles_export_urls" value="1">
                             </form>
 
                             <!-- Images ZIP form -->
@@ -620,6 +654,8 @@ final class Vehicles_Export_Module
                     // Shared XLSX download form
                     const hiddenSelect = document.getElementById('vehx-auctions-hidden');
                     const downloadForm = document.getElementById('vehx-download-form');
+                    const urlsExportForm = document.getElementById('vehx-urls-export-form');
+                    const urlsExportBtn = document.getElementById('vehx-export-all-urls-btn');
                     const rangeInput = document.getElementById('vehx-range');
                     const modeInput = document.getElementById('vehx-mode');
                     const dateStartHidden = document.getElementById('vehx-date-start-hidden');
@@ -652,7 +688,7 @@ final class Vehicles_Export_Module
 
                     function waitForDownloadThenHideLoader() {
                         const startedAt = Date.now();
-                        const maxWaitMs = 120000;
+                        const maxWaitMs = 600000;
                         const t = setInterval(() => {
                             if (getCookie('vehx_file_download') === '1') {
                                 clearInterval(t);
@@ -752,7 +788,11 @@ final class Vehicles_Export_Module
 
                     function clearResults() {
                         resultsBox.style.display = 'none';
+                        const keep = urlsExportBtn;
                         chunksWrap.innerHTML = '';
+                        if (keep) {
+                            chunksWrap.appendChild(keep);
+                        }
                     }
 
                     listEl.addEventListener('click', (e) => {
@@ -835,6 +875,10 @@ final class Vehicles_Export_Module
                                 chunksWrap.appendChild(btn);
                             });
 
+                            if (urlsExportBtn) {
+                                chunksWrap.appendChild(urlsExportBtn);
+                            }
+
                             resultsBox.style.display = 'block';
                         } catch (err) {
                             statusEl.textContent = (err && err.message) ? err.message : 'Search failed.';
@@ -842,6 +886,14 @@ final class Vehicles_Export_Module
                             hideLoader();
                         }
                     });
+
+                    if (urlsExportBtn) {
+                        urlsExportBtn.addEventListener('click', () => {
+                            showLoader('Generating URLs export (all vehicles)…');
+                            waitForDownloadThenHideLoader();
+                            urlsExportForm.submit();
+                        });
+                    }
 
                     // ==========================================================
                     // TAB 2: DATE RANGE (2 steps: Filter -> Search)
@@ -1263,6 +1315,72 @@ final class Vehicles_Export_Module
         self::stream_xlsx($spreadsheet, $startChunk, $endChunk, $mode);
     }
 
+    private static function handle_urls_export(): void
+    {
+        if (!current_user_can(self::CAPABILITY)) {
+            wp_die('You do not have permission.');
+        }
+
+        @set_time_limit(0);
+        @ini_set('memory_limit', '512M');
+        wp_suspend_cache_addition(true);
+
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+
+        self::require_composer_autoload();
+
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Vehicles');
+        $sheet->fromArray(['URL Permalink', 'URL Handh.co.uk'], null, 'A1');
+
+        $row_index  = 2;
+        $last_id    = 0;
+        $batch_size = self::DEFAULT_CHUNK_SIZE;
+
+        while (true) {
+            $ids = self::get_all_vehicle_ids_after_id($last_id, $batch_size);
+            if (empty($ids)) {
+                break;
+            }
+
+            update_meta_cache('post', $ids);
+
+            foreach ($ids as $post_id) {
+                $post_id = (int) $post_id;
+                $sheet->fromArray([
+                    get_permalink($post_id) ?: '',
+                    self::normalize_handh_lot_url(self::acf_value_string($post_id, 'lot_link')),
+                ], null, 'A' . $row_index);
+                $row_index++;
+            }
+
+            $last_id = (int) end($ids);
+
+            if (function_exists('gc_collect_cycles')) {
+                gc_collect_cycles();
+            }
+        }
+
+        self::stream_urls_xlsx($spreadsheet);
+    }
+
+    private static function normalize_handh_lot_url(string $url): string
+    {
+        $url = trim($url);
+        if ($url === '') {
+            return '';
+        }
+
+        return str_replace(
+            ['https://auctions.handh.co.uk', 'http://auctions.handh.co.uk', 'auctions.handh.co.uk'],
+            ['https://www.handh.co.uk', 'http://www.handh.co.uk', 'www.handh.co.uk'],
+            $url
+        );
+    }
+
     private static function build_vehicles_meta_query(array $auction_ids): array
     {
         $has_private = in_array(self::PRIVATE_SALES_TOKEN, $auction_ids, true);
@@ -1311,6 +1429,23 @@ final class Vehicles_Export_Module
             $end,
             gmdate('Y-m-d-His')
         );
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $writer->save('php://output');
+        exit;
+    }
+
+    private static function stream_urls_xlsx(\PhpOffice\PhpSpreadsheet\Spreadsheet $spreadsheet): void
+    {
+        @setcookie('vehx_file_download', '1', time() + 60, COOKIEPATH ?: '/', COOKIE_DOMAIN ?: '');
+
+        nocache_headers();
+
+        $filename = sprintf('vehicles-urls-all-%s.xlsx', gmdate('Y-m-d-His'));
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment; filename="' . $filename . '"');
@@ -1714,6 +1849,29 @@ final class Vehicles_Export_Module
 
         $q = new WP_Query($args);
         return is_array($q->posts) ? $q->posts : [];
+    }
+
+    private static function get_all_vehicle_ids_after_id(int $after_id, int $limit): array
+    {
+        global $wpdb;
+
+        $ids = $wpdb->get_col(
+            $wpdb->prepare(
+                "SELECT ID FROM {$wpdb->posts}
+                 WHERE post_type = %s AND post_status = 'publish' AND ID > %d
+                 ORDER BY ID ASC
+                 LIMIT %d",
+                self::POST_TYPE,
+                $after_id,
+                $limit
+            )
+        );
+
+        if (!is_array($ids) || empty($ids)) {
+            return [];
+        }
+
+        return array_map('intval', $ids);
     }
 
     // ==================================================

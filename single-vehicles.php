@@ -352,6 +352,18 @@ if ($nav_query_args && $auction_permalink) {
                         <div class="listing_info-bid-lot">
                             <div class="auction-bid">
                                 <div class="auction-bid-value">
+                                    <?php
+                                        if (!empty($placebid)) {
+                                            $placebid = preg_replace(
+                                                '#https?://www\.handh\.co\.uk/#i',
+                                                'https://auctions.handh.co.uk/',
+                                                $placebid
+                                            );
+                                        
+                                            // Eliminar dobles barras (excepto las de https://)
+                                            $placebid = preg_replace('#(?<!:)/{2,}#', '/', $placebid);
+                                        }
+                                    ?>
                                     <a href="<?php echo $placebid; ?>" target="_blank" class="btn-bid w-100" data-lot-id="62057" data-auctionid="552" data-session="622" data-lotnumber="1" data-hastelbid="False" data-istimed="0" data-reload="0" data-vatable="False" data-ga-cat="bidding" data-ga-act="submit" data-ga-lbl="/bid" data-ba-cat="" data-ba-lbl="" data-ba-cur="">Place Bid</a>
                                 </div>
                             </div>

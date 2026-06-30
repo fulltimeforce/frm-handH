@@ -496,7 +496,8 @@ function vehicles_handle_import($file)
         }
 
         if ($col_lot_link !== -1) {
-            update_field('lot_link', (string)$row[$col_lot_link], $post_id);
+            $lot_link = hnh_normalize_lot_link((string)$row[$col_lot_link]);
+            update_field('lot_link', $lot_link, $post_id);
         }
 
         if ($col_title_sub !== -1) {
@@ -551,6 +552,26 @@ function vehicles_handle_import($file)
         . '| Skipped (no stock number): ' . intval($skipped_no_stock) . ' '
         . '| Skipped (no title): ' . intval($skipped_no_title)
         . '</p></div>';
+}
+
+function hnh_normalize_lot_link($url)
+{
+    $url = trim((string)$url);
+
+    if ($url === '') {
+        return '';
+    }
+
+    $url = preg_replace(
+        '#https?://www\.handh\.co\.uk/#i',
+        'https://auctions.handh.co.uk/',
+        $url
+    );
+
+    // Quita dobles barras, pero no toca https://
+    $url = preg_replace('#(?<!:)/{2,}#', '/', $url);
+
+    return $url;
 }
 
 /**
@@ -1667,6 +1688,30 @@ function vehicles_get_user_id_by_display($raw, array &$cache = [])
 }
 
 /**
+ * Hardcoded aliases for vehicle_category terms that may arrive with different labels in Excel.
+ * Returns term_id or 0.
+ */
+function vehicles_resolve_hardcoded_category_term_id($name)
+{
+    $normalized = strtolower(preg_replace('/[\s\-_]+/', '', trim((string) $name)));
+
+    $slug_by_normalized = [
+        'registrationnumbers' => 'registration-numbers',
+    ];
+
+    if (!isset($slug_by_normalized[$normalized]) || !taxonomy_exists(HNH_TAX_CATEGORY)) {
+        return 0;
+    }
+
+    $term = get_term_by('slug', $slug_by_normalized[$normalized], HNH_TAX_CATEGORY);
+    if ($term && !is_wp_error($term)) {
+        return (int) $term->term_id;
+    }
+
+    return 0;
+}
+
+/**
  * Crea o devuelve un término en la taxonomía vehicle_category,
  * usando el nombre que viene del Excel.
  * Si viene tipo "Parent > Child > Cars", tomará el ÚLTIMO nivel ("Cars").
@@ -1686,6 +1731,11 @@ function vehicles_get_or_create_category_term($label)
     static $cache = [];
     $key = strtolower($name);
     if (isset($cache[$key])) return (int)$cache[$key];
+
+    $hardcoded_term_id = vehicles_resolve_hardcoded_category_term_id($name);
+    if ($hardcoded_term_id) {
+        return $cache[$key] = $hardcoded_term_id;
+    }
 
     // 1) Buscar por nombre exacto
     $term = get_term_by('name', $name, HNH_TAX_CATEGORY);

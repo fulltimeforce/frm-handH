@@ -38,7 +38,7 @@ function get_centered_banner($image_url = '', $title = '', $size = 'default')
 
   echo '<section class="banner centered ' . esc_attr($size_class) . '">
         <div class="banner__bg">
-            <img src="' . $image_url . '">
+            <img src="' . $image_url . '" loading="lazy">
         </div>
         <div class="container">
             <h1>' . $title . '</h1>
