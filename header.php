@@ -118,11 +118,19 @@
                     <?php endif; ?>
                 </div>
             </nav>
-            <button class="header_toggle header_button-menu" type="button" alt="Menú" title="Menú">
-                <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
-                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M80 160h352M80 256h352M80 352h352" />
-                </svg>
-            </button>
+            <div class="header_actions_mobile">
+                <button type="button" class="toggle_search" title="Search">
+                    Search
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path d="M8.38218 8.34672C6.62482 10.1041 3.77557 10.1041 2.01822 8.34672C0.260856 6.58936 0.260856 3.74012 2.01821 1.98276C3.77557 0.225402 6.62482 0.225403 8.38218 1.98276C10.1395 3.74012 10.1395 6.58936 8.38218 8.34672ZM8.38218 8.34672L11.5642 11.5287" stroke="white" />
+                    </svg>
+                </button>
+                <button class="header_toggle header_button-menu" type="button" alt="Menú" title="Menú">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M80 160h352M80 256h352M80 352h352" />
+                    </svg>
+                </button>
+            </div>
         </div>
     </header>
 

@@ -104,14 +104,65 @@ function vehicles_import_render_page()
 <?php
 }
 
+/**
+ * Escribe en wp-content/logs/vehicles-import-YYYY-MM-DD.log
+ */
+function vehicles_import_log(string $message, string $level = 'error', array $context = []): void
+{
+    $dir = WP_CONTENT_DIR . '/logs';
+    if (!is_dir($dir)) {
+        wp_mkdir_p($dir);
+    }
+
+    $htaccess = $dir . '/.htaccess';
+    if (!file_exists($htaccess)) {
+        @file_put_contents($htaccess, "Deny from all\n");
+    }
+
+    $file = $dir . '/vehicles-import-' . gmdate('Y-m-d') . '.log';
+
+    $line = sprintf(
+        '[%s] [%s] %s',
+        gmdate('Y-m-d H:i:s'),
+        strtoupper($level),
+        $message
+    );
+
+    if (!empty($context)) {
+        $line .= ' | ' . wp_json_encode($context, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
+
+    @file_put_contents($file, $line . PHP_EOL, FILE_APPEND | LOCK_EX);
+}
+
 // === Import Handler ===
 function vehicles_handle_import($file)
+{
+    try {
+        vehicles_handle_import_inner($file);
+    } catch (Throwable $e) {
+        vehicles_import_log('Unhandled import exception', 'error', [
+            'message' => $e->getMessage(),
+            'file'    => $e->getFile(),
+            'line'    => $e->getLine(),
+        ]);
+        echo '<div class="notice notice-error"><p>Import failed. Check the log in <code>wp-content/logs/</code>.</p></div>';
+    }
+}
+
+function vehicles_handle_import_inner($file)
 {
     if (!current_user_can('manage_options')) {
         wp_die('You do not have permission to perform this action.');
     }
 
+    vehicles_import_log('Import started', 'info', [
+        'user_id'  => get_current_user_id(),
+        'filename' => isset($file['name']) ? (string) $file['name'] : '',
+    ]);
+
     if ($file['error'] !== UPLOAD_ERR_OK) {
+        vehicles_import_log('File upload error', 'error', ['code' => $file['error']]);
         echo '<div class="notice notice-error"><p>File upload error.</p></div>';
         return;
     }
@@ -119,6 +170,7 @@ function vehicles_handle_import($file)
     // Upload to /uploads
     $uploaded = wp_handle_upload($file, ['test_form' => false]);
     if (!empty($uploaded['error'])) {
+        vehicles_import_log('wp_handle_upload failed', 'error', ['error' => $uploaded['error']]);
         echo '<div class="notice notice-error"><p>' . esc_html($uploaded['error']) . '</p></div>';
         return;
     }
@@ -134,23 +186,37 @@ function vehicles_handle_import($file)
         }
         $xlsx = SimpleXLSX::parse($path);
         if (!$xlsx) {
-            echo '<div class="notice notice-error"><p>Could not read XLSX: ' . esc_html(SimpleXLSX::parseError()) . '</p></div>';
+            $parse_error = SimpleXLSX::parseError();
+            vehicles_import_log('Could not read XLSX', 'error', [
+                'path'  => basename($path),
+                'error' => $parse_error,
+            ]);
+            echo '<div class="notice notice-error"><p>Could not read XLSX: ' . esc_html($parse_error) . '</p></div>';
             return;
         }
         $rows = $xlsx->rows(); // preserves middle gaps by cell refs
     } elseif ($ext === 'csv') {
-        if (($handle = fopen($path, 'r')) !== false) {
-            while (($data = fgetcsv($handle, 0, ',', '"', '\\')) !== false) {
-                $rows[] = $data;
-            }
-            fclose($handle);
+        $handle = fopen($path, 'r');
+        if ($handle === false) {
+            vehicles_import_log('Could not open CSV file', 'error', ['path' => basename($path)]);
+            echo '<div class="notice notice-error"><p>Could not read CSV file.</p></div>';
+            return;
         }
+        while (($data = fgetcsv($handle, 0, ',', '"', '\\')) !== false) {
+            $rows[] = $data;
+        }
+        fclose($handle);
     } else {
+        vehicles_import_log('Unsupported file extension', 'error', ['ext' => $ext]);
         echo '<div class="notice notice-error"><p>Unsupported extension: ' . esc_html($ext) . '</p></div>';
         return;
     }
 
     if (count($rows) < 2) {
+        vehicles_import_log('Not enough data in file', 'warning', [
+            'rows' => count($rows),
+            'file' => basename($path),
+        ]);
         echo '<div class="notice notice-warning"><p>Not enough data (header + rows required).</p></div>';
         return;
     }
@@ -165,6 +231,7 @@ function vehicles_handle_import($file)
         $headerLen--;
     }
     if ($headerLen === 0) {
+        vehicles_import_log('Header row is empty', 'error', ['file' => basename($path)]);
         echo '<div class="notice notice-error"><p>Header row is empty.</p></div>';
         return;
     }
@@ -216,6 +283,10 @@ function vehicles_handle_import($file)
     if ($col_stock_number === -1) $missing_required[] = 'Stock Number';
 
     if (!empty($missing_required)) {
+        vehicles_import_log('Missing required headers', 'error', [
+            'missing' => $missing_required,
+            'file'    => basename($path),
+        ]);
         echo '<div class="notice notice-error"><p>'
             . 'Import aborted. Missing required header(s): <strong>'
             . esc_html(implode(', ', $missing_required))
@@ -285,12 +356,24 @@ function vehicles_handle_import($file)
             // ==== UPDATE EXISTENTE ====
             $post_id = (int) $existing_id;
 
-            wp_update_post([
+            $update_result = wp_update_post([
                 'ID'           => $post_id,
                 'post_title'   => $title_value,
                 'post_content' => $post_content,
                 // no toco el status para no revivir borrados/trash
             ], true);
+
+            if (is_wp_error($update_result)) {
+                vehicles_import_log('wp_update_post failed', 'error', [
+                    'row'          => $i,
+                    'post_id'      => $post_id,
+                    'stock_number' => $stock_value,
+                    'title'        => $title_value,
+                    'error'        => $update_result->get_error_message(),
+                ]);
+                $skipped_empty++;
+                continue;
+            }
 
             $updated++;
         } else {
@@ -303,6 +386,12 @@ function vehicles_handle_import($file)
             ], true);
 
             if (is_wp_error($post_id) || !$post_id) {
+                vehicles_import_log('wp_insert_post failed', 'error', [
+                    'row'          => $i,
+                    'stock_number' => $stock_value,
+                    'title'        => $title_value,
+                    'error'        => is_wp_error($post_id) ? $post_id->get_error_message() : 'unknown',
+                ]);
                 $skipped_empty++;
                 continue;
             }
@@ -380,7 +469,7 @@ function vehicles_handle_import($file)
         if ($col_description !== -1) {
             // guardamos el contenido formateado con la función
             $desc_html = (string)$row[$col_description];
-            $desc_html = vehicles_convert_registration_block_to_ul($desc_html);
+            //$desc_html = vehicles_convert_registration_block_to_ul($desc_html);
             update_field('description', $desc_html, $post_id);
         }
 
@@ -408,6 +497,12 @@ function vehicles_handle_import($file)
                     // ACF Post Object → guardar ID
                     hnh_update_acf($post_id, 'auction_number_latest', (int)$auction_id);
                 } else {
+                    vehicles_import_log('Auction not found by sale number', 'warning', [
+                        'row'         => $i,
+                        'post_id'     => $post_id,
+                        'stock_number'=> $stock_value,
+                        'sale_number' => $sale_number_raw,
+                    ]);
                     update_field('auction_number_latest', null, $post_id);
                 }
             }
@@ -542,6 +637,16 @@ function vehicles_handle_import($file)
             Vehicles_Search_Sync::force_sync($post_id, 'import');
         }
     }
+
+    vehicles_import_log('Import completed', 'info', [
+        'file'                  => basename($path),
+        'created'               => $created,
+        'updated'               => $updated,
+        'skipped_duplicate_row' => $skipped_duplicate_row,
+        'skipped_empty'         => $skipped_empty,
+        'skipped_no_stock'      => $skipped_no_stock,
+        'skipped_no_title'      => $skipped_no_title,
+    ]);
 
     echo '<div class="notice notice-success"><p>'
         . 'Import completed. '
@@ -750,6 +855,10 @@ function vehicles_update_dates_only(array $rows, array $headers_raw)
     $date_col  = vehicles_find_header(['Auction date (latest)'], $headers_raw);
 
     if ($title_col === -1 || $date_col === -1) {
+        vehicles_import_log('Dates-only mode: required headers not found', 'error', [
+            'title_col' => $title_col,
+            'date_col'  => $date_col,
+        ]);
         echo '<div class="notice notice-error"><p>Required headers not found. Needed: <strong>Title (main)</strong> and <strong>Auction date (latest)</strong>.</p></div>';
         return;
     }
@@ -786,6 +895,11 @@ function vehicles_update_dates_only(array $rows, array $headers_raw)
         // Normaliza a 'Y-m-d H:i'
         $date_norm = vehicles_excel_serial_to_datetime($date_raw, 'Y-m-d H:i');
         if ($date_norm === '') {
+            vehicles_import_log('Invalid auction date in dates-only mode', 'warning', [
+                'row'      => $i,
+                'title'    => $title,
+                'date_raw' => $date_raw,
+            ]);
             $skipped_bad_date++;
             continue;
         }
@@ -817,6 +931,10 @@ function vehicles_update_dates_only(array $rows, array $headers_raw)
         }
 
         if (!$post_id) {
+            vehicles_import_log('No matching post in dates-only mode', 'warning', [
+                'row'   => $i,
+                'title' => $title,
+            ]);
             $skipped_no_post++;
             continue;
         }
@@ -830,6 +948,13 @@ function vehicles_update_dates_only(array $rows, array $headers_raw)
 
         $updated++;
     }
+
+    vehicles_import_log('Dates-only update finished', 'info', [
+        'updated'          => $updated,
+        'skipped_empty'    => $skipped_empty,
+        'skipped_no_post'  => $skipped_no_post,
+        'skipped_bad_date' => $skipped_bad_date,
+    ]);
 
     echo '<div class="notice notice-success"><p>'
         . 'Dates update finished. '
@@ -1195,7 +1320,12 @@ function vehicles_extract_fields_ai(string $source_text): array
     }
 
     $result = vehicles_openai_extract_fields($source_text, $apiKey);
-    if (!is_array($result)) return $fallback;
+    if (!is_array($result)) {
+        vehicles_import_log('AI field extraction failed, using regex fallback', 'warning', [
+            'title_preview' => mb_substr($source_text, 0, 120),
+        ]);
+        return $fallback;
+    }
 
     $out = [
         'registration_no' => trim((string)($result['registration_no'] ?? '')),
@@ -1361,14 +1491,30 @@ TEXT:
         'body' => wp_json_encode($body),
     ]);
 
-    if (is_wp_error($res)) return null;
+    if (is_wp_error($res)) {
+        vehicles_import_log('OpenAI request failed', 'warning', [
+            'error' => $res->get_error_message(),
+        ]);
+        return null;
+    }
 
     $code = wp_remote_retrieve_response_code($res);
     $raw  = wp_remote_retrieve_body($res);
-    if ($code < 200 || $code >= 300 || !$raw) return null;
+    if ($code < 200 || $code >= 300 || !$raw) {
+        vehicles_import_log('OpenAI bad HTTP response', 'warning', [
+            'code'         => $code,
+            'body_preview' => mb_substr((string) $raw, 0, 300),
+        ]);
+        return null;
+    }
 
     $json = json_decode($raw, true);
-    if (!is_array($json)) return null;
+    if (!is_array($json)) {
+        vehicles_import_log('OpenAI response is not valid JSON', 'warning', [
+            'body_preview' => mb_substr((string) $raw, 0, 300),
+        ]);
+        return null;
+    }
 
     $text = '';
     if (!empty($json['output_text']) && is_string($json['output_text'])) {
@@ -1386,15 +1532,27 @@ TEXT:
     }
 
     $text = trim($text);
-    if ($text === '') return null;
+    if ($text === '') {
+        vehicles_import_log('OpenAI returned empty output text', 'warning');
+        return null;
+    }
 
-    error_log('[VEHICLES AI RAW TEXT] ' . $text);
+    $output_preview = mb_substr($text, 0, 300);
+    $json_text = vehicles_extract_json_object($text);
+    if ($json_text === '') {
+        vehicles_import_log('Could not extract JSON object from OpenAI response', 'warning', [
+            'output_preview' => $output_preview,
+        ]);
+        return null;
+    }
 
-    $text = vehicles_extract_json_object($text);
-    if ($text === '') return null;
-
-    $data = json_decode($text, true);
-    if (!is_array($data)) return null;
+    $data = json_decode($json_text, true);
+    if (!is_array($data)) {
+        vehicles_import_log('OpenAI JSON object could not be decoded', 'warning', [
+            'json_preview' => mb_substr($json_text, 0, 300),
+        ]);
+        return null;
+    }
 
     return $data;
 }
@@ -1611,13 +1769,25 @@ function vehicles_set_featured_image_from_url($post_id, $url)
     }
 
     $tmp = download_url($url);
-    if (is_wp_error($tmp)) return false;
+    if (is_wp_error($tmp)) {
+        vehicles_import_log('download_url failed', 'warning', [
+            'post_id' => $post_id,
+            'url'     => $url,
+            'error'   => $tmp->get_error_message(),
+        ]);
+        return false;
+    }
 
     $name = basename(parse_url($url, PHP_URL_PATH)) ?: 'image.jpg';
     $file = ['name' => sanitize_file_name($name), 'tmp_name' => $tmp];
 
     $att_id = media_handle_sideload($file, $post_id);
     if (is_wp_error($att_id)) {
+        vehicles_import_log('media_handle_sideload failed', 'warning', [
+            'post_id' => $post_id,
+            'url'     => $url,
+            'error'   => $att_id->get_error_message(),
+        ]);
         @unlink($tmp);
         return false;
     }

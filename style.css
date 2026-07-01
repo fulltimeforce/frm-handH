@@ -1216,3 +1216,32 @@ body.single-auction .vehicle_card-image {
 body.single-auction .vehicle_card-info {
   flex: 1 1 auto !important;
 }
+
+.header_actions_mobile {
+    display: none;
+}
+@media(max-width: 1200px) {
+    .header_actions_mobile {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+    .header_actions_mobile .toggle_search {
+        background-color: transparent;
+        border: none;
+        padding-block: 14px;
+        text-transform: uppercase;
+		color: black;
+    }
+    .header_actions_mobile .toggle_search svg {
+        width: 14px;
+        height: 14px;
+        margin-left: 4px;
+    }
+    .header_actions_mobile .toggle_search svg path {
+        stroke: black;
+    }
+    .header_actions_mobile .header_button-menu {
+        margin-left: 24px;
+    }
+}

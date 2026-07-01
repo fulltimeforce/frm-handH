@@ -772,6 +772,33 @@ if ($nav_query_args && $auction_permalink) {
     }
 </style>
 
+<script>
+    (function() {
+        // Labels que ya usáis en import.php
+        const SPEC_LABEL_RE = /^(Registration\s*(?:No\.?|Number)?|Chassis\s*(?:No\.?|Number)?|Frame\s*(?:No\.?|Number)?|Engine\s*(?:No\.?|Number)?|MOT|VIN)\s*:/i;
+
+        function isSpecLi(li) {
+            const label = li.querySelector(':scope > strong, :scope > b');
+            if (!label) return false;
+
+            const text = label.textContent.replace(/\s+/g, ' ').trim();
+            return SPEC_LABEL_RE.test(text);
+        }
+
+        document.querySelectorAll('.description ul').forEach((ul) => {
+            const items = [...ul.children].filter((el) => el.tagName === 'LI');
+            if (!items.length) return;
+
+            const specItems = items.filter(isSpecLi);
+
+            // Al menos 1 spec Y todos los <li> del <ul> son specs
+            // (da igual si faltan Registration, Chassis, MOT, etc.)
+            if (specItems.length > 0 && specItems.length === items.length) {
+                ul.classList.add('vehicle-spec-list');
+            }
+        });
+    })();
+</script>
 <script src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.2/sharer.min.js"></script>
 <?php get_footer(); ?>
 <script>
