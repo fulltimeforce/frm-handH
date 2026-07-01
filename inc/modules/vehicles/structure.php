@@ -59,11 +59,20 @@ function hnh_render_vehicle_item($vehicle_id, $args = [])
 
     $auction = get_field('auction_number_latest', $vehicle_id);
 
+   // if ($auction) {
+    //     $auction_id = $auction->ID;
+    //     $check_provisional_number = get_field('show_provisional_numbers', $auction_id);
+
+    //     if (!$check_provisional_number && stripos($lot_number, 'p')) {
+    //         $lot_number = '';
+    //     }
+    // }
+
     if ($auction) {
         $auction_id = $auction->ID;
-        $check_provisional_number = get_field('show_provisional_numbers', $auction_id);
+        $hide_lot_numbers = get_field('hide_lot_numbers', $auction_id);
 
-        if (!$check_provisional_number && stripos($lot_number, 'p')) {
+        if ($hide_lot_numbers == 1) {
             $lot_number = '';
         }
     }
@@ -304,11 +313,20 @@ function hnh_render_vehicle_card($vehicle_id, $args = [], $format = 1)
 
     $auction = get_field('auction_number_latest', $vehicle_id);
 
+    // if ($auction) {
+    //     $auction_id = $auction->ID;
+    //     $check_provisional_number = get_field('show_provisional_numbers', $auction_id);
+
+    //     if (!$check_provisional_number && stripos($lot_number, 'p')) {
+    //         $lot_number = '';
+    //     }
+    // }
+
     if ($auction) {
         $auction_id = $auction->ID;
-        $check_provisional_number = get_field('show_provisional_numbers', $auction_id);
+        $hide_lot_numbers = get_field('hide_lot_numbers', $auction_id);
 
-        if (!$check_provisional_number && stripos($lot_number, 'p')) {
+        if ($hide_lot_numbers == 1) {
             $lot_number = '';
         }
     }
@@ -435,9 +453,12 @@ function hnh_render_vehicle_card($vehicle_id, $args = [], $format = 1)
             <div class="w-100">
                 <div class="vehicle_card-content">
                     <a href="<?php echo esc_url($permalink); ?>" alt="<?php echo esc_html($title); ?>">
-                        <h3><?php echo esc_html($title); ?></h3>
+                        <h3>
+                            <?php echo esc_html($title); ?>
+                        </h3>
                     </a>
                 </div>
+                
                 <?php $sold_price = get_field('sold_price'); ?>
                 <?php if (!$sold_price): ?>
                     <?php if ($estimate_html): ?>
@@ -457,6 +478,7 @@ function hnh_render_vehicle_card($vehicle_id, $args = [], $format = 1)
                         -
                     </h4>
                 <?php endif; ?>
+
             </div>
 
             <div class="vehicle_card-price">
@@ -484,9 +506,9 @@ function hnh_render_vehicle_card($vehicle_id, $args = [], $format = 1)
                 <?php else: ?>
                     <?php if ($registration_no || $chassis_no || $vehicle_mot || $lot_number): ?>
                         <ul>
-                            <?php if ($lot_number): ?>
-                                <li><b><?php esc_html_e('Lot No:'); ?></b> <?php echo esc_html($lot_number); ?></li>
-                            <?php endif; ?>
+                            <?php if ($lot_number) : ?>
+								<li><b>Lot No:</b> <?php echo esc_html($lot_number); ?></li>
+							<?php endif; ?>
                             <?php if ($registration_no): ?>
                                 <li><b><?php esc_html_e('Registration No:'); ?></b> <?php echo esc_html($registration_no); ?></li>
                             <?php endif; ?>

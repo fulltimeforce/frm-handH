@@ -79,7 +79,7 @@ $placeholder_image = '';
         if ($car_makes):
           foreach ($car_makes as $make):
             $thumbnail_id = get_post_thumbnail_id($make->ID);
-            $image_src = $thumbnail_id ? wp_get_attachment_image_url($thumbnail_id, 'medium') : $placeholder_image;
+            $image_src = $thumbnail_id ? wp_get_attachment_image_url($thumbnail_id, 'full') : $placeholder_image;
             $make_title = get_the_title($make->ID);
             $make_url = get_permalink($make->ID);
             ?>
@@ -101,7 +101,7 @@ $placeholder_image = '';
         if ($motorcycle_makes):
           foreach ($motorcycle_makes as $make):
             $thumbnail_id = get_post_thumbnail_id($make->ID);
-            $image_src = $thumbnail_id ? wp_get_attachment_image_url($thumbnail_id, 'medium') : $placeholder_image;
+            $image_src = $thumbnail_id ? wp_get_attachment_image_url($thumbnail_id, 'full') : $placeholder_image;
             $make_title = get_the_title($make->ID);
             $make_url = get_permalink($make->ID);
             ?>

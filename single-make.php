@@ -121,7 +121,14 @@ $models = new WP_Query($argsModels);
                                     class="modelbox <?php echo $model_id == $ID ? 'local' : 'nolocal'; ?>">
                                     <?php if (has_post_thumbnail()): ?>
                                         <div class="modelbox-thumb">
-                                            <?php the_post_thumbnail('full'); ?>
+                                            <?php
+											$image_id = get_post_thumbnail_id();
+											$image_url = wp_get_attachment_image_url($image_id, 'full');
+
+											if ($image_url) :
+											?>
+												<img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr(get_the_title()); ?>">
+											<?php endif; ?>
                                         </div>
                                     <?php endif; ?>
                                     <h3>

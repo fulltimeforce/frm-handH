@@ -77,18 +77,17 @@ $auctions = new WP_Query($argsAuction);
 
                                     <div class="vehicle_bg">
                                         <?php
-                                        if ($venue_id) {
-                                            $thumb_id = get_post_thumbnail_id($venue_id);
-                                            if ($thumb_id) {
-                                                echo wp_get_attachment_image($thumb_id, 'large', false, ['alt' => $venue_name, 'title' => $venue_name]);
-                                            }
-                                        } else {
-                                            $thumb_id = get_post_thumbnail_id($auction_id);
-                                            if ($thumb_id) {
-                                                echo wp_get_attachment_image($thumb_id, 'large', false, ['alt' => $venue_name, 'title' => $venue_name]);
-                                            }
-                                        }
-                                        ?>
+										$post_id = $venue_id ? $venue_id : $auction_id;
+										$thumb_id = get_post_thumbnail_id($post_id);
+
+										if ($thumb_id) {
+											$url = wp_get_attachment_image_url($thumb_id, 'full');
+
+											if ($url) {
+												echo '<img src="' . esc_url($url) . '" alt="' . esc_attr($venue_name) . '" title="' . esc_attr($venue_name) . '">';
+											}
+										}
+										?>
                                     </div>
 
                                     <div class="w-100 vehicle_bottom">

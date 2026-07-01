@@ -28,8 +28,14 @@ if ($auction) {
 
     $auction_number = get_field('sale_number', $auction_id);
 
-    $check_provisional_number = get_field('show_provisional_numbers', $auction_id);
-    if (!$check_provisional_number && stripos($current_lot, 'p')) {
+    // $check_provisional_number = get_field('show_provisional_numbers', $auction_id);
+    // if (!$check_provisional_number && stripos($current_lot, 'p')) {
+    //     $current_lot = '';
+    // }
+
+    $hide_lot_numbers = get_field('hide_lot_numbers', $auction_id);
+
+    if ($hide_lot_numbers) {
         $current_lot = '';
     }
 
