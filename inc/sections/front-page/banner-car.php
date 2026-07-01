@@ -7,6 +7,6 @@ if ($why_video && !empty(get_field('whychoose_poster_video'))): ?>
       title="<?php echo get_field('whychoose_poster_video')['title'] ?>"
       alt="<?php echo get_field('whychoose_poster_video')['alt'] ?>"
       width="<?php echo get_field('whychoose_poster_video')['width'] ?>"
-      height="<?php echo get_field('whychoose_poster_video')['height'] ?>" loading="lazy">
+      height="<?php echo get_field('whychoose_poster_video')['height'] ?>" loading="lazy" decoding="async">
   </section>
 <?php endif; ?>

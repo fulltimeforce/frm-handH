@@ -53,7 +53,7 @@ $successes_text = get_field('success_text');
                       <div class="car_card-flex">
                         <div class="car_card-image">
                           <div class="car_card-thumb">
-                            <img src="<?php echo get_sub_field('image_vehicle_1')['url'] ?>" alt="<?php echo get_sub_field('vehicle_name'); ?>" width="<?php echo get_sub_field('image_vehicle_1')['width'] ?>" height="<?php echo get_sub_field('image_vehicle_1')['height'] ?>" loading="lazy" title="<?php echo get_sub_field('vehicle_name'); ?>">
+                            <img src="<?php echo get_sub_field('image_vehicle_1')['url'] ?>" alt="<?php echo get_sub_field('vehicle_name'); ?>" width="<?php echo get_sub_field('image_vehicle_1')['width'] ?>" height="<?php echo get_sub_field('image_vehicle_1')['height'] ?>" loading="lazy" decoding="async" title="<?php echo get_sub_field('vehicle_name'); ?>">
 
                             <?php if (!empty(get_sub_field('link_vehicle'))): ?>
                               <div class="permalink">
@@ -122,7 +122,7 @@ $successes_text = get_field('success_text');
                       <div class="car_card-flex">
                         <div class="car_card-image">
                           <div class="car_card-thumb">
-                            <img src="<?php echo get_sub_field('image_vehicle')['url'] ?>" alt="<?php echo get_sub_field('vehicle_name'); ?>" width="<?php echo get_sub_field('image_vehicle')['width'] ?>" height="<?php echo get_sub_field('image_vehicle')['height'] ?>" loading="lazy" title="<?php echo get_sub_field('vehicle_name'); ?>">
+                            <img src="<?php echo get_sub_field('image_vehicle')['url'] ?>" alt="<?php echo get_sub_field('vehicle_name'); ?>" width="<?php echo get_sub_field('image_vehicle')['width'] ?>" height="<?php echo get_sub_field('image_vehicle')['height'] ?>" loading="lazy" decoding="async" title="<?php echo get_sub_field('vehicle_name'); ?>">
 
                             <?php if (!empty(get_sub_field('link_vehicle'))): ?>
                               <div class="permalink">

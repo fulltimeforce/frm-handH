@@ -51,8 +51,10 @@
                       'full',
                       false,
                       [
-                        'alt'   => esc_attr($title),
-                        'title' => esc_attr($title),
+                        'alt'      => esc_attr($title),
+                        'title'    => esc_attr($title),
+                        'loading'  => 'lazy',
+                        'decoding' => 'async',
                       ]
                     );
                   }
@@ -102,7 +104,7 @@
         ?>
         <article class="new big" data-nro="1">
           <div class="new_image">
-            <img src="<?php echo IMG; ?>/new1.png" alt="Demo">
+            <img src="<?php echo IMG; ?>/new1.png" alt="Demo" loading="lazy" decoding="async">
           </div>
           <div class="new_content">
             <span>22/09/2018</span>
@@ -114,7 +116,7 @@
         <?php for ($i = 2; $i < 6; $i++): ?>
           <article class="new medium" data-nro="<?php echo $i; ?>">
             <div class="new_image">
-              <img src="<?php echo IMG; ?>/new1.png" alt="Demo">
+              <img src="<?php echo IMG; ?>/new1.png" alt="Demo" loading="lazy" decoding="async">
             </div>
             <div class="new_content">
               <span>22/09/2018</span>

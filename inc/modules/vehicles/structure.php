@@ -419,7 +419,7 @@ function hnh_render_vehicle_card($vehicle_id, $args = [], $format = 1)
                             <?php foreach ($slides as $s): ?>
                                 <li class="splide__slide">
                                     <img src="<?php echo esc_url($s['url']); ?>"
-                                        alt="<?php echo esc_attr($s['alt'] ?: ($title ?: 'Vehicle Image')); ?>" title="Vehicle Image">
+                                        alt="<?php echo esc_attr($s['alt'] ?: ($title ?: 'Vehicle Image')); ?>" title="Vehicle Image" loading="lazy" decoding="async">
                                 </li>
                             <?php endforeach; ?>
                         </ul>
@@ -444,7 +444,7 @@ function hnh_render_vehicle_card($vehicle_id, $args = [], $format = 1)
                 ?>
 
                 <?php if ($single_url): ?>
-                    <img class="vehicle_card-single" src="<?php echo esc_url($single_url); ?>" alt="<?php echo esc_attr($single_alt); ?>" title="Vehicle Image">
+                    <img class="vehicle_card-single" src="<?php echo esc_url($single_url); ?>" alt="<?php echo esc_attr($single_alt); ?>" title="Vehicle Image" loading="lazy" decoding="async">
                 <?php endif; ?>
             <?php endif; ?>
         </div>

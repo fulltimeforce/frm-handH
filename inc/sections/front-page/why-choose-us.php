@@ -35,7 +35,7 @@ $why_button1_text = get_field('whychoose_button2_text');
                   $image = get_sub_field('whychoose_image');
                   if ($image): ?>
                     <li class="splide__slide">
-                      <img src="<?php echo esc_url($image); ?>" alt="Image" title="Image">
+                      <img src="<?php echo esc_url($image); ?>" alt="Image" title="Image" loading="lazy" decoding="async">
                     </li>
                   <?php endif; ?>
                 <?php endwhile; ?>

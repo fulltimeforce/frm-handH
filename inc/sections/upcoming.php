@@ -56,6 +56,8 @@ $auctions = new WP_Query($argsAuction);
                             <?php
                             $auctions->the_post();
 
+                            $is_first_slide = ($count === 0);
+
                             $auction_id = get_the_ID();
                             $venue_id = get_field('template_venue', $auction_id);
 
@@ -72,7 +74,14 @@ $auctions = new WP_Query($argsAuction);
                                 <div class="vehicle <?php echo $count === 0 ? 'active' : ''; ?>">
 
                                     <?php if ($auction_icon): ?>
-                                        <img src="<?php echo esc_url($auction_icon); ?>" title="<?php echo $venue_name; ?>" alt="<?php echo $venue_name; ?>" class="vehicle-logo">
+                                        <img
+                                            src="<?php echo esc_url($auction_icon); ?>"
+                                            title="<?php echo $venue_name; ?>"
+                                            alt="<?php echo $venue_name; ?>"
+                                            class="vehicle-logo"
+                                            loading="<?php echo $is_first_slide ? 'eager' : 'lazy'; ?>"
+                                            decoding="async"
+                                        >
                                     <?php endif; ?>
 
                                     <div class="vehicle_bg">
@@ -80,13 +89,21 @@ $auctions = new WP_Query($argsAuction);
 										$post_id = $venue_id ? $venue_id : $auction_id;
 										$thumb_id = get_post_thumbnail_id($post_id);
 
-										if ($thumb_id) {
-											$url = wp_get_attachment_image_url($thumb_id, 'full');
-
-											if ($url) {
-												echo '<img src="' . esc_url($url) . '" alt="' . esc_attr($venue_name) . '" title="' . esc_attr($venue_name) . '">';
-											}
-										}
+                                        if ($thumb_id) {
+                                            echo wp_get_attachment_image(
+                                                $thumb_id,
+                                                'full',
+                                                false,
+                                                array(
+                                                    'alt'           => $venue_name,
+                                                    'title'         => $venue_name,
+                                                    'loading'       => $is_first_slide ? 'eager' : 'lazy',
+                                                    'decoding'      => 'async',
+                                                    'fetchpriority' => $is_first_slide ? 'high' : 'auto',
+                                                    'sizes'         => '(max-width: 767px) 92vw, (max-width: 1200px) 70vw, 640px',
+                                                )
+                                            );
+                                        }
 										?>
                                     </div>
 
@@ -162,7 +179,7 @@ $auctions = new WP_Query($argsAuction);
                                 <?php if (($count + 1) === $total) : ?>
                                     <div class="vehicle_final">
                                         <h3>Stay tuned for more classic auctions to come</h3>
-                                        <img src="<?php echo IMG; ?>/path_car.svg" title="Car" alt="Car">
+                                        <img src="<?php echo IMG; ?>/path_car.svg" title="Car" alt="Car" loading="lazy" decoding="async">
                                     </div>
                                 <?php endif; ?>
                             </li>
